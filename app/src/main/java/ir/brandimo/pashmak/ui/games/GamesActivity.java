@@ -13,17 +13,18 @@ import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.databinding.ActivityGamesBinding;
 import ir.brandimo.pashmak.ui.base.BaseActivity;
 import ir.brandimo.pashmak.ui.bubbles.BubblePopActivity;
-import ir.brandimo.pashmak.ui.coloring.ColoringActivity;
+import ir.brandimo.pashmak.ui.coloring.ColoringPickerActivity;
 import ir.brandimo.pashmak.ui.freedraw.FreeDrawActivity;
-import ir.brandimo.pashmak.ui.memory.MemoryActivity;
+import ir.brandimo.pashmak.ui.lullaby.LullabyActivity;
+import ir.brandimo.pashmak.ui.memory.MemoryPickerActivity;
 import ir.brandimo.pashmak.ui.missions.MissionsActivity;
 import ir.brandimo.pashmak.ui.parentgate.ParentGateDialog;
 import ir.brandimo.pashmak.ui.story.StoryActivity;
-import ir.brandimo.pashmak.ui.tracing.TracingActivity;
+import ir.brandimo.pashmak.ui.tracing.TracingPickerActivity;
 
 /**
- * The games menu. The headline card spans the row and the other six fall into two
- * even rows, laid out by the grid rather than placed by hand.
+ * The games menu. The headline card spans the row and the other seven fall into
+ * rows beneath it, laid out by the grid rather than placed by hand.
  */
 public class GamesActivity extends BaseActivity {
 
@@ -76,7 +77,7 @@ public class GamesActivity extends BaseActivity {
         entries.add(new GameEntry(R.drawable.btn_purple_card, R.drawable.ic_palette,
                 R.color.purple, R.string.game_paint_title,
                 getString(R.string.game_paint_sub), false, false,
-                ColoringActivity.class));
+                ColoringPickerActivity.class));
 
         entries.add(new GameEntry(R.drawable.btn_cyan, R.drawable.ic_brush,
                 R.color.cyan, R.string.game_freedraw_title,
@@ -86,7 +87,7 @@ public class GamesActivity extends BaseActivity {
         entries.add(new GameEntry(R.drawable.btn_green, R.drawable.ic_pencil,
                 R.color.green, R.string.game_trace_title,
                 getString(R.string.game_trace_sub), false, false,
-                TracingActivity.class));
+                TracingPickerActivity.class));
 
         entries.add(new GameEntry(R.drawable.btn_blue_deep, R.drawable.ic_bubbles,
                 R.color.blue_deep, R.string.game_bubbles_title,
@@ -96,13 +97,18 @@ public class GamesActivity extends BaseActivity {
         entries.add(new GameEntry(R.drawable.btn_red, R.drawable.ic_memory_cards,
                 R.color.red, R.string.game_memory_title,
                 getString(R.string.game_memory_sub), false, false,
-                MemoryActivity.class));
+                MemoryPickerActivity.class));
 
         // The yellow card is pale, so its text goes dark instead of white.
         entries.add(new GameEntry(R.drawable.btn_yellow, R.drawable.ic_book,
                 R.color.yellow_shadow, R.string.game_story_title,
                 getString(R.string.game_story_sub), false, true,
                 StoryActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_night_card, R.drawable.ic_moon,
+                R.color.night_top, R.string.game_lullaby_title,
+                getString(R.string.game_lullaby_sub), false, false,
+                LullabyActivity.class));
 
         return entries;
     }

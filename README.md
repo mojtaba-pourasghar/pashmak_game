@@ -44,9 +44,18 @@ saves the composed scene to the gallery.
 Progress auto-saves after every scan; a child can leave mid-mission and come back, or
 tap a filled slot to re-scan just that item.
 
-**Mini-games.** Coloring book (5 pictures, tap a region with the right colour),
-free drawing, letter and number tracing (the full Persian alphabet plus ۰–۹), bubble
-pop, memory match, and an interactive story whose props answer back when poked.
+**Mini-games, all staged.** Coloring, tracing and memory each open on a named stage
+list built the same way the missions list is, so the child picks a stage by its name
+and its picture rather than hunting through chips inside the game: 60 coloring pages
+across themed packs, one stage per Persian letter and per digit (42 in all), and 30
+memory boards — six themed decks, five levels each, unlocked in order. Alongside them:
+free drawing with real pencils, bubble pop, and an interactive story whose props answer
+back when poked.
+
+**لالایی شبانه — Bedtime.** A night screen with its own sky: ten lullabies, repeat-one,
+automatic advance to the next, and a sleep timer (۱۵/۳۰/۶۰ minutes) that fades the last
+minute out rather than cutting the song off. The background loop is silenced here — the
+lullaby is the sound on this screen.
 
 **Gallery.** Every finished scene, drawing and coloring page, with a full-screen
 viewer, share, delete, and one-tap export to `Pictures/PashmakGame` in the device
@@ -79,6 +88,13 @@ every body part samples one shared clock, which is what lets them each run at th
 period the way independent CSS animations do. Seven states: idle, wave, talk, cheer,
 encourage, tickle, enter. The system "remove animations" setting is honoured.
 
+**The bedtime player** (`audio/LullabyPlayer.java`) owns one `MediaPlayer` and a single
+500 ms tick that drives the progress bar, the sleep timer and the fade together. The
+recordings are dropped into `res/raw` by hand, so every lookup goes through
+`Resources#getIdentifier`: a lullaby with no file yet is skipped rather than thrown, and
+Pashmak mentions it once instead of on every skip — an empty `res/raw` leaves the screen
+usable. Repeat, auto-advance and the chosen timer are remembered between nights.
+
 **Persistence.** Room stores only what the child makes — captured items and gallery
 entries, as file paths, never blobs. The 20 missions are immutable content and live in
 `res/values/arrays.xml`; mission progress is *derived* (`SELECT missionIndex, COUNT(*)
@@ -101,8 +117,9 @@ repo** and none is required — every effect is a no-op until the file exists. S
 
 Drop recordings into `app/src/main/res/raw/` using the exact file names listed in
 [`app/src/main/res/raw/audio_manifest.txt`](app/src/main/res/raw/audio_manifest.txt),
-which also carries the Persian script for each of the mascot's eight voice lines.
-File names must be lowercase with underscores or aapt will reject them.
+which also carries the Persian script for each of the mascot's eight voice lines and the
+ten lullaby file names. File names must be lowercase with underscores or aapt will
+reject them.
 
 ---
 

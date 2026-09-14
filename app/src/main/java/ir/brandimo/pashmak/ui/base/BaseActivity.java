@@ -75,10 +75,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         goImmersive();
-        MusicEngine.get(this).play(musicTrack());
+        String track = musicTrack();
+        if (track == null) {
+            // A screen that makes its own sound (bedtime) asks for silence here.
+            MusicEngine.get(this).stop();
+        } else {
+            MusicEngine.get(this).play(track);
+        }
     }
 
-    /** Which loop this screen wants; play games music over the menu theme. */
+    /** Which loop this screen wants, or null for silence. */
+    @Nullable
     protected String musicTrack() {
         return AudioManifest.BGM_MENU;
     }

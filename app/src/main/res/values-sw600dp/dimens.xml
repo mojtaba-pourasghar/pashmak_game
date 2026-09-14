@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="rail_width">150dp</dimen>
+    <dimen name="lullaby_column_width">320dp</dimen>
     <dimen name="end_column_width">280dp</dimen>
     <dimen name="screen_padding">26dp</dimen>
     <dimen name="screen_padding_v">18dp</dimen>

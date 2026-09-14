@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -80,6 +81,8 @@ public class LiveDrawingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLiveDrawingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        // The child is holding a drawing up to the camera, not touching the screen.
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         int missionIndex = getIntent().getIntExtra(EXTRA_MISSION, 0);
         viewModel = new ViewModelProvider(this).get(LiveDrawingViewModel.class);

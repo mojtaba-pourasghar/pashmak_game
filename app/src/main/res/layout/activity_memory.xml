@@ -53,37 +53,14 @@
             tools:text="جفت‌های پیدا شده: ۰ از ۳" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/memory_stage"
             style="@style/Text.Sub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/memory_decks"
-            android:textColor="@color/red" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/memory_decks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="6"
-            tools:listitem="@layout/item_chip" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/Text.Sub"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/memory_levels"
-            android:textColor="@color/red" />
-
-        <LinearLayout
-            android:id="@+id/memory_levels"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal" />
+            android:gravity="center"
+            android:textColor="@color/red"
+            tools:text="میوه‌ها — مرحله ۲" />
 
         <View
             android:layout_width="match_parent"

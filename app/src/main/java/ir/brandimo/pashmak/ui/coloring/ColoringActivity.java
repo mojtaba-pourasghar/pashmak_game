@@ -13,10 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import ir.brandimo.pashmak.R;
@@ -38,9 +35,10 @@ public class ColoringActivity extends GameActivity {
     private static final int STARS_PER_PAGE = 5;
 
     private ActivityColoringBinding binding;
+    public static final String EXTRA_PACK = "pack_index";
+    public static final String EXTRA_PAGE = "page_index";
+
     private ColoringViewModel viewModel;
-    private ChipAdapter packAdapter;
-    private ChipAdapter pageAdapter;
     private boolean awardedThisPage;
 
     @Override
@@ -73,36 +71,13 @@ public class ColoringActivity extends GameActivity {
         binding.paintCanvas.setOnRegionTapped(this::onRegionTapped);
         binding.paintSave.setOnClickListener(v -> saveToGallery());
 
-        packAdapter = new ChipAdapter((index, locked) -> {
-            tap();
-            if (locked) {
-                mascot.say(getString(R.string.paint_pack_locked),
-                        ir.brandimo.pashmak.mascot.MascotState.TALK,
-                        ir.brandimo.pashmak.mascot.MascotController.HOLD_MIN_MS);
-            } else {
-                viewModel.selectPack(index);
-            }
-        });
-        binding.paintPacks.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.paintPacks.setAdapter(packAdapter);
-
-        pageAdapter = new ChipAdapter((index, locked) -> {
-            tap();
-            viewModel.selectPage(index);
-        });
-        binding.paintPages.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.paintPages.setAdapter(pageAdapter);
-
-        viewModel.packIndex().observe(this, index -> refreshChips());
         viewModel.pageIndex().observe(this, index -> {
             awardedThisPage = false;
             ColoringPage page = viewModel.page();
             binding.paintHeader.headerTitle.setText(getString(R.string.paint_title, page.name));
             binding.paintCanvas.setPage(page, viewModel.fills().getValue());
             buildLegend(page, viewModel.fills().getValue());
-            refreshChips();
+            binding.paintNext.setVisibility(View.GONE);
         });
         viewModel.fills().observe(this, fills -> {
             binding.paintCanvas.setFills(fills);
@@ -118,40 +93,26 @@ public class ColoringActivity extends GameActivity {
                 prefs.setColoringDone(viewModel.pageKey());
                 mascot.addStars(STARS_PER_PAGE);
                 onCorrect(getString(R.string.paint_all_right));
-                refreshChips();
+                offerNextPage();
             }
         });
 
-        viewModel.selectPack(0);
+        binding.paintNext.setOnClickListener(v -> {
+            tap();
+            viewModel.selectPage(viewModel.pagePosition() + 1);
+        });
+
+        viewModel.selectPack(getIntent().getIntExtra(EXTRA_PACK, 0));
+        viewModel.selectPage(getIntent().getIntExtra(EXTRA_PAGE, 0));
         mascot.help("paint");
     }
 
-    /** A pack opens once the one before it is finished. */
-    private boolean isPackUnlocked(int index) {
-        if (index == 0) {
-            return true;
-        }
-        ColorPack previous = ColoringCatalog.pack(index - 1);
-        return prefs.coloringDoneInPack(previous.id, previous.size()) >= previous.size();
+    /** Once a picture is finished, the rest of its pack is one tap away. */
+    private void offerNextPage() {
+        boolean hasNext = viewModel.pagePosition() + 1 < viewModel.pack().size();
+        binding.paintNext.setVisibility(hasNext ? View.VISIBLE : View.GONE);
     }
 
-    private void refreshChips() {
-        List<ChipAdapter.Entry> packs = new ArrayList<>();
-        for (int i = 0; i < ColoringCatalog.packCount(); i++) {
-            ColorPack pack = ColoringCatalog.pack(i);
-            boolean done = prefs.coloringDoneInPack(pack.id, pack.size()) >= pack.size();
-            packs.add(new ChipAdapter.Entry(pack.name, !isPackUnlocked(i), done));
-        }
-        packAdapter.submit(packs, viewModel.packPosition());
-
-        ColorPack pack = viewModel.pack();
-        List<ChipAdapter.Entry> pages = new ArrayList<>();
-        for (int i = 0; i < pack.size(); i++) {
-            boolean done = prefs.isColoringDone(pack.id + "/" + i);
-            pages.add(new ChipAdapter.Entry(pack.page(i).name, false, done));
-        }
-        pageAdapter.submit(pages, viewModel.pagePosition());
-    }
 
     private void onRegionTapped(ColorRegion region) {
         boolean right = viewModel.paint(region);

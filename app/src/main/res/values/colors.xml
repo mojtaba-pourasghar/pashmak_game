@@ -113,6 +113,18 @@
     <color name="grey_lock_end">#7C8288</color>
     <color name="grey_lock_shadow">#5E6368</color>
 
+    <!-- Night / lullaby -->
+    <color name="night_top">#1B2450</color>
+    <color name="night_mid">#2E3A72</color>
+    <color name="night_bottom">#4A4E8C</color>
+    <color name="night_card">#2A3463</color>
+    <color name="night_card_active">#3C4A88</color>
+    <color name="night_border">#55639E</color>
+    <color name="night_ink">#F2F0FF</color>
+    <color name="night_sub">#B6BCE6</color>
+    <color name="night_gold">#FFD97A</color>
+    <color name="night_track">#1A2145</color>
+
     <!-- Item hue swatches (HUES in the prototype), indexed by slot position -->
     <color name="hue1_border">#C8B6DC</color>
     <color name="hue1_bg">#EDE3F6</color>

@@ -24,4 +24,21 @@ Letter and digit pronunciation for the tracing game, named by code point:
   letter_627 (ا), letter_628 (ب), letter_67e (پ) …  — one per Persian letter
   digit_0 … digit_9
 
+Lullabies for the bedtime screen (full songs, looped by the player, any length):
+  lullaby_lay_lay        لای‌لای گل پونه
+  lullaby_mahe_man       ماه من بخواب
+  lullaby_gonjeshk       گنجشک لالایی
+  lullaby_setare         ستاره‌ها بیدارن
+  lullaby_abr_narm       ابر نرم
+  lullaby_baran          صدای بارون
+  lullaby_ahoo           آهوی کوچولو
+  lullaby_darya          دریای خواب
+  lullaby_pashmak        لالایی پشمک
+  lullaby_shab_bekheir   شب به‌خیر ماه
+
+  The list itself lives in data/catalog/LullabyCatalog.java — the titles, the
+  verse shown under each one and the running time printed before the file
+  arrives. Change them there if you record different songs. A lullaby whose
+  file is missing is skipped, and Pashmak says so once rather than repeatedly.
+
 File names must be lowercase with underscores only; aapt rejects anything else.

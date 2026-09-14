@@ -54,55 +54,12 @@
             android:paddingBottom="10dp"
             tools:text="با انگشتت روی «ب» بکش." />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/trace_mode_letters"
-                style="@style/Button.Chunky"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/bg_segment"
-                android:text="@string/trace_letters"
-                android:textColor="@color/ink_secondary"
-                android:textSize="14sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/trace_mode_digits"
-                style="@style/Button.Chunky"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_segment"
-                android:text="@string/trace_digits"
-                android:textColor="@color/ink_secondary"
-                android:textSize="14sp" />
-        
         <include
             android:id="@+id/trace_dock"
             layout="@layout/view_mascot_dock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp" />
-    </LinearLayout>
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:id="@+id/trace_glyphs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" />
-        </HorizontalScrollView>
+            android:layout_marginTop="10dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/trace_coverage"

@@ -140,6 +140,41 @@ public final class GamePrefs {
         return done;
     }
 
+    /** Glyphs the child has finished tracing, keyed by the character itself. */
+    public boolean isTraceDone(String glyph) {
+        return prefs.getBoolean("trace_done_" + glyph, false);
+    }
+
+    public void setTraceDone(String glyph) {
+        prefs.edit().putBoolean("trace_done_" + glyph, true).apply();
+    }
+
+    /** Bedtime settings, remembered so the evening routine is not re-set nightly. */
+    public boolean lullabyRepeat() {
+        return prefs.getBoolean("lullaby_repeat", false);
+    }
+
+    public void setLullabyRepeat(boolean value) {
+        prefs.edit().putBoolean("lullaby_repeat", value).apply();
+    }
+
+    public boolean lullabyAutoNext() {
+        return prefs.getBoolean("lullaby_auto", true);
+    }
+
+    public void setLullabyAutoNext(boolean value) {
+        prefs.edit().putBoolean("lullaby_auto", value).apply();
+    }
+
+    /** Sleep-timer length in minutes; 0 means the timer is off. */
+    public int lullabySleepMinutes() {
+        return prefs.getInt("lullaby_sleep", 0);
+    }
+
+    public void setLullabySleepMinutes(int value) {
+        prefs.edit().putInt("lullaby_sleep", value).apply();
+    }
+
     public boolean musicEnabled() {
         return prefs.getBoolean(KEY_MUSIC, false);
     }

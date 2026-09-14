@@ -60,25 +60,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/paint_header">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/paint_packs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="6"
-            tools:listitem="@layout/item_chip" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/paint_pages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="5"
-            tools:listitem="@layout/item_chip" />
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/paint_legend_title"
             style="@style/Text.Sub"
@@ -115,6 +96,17 @@
             android:background="@drawable/btn_purple"
             android:text="@string/paint_save"
             android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/paint_next"
+            style="@style/Button.Chunky"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/btn_green"
+            android:text="@string/paint_next"
+            android:textSize="16sp"
+            android:visibility="gone" />
     
         <include
             android:id="@+id/paint_dock"

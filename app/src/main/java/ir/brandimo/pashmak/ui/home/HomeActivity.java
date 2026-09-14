@@ -12,6 +12,7 @@ import ir.brandimo.pashmak.mascot.MascotState;
 import ir.brandimo.pashmak.ui.base.BaseActivity;
 import ir.brandimo.pashmak.ui.games.GamesActivity;
 import ir.brandimo.pashmak.ui.gallery.GalleryActivity;
+import ir.brandimo.pashmak.ui.lullaby.LullabyActivity;
 import ir.brandimo.pashmak.ui.missions.MissionsActivity;
 import ir.brandimo.pashmak.ui.parentgate.ParentGateDialog;
 
@@ -35,6 +36,7 @@ public class HomeActivity extends BaseActivity {
         binding.homeBtnMissions.setOnClickListener(v -> open(MissionsActivity.class));
         binding.homeBtnGames.setOnClickListener(v -> open(GamesActivity.class));
         binding.homeBtnGallery.setOnClickListener(v -> open(GalleryActivity.class));
+        binding.homeBtnLullaby.setOnClickListener(v -> open(LullabyActivity.class));
         binding.homeBtnParents.setOnClickListener(v -> {
             tap();
             ParentGateDialog.show(this);

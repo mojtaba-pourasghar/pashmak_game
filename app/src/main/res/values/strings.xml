@@ -82,6 +82,7 @@
     <string name="paint_wrong">اشکالی نداره — %1$s رنگ دیگه‌ای می‌خواد.</string>
     <string name="paint_all_right">عالی شد! کل نقاشی رو درست رنگ کردی.</string>
     <string name="paint_pack_locked">اول بسته‌ی قبلی رو کامل رنگ کن تا این باز شه.</string>
+    <string name="paint_next">نقاشی بعدی</string>
     <string name="paint_save">ذخیره تو گالری</string>
 
     <!-- Free draw -->
@@ -124,6 +125,7 @@
     <string name="memory_levels">مرحله‌ها</string>
     <string name="memory_level_label">مرحله %1$s</string>
     <string name="memory_next_level">مرحله‌ی بعد!</string>
+    <string name="memory_stage_name">%1$s — مرحله‌ی %2$s</string>
     <string name="memory_locked">اول مرحله‌ی قبلی رو تموم کن.</string>
     <string name="memory_win">همه‌ی جفت‌ها رو پیدا کردی! تو فوق‌العاده‌ای.</string>
 
@@ -198,7 +200,36 @@
     <string name="ms_scan_done">وای چه نقاشی قشنگی کشیدی!</string>
 
     <!-- Shared -->
+    <string name="stage_locked">اول مرحله‌ی قبلی رو تموم کن تا این باز شه.</string>
+    <string name="stage_pick_hint">یه مرحله انتخاب کن و شروع کن!</string>
+    <string name="stage_pairs">%1$s جفت</string>
+    <string name="stage_letter">حرف %1$s</string>
+    <string name="stage_digit">عدد %1$s</string>
+    <string name="stage_letters_group">حرف‌های فارسی</string>
+    <string name="stage_digits_group">عددها</string>
+    <string name="stage_level">مرحله %1$s</string>
     <string name="back">برگرد</string>
+
+    <string name="home_lullaby">لالایی شبانه</string>
+
+    <!-- Bedtime / lullabies -->
+    <string name="game_lullaby_title">لالایی شبانه</string>
+    <string name="game_lullaby_sub">وقت خوابه، آروم گوش کن</string>
+    <string name="lullaby_title">لالایی شبانه</string>
+    <string name="lullaby_greeting">شب به‌خیر قندعسلم. یه لالایی انتخاب کن تا باهم گوش بدیم.</string>
+    <string name="lullaby_goodnight">چشماتو ببند عزیزم. شب خوبی داشته باشی.</string>
+    <string name="lullaby_missing">لالایی «%1$s» هنوز ضبط نشده. یکی دیگه رو انتخاب کن.</string>
+    <string name="lullaby_play">پخش</string>
+    <string name="lullaby_pause">مکث</string>
+    <string name="lullaby_next">لالایی بعدی</string>
+    <string name="lullaby_prev">لالایی قبلی</string>
+    <string name="lullaby_repeat">تکرار</string>
+    <string name="lullaby_auto">بعدی خودکار</string>
+    <string name="lullaby_timer">زمان خاموشی</string>
+    <string name="lullaby_timer_off">بی‌زمان</string>
+    <string name="lullaby_timer_left">%1$s تا خاموشی</string>
+    <string name="lullaby_time">%1$s / %2$s</string>
+
     <string name="stars_label">ستاره‌ها</string>
     <string name="sound_toggle">صدا</string>
     <string name="cd_mascot">%1$s، دوست تو</string>

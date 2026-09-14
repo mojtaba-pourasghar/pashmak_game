@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- View tag keys. A tag key has to be a real id, or setTag(int, Object) throws. -->
+<resources>
+    <item name="lullaby_seek_duration" type="id" />
+</resources>

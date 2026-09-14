@@ -3,28 +3,27 @@ package ir.brandimo.pashmak.ui.memory;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
-import ir.brandimo.pashmak.data.catalog.MemoryCatalog;
 import ir.brandimo.pashmak.databinding.ActivityMemoryBinding;
-import ir.brandimo.pashmak.databinding.ItemChipBinding;
 import ir.brandimo.pashmak.ui.base.GameActivity;
 import ir.brandimo.pashmak.util.FaNum;
 
 /**
- * Memory, as a progression: six themed decks and five levels each, from three
- * pairs up to eight. The board is measured and laid out to fit the screen, so the
- * cards stay square instead of stretching.
+ * One memory board, chosen on the stage picker: a themed deck at one level, from
+ * three pairs up to eight. The board is measured and laid out to fit the screen,
+ * so the cards stay square instead of stretching.
  */
 public class MemoryActivity extends GameActivity {
+
+    public static final String EXTRA_DECK = "deck_index";
+    public static final String EXTRA_LEVEL = "level_index";
 
     private static final long MATCH_PAUSE_MS = 460L;
     private static final long MISS_PAUSE_MS = 800L;
@@ -32,7 +31,6 @@ public class MemoryActivity extends GameActivity {
     private ActivityMemoryBinding binding;
     private MemoryViewModel viewModel;
     private MemoryAdapter adapter;
-    private DeckAdapter deckAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,14 +60,6 @@ public class MemoryActivity extends GameActivity {
         binding.memoryBoard.setAdapter(adapter);
         binding.memoryBoard.setItemAnimator(null);
 
-        deckAdapter = new DeckAdapter(MemoryCatalog.all(), index -> {
-            tap();
-            deal(index, 0);
-        });
-        binding.memoryDecks.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.memoryDecks.setAdapter(deckAdapter);
-
         viewModel.cards().observe(this, cards -> {
             adapter.setDeck(viewModel.deck());
             adapter.setCards(cards);
@@ -87,44 +77,21 @@ public class MemoryActivity extends GameActivity {
         });
 
         if (viewModel.cards().getValue() == null || viewModel.cards().getValue().isEmpty()) {
-            deal(0, 0);
+            deal(getIntent().getIntExtra(EXTRA_DECK, 0),
+                    getIntent().getIntExtra(EXTRA_LEVEL, 0));
         } else {
-            renderChips();
+            showStageName();
         }
     }
 
     private void deal(int deckIndex, int level) {
         viewModel.deal(deckIndex, level);
-        deckAdapter.setSelected(deckIndex);
-        renderChips();
+        showStageName();
     }
 
-    /** Level chips: everything up to one past the child's best is playable. */
-    private void renderChips() {
-        LinearLayout container = binding.memoryLevels;
-        container.removeAllViews();
-        int best = prefs.memoryProgress(viewModel.deck().id);
-        for (int level = 0; level < MemoryCatalog.levelCount(); level++) {
-            final int index = level;
-            boolean unlocked = level <= best + 1;
-            ItemChipBinding chip = ItemChipBinding.inflate(getLayoutInflater(), container, false);
-            chip.chipLabel.setText(FaNum.of(level + 1));
-            chip.chipLock.setVisibility(unlocked ? View.GONE : View.VISIBLE);
-            chip.chipRoot.setSelected(level == viewModel.level());
-            chip.chipLabel.setTextColor(ContextCompat.getColor(this,
-                    level == viewModel.level() ? R.color.white : R.color.purple));
-            chip.chipRoot.setOnClickListener(v -> {
-                tap();
-                if (unlocked) {
-                    deal(viewModel.deckIndex(), index);
-                } else {
-                    mascot.say(getString(R.string.memory_locked),
-                            ir.brandimo.pashmak.mascot.MascotState.TALK,
-                            ir.brandimo.pashmak.mascot.MascotController.HOLD_MIN_MS);
-                }
-            });
-            container.addView(chip.getRoot());
-        }
+    private void showStageName() {
+        binding.memoryStage.setText(getString(R.string.memory_stage_name,
+                viewModel.deck().name, FaNum.of(viewModel.level() + 1)));
     }
 
     /**
@@ -194,7 +161,6 @@ public class MemoryActivity extends GameActivity {
         prefs.setMemoryProgress(viewModel.deck().id, viewModel.level());
         mascot.addStars(viewModel.pairCount());
         onCorrect(getString(R.string.memory_win));
-        renderChips();
         if (viewModel.hasNextLevel()) {
             int next = viewModel.level() + 1;
             binding.getRoot().postDelayed(() -> {

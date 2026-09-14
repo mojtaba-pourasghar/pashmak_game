@@ -2,6 +2,7 @@
 <resources>
     <!-- Landscape three-band layout: start rail | center stage | end column -->
     <dimen name="rail_width">96dp</dimen>
+    <dimen name="lullaby_column_width">240dp</dimen>
     <dimen name="end_column_width">200dp</dimen>
     <dimen name="screen_padding">16dp</dimen>
     <dimen name="screen_padding_v">12dp</dimen>
