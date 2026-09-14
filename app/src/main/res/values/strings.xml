@@ -66,6 +66,7 @@
     <string name="alive_headline_complete">مجموعه کامل شد!</string>
     <string name="alive_line_progress">«%1$s» اومد کنار %2$s. حالا %3$s تا مونده تا مجموعه کامل شه.</string>
     <string name="alive_line_complete">همه‌چیزِ «%1$s» آماده‌ست. %2$s داره وسطش می‌رقصه!</string>
+    <string name="alive_arrived">وااای! «%1$s» زنده شد و اومد تو صحنه!</string>
     <string name="alive_next_item">بکش: %1$s</string>
     <string name="alive_next_mission">ماموریت بعدی</string>
     <string name="alive_gallery">گالری</string>
@@ -80,6 +81,7 @@
     <string name="paint_right">آفرین! رنگ %1$s درست بود.</string>
     <string name="paint_wrong">اشکالی نداره — %1$s رنگ دیگه‌ای می‌خواد.</string>
     <string name="paint_all_right">عالی شد! کل نقاشی رو درست رنگ کردی.</string>
+    <string name="paint_pack_locked">اول بسته‌ی قبلی رو کامل رنگ کن تا این باز شه.</string>
     <string name="paint_save">ذخیره تو گالری</string>
 
     <!-- Free draw -->
@@ -88,8 +90,12 @@
     <string name="freedraw_save">ذخیره</string>
     <string name="freedraw_saved">نقاشیت تو گالری ذخیره شد!</string>
     <string name="freedraw_empty">اول یه چیزی بکش تا ذخیره کنم.</string>
-    <string name="brush_thin">نازک</string>
-    <string name="brush_thick">کلفت</string>
+    <string name="tool_pencil_thin">مداد نازک</string>
+    <string name="tool_pencil_thick">مداد کلفت</string>
+    <string name="tool_marker">ماژیک</string>
+    <string name="tool_crayon">مداد شمعی</string>
+    <string name="tool_eraser">پاک‌کن</string>
+    <string name="freedraw_tools">ابزارها</string>
 
     <!-- Tracing -->
     <string name="trace_title">دنبالش بکش</string>
@@ -114,12 +120,20 @@
     <string name="memory_counter">جفت‌های پیدا شده: %1$s از %2$s</string>
     <string name="memory_match">ایول! یه جفت پیدا کردی.</string>
     <string name="memory_miss">نزدیک بود! بیا دوباره امتحان کنیم.</string>
+    <string name="memory_decks">دسته‌ها</string>
+    <string name="memory_levels">مرحله‌ها</string>
+    <string name="memory_level_label">مرحله %1$s</string>
+    <string name="memory_next_level">مرحله‌ی بعد!</string>
+    <string name="memory_locked">اول مرحله‌ی قبلی رو تموم کن.</string>
     <string name="memory_win">همه‌ی جفت‌ها رو پیدا کردی! تو فوق‌العاده‌ای.</string>
 
     <!-- Story -->
     <string name="story_title">قصه‌گوی زنده</string>
     <string name="story_next">ادامه‌ی قصه</string>
-    <string name="story_tap_hint">روی هر چیزی تو صحنه بزن تا صداش رو بشنوی!</string>
+    <string name="story_tap_hint">روی هر چیزی تو صحنه بزن!</string>
+    <string name="story_again">از اول</string>
+    <string name="story_wrong">نه قندعسلم، یه بار دیگه نگاه کن.</string>
+    <string name="story_finished">قصه تموم شد! یه قصه‌ی دیگه انتخاب کن.</string>
 
     <!-- Gallery -->
     <string name="gallery_title">گالری من</string>

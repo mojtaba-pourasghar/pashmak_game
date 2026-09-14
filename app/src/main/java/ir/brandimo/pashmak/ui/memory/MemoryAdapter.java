@@ -2,6 +2,7 @@ package ir.brandimo.pashmak.ui.memory;
 
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -10,31 +11,33 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import ir.brandimo.pashmak.data.catalog.Palette;
+import ir.brandimo.pashmak.data.catalog.MemoryDeck;
 import ir.brandimo.pashmak.databinding.ItemMemoryCardBinding;
 
-/** Cards are told apart by color and shape, exactly as the design specified. */
+/** Draws the board. A face-down card is always the same, whatever it hides. */
 public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.CardHolder> {
 
     public interface OnCardClick {
         void onCardClick(int position);
     }
 
-    private static final int[] PAIR_COLORS = {
-            Palette.RED, Palette.ORANGE, Palette.GREEN,
-            Palette.BLUE, Palette.PURPLE, Palette.YELLOW,
-            Palette.BROWN, Palette.CHARCOAL
-    };
-    private static final int SHAPE_CIRCLE = 0;
-    private static final int SHAPE_SQUARE = 1;
-    private static final int SHAPE_LEAF = 2;
-
     private final OnCardClick listener;
     private List<Integer> cards = new ArrayList<>();
     private int[] states = new int[0];
+    private MemoryDeck deck;
+    private int cardHeightPx;
 
     public MemoryAdapter(OnCardClick listener) {
         this.listener = listener;
+    }
+
+    public void setDeck(MemoryDeck deck) {
+        this.deck = deck;
+    }
+
+    /** The board is sized to fit without scrolling, so rows get an exact height. */
+    public void setCardHeight(int heightPx) {
+        cardHeightPx = heightPx;
     }
 
     public void setCards(List<Integer> next) {
@@ -56,9 +59,9 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.CardHolder
 
     @Override
     public void onBindViewHolder(@NonNull CardHolder holder, int position) {
-        int face = cards.get(position);
-        int state = position < states.length ? states[position] : MemoryViewModel.STATE_FACE_DOWN;
-        holder.bind(face, state, position, listener);
+        int state = position < states.length
+                ? states[position] : MemoryViewModel.STATE_FACE_DOWN;
+        holder.bind(deck, cards.get(position), state, position, cardHeightPx, listener);
     }
 
     @Override
@@ -75,46 +78,43 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.CardHolder
             this.binding = binding;
         }
 
-        void bind(int face, int state, int position, OnCardClick listener) {
-            float density = binding.getRoot().getResources().getDisplayMetrics().density;
-            boolean revealed = state != MemoryViewModel.STATE_FACE_DOWN;
-
-            GradientDrawable card = new GradientDrawable();
-            card.setCornerRadius(18f * density);
-            // Every face-down card looks identical, so nothing leaks about the pair.
-            card.setColor(revealed ? PAIR_COLORS[face % PAIR_COLORS.length] : 0xFFFFFFFF);
-            binding.cardRoot.setBackground(card);
-            binding.cardRoot.setAlpha(state == MemoryViewModel.STATE_MATCHED ? 0.45f : 1f);
-
-            GradientDrawable shape = new GradientDrawable();
-            shape.setColor(revealed ? 0xF2FFFFFF : 0xFFF3D9D6);
-            if (!revealed) {
-                shape.setCornerRadius(10f * density);
-            } else {
-                switch (face % 3) {
-                    case SHAPE_CIRCLE:
-                        shape.setShape(GradientDrawable.OVAL);
-                        break;
-                    case SHAPE_SQUARE:
-                        shape.setCornerRadius(6f * density);
-                        break;
-                    case SHAPE_LEAF:
-                    default:
-                        shape.setCornerRadii(new float[]{
-                                24f * density, 24f * density,
-                                24f * density, 24f * density,
-                                24f * density, 24f * density,
-                                0f, 0f});
-                        break;
+        void bind(MemoryDeck deck, int faceIndex, int state, int position,
+                  int heightPx, OnCardClick listener) {
+            if (heightPx > 0) {
+                ViewGroup.LayoutParams params = binding.getRoot().getLayoutParams();
+                if (params != null && params.height != heightPx) {
+                    params.height = heightPx;
+                    binding.getRoot().setLayoutParams(params);
                 }
             }
-            binding.cardShape.setBackground(shape);
 
-            // A quick half-turn sells the flip without a second layout.
-            binding.cardRoot.setRotationY(0f);
+            boolean revealed = state != MemoryViewModel.STATE_FACE_DOWN;
+            MemoryDeck.Face face = deck == null ? null
+                    : deck.faces.get(faceIndex % deck.size());
+
+            float density = binding.getRoot().getResources().getDisplayMetrics().density;
+            GradientDrawable card = new GradientDrawable();
+            card.setCornerRadius(18f * density);
+            card.setColor(revealed && face != null ? face.tint : 0xFFFFFFFF);
+            binding.cardRoot.setBackground(card);
+            binding.cardRoot.setAlpha(state == MemoryViewModel.STATE_MATCHED ? 0.5f : 1f);
+
+            binding.cardBack.setVisibility(revealed ? View.GONE : View.VISIBLE);
+            boolean picture = revealed && face != null && !face.isGlyph();
+            boolean glyph = revealed && face != null && face.isGlyph();
+            binding.cardIcon.setVisibility(picture ? View.VISIBLE : View.GONE);
+            binding.cardGlyph.setVisibility(glyph ? View.VISIBLE : View.GONE);
+            if (picture) {
+                binding.cardIcon.setImageResource(face.icon);
+            } else if (glyph) {
+                binding.cardGlyph.setText(face.glyph);
+            }
+
             binding.cardRoot.setOnClickListener(v -> {
-                v.animate().rotationY(180f).setDuration(160L)
-                        .withEndAction(() -> v.setRotationY(0f)).start();
+                if (state == MemoryViewModel.STATE_FACE_DOWN) {
+                    v.animate().rotationY(180f).setDuration(150L)
+                            .withEndAction(() -> v.setRotationY(0f)).start();
+                }
                 listener.onCardClick(position);
             });
         }

@@ -42,27 +42,56 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/story_header">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/story_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="6"
+            tools:listitem="@layout/item_chip" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/story_line"
             style="@style/Text.Body"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:background="@drawable/bg_speech_story"
-            android:padding="16dp"
+            android:padding="14dp"
             android:textColor="@color/ink_primary"
             android:textSize="15sp"
-            tools:text="یه روز صبح، اولین نقاشیِ تو از کاغذ پرید بیرون…" />
+            tools:text="یه روز صبح، نقاشیِ تو از کاغذ پرید بیرون…" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/story_tap_hint"
-            style="@style/Text.Sub"
+        <LinearLayout
+            android:id="@+id/story_choices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="@string/story_tap_hint"
-            android:textColor="@color/gold_sub" />
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/story_choice_a"
+                style="@style/Button.Chunky"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_purple"
+                android:textSize="16sp"
+                tools:text="بریم جنگل" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/story_choice_b"
+                style="@style/Button.Chunky"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/btn_blue"
+                android:textSize="16sp"
+                tools:text="بریم دریا" />
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/story_next"
@@ -73,13 +102,22 @@
             android:background="@drawable/btn_orange"
             android:text="@string/story_next"
             android:textSize="18sp" />
+
+        <include
+            android:id="@+id/story_dock"
+            layout="@layout/view_mascot_dock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
     </LinearLayout>
 
-    <include
-        android:id="@+id/story_dock"
-        layout="@layout/view_mascot_dock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ir.brandimo.pashmak.mascot.ConfettiView
+        android:id="@+id/story_confetti"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,7 +9,6 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -31,11 +30,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
 import ir.brandimo.pashmak.data.catalog.Mission;
+import ir.brandimo.pashmak.data.catalog.MissionSceneCatalog;
 import ir.brandimo.pashmak.data.catalog.Palette;
 import ir.brandimo.pashmak.data.db.CapturedItem;
 import ir.brandimo.pashmak.data.db.GalleryEntry;
@@ -70,6 +71,8 @@ public class LiveDrawingActivity extends BaseActivity {
     private boolean capturing;
     private long processingStartedAt;
     private int sceneSavedForCount = -1;
+    /** Set when a scan lands, so the scene knows which drawing should fly in. */
+    private int pendingArrivalSlot = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,10 +84,12 @@ public class LiveDrawingActivity extends BaseActivity {
         viewModel = new ViewModelProvider(this).get(LiveDrawingViewModel.class);
         viewModel.start(missionIndex);
 
+        attachCompanion();
         wireBrief();
         wireCamera();
         wireProcessing();
         wireAlive();
+        binding.aliveSceneView.setScene(MissionSceneCatalog.forMission(missionIndex));
 
         viewModel.step().observe(this, this::showStep);
         viewModel.items().observe(this, this::renderMission);
@@ -96,6 +101,14 @@ public class LiveDrawingActivity extends BaseActivity {
         viewModel.extractionFailed().observe(this, failed ->
                 binding.processingFailure.setVisibility(
                         Boolean.TRUE.equals(failed) ? View.VISIBLE : View.GONE));
+    }
+
+    @Override
+    protected void onSpeakingChanged(boolean speaking) {
+        if (binding != null) {
+            binding.briefMascot.setSpeaking(speaking);
+            binding.aliveMascot.setSpeaking(speaking);
+        }
     }
 
     // ------------------------------------------------------------------ brief
@@ -327,13 +340,16 @@ public class LiveDrawingActivity extends BaseActivity {
     }
 
     private void onCaptured(String label, int capturedCount) {
+        pendingArrivalSlot = Math.max(0, capturedCount - 1);
         long elapsed = System.currentTimeMillis() - processingStartedAt;
         long wait = Math.max(0L, MIN_PROCESSING_MS - elapsed);
+        // Let the drawing land before Pashmak reacts to it by name.
         binding.getRoot().postDelayed(() -> {
             mascot.addStars(2);
-            mascot.say(getString(R.string.ms_scan_done), MascotState.CHEER,
+            binding.aliveMascot.setState(MascotState.CHEER);
+            mascot.say(getString(R.string.alive_arrived, label), MascotState.CHEER,
                     MascotController.HOLD_CHEER_MS);
-        }, wait);
+        }, wait + 700L);
     }
 
     // ------------------------------------------------------------- processing
@@ -406,40 +422,24 @@ public class LiveDrawingActivity extends BaseActivity {
         }
     }
 
-    /** The captured drawings gather around the mascot, sliding in from the side. */
+    /** Puts every captured drawing into the mission's world. */
     private void renderAliveItems(Mission mission, @Nullable List<CapturedItem> items) {
-        GridLayout grid = binding.aliveItems;
-        grid.removeAllViews();
-        if (items == null) {
-            return;
-        }
-        for (int i = 0; i < items.size(); i++) {
-            CapturedItem item = items.get(i);
-            Bitmap bitmap = BitmapIO.readSampled(item.pngPath, 400);
-            AppCompatImageView view = new AppCompatImageView(this);
-            view.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            view.setAdjustViewBounds(true);
-            if (bitmap != null) {
-                view.setImageBitmap(bitmap);
+        List<Bitmap> bitmaps = new ArrayList<>();
+        List<Integer> slots = new ArrayList<>();
+        if (items != null) {
+            for (int i = 0; i < items.size(); i++) {
+                CapturedItem item = items.get(i);
+                Bitmap bitmap = BitmapIO.readSampled(item.pngPath, 600);
+                if (bitmap != null) {
+                    bitmaps.add(bitmap);
+                    slots.add(item.slotIndex);
+                }
             }
-            view.setContentDescription(item.itemLabel);
-
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 0;
-            params.height = 0;
-            params.columnSpec = GridLayout.spec(i % 2, 1f);
-            params.rowSpec = GridLayout.spec(i / 2, 1f);
-            grid.addView(view, params);
-
-            view.setTranslationX(-dp(60));
-            view.setAlpha(0f);
-            view.setScaleX(0.5f);
-            view.setScaleY(0.5f);
-            view.animate()
-                    .translationX(0f).alpha(1f).scaleX(1f).scaleY(1f)
-                    .setStartDelay(80L * i)
-                    .setDuration(520L)
-                    .start();
+        }
+        binding.aliveSceneView.setItems(bitmaps, slots);
+        if (pendingArrivalSlot >= 0) {
+            binding.aliveSceneView.playArrival(pendingArrivalSlot);
+            pendingArrivalSlot = -1;
         }
     }
 

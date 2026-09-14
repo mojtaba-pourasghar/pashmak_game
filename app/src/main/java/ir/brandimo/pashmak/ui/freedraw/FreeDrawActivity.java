@@ -16,12 +16,10 @@ import ir.brandimo.pashmak.data.db.GalleryEntry;
 import ir.brandimo.pashmak.data.repo.GalleryRepository;
 import ir.brandimo.pashmak.databinding.ActivityFreeDrawBinding;
 import ir.brandimo.pashmak.ui.base.GameActivity;
+import ir.brandimo.pashmak.ui.common.PaintCanvasView;
 
 /** A blank page and a box of colors. Anything the child makes can be kept. */
 public class FreeDrawActivity extends GameActivity {
-
-    private static final float BRUSH_THIN = 8f;
-    private static final float BRUSH_THICK = 26f;
 
     private ActivityFreeDrawBinding binding;
 
@@ -50,18 +48,42 @@ public class FreeDrawActivity extends GameActivity {
         binding.drawPalette.setColors(Palette.BRUSH_COLORS);
         binding.drawPalette.setSelected(Palette.ORANGE);
         binding.drawCanvas.setBrushColor(Palette.ORANGE);
-        binding.drawPalette.setOnColorPicked(color -> binding.drawCanvas.setBrushColor(color));
+        binding.drawPalette.setOnColorPicked(color -> {
+            binding.drawCanvas.setBrushColor(color);
+            if (binding.drawCanvas.tool().erases()) {
+                selectTool(PaintCanvasView.Tool.PENCIL_THICK);
+            }
+        });
 
-        binding.drawThin.setOnClickListener(v -> {
-            tap();
-            binding.drawCanvas.setBrushWidthDp(BRUSH_THIN);
-        });
-        binding.drawThick.setOnClickListener(v -> {
-            tap();
-            binding.drawCanvas.setBrushWidthDp(BRUSH_THICK);
-        });
+        wireTools();
         binding.drawCanvas.setOnStrokeListener(() -> sounds.play(AudioManifest.SFX_BRUSH));
         binding.drawSave.setOnClickListener(v -> save());
+    }
+
+    private void wireTools() {
+        binding.drawToolPencilThin.setOnClickListener(
+                v -> selectTool(PaintCanvasView.Tool.PENCIL_THIN));
+        binding.drawToolPencilThick.setOnClickListener(
+                v -> selectTool(PaintCanvasView.Tool.PENCIL_THICK));
+        binding.drawToolMarker.setOnClickListener(
+                v -> selectTool(PaintCanvasView.Tool.MARKER));
+        binding.drawToolCrayon.setOnClickListener(
+                v -> selectTool(PaintCanvasView.Tool.CRAYON));
+        binding.drawToolEraser.setOnClickListener(
+                v -> selectTool(PaintCanvasView.Tool.ERASER));
+        selectTool(PaintCanvasView.Tool.PENCIL_THICK);
+    }
+
+    private void selectTool(PaintCanvasView.Tool tool) {
+        tap();
+        binding.drawCanvas.setTool(tool);
+        binding.drawToolPencilThin.setSelected(tool == PaintCanvasView.Tool.PENCIL_THIN);
+        binding.drawToolPencilThick.setSelected(tool == PaintCanvasView.Tool.PENCIL_THICK);
+        binding.drawToolMarker.setSelected(tool == PaintCanvasView.Tool.MARKER);
+        binding.drawToolCrayon.setSelected(tool == PaintCanvasView.Tool.CRAYON);
+        binding.drawToolEraser.setSelected(tool == PaintCanvasView.Tool.ERASER);
+        // Picking a colour should bring the child back out of the eraser.
+        binding.drawPalette.setAlpha(tool.erases() ? 0.5f : 1f);
     }
 
     private void save() {

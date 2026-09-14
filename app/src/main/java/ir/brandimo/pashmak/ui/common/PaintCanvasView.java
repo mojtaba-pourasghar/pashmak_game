@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -29,6 +30,34 @@ public class PaintCanvasView extends View {
         void onStrokeFinished();
     }
 
+    /** The drawing tools, each with its own feel rather than just a width. */
+    public enum Tool {
+        /** Fine line for careful work. */
+        PENCIL_THIN(6f, 255, Paint.Cap.ROUND),
+        /** Everyday thick pencil. */
+        PENCIL_THICK(16f, 255, Paint.Cap.ROUND),
+        /** Broad and slightly see-through, so overlaps build up colour. */
+        MARKER(34f, 150, Paint.Cap.SQUARE),
+        /** Waxy: drawn as offset passes so the edge breaks up like real crayon. */
+        CRAYON(22f, 90, Paint.Cap.ROUND),
+        /** Clears back to the paper. */
+        ERASER(44f, 255, Paint.Cap.ROUND);
+
+        public final float widthDp;
+        public final int alpha;
+        public final Paint.Cap cap;
+
+        Tool(float widthDp, int alpha, Paint.Cap cap) {
+            this.widthDp = widthDp;
+            this.alpha = alpha;
+            this.cap = cap;
+        }
+
+        public boolean erases() {
+            return this == ERASER;
+        }
+    }
+
     private static final float SMOOTHING = 0.5f;
 
     private final Paint brush = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -42,6 +71,9 @@ public class PaintCanvasView extends View {
     private Bitmap layer;
     @Nullable
     private Canvas layerCanvas;
+    private Tool tool = Tool.PENCIL_THICK;
+    private int brushColor = Color.parseColor("#F26522");
+
     @Nullable
     private String ghostGlyph;
     @Nullable
@@ -60,8 +92,7 @@ public class PaintCanvasView extends View {
         brush.setStyle(Paint.Style.STROKE);
         brush.setStrokeJoin(Paint.Join.ROUND);
         brush.setStrokeCap(Paint.Cap.ROUND);
-        brush.setColor(Color.parseColor("#F26522"));
-        brush.setStrokeWidth(14f * getResources().getDisplayMetrics().density);
+        applyTool();
 
         ghostPaint.setStyle(Paint.Style.FILL);
         ghostPaint.setColor(0xFFE8F4E2);
@@ -73,11 +104,37 @@ public class PaintCanvasView extends View {
     }
 
     public void setBrushColor(int color) {
-        brush.setColor(color);
+        brushColor = color;
+        applyTool();
     }
 
     public void setBrushWidthDp(float dp) {
         brush.setStrokeWidth(dp * getResources().getDisplayMetrics().density);
+    }
+
+    public void setTool(Tool next) {
+        tool = next == null ? Tool.PENCIL_THICK : next;
+        applyTool();
+    }
+
+    public Tool tool() {
+        return tool;
+    }
+
+    private void applyTool() {
+        float density = getResources().getDisplayMetrics().density;
+        brush.setStrokeWidth(tool.widthDp * density);
+        brush.setStrokeCap(tool.cap);
+        brush.setStrokeJoin(tool.cap == Paint.Cap.SQUARE ? Paint.Join.MITER : Paint.Join.ROUND);
+        if (tool.erases()) {
+            brush.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            brush.setColor(Color.TRANSPARENT);
+            brush.setAlpha(255);
+        } else {
+            brush.setXfermode(null);
+            brush.setColor(brushColor);
+            brush.setAlpha(tool.alpha);
+        }
     }
 
     public void setOnStrokeListener(@Nullable OnStrokeListener listener) {
@@ -186,7 +243,29 @@ public class PaintCanvasView extends View {
         if (layer != null) {
             canvas.drawBitmap(layer, 0f, 0f, bitmapPaint);
         }
-        canvas.drawPath(stroke, brush);
+        if (!tool.erases()) {
+            canvas.drawPath(stroke, brush);
+        }
+    }
+
+    /** Crayon lays three slightly offset passes, which reads as waxy texture. */
+    private void commitStroke() {
+        if (layerCanvas == null) {
+            return;
+        }
+        if (tool == Tool.CRAYON) {
+            float density = getResources().getDisplayMetrics().density;
+            float[][] offsets = {{0f, 0f}, {1.6f * density, -1.1f * density},
+                    {-1.3f * density, 1.4f * density}};
+            for (float[] offset : offsets) {
+                layerCanvas.save();
+                layerCanvas.translate(offset[0], offset[1]);
+                layerCanvas.drawPath(stroke, brush);
+                layerCanvas.restore();
+            }
+        } else {
+            layerCanvas.drawPath(stroke, brush);
+        }
     }
 
     private void drawGhost(Canvas canvas) {
@@ -223,6 +302,18 @@ public class PaintCanvasView extends View {
                 invalidate();
                 return true;
             case MotionEvent.ACTION_MOVE:
+                if (tool.erases()) {
+                    // Erase as the finger moves, so the child sees it happening.
+                    stroke.lineTo(x, y);
+                    commitStroke();
+                    stroke.reset();
+                    stroke.moveTo(x, y);
+                    lastX = x;
+                    lastY = y;
+                    dirty = true;
+                    invalidate();
+                    return true;
+                }
                 // Quadratic smoothing keeps fast finger drags from looking angular.
                 float midX = lastX + (x - lastX) * SMOOTHING;
                 float midY = lastY + (y - lastY) * SMOOTHING;
@@ -234,9 +325,7 @@ public class PaintCanvasView extends View {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 stroke.lineTo(x, y);
-                if (layerCanvas != null) {
-                    layerCanvas.drawPath(stroke, brush);
-                }
+                commitStroke();
                 stroke.reset();
                 dirty = true;
                 performClick();

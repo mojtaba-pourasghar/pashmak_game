@@ -30,4 +30,5 @@
     <dimen name="swatch_size">54dp</dimen>
     <dimen name="keypad_key">74dp</dimen>
     <dimen name="keypad_width">92dp</dimen>
+    <dimen name="dock_clearance">148dp</dimen>
 </resources>

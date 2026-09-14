@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import ir.brandimo.pashmak.audio.AudioManifest;
+import ir.brandimo.pashmak.audio.MusicEngine;
 import ir.brandimo.pashmak.audio.SoundBank;
 import ir.brandimo.pashmak.audio.VoicePlayer;
 import ir.brandimo.pashmak.data.prefs.GamePrefs;
@@ -39,8 +40,11 @@ public final class MascotController {
     private final MascotDialogues dialogues;
     private final VoicePlayer voice;
     private final SoundBank sounds;
+    private final MusicEngine music;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final MutableLiveData<MascotUiState> state = new MutableLiveData<>();
+    /** True while words are actually appearing, which is what drives the lips. */
+    private final MutableLiveData<Boolean> speaking = new MutableLiveData<>(false);
 
     private Runnable typer;
     private Runnable dismiss;
@@ -53,6 +57,7 @@ public final class MascotController {
         dialogues = new MascotDialogues(appContext);
         voice = VoicePlayer.get(appContext);
         sounds = SoundBank.get(appContext);
+        music = MusicEngine.get(appContext);
         state.setValue(MascotUiState.idle(prefs.isMuted()));
     }
 
@@ -73,6 +78,11 @@ public final class MascotController {
         return state;
     }
 
+    /** Observed by every MascotView so its mouth moves in step with the text. */
+    public LiveData<Boolean> speaking() {
+        return speaking;
+    }
+
     public MascotDialogues dialogues() {
         return dialogues;
     }
@@ -90,10 +100,13 @@ public final class MascotController {
         typedChars = 0;
         state.setValue(new MascotUiState(pose, body, "", !body.isEmpty(), prefs.isMuted()));
         if (!body.isEmpty()) {
+            setSpeaking(true);
             startTypewriter();
         }
-        if (audio != null) {
-            voice.speak(audio, this::idle);
+        if (audio != null && voice.speak(audio, this::idle)) {
+            // A real clip is playing, so keep the mouth going until it finishes
+            // rather than stopping when the text has finished appearing.
+            setSpeaking(true);
         }
         long hold = Math.max(HOLD_MIN_MS, holdMs <= 0 ? HOLD_DEFAULT_MS : holdMs);
         dismiss = this::idle;
@@ -139,7 +152,17 @@ public final class MascotController {
 
     public void idle() {
         cancelPending();
+        setSpeaking(false);
         state.setValue(MascotUiState.idle(prefs.isMuted()));
+    }
+
+    /** One place to flip the flag, so music ducking can never drift out of step. */
+    private void setSpeaking(boolean value) {
+        if (Boolean.valueOf(value).equals(speaking.getValue())) {
+            return;
+        }
+        speaking.setValue(value);
+        music.setDucked(value);
     }
 
     public void dock() {
@@ -178,7 +201,7 @@ public final class MascotController {
         prefs.setMuted(muted);
         if (muted) {
             voice.stopVoice();
-            voice.stopMusic();
+            music.stop();
         }
         MascotUiState current = state.getValue();
         state.setValue(current == null
@@ -199,6 +222,8 @@ public final class MascotController {
                 state.setValue(current.withTyped(pendingText.substring(0, end)));
                 if (end < pendingText.length()) {
                     handler.postDelayed(this, TYPEWRITER_MS);
+                } else if (!voice.isSpeaking()) {
+                    setSpeaking(false);
                 }
             }
         };
@@ -206,6 +231,7 @@ public final class MascotController {
     }
 
     private void cancelPending() {
+        voice.stopVoice();
         if (typer != null) {
             handler.removeCallbacks(typer);
             typer = null;

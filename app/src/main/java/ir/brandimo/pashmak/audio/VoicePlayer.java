@@ -9,8 +9,8 @@ import androidx.annotation.Nullable;
 import ir.brandimo.pashmak.data.prefs.GamePrefs;
 
 /**
- * Mascot voice lines and background music. Mirrors the prototype's behavior of
- * failing silently when a clip has not been recorded yet.
+ * Mascot voice lines. Mirrors the prototype's behavior of failing silently when a
+ * clip has not been recorded yet; background music lives in MusicEngine.
  */
 public final class VoicePlayer {
 
@@ -20,8 +20,6 @@ public final class VoicePlayer {
     private final GamePrefs prefs;
 
     private MediaPlayer voice;
-    private MediaPlayer music;
-    private String musicName;
 
     private VoicePlayer(Context context) {
         appContext = context.getApplicationContext();
@@ -74,6 +72,15 @@ public final class VoicePlayer {
         }
     }
 
+    /** Whether a mascot clip is currently sounding. */
+    public boolean isSpeaking() {
+        try {
+            return voice != null && voice.isPlaying();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public void stopVoice() {
         if (voice != null) {
             try {
@@ -93,46 +100,6 @@ public final class VoicePlayer {
             } catch (Exception ignored) {
             }
             voice = null;
-        }
-    }
-
-    public void startMusic(String name) {
-        if (name == null || prefs.isMuted() || !prefs.musicEnabled()) {
-            return;
-        }
-        if (music != null && name.equals(musicName)) {
-            return;
-        }
-        stopMusic();
-        int resId = resolve(name);
-        if (resId == 0) {
-            return;
-        }
-        try {
-            music = MediaPlayer.create(appContext, resId);
-            if (music == null) {
-                return;
-            }
-            music.setLooping(true);
-            music.setVolume(0.35f, 0.35f);
-            music.start();
-            musicName = name;
-        } catch (Exception e) {
-            stopMusic();
-        }
-    }
-
-    public void stopMusic() {
-        if (music != null) {
-            try {
-                if (music.isPlaying()) {
-                    music.stop();
-                }
-                music.release();
-            } catch (Exception ignored) {
-            }
-            music = null;
-            musicName = null;
         }
     }
 

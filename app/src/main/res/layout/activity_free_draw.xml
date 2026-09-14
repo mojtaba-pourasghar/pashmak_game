@@ -47,33 +47,98 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <LinearLayout
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/Text.Sub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
+            android:layout_marginTop="10dp"
+            android:text="@string/freedraw_tools"
+            android:textColor="@color/cyan" />
+
+        <GridLayout
+            android:id="@+id/draw_tools_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:columnCount="2">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/draw_thin"
+                android:id="@+id/draw_tool_pencil_thin"
                 style="@style/Button.Chunky"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn_cyan"
-                android:text="@string/brush_thin"
-                android:textSize="15sp" />
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="3dp"
+                android:background="@drawable/bg_tool"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/tool_pencil_thin"
+                android:textColor="@color/ink_primary"
+                android:textSize="14sp" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/draw_thick"
+                android:id="@+id/draw_tool_pencil_thick"
                 style="@style/Button.Chunky"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_cyan"
-                android:text="@string/brush_thick"
-                android:textSize="15sp" />
-        </LinearLayout>
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="3dp"
+                android:background="@drawable/bg_tool"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/tool_pencil_thick"
+                android:textColor="@color/ink_primary"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/draw_tool_marker"
+                style="@style/Button.Chunky"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="3dp"
+                android:background="@drawable/bg_tool"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/tool_marker"
+                android:textColor="@color/ink_primary"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/draw_tool_crayon"
+                style="@style/Button.Chunky"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="3dp"
+                android:background="@drawable/bg_tool"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/tool_crayon"
+                android:textColor="@color/ink_primary"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/draw_tool_eraser"
+                style="@style/Button.Chunky"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_gravity="fill_horizontal"
+                android:layout_margin="3dp"
+                android:layout_columnSpan="2"
+                android:background="@drawable/bg_tool"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/tool_eraser"
+                android:textColor="@color/ink_primary"
+                android:textSize="14sp" />
+
+        </GridLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/draw_save"
@@ -86,11 +151,4 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <include
-        android:id="@+id/draw_dock"
-        layout="@layout/view_mascot_dock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -84,6 +84,13 @@
                 android:gravity="center"
                 android:orientation="vertical" />
 
+            <include
+                android:id="@+id/brief_dock"
+                layout="@layout/view_mascot_dock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp" />
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/brief_go_camera"
                 style="@style/Button.Chunky"
@@ -360,14 +367,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/alive_headline">
 
-            <GridLayout
-                android:id="@+id/alive_items"
+            <ir.brandimo.pashmak.ui.livedrawing.MissionSceneView
+                android:id="@+id/alive_scene_view"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:alignmentMode="alignMargins"
-                android:columnCount="2"
-                android:useDefaultMargins="true" />
+                android:background="@drawable/bg_frame_scene" />
 
             <ir.brandimo.pashmak.mascot.MascotView
                 android:id="@+id/alive_mascot"

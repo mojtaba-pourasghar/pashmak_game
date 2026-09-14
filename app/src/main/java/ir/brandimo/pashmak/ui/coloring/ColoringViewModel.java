@@ -7,18 +7,26 @@ import androidx.lifecycle.ViewModel;
 import java.util.HashMap;
 import java.util.Map;
 
+import ir.brandimo.pashmak.data.catalog.ColorPack;
 import ir.brandimo.pashmak.data.catalog.ColorRegion;
 import ir.brandimo.pashmak.data.catalog.ColoringCatalog;
 import ir.brandimo.pashmak.data.catalog.ColoringPage;
 import ir.brandimo.pashmak.data.catalog.Palette;
 
+/** Tracks which page is open and what has been coloured on it. */
 public class ColoringViewModel extends ViewModel {
 
-    private final Map<Integer, Map<String, Integer>> fillsByPage = new HashMap<>();
+    private final Map<String, Map<String, Integer>> fillsByPage = new HashMap<>();
+    private final MutableLiveData<Integer> packIndex = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> pageIndex = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> selectedColor = new MutableLiveData<>(Palette.RED);
-    private final MutableLiveData<Map<String, Integer>> fills = new MutableLiveData<>(new HashMap<>());
+    private final MutableLiveData<Map<String, Integer>> fills =
+            new MutableLiveData<>(new HashMap<>());
     private final MutableLiveData<Boolean> pageComplete = new MutableLiveData<>(false);
+
+    public LiveData<Integer> packIndex() {
+        return packIndex;
+    }
 
     public LiveData<Integer> pageIndex() {
         return pageIndex;
@@ -36,51 +44,67 @@ public class ColoringViewModel extends ViewModel {
         return pageComplete;
     }
 
+    public int packPosition() {
+        Integer value = packIndex.getValue();
+        return value == null ? 0 : value;
+    }
+
+    public int pagePosition() {
+        Integer value = pageIndex.getValue();
+        return value == null ? 0 : value;
+    }
+
+    public ColorPack pack() {
+        return ColoringCatalog.pack(packPosition());
+    }
+
     public ColoringPage page() {
-        Integer index = pageIndex.getValue();
-        return ColoringCatalog.get(index == null ? 0 : index);
+        return pack().page(pagePosition());
+    }
+
+    /** Stable key for the open page, also used for saved progress. */
+    public String pageKey() {
+        return pack().id + "/" + pagePosition();
+    }
+
+    public void selectPack(int index) {
+        packIndex.setValue(index);
+        selectPage(0);
     }
 
     public void selectPage(int index) {
         pageIndex.setValue(index);
-        fills.setValue(fillsFor(index));
-        pageComplete.setValue(isComplete(index));
+        fills.setValue(new HashMap<>(fillsFor(pageKey())));
+        pageComplete.setValue(isComplete());
     }
 
     public void selectColor(int color) {
         selectedColor.setValue(color);
     }
 
-    /** Returns true when the tapped region got its correct color. */
+    /** Returns true when the tapped region got its correct colour. */
     public boolean paint(ColorRegion region) {
-        Integer index = pageIndex.getValue();
-        int page = index == null ? 0 : index;
         Integer color = selectedColor.getValue();
         int chosen = color == null ? Palette.RED : color;
-
-        Map<String, Integer> current = fillsFor(page);
+        Map<String, Integer> current = fillsFor(pageKey());
         current.put(region.id, chosen);
         fills.setValue(new HashMap<>(current));
-        pageComplete.setValue(isComplete(page));
+        pageComplete.setValue(isComplete());
         return region.targetColor == chosen;
     }
 
     public void clearPage() {
-        Integer index = pageIndex.getValue();
-        int page = index == null ? 0 : index;
-        fillsByPage.put(page, new HashMap<>());
+        fillsByPage.put(pageKey(), new HashMap<>());
         fills.setValue(new HashMap<>());
         pageComplete.setValue(false);
     }
 
     public int correctCount() {
-        Integer index = pageIndex.getValue();
-        int page = index == null ? 0 : index;
-        Map<String, Integer> current = fillsFor(page);
-        ColoringPage coloringPage = ColoringCatalog.get(page);
+        Map<String, Integer> current = fillsFor(pageKey());
+        ColoringPage page = page();
         int correct = 0;
-        for (int i = 0; i < coloringPage.regions.size(); i++) {
-            ColorRegion region = coloringPage.regions.get(i);
+        for (int i = 0; i < page.regions.size(); i++) {
+            ColorRegion region = page.regions.get(i);
             Integer filled = current.get(region.id);
             if (filled != null && filled == region.targetColor) {
                 correct++;
@@ -89,24 +113,15 @@ public class ColoringViewModel extends ViewModel {
         return correct;
     }
 
-    private boolean isComplete(int page) {
-        ColoringPage coloringPage = ColoringCatalog.get(page);
-        Map<String, Integer> current = fillsFor(page);
-        for (int i = 0; i < coloringPage.regions.size(); i++) {
-            ColorRegion region = coloringPage.regions.get(i);
-            Integer filled = current.get(region.id);
-            if (filled == null || filled != region.targetColor) {
-                return false;
-            }
-        }
-        return true;
+    private boolean isComplete() {
+        return correctCount() == page().size();
     }
 
-    private Map<String, Integer> fillsFor(int page) {
-        Map<String, Integer> map = fillsByPage.get(page);
+    private Map<String, Integer> fillsFor(String key) {
+        Map<String, Integer> map = fillsByPage.get(key);
         if (map == null) {
             map = new HashMap<>();
-            fillsByPage.put(page, map);
+            fillsByPage.put(key, map);
         }
         return map;
     }

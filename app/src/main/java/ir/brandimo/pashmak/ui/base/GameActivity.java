@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import ir.brandimo.pashmak.audio.AudioManifest;
-import ir.brandimo.pashmak.audio.VoicePlayer;
 
 /** A mini-game screen: companion docked, play music running, mascot reacting. */
 public abstract class GameActivity extends BaseActivity {
@@ -16,15 +15,8 @@ public abstract class GameActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        VoicePlayer.get(this).startMusic(AudioManifest.BGM_PLAY);
-    }
-
-    @Override
-    protected void onPause() {
-        VoicePlayer.get(this).stopMusic();
-        super.onPause();
+    protected String musicTrack() {
+        return AudioManifest.BGM_PLAY;
     }
 
     /** Correct answer: celebrate and hand out a star. */

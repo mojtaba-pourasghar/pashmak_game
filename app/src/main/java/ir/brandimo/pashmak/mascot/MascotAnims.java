@@ -212,6 +212,16 @@ public final class MascotAnims {
     private MascotAnims() {
     }
 
+    /** The mouth track used whenever the character is actually speaking. */
+    static Track talkMouth() {
+        return trackFor(MascotState.TALK, Part.MOUTH);
+    }
+
+    /** Gentle stand-in for the big poses when the user has asked for less motion. */
+    static Track calmRoot() {
+        return trackFor(MascotState.IDLE, Part.ROOT);
+    }
+
     static Track trackFor(MascotState state, Part part) {
         Map<Part, Track> tracks = STATES.get(state);
         if (tracks == null) {

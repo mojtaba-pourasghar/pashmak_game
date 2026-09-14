@@ -110,6 +110,36 @@ public final class GamePrefs {
         prefs.edit().putBoolean(KEY_SOUND, value).apply();
     }
 
+    /** Highest memory level the child has finished in a deck, -1 for none. */
+    public int memoryProgress(String deckId) {
+        return prefs.getInt("memory_level_" + deckId, -1);
+    }
+
+    public void setMemoryProgress(String deckId, int level) {
+        if (level > memoryProgress(deckId)) {
+            prefs.edit().putInt("memory_level_" + deckId, level).apply();
+        }
+    }
+
+    /** Coloring pages already completed, keyed "packId/pageId". */
+    public boolean isColoringDone(String key) {
+        return prefs.getBoolean("coloring_done_" + key, false);
+    }
+
+    public void setColoringDone(String key) {
+        prefs.edit().putBoolean("coloring_done_" + key, true).apply();
+    }
+
+    public int coloringDoneInPack(String packId, int pageCount) {
+        int done = 0;
+        for (int i = 0; i < pageCount; i++) {
+            if (isColoringDone(packId + "/" + i)) {
+                done++;
+            }
+        }
+        return done;
+    }
+
     public boolean musicEnabled() {
         return prefs.getBoolean(KEY_MUSIC, false);
     }

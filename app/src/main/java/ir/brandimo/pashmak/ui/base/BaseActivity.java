@@ -1,5 +1,6 @@
 package ir.brandimo.pashmak.ui.base;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,12 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
+import ir.brandimo.pashmak.audio.MusicEngine;
 import ir.brandimo.pashmak.audio.SoundBank;
 import ir.brandimo.pashmak.data.prefs.GamePrefs;
 import ir.brandimo.pashmak.mascot.MascotController;
 import ir.brandimo.pashmak.mascot.MascotView;
 import ir.brandimo.pashmak.mascot.SpeechBubbleView;
 import ir.brandimo.pashmak.util.FaNum;
+import ir.brandimo.pashmak.util.LocaleUtil;
 
 /**
  * Shared plumbing for every screen: the docked companion, the star counter and
@@ -28,23 +31,55 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected GamePrefs prefs;
     protected SoundBank sounds;
 
+    private boolean observingSpeech;
+
     @Nullable
     private MascotView dockMascot;
     @Nullable
     private SpeechBubbleView dockBubble;
 
+    /** The app is Persian-only; it must not inherit the device's language. */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleUtil.persian(newBase));
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         mascot = MascotController.get(this);
         prefs = GamePrefs.get(this);
         sounds = SoundBank.get(this);
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        // Registered here, not in onCreate: LiveData delivers immediately, and the
+        // subclass's view binding does not exist yet during super.onCreate().
+        if (!observingSpeech) {
+            observingSpeech = true;
+            mascot.speaking().observe(this, speaking -> {
+                boolean value = Boolean.TRUE.equals(speaking);
+                if (dockMascot != null) {
+                    dockMascot.setSpeaking(value);
+                }
+                onSpeakingChanged(value);
+            });
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         goImmersive();
+        MusicEngine.get(this).play(musicTrack());
+    }
+
+    /** Which loop this screen wants; play games music over the menu theme. */
+    protected String musicTrack() {
+        return AudioManifest.BGM_MENU;
     }
 
     @Override
@@ -100,6 +135,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         prefs.starsLive().observe(this, stars ->
                 view.setText(FaNum.of(stars == null ? 0 : stars)));
+    }
+
+    /** Screens with their own large mascot override this to sync its mouth too. */
+    protected void onSpeakingChanged(boolean speaking) {
     }
 
     protected void tap() {

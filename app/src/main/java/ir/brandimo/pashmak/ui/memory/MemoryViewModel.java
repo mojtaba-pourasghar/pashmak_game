@@ -8,12 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/** Six pairs by default; difficulty widens or narrows the board. */
+import ir.brandimo.pashmak.data.catalog.MemoryCatalog;
+import ir.brandimo.pashmak.data.catalog.MemoryDeck;
+
+/** One deck, one level, one board. */
 public class MemoryViewModel extends ViewModel {
 
     public static final int STATE_FACE_DOWN = 0;
     public static final int STATE_FACE_UP = 1;
     public static final int STATE_MATCHED = 2;
+
+    public enum Outcome {
+        IGNORED, FLIPPED, MATCH, MISS
+    }
 
     private final MutableLiveData<List<Integer>> cards = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<int[]> states = new MutableLiveData<>(new int[0]);
@@ -22,7 +29,10 @@ public class MemoryViewModel extends ViewModel {
 
     private final List<Integer> faceUp = new ArrayList<>();
     private final Random random = new Random();
-    private int pairCount = 6;
+
+    private int deckIndex;
+    private int level;
+    private int pairCount;
     private boolean locked;
 
     public LiveData<List<Integer>> cards() {
@@ -41,46 +51,56 @@ public class MemoryViewModel extends ViewModel {
         return finished;
     }
 
+    public int deckIndex() {
+        return deckIndex;
+    }
+
+    public int level() {
+        return level;
+    }
+
     public int pairCount() {
         return pairCount;
     }
 
-    public void reset(int pairs) {
-        pairCount = Math.max(2, pairs);
-        List<Integer> deck = new ArrayList<>(pairCount * 2);
+    public MemoryDeck deck() {
+        return MemoryCatalog.deck(deckIndex);
+    }
+
+    /** Deals a fresh board for the chosen deck and level. */
+    public void deal(int deckIndex, int level) {
+        this.deckIndex = deckIndex;
+        this.level = level;
+        MemoryDeck deck = MemoryCatalog.deck(deckIndex);
+        pairCount = Math.min(MemoryCatalog.pairsForLevel(level), deck.size());
+
+        List<Integer> board = new ArrayList<>(pairCount * 2);
         for (int i = 0; i < pairCount; i++) {
-            deck.add(i);
-            deck.add(i);
+            board.add(i);
+            board.add(i);
         }
-        // Fisher-Yates, same as the prototype.
-        for (int i = deck.size() - 1; i > 0; i--) {
+        for (int i = board.size() - 1; i > 0; i--) {
             int j = random.nextInt(i + 1);
-            int tmp = deck.get(i);
-            deck.set(i, deck.get(j));
-            deck.set(j, tmp);
+            int tmp = board.get(i);
+            board.set(i, board.get(j));
+            board.set(j, tmp);
         }
+
         faceUp.clear();
         locked = false;
-        cards.setValue(deck);
-        states.setValue(new int[deck.size()]);
+        cards.setValue(board);
+        states.setValue(new int[board.size()]);
         matchedPairs.setValue(0);
         finished.setValue(false);
     }
 
-    public boolean canFlip(int position) {
-        int[] current = states.getValue();
-        return !locked && current != null && position < current.length
-                && current[position] == STATE_FACE_DOWN && faceUp.size() < 2;
-    }
-
-    /** Flips a card and reports whether that completed a pair, or missed. */
     public Outcome flip(int position) {
-        if (!canFlip(position)) {
-            return Outcome.IGNORED;
-        }
         int[] current = states.getValue();
-        List<Integer> deck = cards.getValue();
-        if (current == null || deck == null) {
+        List<Integer> board = cards.getValue();
+        if (locked || current == null || board == null
+                || position >= current.length
+                || current[position] != STATE_FACE_DOWN
+                || faceUp.size() >= 2) {
             return Outcome.IGNORED;
         }
         int[] next = current.clone();
@@ -92,27 +112,22 @@ public class MemoryViewModel extends ViewModel {
             return Outcome.FLIPPED;
         }
         locked = true;
-        int first = faceUp.get(0);
-        int second = faceUp.get(1);
-        return deck.get(first).equals(deck.get(second)) ? Outcome.MATCH : Outcome.MISS;
+        return board.get(faceUp.get(0)).equals(board.get(faceUp.get(1)))
+                ? Outcome.MATCH : Outcome.MISS;
     }
 
-    /** Called after the reveal pause, to settle the two face-up cards. */
+    /** Settles the two face-up cards once the child has had time to see them. */
     public void settle(boolean matched) {
         int[] current = states.getValue();
-        if (current == null) {
-            locked = false;
-            faceUp.clear();
-            return;
-        }
-        int[] next = current.clone();
-        for (int i = 0; i < faceUp.size(); i++) {
-            int position = faceUp.get(i);
-            next[position] = matched ? STATE_MATCHED : STATE_FACE_DOWN;
+        if (current != null) {
+            int[] next = current.clone();
+            for (int i = 0; i < faceUp.size(); i++) {
+                next[faceUp.get(i)] = matched ? STATE_MATCHED : STATE_FACE_DOWN;
+            }
+            states.setValue(next);
         }
         faceUp.clear();
         locked = false;
-        states.setValue(next);
 
         if (matched) {
             int pairs = (matchedPairs.getValue() == null ? 0 : matchedPairs.getValue()) + 1;
@@ -123,7 +138,7 @@ public class MemoryViewModel extends ViewModel {
         }
     }
 
-    public enum Outcome {
-        IGNORED, FLIPPED, MATCH, MISS
+    public boolean hasNextLevel() {
+        return level + 1 < MemoryCatalog.levelCount();
     }
 }

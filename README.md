@@ -35,8 +35,12 @@ Key dependencies: AppCompat, Material, ConstraintLayout, RecyclerView, Lifecycle
 ## What's in it
 
 **نقاشی زنده — Live Drawing.** 20 themed missions, 4 hand-drawn items each. The flow is
-brief → camera → extraction → the drawing joining Pashmak → repeat. Finishing a
-collection fires confetti, awards stars and saves the composed scene to the gallery.
+brief → camera → extraction → the drawing arriving in the mission's own world → repeat.
+Every mission has its own scene — a bedroom, the seabed, deep space — and each item has
+a place reserved in it, so a scanned bed lands on the floor and a scanned window on the
+wall. The cut-out flies in along an arc, settles with a bounce, then breathes gently
+while Pashmak cheers it by name. Finishing a collection fires confetti, awards stars and
+saves the composed scene to the gallery.
 Progress auto-saves after every scan; a child can leave mid-mission and come back, or
 tap a filled slot to re-scan just that item.
 
@@ -68,7 +72,9 @@ anti-aliased strokes. Roughly a quarter-second on a mid-range tablet.
 **The mascot** (`mascot/`) is a custom Canvas `View`, not Lottie — there were no
 animation files in the design. It draws directly in the prototype's 200×224 SVG
 viewBox and scales with a single matrix, so one set of shapes serves every size from
-the splash hero down to the docked companion. `MascotAnims` transcribes the original CSS `@keyframes` stop for stop, and
+the splash hero down to the docked companion. His mouth is driven by the speech bubble's
+typewriter rather than by the pose, so the lips move for exactly as long as words are
+appearing. `MascotAnims` transcribes the original CSS `@keyframes` stop for stop, and
 every body part samples one shared clock, which is what lets them each run at their own
 period the way independent CSS animations do. Seven states: idle, wave, talk, cheer,
 encourage, tickle, enter. The system "remove animations" setting is honoured.
@@ -81,10 +87,16 @@ Stars, mute, difficulty and the welcome flag are SharedPreferences.
 
 ---
 
-## Adding audio
+## Audio
 
-**No audio ships with this repo** and none is required — the app runs silently and
-every sound is a no-op until the file exists. Sounds are resolved by name through
+**Music plays out of the box.** With no files present, `audio/MusicEngine` synthesises a
+soft wordless loop with `AudioTrack` — a pentatonic phrase over a slow drone, rendered
+once and looped. Drop a real `bgm_menu`/`bgm_play` into `res/raw` and it is used instead,
+with no code change. Either way the music ducks to a whisper whenever Pashmak speaks and
+comes back up afterwards.
+
+Voice lines and sound effects are a different matter: **no recordings ship with this
+repo** and none is required — every effect is a no-op until the file exists. Sounds are resolved by name through
 `Resources#getIdentifier`, so nothing has to be referenced at compile time.
 
 Drop recordings into `app/src/main/res/raw/` using the exact file names listed in
@@ -95,6 +107,13 @@ File names must be lowercase with underscores or aapt will reject them.
 ---
 
 ## Layout notes
+
+The app forces the `fa-IR` locale in `attachBaseContext`, so it lays out right-to-left on
+any device rather than inheriting the phone's language — without that, an English-locale
+device mirrors the whole design the wrong way.
+
+Pashmak is placed in the control column on screens that have one, and pinned to the free
+corner elsewhere, so he can never end up sitting on a button.
 
 The prototype was a 392×820 portrait phone mock; this app is landscape-locked. The
 recurring portrait pattern — header, flexible body, pinned footer — becomes a three-band

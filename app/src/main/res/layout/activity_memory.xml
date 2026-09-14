@@ -21,36 +21,79 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/memory_counter"
-        style="@style/Text.Body.Bold"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:gravity="center"
-        android:textColor="@color/ink_memory_counter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/memory_header"
-        tools:text="جفت‌های پیدا شده: ۰ از ۶" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/memory_board"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/memory_side"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/memory_counter"
-        tools:itemCount="12"
+        app:layout_constraintTop_toBottomOf="@id/memory_header"
+        tools:itemCount="8"
         tools:listitem="@layout/item_memory_card" />
 
-    <include
-        android:id="@+id/memory_dock"
-        layout="@layout/view_mascot_dock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/memory_side"
+        android:layout_width="@dimen/end_column_width"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/gap"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memory_header">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/memory_counter"
+            style="@style/Text.Body.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/ink_memory_counter"
+            tools:text="جفت‌های پیدا شده: ۰ از ۳" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/Text.Sub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/memory_decks"
+            android:textColor="@color/red" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/memory_decks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="6"
+            tools:listitem="@layout/item_chip" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/Text.Sub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/memory_levels"
+            android:textColor="@color/red" />
+
+        <LinearLayout
+            android:id="@+id/memory_levels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <include
+            android:id="@+id/memory_dock"
+            layout="@layout/view_mascot_dock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

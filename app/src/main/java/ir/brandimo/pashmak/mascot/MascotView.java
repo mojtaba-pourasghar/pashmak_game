@@ -64,6 +64,7 @@ public class MascotView extends View {
     private long stateStartMs;
     private boolean animating;
     private boolean reducedMotion;
+    private boolean speaking;
 
     public MascotView(Context context) {
         this(context, null);
@@ -116,6 +117,18 @@ public class MascotView extends View {
     @NonNull
     public MascotState getState() {
         return state;
+    }
+
+    /**
+     * Drives the mouth directly from the speech bubble's typewriter, so the lips
+     * move for exactly as long as words are appearing — whatever pose is held.
+     */
+    public void setSpeaking(boolean value) {
+        if (speaking == value) {
+            return;
+        }
+        speaking = value;
+        invalidate();
     }
 
     @Override
@@ -173,7 +186,7 @@ public class MascotView extends View {
     }
 
     private void startClock() {
-        if (!animating && isShown() && !reducedMotion) {
+        if (!animating && isShown()) {
             animating = true;
             postInvalidateOnAnimation();
         }
@@ -181,10 +194,7 @@ public class MascotView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        long elapsed = reducedMotion
-                ? 0L
-                : AnimationUtils.currentAnimationTimeMillis() - stateStartMs;
-        sample(elapsed);
+        sample(AnimationUtils.currentAnimationTimeMillis() - stateStartMs);
 
         float scale = Math.min(getWidth() / VB_WIDTH, getHeight() / VB_HEIGHT) * FIT_INSET;
         float dx = (getWidth() - VB_WIDTH * scale) / 2f;
@@ -203,7 +213,7 @@ public class MascotView extends View {
         drawArmLeft(canvas);
         drawArmRight(canvas);
         drawHead(canvas);
-        if (MascotAnims.showsSparkles(state)) {
+        if (MascotAnims.showsSparkles(state) && !reducedMotion) {
             drawSparkles(canvas);
         }
         canvas.restoreToCount(rootSave);
@@ -215,14 +225,26 @@ public class MascotView extends View {
     }
 
     private void sample(long elapsed) {
-        MascotAnims.trackFor(state, Part.ROOT).eval(elapsed, root);
+        // Reduced motion tones down the sweeping poses but never stops the
+        // breathing, blinking and mouth that make the character feel present.
+        boolean bigPose = state == MascotState.CHEER || state == MascotState.TICKLE
+                || state == MascotState.ENTER;
+        if (reducedMotion && bigPose) {
+            MascotAnims.calmRoot().eval(elapsed, root);
+        } else {
+            MascotAnims.trackFor(state, Part.ROOT).eval(elapsed, root);
+        }
         MascotAnims.trackFor(state, Part.HEAD).eval(elapsed, head);
         MascotAnims.trackFor(state, Part.ARM_L).eval(elapsed, armL);
         MascotAnims.trackFor(state, Part.ARM_R).eval(elapsed, armR);
         MascotAnims.trackFor(state, Part.LID_L).eval(elapsed, lidL);
         MascotAnims.trackFor(state, Part.LID_R).eval(elapsed, lidR);
         MascotAnims.trackFor(state, Part.PUPILS).eval(elapsed, pupils);
-        MascotAnims.trackFor(state, Part.MOUTH).eval(elapsed, mouth);
+        if (speaking) {
+            MascotAnims.talkMouth().eval(elapsed, mouth);
+        } else {
+            MascotAnims.trackFor(state, Part.MOUTH).eval(elapsed, mouth);
+        }
         MascotAnims.trackFor(state, Part.SPARK_1).eval(elapsed, spark1);
         MascotAnims.trackFor(state, Part.SPARK_2).eval(elapsed, spark2);
         MascotAnims.trackFor(state, Part.SPARK_3).eval(elapsed, spark3);
@@ -341,7 +363,7 @@ public class MascotView extends View {
     }
 
     private void drawMouth(Canvas canvas) {
-        if (MascotAnims.mouthOpen(state)) {
+        if (speaking || MascotAnims.mouthOpen(state)) {
             int save = canvas.save();
             canvas.scale(mouth.scaleX, mouth.scaleY, 100f, 106f);
             solid(0xFF26324E);

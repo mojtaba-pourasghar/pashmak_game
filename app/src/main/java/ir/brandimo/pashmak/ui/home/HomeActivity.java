@@ -6,7 +6,6 @@ import androidx.annotation.Nullable;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
-import ir.brandimo.pashmak.audio.VoicePlayer;
 import ir.brandimo.pashmak.databinding.ActivityHomeBinding;
 import ir.brandimo.pashmak.mascot.MascotController;
 import ir.brandimo.pashmak.mascot.MascotState;
@@ -65,14 +64,9 @@ public class HomeActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        VoicePlayer.get(this).startMusic(AudioManifest.BGM_MENU);
-    }
-
-    @Override
-    protected void onPause() {
-        VoicePlayer.get(this).stopMusic();
-        super.onPause();
+    protected void onSpeakingChanged(boolean speaking) {
+        if (binding != null) {
+            binding.homeMascot.setSpeaking(speaking);
+        }
     }
 }

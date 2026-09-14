@@ -2,37 +2,48 @@ package ir.brandimo.pashmak.ui.story;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.res.ResourcesCompat;
 
-import ir.brandimo.pashmak.R;
-import ir.brandimo.pashmak.data.catalog.StoryScene;
+import java.util.ArrayList;
+import java.util.List;
 
-/** A tappable story scene: poke a prop, it wobbles and says something. */
+import ir.brandimo.pashmak.R;
+import ir.brandimo.pashmak.data.catalog.StoryProp;
+import ir.brandimo.pashmak.util.Motion;
+
+/**
+ * The picture the story happens in. Props drift gently so the scene feels alive,
+ * and tapping one makes it jump — which is how the child answers Pashmak.
+ */
 public class StorySceneView extends View {
 
     public interface OnPropTapped {
-        void onPropTapped(StoryScene.Prop prop);
+        void onPropTapped(StoryProp prop);
     }
 
-    private final Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Paint outline = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Paint label = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final RectF box = new RectF();
+    private static final long FLOAT_PERIOD_MS = 3400L;
 
-    @Nullable
-    private StoryScene scene;
+    private final Paint label = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Rect bounds = new Rect();
+    private final List<StoryProp> props = new ArrayList<>();
+    private final List<Drawable> drawables = new ArrayList<>();
+
     @Nullable
     private OnPropTapped listener;
     private int pressedIndex = -1;
+    private long pressedAt;
+    private boolean interactive = true;
 
     public StorySceneView(Context context) {
         this(context, null);
@@ -40,81 +51,113 @@ public class StorySceneView extends View {
 
     public StorySceneView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        outline.setStyle(Paint.Style.STROKE);
-        outline.setColor(0xFF2B3742);
-        outline.setStrokeWidth(3f * getResources().getDisplayMetrics().density);
-        label.setColor(Color.WHITE);
         label.setTextAlign(Paint.Align.CENTER);
+        label.setColor(0xFF7A4A02);
         Typeface lalezar = ResourcesCompat.getFont(context, R.font.lalezar_regular);
         if (lalezar != null) {
             label.setTypeface(lalezar);
         }
     }
 
-    public void setScene(@Nullable StoryScene scene) {
-        this.scene = scene;
+    public void setProps(@Nullable List<StoryProp> next) {
+        props.clear();
+        drawables.clear();
+        if (next != null) {
+            props.addAll(next);
+            for (int i = 0; i < props.size(); i++) {
+                drawables.add(AppCompatResources.getDrawable(
+                        getContext(), props.get(i).icon));
+            }
+        }
         pressedIndex = -1;
         invalidate();
+    }
+
+    /** Taps are ignored while Pashmak is only narrating. */
+    public void setInteractive(boolean value) {
+        interactive = value;
     }
 
     public void setOnPropTapped(@Nullable OnPropTapped listener) {
         this.listener = listener;
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        if (scene == null) {
-            return;
-        }
-        float shortest = Math.min(getWidth(), getHeight());
-        label.setTextSize(shortest * 0.055f);
-        for (int i = 0; i < scene.props.size(); i++) {
-            StoryScene.Prop prop = scene.props.get(i);
-            float size = prop.size * shortest;
-            float scale = i == pressedIndex ? 1.12f : 1f;
-            float half = size * scale / 2f;
-            float cx = prop.x * getWidth();
-            float cy = prop.y * getHeight();
-            box.set(cx - half, cy - half, cx + half, cy + half);
-
-            fill.setColor(prop.color);
-            if (prop.round) {
-                canvas.drawOval(box, fill);
-                canvas.drawOval(box, outline);
-            } else {
-                float radius = size * 0.18f;
-                canvas.drawRoundRect(box, radius, radius, fill);
-                canvas.drawRoundRect(box, radius, radius, outline);
+    /** Makes one prop jump — used to confirm a correct answer. */
+    public void bounce(String propId) {
+        for (int i = 0; i < props.size(); i++) {
+            if (props.get(i).id.equals(propId)) {
+                pressedIndex = i;
+                pressedAt = AnimationUtils.currentAnimationTimeMillis();
+                invalidate();
+                return;
             }
-            canvas.drawText(prop.label, cx, box.bottom + label.getTextSize() * 1.1f, labelPaint());
         }
     }
 
-    private Paint labelPaint() {
-        label.setColor(0xFF7A4A02);
-        return label;
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (props.isEmpty()) {
+            return;
+        }
+        float shortest = Math.min(getWidth(), getHeight());
+        label.setTextSize(shortest * 0.058f);
+        long now = AnimationUtils.currentAnimationTimeMillis();
+        boolean still = Motion.reduced(getContext());
+
+        for (int i = 0; i < props.size(); i++) {
+            StoryProp prop = props.get(i);
+            Drawable drawable = drawables.get(i);
+            if (drawable == null) {
+                continue;
+            }
+            float size = prop.size * shortest;
+            float cx = prop.x * getWidth();
+            float cy = prop.y * getHeight();
+
+            // Each prop floats on its own offset phase, so they never move in lockstep.
+            float drift = 0f;
+            if (!still) {
+                float phase = ((now + i * 480L) % FLOAT_PERIOD_MS) / (float) FLOAT_PERIOD_MS;
+                drift = (float) Math.sin(phase * 2 * Math.PI) * size * 0.04f;
+            }
+
+            float scale = 1f;
+            if (i == pressedIndex) {
+                float elapsed = (now - pressedAt) / 420f;
+                if (elapsed >= 1f) {
+                    pressedIndex = -1;
+                } else {
+                    scale = 1f + (float) Math.sin(elapsed * Math.PI) * 0.22f;
+                }
+            }
+
+            float half = size * scale / 2f;
+            drawable.setBounds(Math.round(cx - half), Math.round(cy - half + drift),
+                    Math.round(cx + half), Math.round(cy + half + drift));
+            drawable.draw(canvas);
+            canvas.drawText(prop.label, cx, cy + half + drift + label.getTextSize(), label);
+        }
+
+        if (!still || pressedIndex >= 0) {
+            postInvalidateOnAnimation();
+        }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (scene == null) {
-            return false;
-        }
-        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            int index = propAt(event.getX(), event.getY());
-            if (index >= 0) {
-                pressedIndex = index;
-                invalidate();
-                performClick();
-                if (listener != null) {
-                    listener.onPropTapped(scene.props.get(index));
-                }
-                postDelayed(() -> {
-                    pressedIndex = -1;
-                    invalidate();
-                }, 260L);
-            }
+        if (!interactive || props.isEmpty()
+                || event.getActionMasked() != MotionEvent.ACTION_DOWN) {
             return true;
+        }
+        int index = propAt(event.getX(), event.getY());
+        if (index >= 0) {
+            pressedIndex = index;
+            pressedAt = AnimationUtils.currentAnimationTimeMillis();
+            invalidate();
+            performClick();
+            if (listener != null) {
+                listener.onPropTapped(props.get(index));
+            }
         }
         return true;
     }
@@ -126,9 +169,10 @@ public class StorySceneView extends View {
 
     private int propAt(float x, float y) {
         float shortest = Math.min(getWidth(), getHeight());
-        for (int i = scene.props.size() - 1; i >= 0; i--) {
-            StoryScene.Prop prop = scene.props.get(i);
-            float half = prop.size * shortest / 2f;
+        for (int i = props.size() - 1; i >= 0; i--) {
+            StoryProp prop = props.get(i);
+            // A little generous, because small fingers aim roughly.
+            float half = prop.size * shortest * 0.62f;
             float cx = prop.x * getWidth();
             float cy = prop.y * getHeight();
             if (x >= cx - half && x <= cx + half && y >= cy - half && y <= cy + half) {
