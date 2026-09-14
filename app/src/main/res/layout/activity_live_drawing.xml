@@ -8,6 +8,8 @@
     android:background="@color/surface">
 
     <!-- ============================ 1. Mission brief ============================ -->
+    <!-- The room the child is furnishing, with a dashed spot for every item still
+         to be drawn, and Pashmak standing in it. -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/step_brief"
         android:layout_width="match_parent"
@@ -33,63 +35,65 @@
             style="@style/Text.Body.Bold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:background="@drawable/bg_speech_draw"
-            android:paddingStart="16dp"
-            android:paddingTop="12dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="12dp"
+            android:paddingStart="14dp"
+            android:paddingTop="9dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="9dp"
             android:textColor="@color/ink_slate"
-            app:layout_constraintEnd_toStartOf="@id/brief_end_column"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/brief_header"
             tools:text="پشمک می‌گه: یه «تخت» می‌خوام. روی کاغذ بکشش!" />
+
+        <ir.brandimo.pashmak.ui.livedrawing.MissionSceneView
+            android:id="@+id/brief_scene"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_frame_scene"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/brief_end_column"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/brief_line" />
 
         <ir.brandimo.pashmak.mascot.MascotView
             android:id="@+id/brief_mascot"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/mascot_inline"
-            app:layout_constraintBottom_toTopOf="@id/brief_now"
-            app:layout_constraintEnd_toEndOf="@id/brief_line"
-            app:layout_constraintStart_toStartOf="@id/brief_line"
-            app:layout_constraintTop_toBottomOf="@id/brief_line"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/brief_now"
-            style="@style/Text.Display"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/brief_line"
-            app:layout_constraintStart_toStartOf="@id/brief_line"
-            app:layout_constraintTop_toBottomOf="@id/brief_mascot"
-            tools:text="الان بکش: تخت" />
+            android:layout_marginStart="6dp"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintBottom_toBottomOf="@id/brief_scene"
+            app:layout_constraintStart_toStartOf="@id/brief_scene" />
 
         <LinearLayout
             android:id="@+id/brief_end_column"
             android:layout_width="@dimen/end_column_width"
             android:layout_height="0dp"
+            android:layout_marginStart="@dimen/gap"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/brief_header">
+            app:layout_constraintTop_toBottomOf="@id/brief_line">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/brief_now"
+                style="@style/Text.Section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textColor="@color/red"
+                tools:text="الان بکش: تخت" />
 
             <LinearLayout
                 android:id="@+id/brief_slots"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:orientation="vertical" />
-
-            <include
-                android:id="@+id/brief_dock"
-                layout="@layout/view_mascot_dock"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/brief_go_camera"
@@ -98,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_orange"
                 android:text="@string/draw_go_camera"
-                android:textSize="18sp" />
+                android:textSize="17sp" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

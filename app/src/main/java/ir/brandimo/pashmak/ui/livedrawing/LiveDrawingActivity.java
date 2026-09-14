@@ -36,6 +36,7 @@ import java.util.List;
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
 import ir.brandimo.pashmak.data.catalog.Mission;
+import ir.brandimo.pashmak.data.catalog.MissionScene;
 import ir.brandimo.pashmak.data.catalog.MissionSceneCatalog;
 import ir.brandimo.pashmak.data.catalog.Palette;
 import ir.brandimo.pashmak.data.db.CapturedItem;
@@ -89,7 +90,12 @@ public class LiveDrawingActivity extends BaseActivity {
         wireCamera();
         wireProcessing();
         wireAlive();
-        binding.aliveSceneView.setScene(MissionSceneCatalog.forMission(missionIndex));
+        MissionScene room = MissionSceneCatalog.forMission(missionIndex);
+        binding.aliveSceneView.setScene(room);
+        binding.briefScene.setScene(room);
+        String[] labels = viewModel.mission().items.toArray(new String[0]);
+        binding.aliveSceneView.setSlotLabels(labels);
+        binding.briefScene.setSlotLabels(labels);
 
         viewModel.step().observe(this, this::showStep);
         viewModel.items().observe(this, this::renderMission);
@@ -119,7 +125,7 @@ public class LiveDrawingActivity extends BaseActivity {
             finish();
         });
         bindStars(binding.briefHeader.headerStarsValue);
-        binding.briefMascot.setState(MascotState.TALK);
+        binding.briefMascot.setState(MascotState.WAVE);
         binding.briefGoCamera.setOnClickListener(v -> {
             tap();
             openCamera();
@@ -346,7 +352,6 @@ public class LiveDrawingActivity extends BaseActivity {
         // Let the drawing land before Pashmak reacts to it by name.
         binding.getRoot().postDelayed(() -> {
             mascot.addStars(2);
-            binding.aliveMascot.setState(MascotState.CHEER);
             mascot.say(getString(R.string.alive_arrived, label), MascotState.CHEER,
                     MascotController.HOLD_CHEER_MS);
         }, wait + 700L);
@@ -437,10 +442,22 @@ public class LiveDrawingActivity extends BaseActivity {
             }
         }
         binding.aliveSceneView.setItems(bitmaps, slots);
+        binding.briefScene.setItems(bitmaps, slots);
         if (pendingArrivalSlot >= 0) {
             binding.aliveSceneView.playArrival(pendingArrivalSlot);
+            celebrate();
             pendingArrivalSlot = -1;
         }
+    }
+
+    /** Pashmak jumps up and down while the new drawing settles into the room. */
+    private void celebrate() {
+        binding.aliveMascot.setState(MascotState.CHEER);
+        binding.briefMascot.setState(MascotState.CHEER);
+        binding.getRoot().postDelayed(() -> {
+            binding.aliveMascot.setState(MascotState.CHEER);
+            binding.briefMascot.setState(MascotState.WAVE);
+        }, MascotController.HOLD_CHEER_MS);
     }
 
     private void celebrate(Mission mission) {

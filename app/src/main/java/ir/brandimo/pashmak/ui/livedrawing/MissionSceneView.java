@@ -4,9 +4,11 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -15,10 +17,12 @@ import android.view.animation.OvershootInterpolator;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.data.catalog.MissionScene;
 import ir.brandimo.pashmak.util.Motion;
 
@@ -47,6 +51,9 @@ public class MissionSceneView extends View {
 
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
     private final Paint band = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint slotStroke = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint slotLabel = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final android.graphics.Path shapePath = new android.graphics.Path();
     private final RectF rect = new RectF();
     private final Rect source = new Rect();
     private final List<Item> items = new ArrayList<>();
@@ -56,6 +63,7 @@ public class MissionSceneView extends View {
     private MissionScene scene;
     @Nullable
     private ValueAnimator arrivalAnimator;
+    private String[] slotLabels = new String[0];
 
     public MissionSceneView(Context context) {
         this(context, null);
@@ -63,6 +71,27 @@ public class MissionSceneView extends View {
 
     public MissionSceneView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        float density = context.getResources().getDisplayMetrics().density;
+        slotStroke.setStyle(Paint.Style.STROKE);
+        slotStroke.setColor(0x8C2B3742);
+        slotStroke.setStrokeWidth(2.5f * density);
+        slotStroke.setPathEffect(new DashPathEffect(
+                new float[]{9f * density, 7f * density}, 0f));
+        slotLabel.setTextAlign(Paint.Align.CENTER);
+        slotLabel.setColor(0xCC2B3742);
+        Typeface lalezar = ResourcesCompat.getFont(context, R.font.lalezar_regular);
+        if (lalezar != null) {
+            slotLabel.setTypeface(lalezar);
+        }
+    }
+
+    /**
+     * The names of the items this mission expects. Slots still to be drawn show as
+     * a dashed outline with the name, so the child can see what the room is missing.
+     */
+    public void setSlotLabels(@Nullable String[] labels) {
+        slotLabels = labels == null ? new String[0] : labels;
+        invalidate();
     }
 
     public void setScene(@Nullable MissionScene next) {
@@ -132,7 +161,9 @@ public class MissionSceneView extends View {
             return;
         }
         drawBackdrop(canvas);
+        drawShapes(canvas);
         drawDecor(canvas);
+        drawEmptySlots(canvas);
         drawItems(canvas);
 
         if (!Motion.reduced(getContext())) {
@@ -146,6 +177,79 @@ public class MissionSceneView extends View {
         canvas.drawRect(0f, 0f, getWidth(), horizon, band);
         band.setColor(scene.groundColor);
         canvas.drawRect(0f, horizon, getWidth(), getHeight(), band);
+    }
+
+    /** The room itself: walls, counters, rugs, rails. */
+    private void drawShapes(Canvas canvas) {
+        for (int i = 0; i < scene.shapes.size(); i++) {
+            MissionScene.Shape shape = scene.shapes.get(i);
+            rect.set(shape.x * getWidth(), shape.y * getHeight(),
+                    (shape.x + shape.width) * getWidth(),
+                    (shape.y + shape.height) * getHeight());
+            band.setColor(shape.color);
+            switch (shape.kind) {
+                case OVAL:
+                    canvas.drawOval(rect, band);
+                    break;
+                case ROUND: {
+                    float radius = Math.min(rect.width(), rect.height()) * shape.radius;
+                    canvas.drawRoundRect(rect, radius, radius, band);
+                    break;
+                }
+                case TRIANGLE_UP:
+                    shapePath.reset();
+                    shapePath.moveTo(rect.centerX(), rect.top);
+                    shapePath.lineTo(rect.right, rect.bottom);
+                    shapePath.lineTo(rect.left, rect.bottom);
+                    shapePath.close();
+                    canvas.drawPath(shapePath, band);
+                    break;
+                case TRIANGLE_DOWN:
+                    shapePath.reset();
+                    shapePath.moveTo(rect.left, rect.top);
+                    shapePath.lineTo(rect.right, rect.top);
+                    shapePath.lineTo(rect.centerX(), rect.bottom);
+                    shapePath.close();
+                    canvas.drawPath(shapePath, band);
+                    break;
+                case RECT:
+                default:
+                    canvas.drawRect(rect, band);
+                    break;
+            }
+        }
+    }
+
+    /** Dashed outlines marking where the missing drawings will go. */
+    private void drawEmptySlots(Canvas canvas) {
+        if (slotLabels.length == 0) {
+            return;
+        }
+        float density = getResources().getDisplayMetrics().density;
+        float shortest = Math.min(getWidth(), getHeight());
+        slotLabel.setTextSize(shortest * 0.045f);
+
+        for (int slot = 0; slot < slotLabels.length; slot++) {
+            if (hasItemInSlot(slot)) {
+                continue;
+            }
+            MissionScene.Anchor anchor = scene.anchor(slot);
+            float size = anchor.scale * shortest;
+            float cx = anchor.x * getWidth();
+            float cy = anchor.y * getHeight();
+            rect.set(cx - size / 2f, cy - size / 2f, cx + size / 2f, cy + size / 2f);
+            canvas.drawRoundRect(rect, 14f * density, 14f * density, slotStroke);
+            canvas.drawText(slotLabels[slot], cx, cy + slotLabel.getTextSize() / 3f, slotLabel);
+        }
+    }
+
+    private boolean hasItemInSlot(int slot) {
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).slot == slot) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void drawDecor(Canvas canvas) {

@@ -6,8 +6,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The world a mission's drawings live in: a two-band backdrop, a little scenery
- * of its own, and a place for each drawing to land.
+ * The world a mission's drawings live in — an actual drawn place, not a backdrop:
+ * the bedroom has a wall, a floor, a skirting board and a bedside table; the
+ * kitchen has tiled walls and a counter. The child's scanned drawings then land
+ * in the spots reserved for them.
  */
 public final class MissionScene {
 
@@ -23,6 +25,34 @@ public final class MissionScene {
             this.y = y;
             this.scale = scale;
             this.rotation = rotation;
+        }
+    }
+
+    /** A piece of the room itself, in fractions of the scene. */
+    public static final class Shape {
+
+        public enum Kind {
+            RECT, ROUND, OVAL, TRIANGLE_UP, TRIANGLE_DOWN
+        }
+
+        public final Kind kind;
+        public final int color;
+        public final float x;
+        public final float y;
+        public final float width;
+        public final float height;
+        /** Corner radius as a fraction of the shape's shorter side. */
+        public final float radius;
+
+        Shape(Kind kind, int color, float x, float y,
+              float width, float height, float radius) {
+            this.kind = kind;
+            this.color = color;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.radius = radius;
         }
     }
 
@@ -46,14 +76,17 @@ public final class MissionScene {
     public final int groundColor;
     /** Height of the sky band, as a fraction of the scene. */
     public final float horizon;
+    /** The room's own furniture and fittings, drawn under the child's work. */
+    public final List<Shape> shapes;
     public final List<Decor> decor;
     public final List<Anchor> anchors;
 
-    MissionScene(int skyColor, int groundColor, float horizon,
+    MissionScene(int skyColor, int groundColor, float horizon, List<Shape> shapes,
                  List<Decor> decor, List<Anchor> anchors) {
         this.skyColor = skyColor;
         this.groundColor = groundColor;
         this.horizon = horizon;
+        this.shapes = Collections.unmodifiableList(shapes);
         this.decor = Collections.unmodifiableList(decor);
         this.anchors = Collections.unmodifiableList(anchors);
     }
