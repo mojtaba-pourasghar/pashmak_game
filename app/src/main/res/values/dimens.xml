@@ -25,7 +25,7 @@
     <dimen name="radius_lg">22dp</dimen>
     <dimen name="radius_xl">26dp</dimen>
 
-    <dimen name="card_min_height">108dp</dimen>
+    <dimen name="card_min_height">92dp</dimen>
     <dimen name="mascot_hero">240dp</dimen>
     <dimen name="mascot_home">190dp</dimen>
     <dimen name="mascot_inline">150dp</dimen>

@@ -1,17 +1,16 @@
 package ir.brandimo.pashmak.ui.games;
 
 import android.os.Bundle;
-import android.view.View;
 
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.databinding.ActivityGamesBinding;
-import ir.brandimo.pashmak.databinding.ViewGameCardBinding;
 import ir.brandimo.pashmak.ui.base.BaseActivity;
 import ir.brandimo.pashmak.ui.bubbles.BubblePopActivity;
 import ir.brandimo.pashmak.ui.coloring.ColoringActivity;
@@ -22,7 +21,10 @@ import ir.brandimo.pashmak.ui.parentgate.ParentGateDialog;
 import ir.brandimo.pashmak.ui.story.StoryActivity;
 import ir.brandimo.pashmak.ui.tracing.TracingActivity;
 
-/** The games menu: every game as a card with its own icon and colour. */
+/**
+ * The games menu. The headline card spans the row and the other six fall into two
+ * even rows, laid out by the grid rather than placed by hand.
+ */
 public class GamesActivity extends BaseActivity {
 
     private ActivityGamesBinding binding;
@@ -43,40 +45,18 @@ public class GamesActivity extends BaseActivity {
         bindStars(binding.gamesHeader.headerStarsValue);
         attachCompanion();
 
-        String name = getString(R.string.mascot_name);
-
-        card(binding.gamesLive, R.drawable.btn_orange_card, R.drawable.ic_camera, R.color.orange,
-                R.string.game_live_title, getString(R.string.game_live_sub, name),
-                v -> open(MissionsActivity.class));
-
-        card(binding.gamesPaint, R.drawable.btn_purple_card, R.drawable.ic_palette, R.color.purple,
-                R.string.game_paint_title, getString(R.string.game_paint_sub),
-                v -> open(ColoringActivity.class));
-
-        card(binding.gamesFreedraw, R.drawable.btn_cyan, R.drawable.ic_brush, R.color.cyan,
-                R.string.game_freedraw_title, getString(R.string.game_freedraw_sub),
-                v -> open(FreeDrawActivity.class));
-
-        card(binding.gamesTrace, R.drawable.btn_green, R.drawable.ic_pencil, R.color.green,
-                R.string.game_trace_title, getString(R.string.game_trace_sub),
-                v -> open(TracingActivity.class));
-
-        card(binding.gamesBubbles, R.drawable.btn_blue_deep, R.drawable.ic_bubbles, R.color.blue_deep,
-                R.string.game_bubbles_title, getString(R.string.game_bubbles_sub),
-                v -> open(BubblePopActivity.class));
-
-        card(binding.gamesMemory, R.drawable.btn_red, R.drawable.ic_memory_cards, R.color.red,
-                R.string.game_memory_title, getString(R.string.game_memory_sub),
-                v -> open(MemoryActivity.class));
-
-        card(binding.gamesStory, R.drawable.btn_yellow, R.drawable.ic_book, R.color.yellow_shadow,
-                R.string.game_story_title, getString(R.string.game_story_sub),
-                v -> open(StoryActivity.class));
-
-        // The story card is pale, so its text needs the dark ink instead of white.
-        int gold = ContextCompat.getColor(this, R.color.gold_ink);
-        binding.gamesStory.cardTitle.setTextColor(gold);
-        binding.gamesStory.cardSub.setTextColor(gold);
+        final GameAdapter adapter = new GameAdapter(buildEntries(),
+                entry -> open(entry.destination));
+        int span = getResources().getInteger(R.integer.games_span);
+        GridLayoutManager manager = new GridLayoutManager(this, span);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return adapter.entryAt(position).wide ? span : 1;
+            }
+        });
+        binding.gamesGrid.setLayoutManager(manager);
+        binding.gamesGrid.setAdapter(adapter);
 
         binding.gamesSettings.setOnClickListener(v -> {
             tap();
@@ -84,15 +64,46 @@ public class GamesActivity extends BaseActivity {
         });
     }
 
-    private void card(ViewGameCardBinding card, @DrawableRes int background,
-                      @DrawableRes int icon, @ColorRes int iconTint,
-                      @StringRes int title, String subtitle,
-                      View.OnClickListener click) {
-        card.cardRoot.setBackgroundResource(background);
-        card.cardIcon.setImageResource(icon);
-        card.cardIcon.setColorFilter(ContextCompat.getColor(this, iconTint));
-        card.cardTitle.setText(title);
-        card.cardSub.setText(subtitle);
-        card.cardRoot.setOnClickListener(click);
+    private List<GameEntry> buildEntries() {
+        String name = getString(R.string.mascot_name);
+        List<GameEntry> entries = new ArrayList<>();
+
+        entries.add(new GameEntry(R.drawable.btn_orange_card, R.drawable.ic_camera,
+                R.color.orange, R.string.game_live_title,
+                getString(R.string.game_live_sub, name), true, false,
+                MissionsActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_purple_card, R.drawable.ic_palette,
+                R.color.purple, R.string.game_paint_title,
+                getString(R.string.game_paint_sub), false, false,
+                ColoringActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_cyan, R.drawable.ic_brush,
+                R.color.cyan, R.string.game_freedraw_title,
+                getString(R.string.game_freedraw_sub), false, false,
+                FreeDrawActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_green, R.drawable.ic_pencil,
+                R.color.green, R.string.game_trace_title,
+                getString(R.string.game_trace_sub), false, false,
+                TracingActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_blue_deep, R.drawable.ic_bubbles,
+                R.color.blue_deep, R.string.game_bubbles_title,
+                getString(R.string.game_bubbles_sub), false, false,
+                BubblePopActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_red, R.drawable.ic_memory_cards,
+                R.color.red, R.string.game_memory_title,
+                getString(R.string.game_memory_sub), false, false,
+                MemoryActivity.class));
+
+        // The yellow card is pale, so its text goes dark instead of white.
+        entries.add(new GameEntry(R.drawable.btn_yellow, R.drawable.ic_book,
+                R.color.yellow_shadow, R.string.game_story_title,
+                getString(R.string.game_story_sub), false, true,
+                StoryActivity.class));
+
+        return entries;
     }
 }

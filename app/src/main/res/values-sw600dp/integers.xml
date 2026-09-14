@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="games_span">4</integer>
+    <integer name="games_span">3</integer>
     <integer name="missions_span">3</integer>
     <integer name="gallery_span">4</integer>
     <integer name="memory_span">6</integer>
