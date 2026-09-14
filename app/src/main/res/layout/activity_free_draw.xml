@@ -31,124 +31,107 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/draw_header" />
 
-    <LinearLayout
+    <!-- Everything here is shown, not named: pencils for the colours, drawn
+         instruments, and thickness samples at the size they really paint. -->
+    <ScrollView
         android:id="@+id/draw_tools"
         android:layout_width="@dimen/end_column_width"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/gap"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
+        android:fillViewport="true"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/draw_header">
 
-        <ir.brandimo.pashmak.ui.common.SwatchBar
-            android:id="@+id/draw_palette"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/Text.Sub"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/freedraw_tools"
-            android:textColor="@color/cyan" />
+            android:orientation="vertical">
 
-        <GridLayout
-            android:id="@+id/draw_tools_grid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:columnCount="2">
+            <ir.brandimo.pashmak.ui.common.PenBar
+                android:id="@+id/draw_pens"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/draw_tool_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/draw_tool_pencil"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_tool"
+                    android:contentDescription="@string/tool_pencil_thick"
+                    android:padding="6dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_tool_pencil" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/draw_tool_marker"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_tool"
+                    android:contentDescription="@string/tool_marker"
+                    android:padding="6dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_tool_marker" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/draw_tool_crayon"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_tool"
+                    android:contentDescription="@string/tool_crayon"
+                    android:padding="6dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_tool_crayon" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/draw_tool_eraser"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_tool"
+                    android:contentDescription="@string/tool_eraser"
+                    android:padding="6dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_tool_eraser" />
+            </LinearLayout>
+
+            <ir.brandimo.pashmak.ui.common.StrokeBar
+                android:id="@+id/draw_widths"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/draw_tool_pencil_thin"
+                android:id="@+id/draw_save"
                 style="@style/Button.Chunky"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_gravity="fill_horizontal"
-                android:layout_margin="3dp"
-                android:background="@drawable/bg_tool"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/tool_pencil_thin"
-                android:textColor="@color/ink_primary"
-                android:textSize="14sp" />
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_green"
+                android:text="@string/freedraw_save"
+                android:textSize="17sp" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/draw_tool_pencil_thick"
-                style="@style/Button.Chunky"
-                android:layout_width="0dp"
+            <include
+                android:id="@+id/draw_dock"
+                layout="@layout/view_mascot_dock"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_gravity="fill_horizontal"
-                android:layout_margin="3dp"
-                android:background="@drawable/bg_tool"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/tool_pencil_thick"
-                android:textColor="@color/ink_primary"
-                android:textSize="14sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/draw_tool_marker"
-                style="@style/Button.Chunky"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_gravity="fill_horizontal"
-                android:layout_margin="3dp"
-                android:background="@drawable/bg_tool"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/tool_marker"
-                android:textColor="@color/ink_primary"
-                android:textSize="14sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/draw_tool_crayon"
-                style="@style/Button.Chunky"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_gravity="fill_horizontal"
-                android:layout_margin="3dp"
-                android:background="@drawable/bg_tool"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/tool_crayon"
-                android:textColor="@color/ink_primary"
-                android:textSize="14sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/draw_tool_eraser"
-                style="@style/Button.Chunky"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_gravity="fill_horizontal"
-                android:layout_margin="3dp"
-                android:layout_columnSpan="2"
-                android:background="@drawable/bg_tool"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/tool_eraser"
-                android:textColor="@color/ink_primary"
-                android:textSize="14sp" />
-
-        </GridLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/draw_save"
-            style="@style/Button.Chunky"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/btn_green"
-            android:text="@string/freedraw_save"
-            android:textSize="18sp" />
-    </LinearLayout>
-
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

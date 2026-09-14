@@ -31,4 +31,5 @@
     <dimen name="keypad_key">74dp</dimen>
     <dimen name="keypad_width">92dp</dimen>
     <dimen name="dock_clearance">148dp</dimen>
+    <dimen name="mascot_dock_small">104dp</dimen>
 </resources>

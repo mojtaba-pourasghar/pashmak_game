@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -126,6 +127,21 @@ public abstract class BaseActivity extends AppCompatActivity {
                 dockBubble.bind(state);
             }
         });
+    }
+
+    /**
+     * Shrinks the docked companion, for screens whose side column is already full
+     * of tools. An include can only resize its own root, so this is done in code.
+     */
+    protected void shrinkCompanion() {
+        if (dockMascot == null) {
+            return;
+        }
+        ViewGroup.LayoutParams params = dockMascot.getLayoutParams();
+        if (params != null) {
+            params.height = getResources().getDimensionPixelSize(R.dimen.mascot_dock_small);
+            dockMascot.setLayoutParams(params);
+        }
     }
 
     /** Binds a star counter that follows the shared total. */

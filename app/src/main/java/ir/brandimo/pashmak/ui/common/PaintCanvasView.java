@@ -30,33 +30,38 @@ public class PaintCanvasView extends View {
         void onStrokeFinished();
     }
 
-    /** The drawing tools, each with its own feel rather than just a width. */
+    /**
+     * What a tool is made of — how the stroke feels, not how wide it is. Width is
+     * the child's own choice and survives changing pen or tool.
+     */
     public enum Tool {
-        /** Fine line for careful work. */
-        PENCIL_THIN(6f, 255, Paint.Cap.ROUND),
-        /** Everyday thick pencil. */
-        PENCIL_THICK(16f, 255, Paint.Cap.ROUND),
+        /** Clean, solid line. */
+        PENCIL(255, Paint.Cap.ROUND, 1f),
         /** Broad and slightly see-through, so overlaps build up colour. */
-        MARKER(34f, 150, Paint.Cap.SQUARE),
+        MARKER(150, Paint.Cap.SQUARE, 1.5f),
         /** Waxy: drawn as offset passes so the edge breaks up like real crayon. */
-        CRAYON(22f, 90, Paint.Cap.ROUND),
-        /** Clears back to the paper. */
-        ERASER(44f, 255, Paint.Cap.ROUND);
+        CRAYON(90, Paint.Cap.ROUND, 1.2f),
+        /** Clears back to the paper, and always a little fatter than a pen. */
+        ERASER(255, Paint.Cap.ROUND, 1.8f);
 
-        public final float widthDp;
         public final int alpha;
         public final Paint.Cap cap;
+        /** How much fatter this tool draws than the chosen width. */
+        public final float widthScale;
 
-        Tool(float widthDp, int alpha, Paint.Cap cap) {
-            this.widthDp = widthDp;
+        Tool(int alpha, Paint.Cap cap, float widthScale) {
             this.alpha = alpha;
             this.cap = cap;
+            this.widthScale = widthScale;
         }
 
         public boolean erases() {
             return this == ERASER;
         }
     }
+
+    /** The four thickness steps the child picks between, in dp. */
+    public static final float[] WIDTH_STEPS = {6f, 14f, 26f, 40f};
 
     private static final float SMOOTHING = 0.5f;
 
@@ -71,7 +76,8 @@ public class PaintCanvasView extends View {
     private Bitmap layer;
     @Nullable
     private Canvas layerCanvas;
-    private Tool tool = Tool.PENCIL_THICK;
+    private Tool tool = Tool.PENCIL;
+    private float strokeWidthDp = WIDTH_STEPS[1];
     private int brushColor = Color.parseColor("#F26522");
 
     @Nullable
@@ -109,11 +115,16 @@ public class PaintCanvasView extends View {
     }
 
     public void setBrushWidthDp(float dp) {
-        brush.setStrokeWidth(dp * getResources().getDisplayMetrics().density);
+        strokeWidthDp = dp;
+        applyTool();
+    }
+
+    public float strokeWidthDp() {
+        return strokeWidthDp;
     }
 
     public void setTool(Tool next) {
-        tool = next == null ? Tool.PENCIL_THICK : next;
+        tool = next == null ? Tool.PENCIL : next;
         applyTool();
     }
 
@@ -121,9 +132,27 @@ public class PaintCanvasView extends View {
         return tool;
     }
 
+    public int brushColor() {
+        return brushColor;
+    }
+
+    /**
+     * Configures a paint to stroke exactly the way this canvas would — so the
+     * thickness picker can show the child a true preview rather than an icon.
+     */
+    public void describeStroke(Paint out, Tool forTool, float widthDp, int color) {
+        float density = getResources().getDisplayMetrics().density;
+        out.setStyle(Paint.Style.STROKE);
+        out.setStrokeWidth(widthDp * forTool.widthScale * density);
+        out.setStrokeCap(forTool.cap);
+        out.setStrokeJoin(forTool.cap == Paint.Cap.SQUARE ? Paint.Join.MITER : Paint.Join.ROUND);
+        out.setColor(forTool.erases() ? 0xFFD8D0C6 : color);
+        out.setAlpha(forTool.erases() ? 255 : forTool.alpha);
+    }
+
     private void applyTool() {
         float density = getResources().getDisplayMetrics().density;
-        brush.setStrokeWidth(tool.widthDp * density);
+        brush.setStrokeWidth(strokeWidthDp * tool.widthScale * density);
         brush.setStrokeCap(tool.cap);
         brush.setStrokeJoin(tool.cap == Paint.Cap.SQUARE ? Paint.Join.MITER : Paint.Join.ROUND);
         if (tool.erases()) {
