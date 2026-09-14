@@ -143,11 +143,11 @@ public class MemoryActivity extends GameActivity {
                 sounds.play(AudioManifest.SFX_FLIP);
                 break;
             case MATCH:
-                onCorrect(getString(R.string.memory_match));
+                onCorrect(getString(R.string.memory_match), AudioManifest.VOICE_MEMORY_MATCH);
                 binding.getRoot().postDelayed(() -> viewModel.settle(true), MATCH_PAUSE_MS);
                 break;
             case MISS:
-                onWrong(getString(R.string.memory_miss));
+                onWrong(getString(R.string.memory_miss), AudioManifest.VOICE_MEMORY_MISS);
                 binding.getRoot().postDelayed(() -> viewModel.settle(false), MISS_PAUSE_MS);
                 break;
             case IGNORED:
@@ -160,13 +160,14 @@ public class MemoryActivity extends GameActivity {
         sounds.play(AudioManifest.SFX_FANFARE);
         prefs.setMemoryProgress(viewModel.deck().id, viewModel.level());
         mascot.addStars(viewModel.pairCount());
-        onCorrect(getString(R.string.memory_win));
+        onCorrect(getString(R.string.memory_win), AudioManifest.VOICE_MEMORY_WIN);
         if (viewModel.hasNextLevel()) {
             int next = viewModel.level() + 1;
             binding.getRoot().postDelayed(() -> {
                 mascot.say(getString(R.string.memory_next_level),
                         ir.brandimo.pashmak.mascot.MascotState.CHEER,
-                        ir.brandimo.pashmak.mascot.MascotController.HOLD_MIN_MS);
+                        ir.brandimo.pashmak.mascot.MascotController.HOLD_MIN_MS,
+                        AudioManifest.VOICE_MEMORY_NEXT);
                 deal(viewModel.deckIndex(), next);
             }, 2400L);
         }

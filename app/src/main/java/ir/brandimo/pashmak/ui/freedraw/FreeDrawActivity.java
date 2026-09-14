@@ -106,7 +106,7 @@ public class FreeDrawActivity extends GameActivity {
         tap();
         if (!binding.drawCanvas.isDirty()) {
             mascot.say(getString(R.string.freedraw_empty), MascotState.TALK,
-                    MascotController.HOLD_MIN_MS);
+                    MascotController.HOLD_MIN_MS, AudioManifest.VOICE_DRAW_EMPTY);
             return;
         }
         Bitmap bitmap = binding.drawCanvas.snapshot(Color.WHITE);

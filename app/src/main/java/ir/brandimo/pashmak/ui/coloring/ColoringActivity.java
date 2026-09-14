@@ -92,7 +92,7 @@ public class ColoringActivity extends GameActivity {
                 awardedThisPage = true;
                 prefs.setColoringDone(viewModel.pageKey());
                 mascot.addStars(STARS_PER_PAGE);
-                onCorrect(getString(R.string.paint_all_right));
+                onCorrect(getString(R.string.paint_all_right), AudioManifest.VOICE_PAINT_DONE);
                 offerNextPage();
             }
         });
@@ -119,10 +119,12 @@ public class ColoringActivity extends GameActivity {
         if (right) {
             binding.paintCanvas.flash(region.id);
             if (!Boolean.TRUE.equals(viewModel.pageComplete().getValue())) {
-                onCorrect(getString(R.string.paint_right, region.label));
+                onCorrect(getString(R.string.paint_right, region.label),
+                        AudioManifest.VOICE_PAINT_RIGHT);
             }
         } else {
-            onWrong(getString(R.string.paint_wrong, region.label));
+            onWrong(getString(R.string.paint_wrong, region.label),
+                    AudioManifest.VOICE_PAINT_WRONG);
         }
     }
 

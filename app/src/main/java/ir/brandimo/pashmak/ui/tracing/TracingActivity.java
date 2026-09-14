@@ -95,11 +95,11 @@ public class TracingActivity extends GameActivity {
         if (coverage >= PASS_COVERAGE) {
             prefs.setTraceDone(glyphs[index]);
             mascot.addStars(STARS_PER_GLYPH);
-            onCorrect(getString(R.string.trace_award));
+            onCorrect(getString(R.string.trace_award), AudioManifest.VOICE_TRACE_DONE);
             binding.traceCanvas.clear();
             binding.getRoot().postDelayed(() -> select(index + 1), 900L);
         } else {
-            onWrong(getString(R.string.trace_incomplete));
+            onWrong(getString(R.string.trace_incomplete), AudioManifest.VOICE_TRACE_MORE);
         }
         refreshCoverage();
     }

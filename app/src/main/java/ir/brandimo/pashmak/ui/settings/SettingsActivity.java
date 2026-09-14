@@ -1,14 +1,17 @@
 package ir.brandimo.pashmak.ui.settings;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import ir.brandimo.pashmak.R;
+import ir.brandimo.pashmak.audio.AudioInventory;
 import ir.brandimo.pashmak.data.prefs.GamePrefs;
 import ir.brandimo.pashmak.databinding.ActivitySettingsBinding;
 import ir.brandimo.pashmak.ui.base.BaseActivity;
+import ir.brandimo.pashmak.util.FaNum;
 
 /** Behind the parent gate: difficulty, audio and a way to reset the score. */
 public class SettingsActivity extends BaseActivity {
@@ -52,6 +55,23 @@ public class SettingsActivity extends BaseActivity {
         });
 
         renderDifficulty();
+        renderAudioInventory();
+    }
+
+    /**
+     * Whoever records the voice files has no way to tell from inside the app
+     * whether one landed under the right name, so say how many were found.
+     */
+    private void renderAudioInventory() {
+        AudioInventory.Report report = AudioInventory.scan(this);
+        if (report.found == report.total) {
+            binding.settingsAudio.setText(getString(R.string.settings_audio_all,
+                    FaNum.of(report.total)));
+            return;
+        }
+        binding.settingsAudio.setText(getString(R.string.settings_audio_some,
+                FaNum.of(report.found), FaNum.of(report.total),
+                TextUtils.join("، ", report.missingSample)));
     }
 
     private void setDifficulty(int level) {

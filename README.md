@@ -105,21 +105,35 @@ Stars, mute, difficulty and the welcome flag are SharedPreferences.
 
 ## Audio
 
-**Music plays out of the box.** With no files present, `audio/MusicEngine` synthesises a
-soft wordless loop with `AudioTrack` — a pentatonic phrase over a slow drone, rendered
-once and looped. Drop a real `bgm_menu`/`bgm_play` into `res/raw` and it is used instead,
-with no code change. Either way the music ducks to a whisper whenever Pashmak speaks and
-comes back up afterwards.
+**Every sound has a file name, and they are all in one list.** Nothing in the app
+speaks anonymously — `MascotController.say()` requires a clip name, so a new screen
+cannot ship a mouth moving over silence. The complete list of 146 file names, each with
+the exact Persian line it reads and where it is heard, is
+[`app/src/main/res/raw/audio_manifest.txt`](app/src/main/res/raw/audio_manifest.txt).
+Drop the recordings into `app/src/main/res/raw/` under those names — `.mp3` or `.ogg`,
+lowercase with underscores or aapt will reject them. **No recordings ship with this
+repo and none is required**: every clip is resolved by name through
+`Resources#getIdentifier`, so a missing file is a silent no-op and the words still
+appear in the speech bubble.
 
-Voice lines and sound effects are a different matter: **no recordings ship with this
-repo** and none is required — every effect is a no-op until the file exists. Sounds are resolved by name through
-`Resources#getIdentifier`, so nothing has to be referenced at compile time.
+**Background music** is three files:
 
-Drop recordings into `app/src/main/res/raw/` using the exact file names listed in
-[`app/src/main/res/raw/audio_manifest.txt`](app/src/main/res/raw/audio_manifest.txt),
-which also carries the Persian script for each of the mascot's eight voice lines and the
-ten lullaby file names. File names must be lowercase with underscores or aapt will
-reject them.
+| file | where it plays |
+|---|---|
+| `bgm_menu` | splash, home, missions list, games menu, gallery, settings |
+| `bgm_play` | every mini-game and the whole live-drawing flow |
+| `bgm_story` | the story screen, which wants something softer |
+
+Loop them seamlessly; 60–120 seconds each is plenty. **Music plays out of the box even
+with none of them present** — `audio/MusicEngine` synthesises a soft wordless loop with
+`AudioTrack`, a pentatonic phrase over a slow drone, rendered once and looped. Drop a
+real file in and it is used instead, with no code change. Either way the music ducks to
+a whisper whenever Pashmak speaks and comes back up afterwards. The bedtime screen asks
+for silence — the lullaby is the sound there.
+
+**Checking your files landed.** The parent screen (behind the gate) reports how many of
+the 146 clips it can actually find and names a few of the ones it cannot, so a wrong
+file name shows up immediately instead of as a character that never speaks.
 
 ---
 

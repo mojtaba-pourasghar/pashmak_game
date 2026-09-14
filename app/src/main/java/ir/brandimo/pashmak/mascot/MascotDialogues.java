@@ -84,17 +84,22 @@ public final class MascotDialogues {
         }
     }
 
-    /** Contextual hints, keyed by screen. */
-    public String help(String key, String... args) {
+    /** Contextual hints, keyed by screen. Each one carries its own clip. */
+    public MascotLine help(String key, String... args) {
         if ("paint".equals(key)) {
-            return appContext.getString(R.string.ms_help_paint);
+            return new MascotLine(appContext.getString(R.string.ms_help_paint),
+                    AudioManifest.VOICE_HELP_PAINT, MascotState.TALK);
         }
         if ("trace".equals(key)) {
-            return appContext.getString(R.string.ms_help_trace);
+            return new MascotLine(appContext.getString(R.string.ms_help_trace),
+                    AudioManifest.VOICE_HELP_TRACE, MascotState.TALK);
         }
         if ("mission".equals(key) && args.length >= 2) {
-            return appContext.getString(R.string.ms_help_mission, args[0], args[1]);
+            return new MascotLine(
+                    appContext.getString(R.string.ms_help_mission, args[0], args[1]),
+                    AudioManifest.VOICE_HELP_MISSION, MascotState.TALK);
         }
-        return appContext.getString(R.string.ms_help_default);
+        return new MascotLine(appContext.getString(R.string.ms_help_default),
+                AudioManifest.VOICE_HELP_DEFAULT, MascotState.TALK);
     }
 }

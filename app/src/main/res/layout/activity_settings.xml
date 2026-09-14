@@ -217,6 +217,17 @@
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/settings_audio"
+                style="@style/Text.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_banner_info"
+                android:padding="16dp"
+                android:textColor="@color/info_ink"
+                tools:text="فایل‌های صدا: ۰ از ۱۴۶ پیدا شد." />
+
+            <androidx.appcompat.widget.AppCompatTextView
                 style="@style/Text.Body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import ir.brandimo.pashmak.R;
+import ir.brandimo.pashmak.audio.AudioManifest;
 import ir.brandimo.pashmak.mascot.MascotController;
 import ir.brandimo.pashmak.mascot.MascotState;
 import ir.brandimo.pashmak.databinding.ActivityMissionsBinding;
@@ -50,7 +51,8 @@ public class MissionsActivity extends BaseActivity {
     private void startMission(ir.brandimo.pashmak.data.catalog.Mission mission, int captured) {
         tap();
         mascot.say(getString(R.string.mission_start_line, mission.title),
-                MascotState.TALK, MascotController.HOLD_DEFAULT_MS);
+                MascotState.TALK, MascotController.HOLD_DEFAULT_MS,
+                AudioManifest.VOICE_MISSION_START);
         Intent intent = new Intent(this, LiveDrawingActivity.class);
         intent.putExtra(LiveDrawingActivity.EXTRA_MISSION, mission.index);
         startActivity(intent);

@@ -87,12 +87,20 @@ public final class MascotController {
         return dialogues;
     }
 
-    /** Speak a line, with a pose and a hold before returning to idle. */
-    public void say(String text, @Nullable MascotState mood, long holdMs) {
-        say(text, mood, holdMs, null);
+    /**
+     * Speak a line, with a pose, a hold before returning to idle, and the clip to
+     * play. The clip is not optional: every line in the app names one, so a new
+     * screen cannot quietly ship a mouth moving over silence. Pass a name from
+     * {@link AudioManifest}; if the recording is not in res/raw yet the words
+     * still appear and nothing sounds.
+     */
+    public void say(String text, @Nullable MascotState mood, long holdMs,
+                    @NonNull String audio) {
+        speakInternal(text, mood, holdMs, audio);
     }
 
-    public void say(String text, @Nullable MascotState mood, long holdMs, @Nullable String audio) {
+    private void speakInternal(String text, @Nullable MascotState mood, long holdMs,
+                               @Nullable String audio) {
         cancelPending();
         String body = text == null ? "" : text;
         MascotState pose = mood == null ? MascotState.TALK : mood;
@@ -114,7 +122,7 @@ public final class MascotController {
     }
 
     public void speak(@NonNull MascotLine line, long holdMs) {
-        say(line.text, line.mood, holdMs, line.audio);
+        speakInternal(line.text, line.mood, holdMs, line.audio);
     }
 
     /** Celebrates and awards a star, exactly as the prototype's cheer() does. */
@@ -140,14 +148,15 @@ public final class MascotController {
     }
 
     public void help(String key, String... args) {
-        say(dialogues.help(key, args), MascotState.TALK, HOLD_DEFAULT_MS);
+        speak(dialogues.help(key, args), HOLD_DEFAULT_MS);
     }
 
     public void welcome() {
         MascotLine line = dialogues.welcome();
-        say(line.text, MascotState.ENTER, HOLD_WELCOME_MS);
-        handler.postDelayed(() -> say(line.text, line.mood, HOLD_WELCOME_MS, line.audio),
-                DOCK_TRANSITION_MS);
+        // The entrance pose first, silent; the clip plays once he has landed.
+        speakInternal(line.text, MascotState.ENTER, HOLD_WELCOME_MS, null);
+        handler.postDelayed(() -> speakInternal(line.text, line.mood, HOLD_WELCOME_MS,
+                line.audio), DOCK_TRANSITION_MS);
     }
 
     public void idle() {

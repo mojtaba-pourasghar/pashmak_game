@@ -80,6 +80,12 @@ public class StoryActivity extends GameActivity {
         renderBeat();
     }
 
+    /** Stories want something softer underneath than the mini-games loop. */
+    @Override
+    protected String musicTrack() {
+        return AudioManifest.BGM_STORY;
+    }
+
     private StoryBeat currentBeat() {
         return story.beat(beatIndex);
     }
@@ -110,7 +116,8 @@ public class StoryActivity extends GameActivity {
         binding.storyNext.setVisibility(waitingForChild || ended ? View.GONE : View.VISIBLE);
 
         // Pashmak narrates every beat, so his mouth moves with the words.
-        mascot.say(beat.text, MascotState.TALK, MascotController.HOLD_DEFAULT_MS);
+        mascot.say(beat.text, MascotState.TALK, MascotController.HOLD_DEFAULT_MS,
+                AudioManifest.storyBeat(story.id, beatIndex));
 
         if (ended) {
             celebrate();
@@ -127,11 +134,12 @@ public class StoryActivity extends GameActivity {
             binding.storyScene.bounce(prop.id);
             mascot.addStars(1);
             String praise = beat.praise == null ? "" : beat.praise;
-            mascot.say(praise, MascotState.CHEER, MascotController.HOLD_CHEER_MS);
+            mascot.say(praise, MascotState.CHEER, MascotController.HOLD_CHEER_MS,
+                    AudioManifest.storyPraise(story.id, beatIndex));
             binding.storyScene.setInteractive(false);
             binding.getRoot().postDelayed(() -> advance(beat.next), 1500L);
         } else {
-            onWrong(getString(R.string.story_wrong));
+            onWrong(getString(R.string.story_wrong), AudioManifest.VOICE_STORY_WRONG);
         }
     }
 
@@ -139,7 +147,7 @@ public class StoryActivity extends GameActivity {
         int next = explicitNext >= 0 ? explicitNext : beatIndex + 1;
         if (next >= story.size()) {
             mascot.say(getString(R.string.story_finished), MascotState.TALK,
-                    MascotController.HOLD_DEFAULT_MS);
+                    MascotController.HOLD_DEFAULT_MS, AudioManifest.VOICE_STORY_END);
             return;
         }
         beatIndex = next;
@@ -150,7 +158,9 @@ public class StoryActivity extends GameActivity {
         sounds.play(AudioManifest.SFX_FANFARE);
         binding.storyConfetti.burst();
         mascot.addStars(STARS_PER_STORY);
+        final int ending = beatIndex;
         binding.getRoot().postDelayed(() -> mascot.say(currentBeat().text,
-                MascotState.CHEER, MascotController.HOLD_CHEER_MS), 400L);
+                MascotState.CHEER, MascotController.HOLD_CHEER_MS,
+                AudioManifest.storyBeat(story.id, ending)), 400L);
     }
 }

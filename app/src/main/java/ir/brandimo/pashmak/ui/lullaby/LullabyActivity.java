@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import java.util.Locale;
 
 import ir.brandimo.pashmak.R;
+import ir.brandimo.pashmak.audio.AudioManifest;
 import ir.brandimo.pashmak.audio.LullabyPlayer;
 import ir.brandimo.pashmak.data.catalog.Lullaby;
 import ir.brandimo.pashmak.data.catalog.LullabyCatalog;
@@ -119,7 +120,7 @@ public class LullabyActivity extends BaseActivity implements LullabyPlayer.Liste
         refreshToggles();
         showTrack(0);
         mascot.say(getString(R.string.lullaby_greeting), MascotState.IDLE,
-                MascotController.HOLD_MIN_MS);
+                MascotController.HOLD_MIN_MS, AudioManifest.VOICE_NIGHT_HELLO);
     }
 
     /** No background loop here: the lullaby is the sound on this screen. */
@@ -232,7 +233,8 @@ public class LullabyActivity extends BaseActivity implements LullabyPlayer.Liste
         }
         warnedMissing = true;
         mascot.say(getString(R.string.lullaby_missing, lullaby.title),
-                MascotState.IDLE, MascotController.HOLD_MIN_MS);
+                MascotState.IDLE, MascotController.HOLD_MIN_MS,
+                AudioManifest.VOICE_NIGHT_MISSING);
     }
 
     @Override
@@ -249,7 +251,7 @@ public class LullabyActivity extends BaseActivity implements LullabyPlayer.Liste
     @Override
     public void onPlaylistFinished() {
         mascot.say(getString(R.string.lullaby_goodnight), MascotState.IDLE,
-                MascotController.HOLD_MIN_MS);
+                MascotController.HOLD_MIN_MS, AudioManifest.VOICE_NIGHT_GOODNIGHT);
     }
 
     private String clock(int milliseconds) {

@@ -356,7 +356,7 @@ public class LiveDrawingActivity extends BaseActivity {
         binding.getRoot().postDelayed(() -> {
             mascot.addStars(2);
             mascot.say(getString(R.string.alive_arrived, label), MascotState.CHEER,
-                    MascotController.HOLD_CHEER_MS);
+                    MascotController.HOLD_CHEER_MS, AudioManifest.VOICE_ITEM_ARRIVED);
         }, wait + 700L);
     }
 
@@ -468,7 +468,7 @@ public class LiveDrawingActivity extends BaseActivity {
         binding.liveConfetti.burst();
         mascot.addStars(5);
         mascot.say(getString(R.string.ms_mission_done), MascotState.CHEER,
-                MascotController.HOLD_CHEER_MS);
+                MascotController.HOLD_CHEER_MS, AudioManifest.VOICE_MISSION_DONE);
         // Give the items time to land before snapshotting the finished scene.
         binding.getRoot().postDelayed(() -> {
             Bitmap scene = ViewCapture.of(binding.aliveScene, Color.WHITE);

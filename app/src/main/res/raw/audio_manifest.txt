@@ -1,30 +1,117 @@
 Pashmak Game — audio drop-in list
 =================================
-Put the recordings in this folder (app/src/main/res/raw/) using exactly these
-file names. Any missing file is skipped silently; the game stays playable.
+Put the recordings in app/src/main/res/raw/ using exactly these file names.
+Any missing file is skipped silently; the game stays playable and the words
+still appear in the speech bubble. Use .mp3 or .ogg, mono, 44.1 kHz.
 
-Mascot voice (mp3 or ogg, mono, 44.1 kHz):
-  welcome        سلام قندعسلم! من پشمکم، دوست جدیدت! آماده‌ای باهم کلی بازی کنیم؟
-  win1           هورااا! آفرین به قهرمان باهوشم! زدی تو هدف!
-  win2           ایول بهت! دیدی چقدر زرنگی؟ بزن قدش!
-  win3           ماشالله! این مرحله رو مثل آب خوردن بردی!
-  try_again1     فدای سرت مهربونم! غصه نداره، یه بار دیگه دقت کن حتماً می‌تونی!
-  try_again2     عیبی نداره کوچولو، حتی قهرمان‌ها هم تمرین می‌کنن! بیا باهم دوباره.
-  giggle         قلقلکم نده شیطون بلا! ههههه
-  poke           جونم قندعسل؟ منتظرتم‌ها، بیا بریم مرحله بعد!
+File names must be lowercase with letters, digits and underscores only —
+aapt rejects anything else. Do not write the extension in this list; the
+app looks the file up by name, so welcome.mp3 and welcome.ogg both work.
 
-Sound effects (short, under 1 second):
-  sfx_pop, sfx_flip, sfx_match, sfx_star, sfx_shutter,
-  sfx_wrong, sfx_brush, sfx_tap, sfx_whoosh, sfx_fanfare
+Every line Pashmak speaks in the app is listed below with the exact file it
+looks for. Nothing speaks without a name: MascotController.say() requires a
+clip, so this list is complete.
 
-Background music (looping):
-  bgm_menu, bgm_play
 
-Letter and digit pronunciation for the tracing game, named by code point:
-  letter_627 (ا), letter_628 (ب), letter_67e (پ) …  — one per Persian letter
-  digit_0 … digit_9
+1. BACKGROUND MUSIC  (looping, instrumental, no singing)
+--------------------------------------------------------
+These are the three files to drop in for background music:
 
-Lullabies for the bedtime screen (full songs, looped by the player, any length):
+  bgm_menu               Splash, home, the mission list, the games menu,
+                         the gallery and settings.
+  bgm_play               Every mini-game and the whole live-drawing flow.
+  bgm_story              The story screen — softer than the games loop.
+
+  Make each one loop seamlessly; the app loops the file end-to-start with no
+  gap. 60-120 seconds is plenty. The music ducks to a whisper automatically
+  whenever Pashmak speaks and comes back up afterwards.
+
+  If no file is present the app synthesises a soft wordless loop instead, so
+  music plays either way. The bedtime screen plays no background music at
+  all — the lullaby is the sound there.
+
+2. MASCOT GREETING AND REACTIONS
+--------------------------------
+  welcome                سلام قندعسلم! من پشمکم، دوست جدیدت! آماده‌ای باهم کلی بازی کنیم؟
+  win1                   هورااا! آفرین به قهرمان باهوشم! زدی تو هدف!
+  win2                   ایول بهت! دیدی چقدر زرنگی؟ بزن قدش!
+  win3                   ماشالله! این مرحله رو مثل آب خوردن بردی!
+  try_again1             فدای سرت مهربونم! غصه نداره، یه بار دیگه دقت کن حتماً می‌تونی!
+  try_again2             عیبی نداره کوچولو، حتی قهرمان‌ها هم تمرین می‌کنن! بیا باهم دوباره.
+  giggle                 قلقلکم نده شیطون بلا! ههههه
+  poke                   جونم قندعسل؟ منتظرتم‌ها، بیا بریم مرحله بعد!
+
+  win1-3 play at random on any success, try_again1-2 on any miss, and
+  giggle/poke when the child taps Pashmak himself.
+
+3. SCREEN HINTS  (spoken once when a screen opens)
+--------------------------------------------------
+  help_default           خوب به این مرحله نگاه کن؛ فکر می‌کنی کدوم رو انتخاب کنیم؟
+  help_paint             یه رنگ بردار و روی قسمت درست بزن. من راهنماییت می‌کنم!
+  help_trace             انگشتت رو بذار روی حرف و آرام‌آرام دنبالش بکش.
+  help_mission           بریم سراغ …! اول … رو روی کاغذ بکش.
+
+  help_mission is shown with the mission and item names filled in. Record the
+  sentence without them — for example: «بریم سراغ ماموریت! اول این رو روی
+  کاغذ بکش.» The written line on screen still names them.
+
+4. نقاشی زنده — LIVE DRAWING
+----------------------------
+  mission_start          بریم سراغ …!
+  item_arrived           وااای! «…» زنده شد و اومد تو صحنه!
+  mission_done           مجموعه کامل شد! چه هنرمندی هستی تو!
+
+  mission_start and item_arrived also carry a name on screen. Record them
+  generically, e.g. «بریم سراغ ماموریت بعدی!» and «وااای! نقاشیت زنده شد و
+  اومد تو صحنه!»
+
+5. RANG-AMIZI — COLORING
+------------------------
+  paint_right            آفرین! رنگ … درست بود.
+  paint_wrong            اشکالی نداره — … رنگ دیگه‌ای می‌خواد.
+  paint_done             عالی شد! کل نقاشی رو درست رنگ کردی.
+
+6. BAZI-E HOROOF — TRACING
+--------------------------
+  trace_done             چه خوشگل نوشتی! ۳ ستاره گرفتی.
+  trace_more             هنوز یه کم مونده — همه‌ی حرف رو پُر کن.
+
+  Plus one clip per glyph, named by its Unicode code point, spoken when the
+  stage opens:
+    letter_627 (ا)  letter_628 (ب)  letter_67e (پ)  letter_62a (ت)
+    letter_62b (ث)  letter_62c (ج)  letter_686 (چ)  letter_62d (ح)
+    letter_62e (خ)  letter_62f (د)  letter_630 (ذ)  letter_631 (ر)
+    letter_632 (ز)  letter_698 (ژ)  letter_633 (س)  letter_634 (ش)
+    letter_635 (ص)  letter_636 (ض)  letter_637 (ط)  letter_638 (ظ)
+    letter_639 (ع)  letter_63a (غ)  letter_641 (ف)  letter_642 (ق)
+    letter_6a9 (ک)  letter_6af (گ)  letter_644 (ل)  letter_645 (م)
+    letter_646 (ن)  letter_648 (و)  letter_647 (ه)  letter_6cc (ی)
+    digit_0  digit_1  digit_2  digit_3  digit_4
+    digit_5  digit_6  digit_7  digit_8  digit_9
+
+7. BAZI-E HAFEZE — MEMORY
+-------------------------
+  memory_match           ایول! یه جفت پیدا کردی.
+  memory_miss            نزدیک بود! بیا دوباره امتحان کنیم.
+  memory_win             همه‌ی جفت‌ها رو پیدا کردی! تو فوق‌العاده‌ای.
+  memory_next            مرحله‌ی بعد!
+
+8. BUBBLES AND FREE DRAWING
+---------------------------
+  bubble_pop             ترکوندیش! ادامه بده.
+  draw_empty             اول یه چیزی بکش تا ذخیره کنم.
+
+9. STAGE LISTS
+--------------
+  stage_locked           اول مرحله‌ی قبلی رو تموم کن تا این باز شه.
+
+10. BEDTIME — لالایی شبانه
+--------------------------
+  night_hello            شب به‌خیر قندعسلم. یه لالایی انتخاب کن تا باهم گوش بدیم.
+  night_goodnight        چشماتو ببند عزیزم. شب خوبی داشته باشی.
+  night_missing          لالایی «…» هنوز ضبط نشده. یکی دیگه رو انتخاب کن.
+
+  And the lullabies themselves — full songs, any length:
   lullaby_lay_lay        لای‌لای گل پونه
   lullaby_mahe_man       ماه من بخواب
   lullaby_gonjeshk       گنجشک لالایی
@@ -36,9 +123,88 @@ Lullabies for the bedtime screen (full songs, looped by the player, any length):
   lullaby_pashmak        لالایی پشمک
   lullaby_shab_bekheir   شب به‌خیر ماه
 
-  The list itself lives in data/catalog/LullabyCatalog.java — the titles, the
-  verse shown under each one and the running time printed before the file
-  arrives. Change them there if you record different songs. A lullaby whose
-  file is missing is skipped, and Pashmak says so once rather than repeatedly.
+  The titles and the verse under each one live in
+  data/catalog/LullabyCatalog.java — change them there if you record
+  different songs.
 
-File names must be lowercase with underscores only; aapt rejects anything else.
+11. STORIES  (one clip per line Pashmak narrates)
+-------------------------------------------------
+  Optional: a story reads perfectly well from the bubble alone. Record these
+  only if you want the stories narrated aloud.
+
+  نقاشی جادویی — magic
+    story_magic_0        یه روز صبح، اولین نقاشیِ تو از کاغذ پرید بیرون و گفت: «من می‌خوام دنیا رو ببینم!»
+    story_magic_1        قبلش کمکم کن! کدوم تو آسمونه و گرممون می‌کنه؟
+    story_magic_1_yes    آفرین قندعسلم! خورشید بالای سرمونه.
+    story_magic_2        خورشید بهمون لبخند زد و ما راه افتادیم.
+    story_magic_3        حالا تو بگو از کدوم راه بریم؟
+    story_magic_4        تو جنگل یه خرگوش دیدیم که دنبال دوست می‌گشت.
+    story_magic_5        خرگوش کوچولو هم باهامون اومد. چه روز خوبی!
+    story_magic_6        لب دریا یه قایق قرمز منتظرمون بود.
+    story_magic_7        سوار قایق شدیم و یه ماهی طلایی برامون آواز خوند.
+    story_magic_8        آخرش همه دور هم جمع شدیم. این قشنگ‌ترین روزِ نقاشیِ تو بود!
+
+  توپ گم‌شده — ball
+    story_ball_0         پشمک و دوستاش تو حیاط بازی می‌کردن که توپ قل خورد و گم شد!
+    story_ball_1         کمکم کن! کدوم گرده و باهاش بازی می‌کنیم؟
+    story_ball_1_yes     ایول! توپمون رو پیدا کردی!
+    story_ball_2         توپ رو به کی بدیم اول بازی کنه؟
+    story_ball_3         سگ کوچولو توپ رو با پوزه‌اش هل داد و همه خندیدیم!
+    story_ball_4         گربه توپ رو با دُمش چرخوند، چه بامزه بود!
+    story_ball_5         تا شب بازی کردیم. دوستی یعنی همین!
+
+  سفر به ماه — moon
+    story_moon_0         پشمک یه موشک نارنجی ساخت و گفت: «بریم ماه رو ببینیم؟»
+    story_moon_1         برای پرواز باید بدونیم کجا می‌ریم. کدوم ماهه؟
+    story_moon_1_yes     درسته! ماه اون بالا منتظرمونه.
+    story_moon_2         سه، دو، یک… موشک بلند شد و از لای ستاره‌ها رد شد!
+    story_moon_3         رو ماه چی کار کنیم؟
+    story_moon_4         رو ماه همه‌چی سبکه! پشمک تا آسمون پرید و خندید.
+    story_moon_5         یه جیب پر ستاره جمع کردیم که شب‌ها چراغ اتاقت باشه.
+    story_moon_6         برگشتیم خونه. حالا تو هم یه ستاره‌ی خودت داری!
+
+  مهمونی میوه‌ها — fruit
+    story_fruit_0        امروز تولد پشمکه و همه‌ی میوه‌ها دعوتن!
+    story_fruit_1        یه میوه‌ی قرمز و گرد می‌خوام. کدومه؟
+    story_fruit_1_yes    آفرین! سیب سرخ اومد به مهمونی.
+    story_fruit_2        حالا یکی که درازه و زرده!
+    story_fruit_2_yes    دقیقاً! موز هم اومد.
+    story_fruit_3        برای پذیرایی چی درست کنیم؟
+    story_fruit_4        یه پارچ آب‌میوه‌ی خنک درست کردیم، همه سیر شدن!
+    story_fruit_5        بستنی میوه‌ای درست کردیم و همه لیس زدن و خندیدن!
+    story_fruit_6        پشمک گفت: «بهترین تولد عمرم بود!» تو هم دعوتی.
+
+  دوست تازه — friend
+    story_friend_0       یه خرس کوچولو تنها نشسته بود و غصه‌دار بود.
+    story_friend_1       چی کار کنیم که خوشحال شه؟
+    story_friend_2       رفتیم سلام کردیم و اسمش رو پرسیدیم. لبخند زد!
+    story_friend_3       یه گل قشنگ چیدیم و بهش دادیم. چشماش برق زد!
+    story_friend_4       حالا یه دوست دیگه هم صدا کنیم. کدوم تو آب می‌پره؟
+    story_friend_4_yes   درسته! قورباغه هم اومد تو جمعمون.
+    story_friend_5       حالا سه تا دوستیم. هیچ‌کس دیگه تنها نیست!
+
+  شب بارونی — rain
+    story_rain_0         ابرها جمع شدن و بارون شروع شد. کاش یه چیزی داشتیم!
+    story_rain_1         کمکم کن! زیر کدوم خیس نمی‌شیم؟
+    story_rain_1_yes     آفرین! چتر نجاتمون داد.
+    story_rain_2         زیر چتر راه افتادیم و صدای قطره‌ها مثل آهنگ بود.
+    story_rain_3         بریم خونه یا تو بارون بازی کنیم؟
+    story_rain_4         رفتیم خونه، شیر داغ خوردیم و از پنجره بارون رو تماشا کردیم.
+    story_rain_5         تو گودال‌ها پریدیم و کلی خندیدیم! لباسامون خیس شد ولی می‌ارزید.
+    story_rain_6         بارون تموم شد و یه رنگین‌کمون اومد. شب بخیر قهرمان!
+
+  story_wrong            نه قندعسلم، یه بار دیگه نگاه کن.
+  story_end              قصه تموم شد! یه قصه‌ی دیگه انتخاب کن.
+
+12. SOUND EFFECTS  (short, under a second)
+------------------------------------------
+  sfx_pop       a bubble bursting
+  sfx_flip      a memory card turning over
+  sfx_match     a correct answer
+  sfx_star      a star being awarded
+  sfx_shutter   the camera taking a photo
+  sfx_wrong     a gentle "not that one" — never harsh
+  sfx_brush     a pencil stroke on paper
+  sfx_tap       any button
+  sfx_whoosh    a screen or an item moving
+  sfx_fanfare   a mission or a story finishing

@@ -75,7 +75,7 @@ public class BubblePopActivity extends GameActivity {
         renderScore();
         if (score % CHEER_EVERY == 0) {
             mascot.say(getString(R.string.bubbles_pop_line), MascotState.CHEER,
-                    MascotController.HOLD_MIN_MS);
+                    MascotController.HOLD_MIN_MS, AudioManifest.VOICE_BUBBLE_POP);
         }
     }
 

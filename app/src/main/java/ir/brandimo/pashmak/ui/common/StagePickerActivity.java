@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import java.util.List;
 
 import ir.brandimo.pashmak.R;
+import ir.brandimo.pashmak.audio.AudioManifest;
 import ir.brandimo.pashmak.databinding.ActivityStagePickerBinding;
 import ir.brandimo.pashmak.mascot.MascotController;
 import ir.brandimo.pashmak.mascot.MascotState;
@@ -72,7 +73,7 @@ public abstract class StagePickerActivity extends BaseActivity
         tap();
         if (stage.locked) {
             mascot.say(getString(R.string.stage_locked), MascotState.TALK,
-                    MascotController.HOLD_MIN_MS);
+                    MascotController.HOLD_MIN_MS, AudioManifest.VOICE_STAGE_LOCKED);
             return;
         }
         onStageChosen(stage);

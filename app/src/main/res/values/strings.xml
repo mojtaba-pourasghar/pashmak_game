@@ -179,6 +179,8 @@
     <string name="settings_off">خاموش</string>
     <string name="settings_reset_stars">صفر کردن ستاره‌ها</string>
     <string name="settings_stars_reset">ستاره‌ها صفر شد.</string>
+    <string name="settings_audio_all">همه‌ی %1$s فایل صدا پیدا شد. ✔</string>
+    <string name="settings_audio_some">فایل‌های صدا: %1$s از %2$s پیدا شد. بقیه در res/raw/audio_manifest.txt فهرست شده — مثل: %3$s</string>
     <string name="settings_info">این اپ کامل آفلاین کار می‌کنه — بدون تبلیغ، بدون حساب کاربری و بدون خرید درون‌برنامه‌ای.</string>
 
     <!-- Mascot dialogue (MascotConfig.js, verbatim) -->
