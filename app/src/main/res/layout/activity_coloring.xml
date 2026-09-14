@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_paint"
+    android:clipChildren="false"
+    android:paddingStart="@dimen/screen_padding"
+    android:paddingTop="@dimen/screen_padding_v"
+    android:paddingEnd="@dimen/screen_padding"
+    android:paddingBottom="@dimen/screen_padding_v">
+
+    <include
+        android:id="@+id/paint_header"
+        layout="@layout/view_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ir.brandimo.pashmak.ui.coloring.ColoringCanvasView
+        android:id="@+id/paint_canvas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_frame_paint"
+        app:layout_constraintBottom_toTopOf="@id/paint_banner"
+        app:layout_constraintEnd_toStartOf="@id/paint_side"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/paint_header" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/paint_banner"
+        style="@style/Text.Body.Bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_banner_purple"
+        android:gravity="center"
+        android:paddingStart="14dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/purple_ink"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/paint_canvas"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="یه رنگ انتخاب کن و روی قسمت درست بزن" />
+
+    <LinearLayout
+        android:id="@+id/paint_side"
+        android:layout_width="@dimen/end_column_width"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/gap"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/paint_header">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/paint_pages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/paint_legend_title"
+            style="@style/Text.Sub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/purple_ink" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/paint_legend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+        <ir.brandimo.pashmak.ui.common.SwatchBar
+            android:id="@+id/paint_palette"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/paint_save"
+            style="@style/Button.Chunky"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/btn_purple"
+            android:text="@string/paint_save"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/paint_dock"
+        layout="@layout/view_mascot_dock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

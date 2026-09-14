@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <files-path name="items" path="items/" />
+    <files-path name="scenes" path="scenes/" />
+    <cache-path name="share" path="share/" />
+</paths>

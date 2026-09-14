@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/splash_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_splash"
+    android:clipChildren="false">
+
+    <ir.brandimo.pashmak.mascot.MascotView
+        android:id="@+id/splash_mascot"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/mascot_hero"
+        app:layout_constraintBottom_toTopOf="@id/splash_progress"
+        app:layout_constraintEnd_toStartOf="@id/splash_text_group"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.42" />
+
+    <LinearLayout
+        android:id="@+id/splash_text_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/splash_mascot"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/splash_mascot"
+        app:layout_constraintTop_toTopOf="@id/splash_mascot">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Text.Display"
+            android:text="@string/splash_title"
+            android:textColor="@color/navy" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/splash_tagline"
+            style="@style/Text.Body.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:letterSpacing="0.12"
+            android:textColor="@color/splash_tagline"
+            tools:text="با پشمک بساز، بازی کن" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/splash_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="6dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="16dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="36"
+        android:progressDrawable="@drawable/progress_splash"
+        app:layout_constraintBottom_toTopOf="@id/splash_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/splash_label"
+        style="@style/Text.Body.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:letterSpacing="0.08"
+        android:text="@string/splash_loading"
+        android:textColor="@color/ink_splash_label"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

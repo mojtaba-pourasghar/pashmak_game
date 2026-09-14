@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mission table transcribed verbatim from the design prototype. -->
+<resources>
+    <string-array name="mission_titles">
+        <item>اتاق خواب پشمک رو بساز</item>
+        <item>آشپزخونه‌ی پشمک</item>
+        <item>حیاط خونه</item>
+        <item>جشن تولد پشمک</item>
+        <item>اتاق بازی</item>
+        <item>سفر به دریا</item>
+        <item>باغ‌وحش پشمک</item>
+        <item>سفر به فضا</item>
+        <item>روز اول مدرسه</item>
+        <item>زمین بازی</item>
+        <item>مزرعه</item>
+        <item>پیتزای پشمک</item>
+        <item>شهر شلوغ</item>
+        <item>قطار پشمک</item>
+        <item>زیر دریا</item>
+        <item>کمپ جنگل</item>
+        <item>روز بارونی</item>
+        <item>سیرک</item>
+        <item>کارگاه ربات‌ها</item>
+        <item>زمستون برفی</item>
+    </string-array>
+
+    <string-array name="mission_1_items">
+        <item>تخت</item>
+        <item>چراغ</item>
+        <item>قالیچه</item>
+        <item>پنجره</item>
+    </string-array>
+    <string-array name="mission_2_items">
+        <item>یخچال</item>
+        <item>قابلمه</item>
+        <item>میز</item>
+        <item>لیوان</item>
+    </string-array>
+    <string-array name="mission_3_items">
+        <item>درخت</item>
+        <item>تاب</item>
+        <item>گل</item>
+        <item>حصار</item>
+    </string-array>
+    <string-array name="mission_4_items">
+        <item>کیک</item>
+        <item>بادکنک</item>
+        <item>کلاه</item>
+        <item>کادو</item>
+    </string-array>
+    <string-array name="mission_5_items">
+        <item>توپ</item>
+        <item>عروسک</item>
+        <item>جعبه</item>
+        <item>کتاب</item>
+    </string-array>
+    <string-array name="mission_6_items">
+        <item>قایق</item>
+        <item>ماهی</item>
+        <item>خورشید</item>
+        <item>صدف</item>
+    </string-array>
+    <string-array name="mission_7_items">
+        <item>فیل</item>
+        <item>زرافه</item>
+        <item>میمون</item>
+        <item>آب‌خوری</item>
+    </string-array>
+    <string-array name="mission_8_items">
+        <item>موشک</item>
+        <item>ستاره</item>
+        <item>ماه</item>
+        <item>سیاره</item>
+    </string-array>
+    <string-array name="mission_9_items">
+        <item>کیف</item>
+        <item>مداد</item>
+        <item>تخته</item>
+        <item>زنگ</item>
+    </string-array>
+    <string-array name="mission_10_items">
+        <item>سرسره</item>
+        <item>الاکلنگ</item>
+        <item>توپ</item>
+        <item>دوست</item>
+    </string-array>
+    <string-array name="mission_11_items">
+        <item>گاو</item>
+        <item>مرغ</item>
+        <item>تراکتور</item>
+        <item>انبار</item>
+    </string-array>
+    <string-array name="mission_12_items">
+        <item>خمیر</item>
+        <item>پنیر</item>
+        <item>گوجه</item>
+        <item>قارچ</item>
+    </string-array>
+    <string-array name="mission_13_items">
+        <item>ماشین</item>
+        <item>چراغ راهنما</item>
+        <item>ساختمان</item>
+        <item>اتوبوس</item>
+    </string-array>
+    <string-array name="mission_14_items">
+        <item>لوکوموتیو</item>
+        <item>واگن</item>
+        <item>ریل</item>
+        <item>ایستگاه</item>
+    </string-array>
+    <string-array name="mission_15_items">
+        <item>هشت‌پا</item>
+        <item>مرجان</item>
+        <item>اسب دریایی</item>
+        <item>حباب</item>
+    </string-array>
+    <string-array name="mission_16_items">
+        <item>چادر</item>
+        <item>آتش</item>
+        <item>درخت</item>
+        <item>خرس</item>
+    </string-array>
+    <string-array name="mission_17_items">
+        <item>ابر</item>
+        <item>چتر</item>
+        <item>قطره</item>
+        <item>رنگین‌کمان</item>
+    </string-array>
+    <string-array name="mission_18_items">
+        <item>چادر سیرک</item>
+        <item>دلقک</item>
+        <item>توپ</item>
+        <item>طناب</item>
+    </string-array>
+    <string-array name="mission_19_items">
+        <item>سر ربات</item>
+        <item>بازو</item>
+        <item>دکمه</item>
+        <item>آنتن</item>
+    </string-array>
+    <string-array name="mission_20_items">
+        <item>آدم‌برفی</item>
+        <item>دانه‌برف</item>
+        <item>شال</item>
+        <item>سورتمه</item>
+    </string-array>
+
+    <array name="mission_items">
+        <item>@array/mission_1_items</item>
+        <item>@array/mission_2_items</item>
+        <item>@array/mission_3_items</item>
+        <item>@array/mission_4_items</item>
+        <item>@array/mission_5_items</item>
+        <item>@array/mission_6_items</item>
+        <item>@array/mission_7_items</item>
+        <item>@array/mission_8_items</item>
+        <item>@array/mission_9_items</item>
+        <item>@array/mission_10_items</item>
+        <item>@array/mission_11_items</item>
+        <item>@array/mission_12_items</item>
+        <item>@array/mission_13_items</item>
+        <item>@array/mission_14_items</item>
+        <item>@array/mission_15_items</item>
+        <item>@array/mission_16_items</item>
+        <item>@array/mission_17_items</item>
+        <item>@array/mission_18_items</item>
+        <item>@array/mission_19_items</item>
+        <item>@array/mission_20_items</item>
+    </array>
+
+    <string-array name="story_lines">
+        <item>یه روز صبح، اولین نقاشیِ تو از کاغذ پرید بیرون و گفت: «من می‌خوام دنیا رو ببینم!»</item>
+        <item>پشمک دستش رو گرفت و راه افتادیم. سر راه هرچی کشیده بودی به ما پیوست!</item>
+        <item>آخرش همه دور هم جمع شدیم و پشمک گفت: «این قشنگ‌ترین مجموعه‌ای بود که دیدم!»</item>
+    </string-array>
+
+    <string-array name="trace_letters">
+        <item>ا</item>
+        <item>ب</item>
+        <item>پ</item>
+        <item>ت</item>
+        <item>ث</item>
+        <item>ج</item>
+        <item>چ</item>
+        <item>ح</item>
+        <item>خ</item>
+        <item>د</item>
+        <item>ذ</item>
+        <item>ر</item>
+        <item>ز</item>
+        <item>ژ</item>
+        <item>س</item>
+        <item>ش</item>
+        <item>ص</item>
+        <item>ض</item>
+        <item>ط</item>
+        <item>ظ</item>
+        <item>ع</item>
+        <item>غ</item>
+        <item>ف</item>
+        <item>ق</item>
+        <item>ک</item>
+        <item>گ</item>
+        <item>ل</item>
+        <item>م</item>
+        <item>ن</item>
+        <item>و</item>
+        <item>ه</item>
+        <item>ی</item>
+    </string-array>
+
+    <string-array name="trace_digits">
+        <item>۰</item>
+        <item>۱</item>
+        <item>۲</item>
+        <item>۳</item>
+        <item>۴</item>
+        <item>۵</item>
+        <item>۶</item>
+        <item>۷</item>
+        <item>۸</item>
+        <item>۹</item>
+    </string-array>
+</resources>

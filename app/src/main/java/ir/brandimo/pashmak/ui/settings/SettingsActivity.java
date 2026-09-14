@@ -1,0 +1,78 @@
+package ir.brandimo.pashmak.ui.settings;
+
+import android.os.Bundle;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+
+import ir.brandimo.pashmak.R;
+import ir.brandimo.pashmak.data.prefs.GamePrefs;
+import ir.brandimo.pashmak.databinding.ActivitySettingsBinding;
+import ir.brandimo.pashmak.ui.base.BaseActivity;
+
+/** Behind the parent gate: difficulty, audio and a way to reset the score. */
+public class SettingsActivity extends BaseActivity {
+
+    private ActivitySettingsBinding binding;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivitySettingsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        binding.settingsHeader.headerTitle.setText(R.string.settings_title);
+        binding.settingsHeader.headerBack.setOnClickListener(v -> {
+            tap();
+            finish();
+        });
+        bindStars(binding.settingsHeader.headerStarsValue);
+
+        binding.settingsSoundSub.setText(
+                getString(R.string.settings_sound_sub, getString(R.string.mascot_name)));
+
+        binding.settingsEasy.setOnClickListener(v -> setDifficulty(GamePrefs.DIFFICULTY_EASY));
+        binding.settingsMedium.setOnClickListener(v -> setDifficulty(GamePrefs.DIFFICULTY_MEDIUM));
+        binding.settingsHard.setOnClickListener(v -> setDifficulty(GamePrefs.DIFFICULTY_HARD));
+
+        binding.settingsSoundSwitch.setChecked(prefs.soundEnabled() && !prefs.isMuted());
+        binding.settingsSoundSwitch.setOnCheckedChangeListener((button, checked) -> {
+            prefs.setSoundEnabled(checked);
+            mascot.setMuted(!checked);
+        });
+
+        binding.settingsMusicSwitch.setChecked(prefs.musicEnabled());
+        binding.settingsMusicSwitch.setOnCheckedChangeListener(
+                (button, checked) -> prefs.setMusicEnabled(checked));
+
+        binding.settingsResetStars.setOnClickListener(v -> {
+            tap();
+            prefs.resetStars();
+            Toast.makeText(this, R.string.settings_stars_reset, Toast.LENGTH_SHORT).show();
+        });
+
+        renderDifficulty();
+    }
+
+    private void setDifficulty(int level) {
+        tap();
+        prefs.setDifficulty(level);
+        renderDifficulty();
+    }
+
+    private void renderDifficulty() {
+        int level = prefs.difficulty();
+        binding.settingsEasy.setSelected(level == GamePrefs.DIFFICULTY_EASY);
+        binding.settingsMedium.setSelected(level == GamePrefs.DIFFICULTY_MEDIUM);
+        binding.settingsHard.setSelected(level == GamePrefs.DIFFICULTY_HARD);
+
+        int active = androidx.core.content.ContextCompat.getColor(this, R.color.white);
+        int idle = androidx.core.content.ContextCompat.getColor(this, R.color.ink_secondary);
+        binding.settingsEasy.setTextColor(
+                level == GamePrefs.DIFFICULTY_EASY ? active : idle);
+        binding.settingsMedium.setTextColor(
+                level == GamePrefs.DIFFICULTY_MEDIUM ? active : idle);
+        binding.settingsHard.setTextColor(
+                level == GamePrefs.DIFFICULTY_HARD ? active : idle);
+    }
+}

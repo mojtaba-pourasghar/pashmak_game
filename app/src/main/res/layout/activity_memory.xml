@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_memory"
+    android:clipChildren="false"
+    android:paddingStart="@dimen/screen_padding"
+    android:paddingTop="@dimen/screen_padding_v"
+    android:paddingEnd="@dimen/screen_padding"
+    android:paddingBottom="@dimen/screen_padding_v">
+
+    <include
+        android:id="@+id/memory_header"
+        layout="@layout/view_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/memory_counter"
+        style="@style/Text.Body.Bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:textColor="@color/ink_memory_counter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memory_header"
+        tools:text="جفت‌های پیدا شده: ۰ از ۶" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/memory_board"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memory_counter"
+        tools:itemCount="12"
+        tools:listitem="@layout/item_memory_card" />
+
+    <include
+        android:id="@+id/memory_dock"
+        layout="@layout/view_mascot_dock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

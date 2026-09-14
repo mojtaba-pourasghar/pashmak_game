@@ -1,0 +1,120 @@
+package ir.brandimo.pashmak.data.prefs;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+/**
+ * Light, frequently-read state. Keys match the prototype's localStorage names so
+ * the two implementations stay recognisably the same product.
+ */
+public final class GamePrefs {
+
+    private static final String FILE = "pashmak_prefs";
+
+    public static final String KEY_MUTED = "mascot_muted";
+    public static final String KEY_WELCOMED = "mascot_has_welcomed";
+    public static final String KEY_STARS = "mascot_stars_count";
+    public static final String KEY_DIFFICULTY = "difficulty";
+    public static final String KEY_SOUND = "sound_enabled";
+    public static final String KEY_MUSIC = "music_enabled";
+
+    public static final int DIFFICULTY_EASY = 0;
+    public static final int DIFFICULTY_MEDIUM = 1;
+    public static final int DIFFICULTY_HARD = 2;
+
+    private static volatile GamePrefs instance;
+
+    private final SharedPreferences prefs;
+    private final MutableLiveData<Integer> stars = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> muted = new MutableLiveData<>();
+
+    private GamePrefs(Context context) {
+        prefs = context.getApplicationContext().getSharedPreferences(FILE, Context.MODE_PRIVATE);
+        stars.setValue(prefs.getInt(KEY_STARS, 0));
+        muted.setValue(prefs.getBoolean(KEY_MUTED, false));
+    }
+
+    public static GamePrefs get(@NonNull Context context) {
+        GamePrefs local = instance;
+        if (local == null) {
+            synchronized (GamePrefs.class) {
+                if (instance == null) {
+                    instance = new GamePrefs(context);
+                }
+                local = instance;
+            }
+        }
+        return local;
+    }
+
+    public LiveData<Integer> starsLive() {
+        return stars;
+    }
+
+    public int stars() {
+        Integer value = stars.getValue();
+        return value == null ? 0 : value;
+    }
+
+    /** Stars only ever accumulate downward to zero, never below it. */
+    public void addStars(int delta) {
+        int next = Math.max(0, stars() + delta);
+        prefs.edit().putInt(KEY_STARS, next).apply();
+        stars.setValue(next);
+    }
+
+    public void resetStars() {
+        prefs.edit().putInt(KEY_STARS, 0).apply();
+        stars.setValue(0);
+    }
+
+    public LiveData<Boolean> mutedLive() {
+        return muted;
+    }
+
+    public boolean isMuted() {
+        Boolean value = muted.getValue();
+        return value != null && value;
+    }
+
+    public void setMuted(boolean value) {
+        prefs.edit().putBoolean(KEY_MUTED, value).apply();
+        muted.setValue(value);
+    }
+
+    public boolean hasWelcomed() {
+        return prefs.getBoolean(KEY_WELCOMED, false);
+    }
+
+    public void setWelcomed(boolean value) {
+        prefs.edit().putBoolean(KEY_WELCOMED, value).apply();
+    }
+
+    public int difficulty() {
+        return prefs.getInt(KEY_DIFFICULTY, DIFFICULTY_MEDIUM);
+    }
+
+    public void setDifficulty(int value) {
+        prefs.edit().putInt(KEY_DIFFICULTY, value).apply();
+    }
+
+    public boolean soundEnabled() {
+        return prefs.getBoolean(KEY_SOUND, true);
+    }
+
+    public void setSoundEnabled(boolean value) {
+        prefs.edit().putBoolean(KEY_SOUND, value).apply();
+    }
+
+    public boolean musicEnabled() {
+        return prefs.getBoolean(KEY_MUSIC, false);
+    }
+
+    public void setMusicEnabled(boolean value) {
+        prefs.edit().putBoolean(KEY_MUSIC, value).apply();
+    }
+}

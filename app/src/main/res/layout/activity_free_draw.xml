@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_plain"
+    android:clipChildren="false"
+    android:paddingStart="@dimen/screen_padding"
+    android:paddingTop="@dimen/screen_padding_v"
+    android:paddingEnd="@dimen/screen_padding"
+    android:paddingBottom="@dimen/screen_padding_v">
+
+    <include
+        android:id="@+id/draw_header"
+        layout="@layout/view_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ir.brandimo.pashmak.ui.common.PaintCanvasView
+        android:id="@+id/draw_canvas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_frame_draw"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/draw_tools"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/draw_header" />
+
+    <LinearLayout
+        android:id="@+id/draw_tools"
+        android:layout_width="@dimen/end_column_width"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/gap"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/draw_header">
+
+        <ir.brandimo.pashmak.ui.common.SwatchBar
+            android:id="@+id/draw_palette"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/draw_thin"
+                style="@style/Button.Chunky"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_cyan"
+                android:text="@string/brush_thin"
+                android:textSize="15sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/draw_thick"
+                style="@style/Button.Chunky"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_cyan"
+                android:text="@string/brush_thick"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/draw_save"
+            style="@style/Button.Chunky"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/btn_green"
+            android:text="@string/freedraw_save"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/draw_dock"
+        layout="@layout/view_mascot_dock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

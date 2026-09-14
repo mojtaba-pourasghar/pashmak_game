@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gallery_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:background="@drawable/bg_card_white"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/gallery_thumb"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@drawable/bg_thumb"
+        android:contentDescription="@string/gallery_title"
+        android:scaleType="centerCrop" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/gallery_item_title"
+        style="@style/Text.Section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="16sp"
+        tools:text="اتاق خواب پشمک" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/gallery_item_sub"
+        style="@style/Text.Sub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="ماموریت ۱" />
+</LinearLayout>

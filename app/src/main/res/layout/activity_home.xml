@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_home"
+    android:clipChildren="false"
+    android:paddingStart="@dimen/screen_padding"
+    android:paddingTop="@dimen/screen_padding_v"
+    android:paddingEnd="@dimen/screen_padding"
+    android:paddingBottom="@dimen/screen_padding_v">
+
+    <!-- Start rail: identity and score -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/home_title"
+        style="@style/Text.Display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="@color/white"
+        android:shadowDy="3"
+        android:shadowRadius="0.01"
+        android:text="@string/home_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/home_subtitle"
+        style="@style/Text.Section"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_title"
+        tools:text="با پشمک بازی کن!" />
+
+    <include
+        android:id="@+id/home_stars"
+        layout="@layout/view_stars_chip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_subtitle" />
+
+    <!-- Centre stage: the character, tappable for a giggle -->
+    <FrameLayout
+        android:id="@+id/home_mascot_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:clipChildren="false"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/home_buttons"
+        app:layout_constraintStart_toEndOf="@id/home_title"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ir.brandimo.pashmak.mascot.MascotView
+            android:id="@+id/home_mascot"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mascot_home" />
+    </FrameLayout>
+
+    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+        android:id="@+id/home_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:background="@drawable/bg_speech_bubble"
+        android:paddingStart="11dp"
+        android:paddingTop="9dp"
+        android:paddingEnd="11dp"
+        android:paddingBottom="9dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/home_mascot_holder"
+        app:layout_constraintEnd_toEndOf="@id/home_mascot_holder"
+        app:layout_constraintStart_toStartOf="@id/home_mascot_holder" />
+
+    <!-- End column: where the child goes next -->
+    <LinearLayout
+        android:id="@+id/home_buttons"
+        android:layout_width="@dimen/end_column_width"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/home_btn_missions"
+            style="@style/Button.Chunky.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_amber"
+            tools:text="ماموریت‌های پشمک" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/home_btn_games"
+            style="@style/Button.Chunky"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap"
+            android:background="@drawable/btn_blue"
+            android:text="@string/home_games" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/home_btn_gallery"
+            style="@style/Button.Chunky"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap"
+            android:background="@drawable/btn_purple"
+            android:text="@string/home_gallery" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/home_btn_parents"
+            style="@style/Button.Chunky"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap"
+            android:background="@drawable/btn_grey"
+            android:text="@string/home_parents"
+            android:textSize="16sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

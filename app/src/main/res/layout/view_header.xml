@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Back, title, score and one optional action. Used by every list/game screen. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/header_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/header_back"
+        style="@style/Button.Round"
+        android:contentDescription="@string/back"
+        android:src="@drawable/ic_back"
+        app:tint="@color/blue" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/header_title"
+        style="@style/Text.Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/blue"
+        tools:text="ماموریت‌ها" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/header_action"
+        style="@style/Button.Pill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:textColor="@color/blue"
+        android:visibility="gone"
+        tools:text="پاک کن"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/header_stars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_chip_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="6dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:contentDescription="@string/cd_star"
+            android:src="@drawable/ic_star" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/header_stars_value"
+            style="@style/Text.Chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            tools:text="۱۲" />
+    </LinearLayout>
+</LinearLayout>

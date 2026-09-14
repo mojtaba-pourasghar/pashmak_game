@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_plain"
+    android:clipChildren="false"
+    android:paddingStart="@dimen/screen_padding"
+    android:paddingTop="@dimen/screen_padding_v"
+    android:paddingEnd="@dimen/screen_padding"
+    android:paddingBottom="@dimen/screen_padding_v">
+
+    <include
+        android:id="@+id/games_header"
+        layout="@layout/view_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/games_scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/games_header">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="12dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/games_live"
+                style="@style/Button.Chunky.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_orange_card"
+                android:text="@string/game_live_title" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/games_live_sub"
+                style="@style/Text.Sub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:textColor="@color/ink_secondary" />
+
+            <GridLayout
+                android:id="@+id/games_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_lg"
+                android:alignmentMode="alignMargins"
+                android:columnCount="3"
+                android:useDefaultMargins="false">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/games_paint"
+                    style="@style/Button.Chunky"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="fill_horizontal"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:background="@drawable/btn_purple_card"
+                    android:minHeight="@dimen/card_min_height"
+                    android:text="@string/game_paint_title" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/games_freedraw"
+                    style="@style/Button.Chunky"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="fill_horizontal"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:background="@drawable/btn_cyan"
+                    android:minHeight="@dimen/card_min_height"
+                    android:text="@string/game_freedraw_title" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/games_trace"
+                    style="@style/Button.Chunky"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="fill_horizontal"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:background="@drawable/btn_green"
+                    android:minHeight="@dimen/card_min_height"
+                    android:text="@string/game_trace_title" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/games_bubbles"
+                    style="@style/Button.Chunky"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="fill_horizontal"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:background="@drawable/btn_blue_deep"
+                    android:minHeight="@dimen/card_min_height"
+                    android:text="@string/game_bubbles_title" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/games_memory"
+                    style="@style/Button.Chunky"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="fill_horizontal"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:background="@drawable/btn_red"
+                    android:minHeight="@dimen/card_min_height"
+                    android:text="@string/game_memory_title" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/games_story"
+                    style="@style/Button.Chunky"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="fill_horizontal"
+                    android:layout_margin="5dp"
+                    android:layout_rowWeight="1"
+                    android:background="@drawable/btn_yellow"
+                    android:minHeight="@dimen/card_min_height"
+                    android:text="@string/game_story_title"
+                    android:textColor="@color/gold_ink" />
+            </GridLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/games_settings"
+                style="@style/Button.Pill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap_lg"
+                android:background="@drawable/bg_card_dashed"
+                android:text="@string/game_settings_row"
+                android:textColor="@color/ink_secondary" />
+        </LinearLayout>
+    </ScrollView>
+
+    <include
+        android:id="@+id/games_dock"
+        layout="@layout/view_mascot_dock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

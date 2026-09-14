@@ -1,0 +1,27 @@
+Pashmak Game — audio drop-in list
+=================================
+Put the recordings in this folder (app/src/main/res/raw/) using exactly these
+file names. Any missing file is skipped silently; the game stays playable.
+
+Mascot voice (mp3 or ogg, mono, 44.1 kHz):
+  welcome        سلام قندعسلم! من پشمکم، دوست جدیدت! آماده‌ای باهم کلی بازی کنیم؟
+  win1           هورااا! آفرین به قهرمان باهوشم! زدی تو هدف!
+  win2           ایول بهت! دیدی چقدر زرنگی؟ بزن قدش!
+  win3           ماشالله! این مرحله رو مثل آب خوردن بردی!
+  try_again1     فدای سرت مهربونم! غصه نداره، یه بار دیگه دقت کن حتماً می‌تونی!
+  try_again2     عیبی نداره کوچولو، حتی قهرمان‌ها هم تمرین می‌کنن! بیا باهم دوباره.
+  giggle         قلقلکم نده شیطون بلا! ههههه
+  poke           جونم قندعسل؟ منتظرتم‌ها، بیا بریم مرحله بعد!
+
+Sound effects (short, under 1 second):
+  sfx_pop, sfx_flip, sfx_match, sfx_star, sfx_shutter,
+  sfx_wrong, sfx_brush, sfx_tap, sfx_whoosh, sfx_fanfare
+
+Background music (looping):
+  bgm_menu, bgm_play
+
+Letter and digit pronunciation for the tracing game, named by code point:
+  letter_627 (ا), letter_628 (ب), letter_67e (پ) …  — one per Persian letter
+  digit_0 … digit_9
+
+File names must be lowercase with underscores only; aapt rejects anything else.

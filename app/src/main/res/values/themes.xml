@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Pashmak" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/orange</item>
+        <item name="colorPrimaryDark">@color/amber_shadow</item>
+        <item name="colorAccent">@color/amber</item>
+        <item name="colorSecondary">@color/blue</item>
+        <item name="android:colorBackground">@color/surface</item>
+        <item name="android:windowBackground">@color/surface</item>
+        <item name="android:statusBarColor" tools:targetApi="21">@android:color/transparent</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="19">false</item>
+        <item name="android:textColor">@color/ink_primary</item>
+        <item name="fontFamily">@font/vazirmatn</item>
+        <item name="android:fontFamily">@font/vazirmatn</item>
+    </style>
+
+    <style name="Theme.Pashmak.Splash">
+        <item name="android:windowBackground">@drawable/bg_screen_splash</item>
+    </style>
+</resources>

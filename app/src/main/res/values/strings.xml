@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- All copy transcribed from the Claude Design prototype. The app ships Persian-only. -->
+<resources>
+    <string name="app_name">دنیای بازی پشمک</string>
+    <string name="mascot_name">پشمک</string>
+
+    <!-- Splash -->
+    <string name="splash_title">دنیای بازی</string>
+    <string name="splash_tagline">با %1$s بساز، بازی کن</string>
+    <string name="splash_loading">در حال آماده‌سازی…</string>
+
+    <!-- Home -->
+    <string name="home_title">دنیای بازی</string>
+    <string name="home_subtitle">با %1$s بازی کن!</string>
+    <string name="home_missions">ماموریت‌های %1$s</string>
+    <string name="home_games">بازی‌ها</string>
+    <string name="home_gallery">گالری من</string>
+    <string name="home_parents">بخش والدین</string>
+
+    <!-- Missions -->
+    <string name="missions_title">ماموریت‌ها</string>
+    <string name="missions_hint">%1$s هر بار یه مجموعه می‌خواد. تو هر ماموریت چند تا نقاشی می‌کشی و کنار %1$s زنده می‌شن.</string>
+    <string name="mission_start_line">بریم سراغ %1$s!</string>
+
+    <!-- Games menu -->
+    <string name="games_title">بازی‌ها</string>
+    <string name="game_live_title">نقاشی زنده</string>
+    <string name="game_live_sub">۲۰ ماموریت — برای %1$s مجموعه بساز</string>
+    <string name="game_paint_title">رنگ‌آمیزی نقاشی‌ها</string>
+    <string name="game_paint_sub">نقاشی آماده + رنگِ درست هر قسمت</string>
+    <string name="game_freedraw_title">نقاشی آزاد</string>
+    <string name="game_freedraw_sub">با انگشت بکش</string>
+    <string name="game_trace_title">حرف و عدد</string>
+    <string name="game_trace_sub">دنبالش بکش</string>
+    <string name="game_bubbles_title">ترکوندن حباب</string>
+    <string name="game_bubbles_sub">سریع باش!</string>
+    <string name="game_memory_title">بازی حافظه</string>
+    <string name="game_memory_sub">جفت‌ها رو پیدا کن</string>
+    <string name="game_story_title">قصه‌گوی زنده</string>
+    <string name="game_story_sub">شخصیت‌های زنده‌شده‌ات قصه می‌سازن</string>
+    <string name="game_settings_row">تنظیمات و والدین</string>
+
+    <!-- Mission brief -->
+    <string name="draw_line_incomplete">%1$s می‌گه: برای %2$s الان یه «%3$s» می‌خوام. روی کاغذ بکشش!</string>
+    <string name="draw_line_complete">%1$s می‌گه: مجموعه کامل شد! می‌خوای یه ماموریت تازه برداریم؟</string>
+    <string name="draw_now">الان بکش: %1$s</string>
+    <string name="draw_go_camera">کشیدم! بریم دوربین</string>
+    <string name="draw_pick_other">یه ماموریت دیگه انتخاب کن</string>
+
+    <!-- Camera -->
+    <string name="cam_title">«%1$s» رو تو قاب بگیر</string>
+    <string name="cam_hint">کاغذ رو ثابت نگه دار و وقتی نقاشی کامل تو قاب بود، دکمه رو بزن.</string>
+    <string name="cam_permission_title">برای عکس گرفتن از نقاشی، اجازه‌ی دوربین لازمه</string>
+    <string name="cam_permission_action">اجازه می‌دم</string>
+    <string name="cam_permission_denied">بدون اجازه‌ی دوربین نمی‌تونیم نقاشی رو زنده کنیم.</string>
+    <string name="cam_shutter">عکس بگیر</string>
+    <string name="cam_unavailable">دوربین در دسترس نیست.</string>
+
+    <!-- Processing -->
+    <string name="processing_title">دارم «%1$s» رو جدا می‌کنم…</string>
+    <string name="processing_failed">نتونستم نقاشی رو جدا کنم. نور بیشتر و کاغذ صاف کمک می‌کنه.</string>
+    <string name="processing_retry">دوباره عکس بگیر</string>
+
+    <!-- Alive scene -->
+    <string name="alive_headline_progress">زنده شد! %1$s از %2$s</string>
+    <string name="alive_headline_complete">مجموعه کامل شد!</string>
+    <string name="alive_line_progress">«%1$s» اومد کنار %2$s. حالا %3$s تا مونده تا مجموعه کامل شه.</string>
+    <string name="alive_line_complete">همه‌چیزِ «%1$s» آماده‌ست. %2$s داره وسطش می‌رقصه!</string>
+    <string name="alive_next_item">بکش: %1$s</string>
+    <string name="alive_next_mission">ماموریت بعدی</string>
+    <string name="alive_gallery">گالری</string>
+    <string name="alive_retake">دوباره بکش</string>
+
+    <!-- Coloring -->
+    <string name="paint_title">رنگ‌آمیزی · %1$s</string>
+    <string name="paint_clear">پاک کن</string>
+    <string name="paint_banner_progress">یه رنگ انتخاب کن و روی قسمت درست بزن · %1$s از %2$s درست</string>
+    <string name="paint_banner_done">عالی بود! همه‌ی رنگ‌ها درست شد — ۵ ستاره گرفتی</string>
+    <string name="paint_enter_line">یه رنگ بردار و قسمت درست رو رنگ کن.</string>
+    <string name="paint_right">آفرین! رنگ %1$s درست بود.</string>
+    <string name="paint_wrong">اشکالی نداره — %1$s رنگ دیگه‌ای می‌خواد.</string>
+    <string name="paint_all_right">عالی شد! کل نقاشی رو درست رنگ کردی.</string>
+    <string name="paint_save">ذخیره تو گالری</string>
+
+    <!-- Free draw -->
+    <string name="freedraw_title">نقاشی آزاد</string>
+    <string name="freedraw_clear">پاک کن</string>
+    <string name="freedraw_save">ذخیره</string>
+    <string name="freedraw_saved">نقاشیت تو گالری ذخیره شد!</string>
+    <string name="freedraw_empty">اول یه چیزی بکش تا ذخیره کنم.</string>
+    <string name="brush_thin">نازک</string>
+    <string name="brush_thick">کلفت</string>
+
+    <!-- Tracing -->
+    <string name="trace_title">دنبالش بکش</string>
+    <string name="trace_next">بعدی</string>
+    <string name="trace_restart">از اول</string>
+    <string name="trace_done">تمام شد!</string>
+    <string name="trace_hint">با انگشتت روی «%1$s» بکش. آفرین!</string>
+    <string name="trace_award">چه خوشگل نوشتی! ۳ ستاره گرفتی.</string>
+    <string name="trace_incomplete">هنوز یه کم مونده — همه‌ی حرف رو پُر کن.</string>
+    <string name="trace_coverage">%1$s٪ پُر شده</string>
+    <string name="trace_letters">حرف‌ها</string>
+    <string name="trace_digits">عددها</string>
+
+    <!-- Bubbles -->
+    <string name="bubbles_title">ترکوندن حباب</string>
+    <string name="bubbles_banner">هر حباب یه ستاره! سریع بترکونشون</string>
+    <string name="bubbles_pop_line">ترکوندیش! ادامه بده.</string>
+
+    <!-- Memory -->
+    <string name="memory_title">بازی حافظه</string>
+    <string name="memory_again">دوباره</string>
+    <string name="memory_counter">جفت‌های پیدا شده: %1$s از %2$s</string>
+    <string name="memory_match">ایول! یه جفت پیدا کردی.</string>
+    <string name="memory_miss">نزدیک بود! بیا دوباره امتحان کنیم.</string>
+    <string name="memory_win">همه‌ی جفت‌ها رو پیدا کردی! تو فوق‌العاده‌ای.</string>
+
+    <!-- Story -->
+    <string name="story_title">قصه‌گوی زنده</string>
+    <string name="story_next">ادامه‌ی قصه</string>
+    <string name="story_tap_hint">روی هر چیزی تو صحنه بزن تا صداش رو بشنوی!</string>
+
+    <!-- Gallery -->
+    <string name="gallery_title">گالری من</string>
+    <string name="gallery_count">%1$s نقاشی زنده‌شده</string>
+    <string name="gallery_empty">هنوز چیزی اینجا نیست. بریم یه ماموریت بسازیم!</string>
+    <string name="gallery_mission_label">ماموریت %1$s</string>
+    <string name="gallery_freedraw_label">نقاشی آزاد</string>
+    <string name="gallery_coloring_label">رنگ‌آمیزی</string>
+    <string name="gallery_export">ذخیره در گالری گوشی</string>
+    <string name="gallery_share">به اشتراک بذار</string>
+    <string name="gallery_delete">حذف</string>
+    <string name="gallery_exported">تو پوشه‌ی Pictures/PashmakGame ذخیره شد.</string>
+    <string name="gallery_export_failed">ذخیره نشد. فضای دستگاه رو چک کن.</string>
+    <string name="gallery_delete_confirm">این نقاشی حذف بشه؟</string>
+    <string name="gallery_deleted">حذف شد.</string>
+
+    <!-- Parent gate -->
+    <string name="lock_title">بخش والدین</string>
+    <string name="lock_question">%1$s چند می‌شه؟</string>
+    <string name="lock_hint">برای ورود به تنظیمات جواب بده</string>
+    <string name="lock_error">درست نبود، دوباره امتحان کن</string>
+    <string name="lock_empty">؟</string>
+    <string name="lock_backspace">⌫</string>
+    <string name="lock_confirm">✓</string>
+    <string name="lock_plus">به‌علاوه</string>
+    <string name="lock_times">ضربدر</string>
+
+    <!-- Settings -->
+    <string name="settings_title">تنظیمات</string>
+    <string name="settings_difficulty">سطح سختی</string>
+    <string name="difficulty_easy">آسان</string>
+    <string name="difficulty_medium">متوسط</string>
+    <string name="difficulty_hard">سخت</string>
+    <string name="settings_sound">راهنمای صوتی فارسی</string>
+    <string name="settings_sound_sub">صدای %1$s در همه‌ی صفحه‌ها</string>
+    <string name="settings_music">آهنگ پس‌زمینه</string>
+    <string name="settings_music_sub">موسیقی ملایم موقع بازی</string>
+    <string name="settings_break">تایمر استراحت چشم</string>
+    <string name="settings_break_sub">هر ۲۰ دقیقه یادآوری</string>
+    <string name="settings_on">روشن</string>
+    <string name="settings_off">خاموش</string>
+    <string name="settings_reset_stars">صفر کردن ستاره‌ها</string>
+    <string name="settings_stars_reset">ستاره‌ها صفر شد.</string>
+    <string name="settings_info">این اپ کامل آفلاین کار می‌کنه — بدون تبلیغ، بدون حساب کاربری و بدون خرید درون‌برنامه‌ای.</string>
+
+    <!-- Mascot dialogue (MascotConfig.js, verbatim) -->
+    <string name="ms_welcome">سلام قندعسلم! من %1$sم، دوست جدیدت! آماده‌ای باهم کلی بازی کنیم؟</string>
+    <string name="ms_win_1">هورااا! آفرین به قهرمان باهوشم! زدی تو هدف!</string>
+    <string name="ms_win_2">ایول بهت! دیدی چقدر زرنگی؟ بزن قدش!</string>
+    <string name="ms_win_3">ماشالله! این مرحله رو مثل آب خوردن بردی!</string>
+    <string name="ms_try_1">فدای سرت مهربونم! غصه نداره، یه بار دیگه دقت کن حتماً می‌تونی!</string>
+    <string name="ms_try_2">عیبی نداره کوچولو، حتی قهرمان‌ها هم تمرین می‌کنن! بیا باهم دوباره.</string>
+    <string name="ms_poke_1">قلقلکم نده شیطون بلا! ههههه</string>
+    <string name="ms_poke_2">جونم قندعسل؟ منتظرتم‌ها، بیا بریم مرحله بعد!</string>
+    <string name="ms_poke_home">قلقلکم دادی! هیهی…</string>
+    <string name="ms_help_default">خوب به این مرحله نگاه کن؛ فکر می‌کنی کدوم رو انتخاب کنیم؟</string>
+    <string name="ms_help_paint">یه رنگ بردار و روی قسمت درست بزن. من راهنماییت می‌کنم!</string>
+    <string name="ms_help_trace">انگشتت رو بذار روی حرف و آرام‌آرام دنبالش بکش.</string>
+    <string name="ms_help_mission">بریم سراغ %1$s! اول %2$s رو روی کاغذ بکش.</string>
+    <string name="ms_lets_go">بزن بریم!</string>
+    <string name="ms_mission_done">مجموعه کامل شد! چه هنرمندی هستی تو!</string>
+    <string name="ms_scan_done">وای چه نقاشی قشنگی کشیدی!</string>
+
+    <!-- Shared -->
+    <string name="back">برگرد</string>
+    <string name="stars_label">ستاره‌ها</string>
+    <string name="sound_toggle">صدا</string>
+    <string name="cd_mascot">%1$s، دوست تو</string>
+    <string name="cd_star">ستاره</string>
+</resources>

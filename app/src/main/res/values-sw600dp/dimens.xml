@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rail_width">150dp</dimen>
+    <dimen name="end_column_width">280dp</dimen>
+    <dimen name="screen_padding">26dp</dimen>
+    <dimen name="screen_padding_v">18dp</dimen>
+    <dimen name="gap">14dp</dimen>
+    <dimen name="gap_lg">20dp</dimen>
+
+    <dimen name="back_button">56dp</dimen>
+    <dimen name="back_glyph">28sp</dimen>
+
+    <dimen name="text_display">46sp</dimen>
+    <dimen name="text_title">32sp</dimen>
+    <dimen name="text_section">26sp</dimen>
+    <dimen name="text_button">26sp</dimen>
+    <dimen name="text_button_lg">32sp</dimen>
+    <dimen name="text_body">16sp</dimen>
+    <dimen name="text_sub">14sp</dimen>
+    <dimen name="text_chip">18sp</dimen>
+
+    <dimen name="card_min_height">150dp</dimen>
+    <dimen name="mascot_hero">330dp</dimen>
+    <dimen name="mascot_home">260dp</dimen>
+    <dimen name="mascot_inline">200dp</dimen>
+    <dimen name="mascot_dock">128dp</dimen>
+    <dimen name="bubble_max_width">300dp</dimen>
+
+    <dimen name="slot_size">100dp</dimen>
+    <dimen name="swatch_size">54dp</dimen>
+    <dimen name="keypad_key">74dp</dimen>
+    <dimen name="keypad_width">92dp</dimen>
+</resources>

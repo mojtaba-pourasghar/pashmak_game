@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_story"
+    android:clipChildren="false"
+    android:paddingStart="@dimen/screen_padding"
+    android:paddingTop="@dimen/screen_padding_v"
+    android:paddingEnd="@dimen/screen_padding"
+    android:paddingBottom="@dimen/screen_padding_v">
+
+    <include
+        android:id="@+id/story_header"
+        layout="@layout/view_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ir.brandimo.pashmak.ui.story.StorySceneView
+        android:id="@+id/story_scene"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_frame_scene"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/story_side"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/story_header" />
+
+    <LinearLayout
+        android:id="@+id/story_side"
+        android:layout_width="@dimen/end_column_width"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/gap"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/story_header">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/story_line"
+            style="@style/Text.Body"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_speech_story"
+            android:padding="16dp"
+            android:textColor="@color/ink_primary"
+            android:textSize="15sp"
+            tools:text="یه روز صبح، اولین نقاشیِ تو از کاغذ پرید بیرون…" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/story_tap_hint"
+            style="@style/Text.Sub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/story_tap_hint"
+            android:textColor="@color/gold_sub" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/story_next"
+            style="@style/Button.Chunky"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/btn_orange"
+            android:text="@string/story_next"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/story_dock"
+        layout="@layout/view_mascot_dock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
