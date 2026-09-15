@@ -149,9 +149,27 @@ corner elsewhere, so he can never end up sitting on a button.
 
 The prototype was a 392×820 portrait phone mock; this app is landscape-locked. The
 recurring portrait pattern — header, flexible body, pinned footer — becomes a three-band
-layout: a start rail, the centre stage, and an end column of actions. Phone and tablet
-share the same layouts and differ through `values-sw600dp` (type scale, touch targets,
-grid spans); only where the structure genuinely changes does a layout get a second copy.
+layout: a start rail, the centre stage, and an end column of actions.
+
+**Height is the scarce dimension.** Landscape-locked means a device's `smallestWidth`
+*is* its height: about 320dp on a small phone, 360dp on a common one, 600dp on a 7″
+tablet and 800dp on a 10″. So there are four dimension buckets — `values/` (tuned for
+the smallest phone, since it is also the fallback), `values-sw360dp`, `values-sw600dp`
+and `values-sw720dp` — covering type scale, touch targets, mascot sizes and grid spans.
+Anything added to one belongs in all four.
+
+Phone and tablet share layouts except where the structure genuinely has to change, which
+so far is one screen: the home screen's five buttons are two-up on a phone and a single
+tall column in `layout-sw600dp/`. The games menu adapts through a resource instead — a
+phone drops the headline card's full-width span (`@bool/games_wide_headline`) so all
+eight cards land in three rows and nothing scrolls.
+
+Because there is no way to eyeball every screen on every device, `tools/vfit.py`
+walks each layout and works out the height it cannot do without — reading `ScrollView`,
+`layout_weight`, `GridLayout` wrapping and ConstraintLayout's vertical chains — and
+fails if any screen needs more than the shortest device in its bucket has.
+`tools/gridfit.py` does the same for the games grid, which `vfit` cannot judge
+because the grid is a flexible `0dp` RecyclerView by construction.
 
 ---
 

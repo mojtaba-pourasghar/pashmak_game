@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        On a phone the games menu has to show all eight cards without scrolling, so
+        the نقاشی زنده card takes a normal cell and the eight fall into three rows.
+        A tablet has the height to give it the full-width headline it was designed as.
+    -->
+    <bool name="games_wide_headline">false</bool>
+</resources>

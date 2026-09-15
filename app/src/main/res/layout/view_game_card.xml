@@ -13,21 +13,21 @@
     android:gravity="center_vertical"
     android:minHeight="@dimen/card_min_height"
     android:orientation="horizontal"
-    android:paddingStart="14dp"
-    android:paddingTop="14dp"
-    android:paddingEnd="14dp"
-    android:paddingBottom="20dp">
+    android:paddingStart="12dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="16dp">
 
     <FrameLayout
         android:id="@+id/card_icon_tile"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="@dimen/card_icon_tile"
+        android:layout_height="@dimen/card_icon_tile"
         android:background="@drawable/bg_icon_tile">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/card_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="@dimen/card_icon"
+            android:layout_height="@dimen/card_icon"
             android:layout_gravity="center"
             android:contentDescription="@null"
             android:src="@drawable/ic_camera" />
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:textColor="@color/white"
             tools:text="بازی حافظه" />
 
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:textColor="#E6FFFFFF"
             tools:text="جفت‌ها رو پیدا کن" />
     </LinearLayout>

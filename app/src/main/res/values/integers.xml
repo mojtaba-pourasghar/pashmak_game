@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Eight game cards over three columns is three rows, which fits a phone. -->
     <integer name="games_span">3</integer>
     <integer name="missions_span">2</integer>
     <integer name="gallery_span">3</integer>

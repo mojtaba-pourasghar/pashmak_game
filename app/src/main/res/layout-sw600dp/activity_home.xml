@@ -79,28 +79,15 @@
         app:layout_constraintEnd_toEndOf="@id/home_mascot_holder"
         app:layout_constraintStart_toStartOf="@id/home_mascot_holder" />
 
-    <!-- End column: where the child goes next.
-
-         Two-up on a phone. In landscape a phone gives ~300-336dp of height, and five
-         stacked chunky buttons need more than that, so they ran off both edges. The
-         missions button keeps the headline row; the other four pair off beneath it.
-         The tablet copy in layout-sw600dp/ keeps the single tall column. -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/home_split"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.54" />
-
+    <!-- End column: where the child goes next. A tablet has the height for one tall
+         column; the phone layout stacks these two-up instead. -->
     <LinearLayout
         android:id="@+id/home_buttons"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/end_column_width"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/gap"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/home_split"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatButton
@@ -109,69 +96,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_amber"
-            android:ellipsize="end"
-            android:maxLines="1"
             tools:text="ماموریت‌های پشمک" />
 
-        <LinearLayout
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/home_btn_games"
+            style="@style/Button.Chunky"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap"
-            android:orientation="horizontal">
+            android:background="@drawable/btn_blue"
+            android:text="@string/home_games" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/home_btn_games"
-                style="@style/Button.Chunky"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn_blue"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/home_games" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/home_btn_gallery"
-                style="@style/Button.Chunky"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/gap"
-                android:layout_weight="1"
-                android:background="@drawable/btn_purple"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/home_gallery" />
-        </LinearLayout>
-
-        <LinearLayout
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/home_btn_gallery"
+            style="@style/Button.Chunky"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/gap"
-            android:orientation="horizontal">
+            android:background="@drawable/btn_purple"
+            android:text="@string/home_gallery" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/home_btn_lullaby"
-                style="@style/Button.Chunky"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/btn_night_card"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/home_lullaby" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/home_btn_lullaby"
+            style="@style/Button.Chunky"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap"
+            android:background="@drawable/btn_night_card"
+            android:text="@string/home_lullaby" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/home_btn_parents"
-                style="@style/Button.Chunky"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/gap"
-                android:layout_weight="1"
-                android:background="@drawable/btn_grey"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/home_parents" />
-        </LinearLayout>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/home_btn_parents"
+            style="@style/Button.Chunky"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap"
+            android:background="@drawable/btn_grey"
+            android:text="@string/home_parents"
+            android:textSize="16sp" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

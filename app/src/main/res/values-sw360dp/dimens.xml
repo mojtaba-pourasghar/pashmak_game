@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The common landscape phone: 640x360 and up, about 336dp of usable height. -->
+<resources>
+    <dimen name="rail_width">96dp</dimen>
+    <dimen name="lullaby_column_width">228dp</dimen>
+    <dimen name="end_column_width">196dp</dimen>
+    <dimen name="screen_padding">14dp</dimen>
+    <dimen name="screen_padding_v">10dp</dimen>
+    <dimen name="gap">10dp</dimen>
+    <dimen name="gap_lg">14dp</dimen>
+
+    <dimen name="back_button">42dp</dimen>
+    <dimen name="back_glyph">21sp</dimen>
+
+    <dimen name="text_display">32sp</dimen>
+    <dimen name="text_title">23sp</dimen>
+    <dimen name="text_section">19sp</dimen>
+    <dimen name="text_button">18sp</dimen>
+    <dimen name="text_button_lg">22sp</dimen>
+    <dimen name="text_body">13sp</dimen>
+    <dimen name="text_sub">11sp</dimen>
+    <dimen name="text_chip">13sp</dimen>
+
+    <dimen name="card_min_height">62dp</dimen>
+    <dimen name="card_icon_tile">44dp</dimen>
+    <dimen name="card_icon">26dp</dimen>
+    <dimen name="mascot_hero">200dp</dimen>
+    <dimen name="mascot_home">156dp</dimen>
+    <dimen name="mascot_inline">126dp</dimen>
+    <dimen name="mascot_dock">84dp</dimen>
+    <dimen name="mascot_dock_small">62dp</dimen>
+    <dimen name="bubble_max_width">196dp</dimen>
+
+    <dimen name="slot_size">64dp</dimen>
+    <dimen name="swatch_size">38dp</dimen>
+    <dimen name="keypad_key">50dp</dimen>
+    <dimen name="keypad_width">64dp</dimen>
+    <dimen name="dock_clearance">96dp</dimen>
+
+    <dimen name="lullaby_play">50dp</dimen>
+    <dimen name="lullaby_row">38dp</dimen>
+    <dimen name="story_line_min">64dp</dimen>
+</resources>

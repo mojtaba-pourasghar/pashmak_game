@@ -1,36 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 7-8" tablet: 960x600 and up. A step up from the phone, not a leap. -->
 <resources>
-    <dimen name="rail_width">150dp</dimen>
-    <dimen name="lullaby_column_width">320dp</dimen>
-    <dimen name="end_column_width">280dp</dimen>
-    <dimen name="screen_padding">26dp</dimen>
-    <dimen name="screen_padding_v">18dp</dimen>
-    <dimen name="gap">14dp</dimen>
-    <dimen name="gap_lg">20dp</dimen>
+    <dimen name="rail_width">140dp</dimen>
+    <dimen name="lullaby_column_width">300dp</dimen>
+    <dimen name="end_column_width">264dp</dimen>
+    <dimen name="screen_padding">22dp</dimen>
+    <dimen name="screen_padding_v">16dp</dimen>
+    <dimen name="gap">13dp</dimen>
+    <dimen name="gap_lg">18dp</dimen>
 
-    <dimen name="back_button">56dp</dimen>
-    <dimen name="back_glyph">28sp</dimen>
+    <dimen name="back_button">54dp</dimen>
+    <dimen name="back_glyph">27sp</dimen>
 
-    <dimen name="text_display">46sp</dimen>
-    <dimen name="text_title">32sp</dimen>
-    <dimen name="text_section">26sp</dimen>
-    <dimen name="text_button">26sp</dimen>
-    <dimen name="text_button_lg">32sp</dimen>
+    <dimen name="text_display">44sp</dimen>
+    <dimen name="text_title">31sp</dimen>
+    <dimen name="text_section">25sp</dimen>
+    <dimen name="text_button">25sp</dimen>
+    <dimen name="text_button_lg">31sp</dimen>
     <dimen name="text_body">16sp</dimen>
     <dimen name="text_sub">14sp</dimen>
-    <dimen name="text_chip">18sp</dimen>
+    <dimen name="text_chip">17sp</dimen>
 
-    <dimen name="card_min_height">150dp</dimen>
-    <dimen name="mascot_hero">330dp</dimen>
-    <dimen name="mascot_home">260dp</dimen>
-    <dimen name="mascot_inline">200dp</dimen>
-    <dimen name="mascot_dock">128dp</dimen>
-    <dimen name="bubble_max_width">300dp</dimen>
+    <dimen name="card_min_height">96dp</dimen>
+    <dimen name="card_icon_tile">58dp</dimen>
+    <dimen name="card_icon">36dp</dimen>
+    <dimen name="mascot_hero">320dp</dimen>
+    <dimen name="mascot_home">250dp</dimen>
+    <dimen name="mascot_inline">196dp</dimen>
+    <dimen name="mascot_dock">122dp</dimen>
+    <dimen name="mascot_dock_small">98dp</dimen>
+    <dimen name="bubble_max_width">292dp</dimen>
 
-    <dimen name="slot_size">100dp</dimen>
-    <dimen name="swatch_size">54dp</dimen>
-    <dimen name="keypad_key">74dp</dimen>
-    <dimen name="keypad_width">92dp</dimen>
-    <dimen name="dock_clearance">148dp</dimen>
-    <dimen name="mascot_dock_small">104dp</dimen>
+    <dimen name="slot_size">98dp</dimen>
+    <dimen name="swatch_size">52dp</dimen>
+    <dimen name="keypad_key">70dp</dimen>
+    <dimen name="keypad_width">88dp</dimen>
+    <dimen name="dock_clearance">142dp</dimen>
+
+    <dimen name="lullaby_play">72dp</dimen>
+    <dimen name="lullaby_row">54dp</dimen>
+    <dimen name="story_line_min">110dp</dimen>
 </resources>

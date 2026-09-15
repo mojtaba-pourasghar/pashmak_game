@@ -49,11 +49,14 @@ public class GamesActivity extends BaseActivity {
         final GameAdapter adapter = new GameAdapter(buildEntries(),
                 entry -> open(entry.destination));
         int span = getResources().getInteger(R.integer.games_span);
+        // On a phone the headline card gives up its full-width row so that all eight
+        // cards fit on screen at once; a tablet has the height to keep it.
+        final boolean wideHeadline = getResources().getBoolean(R.bool.games_wide_headline);
         GridLayoutManager manager = new GridLayoutManager(this, span);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return adapter.entryAt(position).wide ? span : 1;
+                return wideHeadline && adapter.entryAt(position).wide ? span : 1;
             }
         });
         binding.gamesGrid.setLayoutManager(manager);

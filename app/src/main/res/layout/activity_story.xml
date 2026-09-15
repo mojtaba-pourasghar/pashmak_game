@@ -59,7 +59,8 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:background="@drawable/bg_speech_story"
-            android:padding="14dp"
+            android:minHeight="@dimen/story_line_min"
+            android:padding="12dp"
             android:textColor="@color/ink_primary"
             android:textSize="15sp"
             tools:text="یه روز صبح، نقاشیِ تو از کاغذ پرید بیرون…" />
