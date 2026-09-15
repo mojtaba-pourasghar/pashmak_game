@@ -37,6 +37,34 @@ def integer(name, dirs):
                 return int(m.group(1))
     return 1
 
+# Buttons that sit two-up in a fixed column, where a label that does not fit wraps
+# to a second line and leaves the pair at different heights. That is what happened
+# to the lullaby toggles: «بعدی خودکار» wrapped, «تکرار» did not.
+PAIRED_BUTTONS = [
+    ('lullaby toggles', 'lullaby_column_width', 2, 8, 24, 4, 13,
+     [('lullaby_repeat', 'تکرار'), ('lullaby_auto', 'خودکار')]),
+]
+
+# Vazirmatn is narrow; Persian letters join and many (ا ر و ل) are slim. 0.52em is a
+# deliberately pessimistic average, so passing here means passing on a device.
+EM_RATIO = 0.52
+
+
+def check_paired_buttons(dims):
+    problems = []
+    for (label, column_res, count, gap, icon, icon_pad, text_sp,
+         buttons) in PAIRED_BUTTONS:
+        column = dims[column_res] - 2 * dims['list_box_padding']
+        each = (column - gap * (count - 1)) / count
+        room = each - 12 - icon - icon_pad        # 6dp side padding each side
+        for name, text in buttons:
+            needed = len(text) * text_sp * EM_RATIO
+            if needed > room:
+                problems.append('%s/%s: "%s" needs %.0fdp, has %.0fdp'
+                                % (label, name, text, needed, room))
+    return problems
+
+
 def run():
     failures = 0
     for label, dirs, viewport in vfit.BUCKETS:
@@ -54,6 +82,9 @@ def run():
             failures += 0 if ok else 1
             print('    %-14s span %d -> %5.0fdp/column  (needs %ddp: %s)  %s'
                   % (name, span, column, floor, why, 'ok' if ok else 'TOO NARROW'))
+        for problem in check_paired_buttons(d):
+            failures += 1
+            print('    %s  WRAPS' % problem)
     print('\n%s' % ('FAIL: %d grid/bucket combinations are too narrow' % failures
                     if failures else 'PASS: every grid column stays readable'))
     return 1 if failures else 0

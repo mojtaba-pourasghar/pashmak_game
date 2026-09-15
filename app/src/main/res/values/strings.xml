@@ -233,7 +233,7 @@
     <string name="lullaby_next">لالایی بعدی</string>
     <string name="lullaby_prev">لالایی قبلی</string>
     <string name="lullaby_repeat">تکرار</string>
-    <string name="lullaby_auto">بعدی خودکار</string>
+    <string name="lullaby_auto">خودکار</string>
     <string name="lullaby_timer">زمان خاموشی</string>
     <string name="lullaby_timer_off">بی‌زمان</string>
     <string name="lullaby_timer_left">%1$s تا خاموشی</string>
