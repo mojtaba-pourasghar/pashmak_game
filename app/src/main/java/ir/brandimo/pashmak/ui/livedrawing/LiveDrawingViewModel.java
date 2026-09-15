@@ -89,6 +89,14 @@ public class LiveDrawingViewModel extends AndroidViewModel {
      * Runs the real extraction off the main thread and reports honest progress —
      * the bar reflects the pipeline rather than a timer.
      */
+    /** The photo never even decoded; show the retry panel rather than failing quietly. */
+    public void reportCaptureFailed() {
+        extracting = false;
+        progress.setValue(0);
+        step.setValue(Step.PROCESSING);
+        extractionFailed.setValue(true);
+    }
+
     public void processCapture(Bitmap frame, RectF roi, int slotIndex,
                                @NonNull ExtractionCallback callback) {
         if (extracting) {

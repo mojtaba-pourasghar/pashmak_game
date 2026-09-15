@@ -187,6 +187,30 @@ BUCKETS = [
                             'values-sw720dp'], 720),
 ]
 
+def generated_content(dims, viewport):
+    """Content built in code that still has to fit a fixed container.
+
+    vfit reads layouts, so it cannot see views an Activity creates at runtime — which
+    is how four mission item cards ended up in a column with room for two. Anything
+    generated into a fixed-height parent belongs here.
+    """
+    problems = []
+    # LiveDrawingActivity#renderSlots fills brief_slots with one card per item.
+    items = 4                                   # every mission has four
+    card = dims['slot_thumb'] + 16 + 8          # thumbnail + 8dp padding each side + margin
+    body = dims['text_body'] * 1.45 * 2 + 18    # brief_line, two lines
+    column = (viewport - 2 * dims['screen_padding_v'] - dims['back_button']
+              - 6 - body - 8)
+    room = (column - (dims['text_section'] * 1.45 + 8) - 8
+            - (dims['text_button'] * 1.45 + 30))
+    # The column scrolls, so not fitting is fine — being too small to use is not.
+    visible = int(room // card)
+    if visible < 2:
+        problems.append('brief_slots: only %d of %d item cards visible in %.0fdp'
+                        % (visible, items, room))
+    return problems
+
+
 def main():
     failures = 0
     names = sorted(os.path.basename(f)[:-4]
@@ -207,6 +231,9 @@ def main():
         else:
             print('all fit  (tightest: %s at ~%.0fdp, %.0fdp spare)'
                   % (worst[0], worst[1], viewport - worst[1]))
+        for problem in generated_content(dims, viewport):
+            failures += 1
+            print('    %s  OVER' % problem)
     print('\n%s' % ('FAIL: %d screen/bucket combinations overflow' % failures
                     if failures else 'PASS: every screen fits every bucket'))
     return 1 if failures else 0

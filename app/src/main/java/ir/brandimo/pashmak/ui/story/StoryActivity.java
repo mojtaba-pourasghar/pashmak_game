@@ -58,10 +58,6 @@ public class StoryActivity extends GameActivity {
         attachCompanion();
 
         binding.storyScene.setOnPropTapped(this::onPropTapped);
-        binding.storyNext.setOnClickListener(v -> {
-            tap();
-            advance(currentBeat().next);
-        });
 
         openStory(getIntent().getIntExtra(EXTRA_STORY, 0));
     }
@@ -113,9 +109,26 @@ public class StoryActivity extends GameActivity {
             });
         }
 
-        boolean waitingForChild = choosing || beat.type == StoryBeat.Type.ASK_TAP;
+        // The button never just vanishes. On a "find it" beat that left the child
+        // with no way forward at all, and on the last beat with no way out.
         boolean ended = beat.type == StoryBeat.Type.CELEBRATE;
-        binding.storyNext.setVisibility(waitingForChild || ended ? View.GONE : View.VISIBLE);
+        binding.storyNext.setVisibility(choosing ? View.GONE : View.VISIBLE);
+        if (beat.type == StoryBeat.Type.ASK_TAP) {
+            binding.storyNext.setText(R.string.story_dont_know);
+            binding.storyNext.setOnClickListener(v -> revealAnswer(beat));
+        } else if (ended) {
+            binding.storyNext.setText(R.string.story_next_story);
+            binding.storyNext.setOnClickListener(v -> {
+                tap();
+                openNextStory();
+            });
+        } else {
+            binding.storyNext.setText(R.string.story_next);
+            binding.storyNext.setOnClickListener(v -> {
+                tap();
+                advance(currentBeat().next);
+            });
+        }
 
         // Pashmak narrates every beat, so his mouth moves with the words.
         mascot.say(beat.text, MascotState.TALK, MascotController.HOLD_DEFAULT_MS,
@@ -123,6 +136,37 @@ public class StoryActivity extends GameActivity {
 
         if (ended) {
             celebrate();
+        }
+    }
+
+    /**
+     * "I don't know": Pashmak points the answer out and names it, then the story
+     * moves on. Deliberately not the praise line the beat carries — that one
+     * congratulates the child for finding it, which they did not.
+     */
+    private void revealAnswer(StoryBeat beat) {
+        tap();
+        binding.storyScene.setInteractive(false);
+        String label = "";
+        for (int i = 0; i < beat.props.size(); i++) {
+            StoryProp prop = beat.props.get(i);
+            if (prop.id.equals(beat.answerPropId)) {
+                binding.storyScene.bounce(prop.id);
+                label = prop.label;
+                break;
+            }
+        }
+        mascot.say(getString(R.string.story_here_it_is, label), MascotState.TALK,
+                MascotController.HOLD_MIN_MS, AudioManifest.VOICE_HELP_DEFAULT);
+        binding.getRoot().postDelayed(() -> advance(beat.next), 1600L);
+    }
+
+    /** The story is over; roll straight into the next one, or back to the list. */
+    private void openNextStory() {
+        if (storyIndex + 1 < StoryCatalog.count()) {
+            openStory(storyIndex + 1);
+        } else {
+            finish();
         }
     }
 

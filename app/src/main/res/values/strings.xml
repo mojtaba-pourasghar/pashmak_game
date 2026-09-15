@@ -138,6 +138,9 @@
     <string name="story_tap_hint">روی هر چیزی تو صحنه بزن!</string>
     <string name="story_again">از اول</string>
     <string name="story_wrong">نه قندعسلم، یه بار دیگه نگاه کن.</string>
+    <string name="story_here_it_is">اینجاست! این «%1$s» بود. دفعه‌ی بعد تو پیداش کن.</string>
+    <string name="story_dont_know">نمی‌دونم، نشونم بده</string>
+    <string name="story_next_story">قصه‌ی بعدی</string>
     <string name="story_finished">قصه تموم شد! یه قصه‌ی دیگه انتخاب کن.</string>
 
     <!-- Gallery -->

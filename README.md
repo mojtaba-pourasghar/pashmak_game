@@ -174,7 +174,9 @@ walks each layout and works out the height it cannot do without — reading `Scr
 `layout_weight`, `GridLayout` wrapping and ConstraintLayout's vertical chains — and
 fails if any screen needs more than the shortest device in its bucket has.
 `tools/gridfit.py` does the same for the games grid, which `vfit` cannot judge
-because the grid is a flexible `0dp` RecyclerView by construction. `tools/hfit.py` guards the
+because the grid is a flexible `0dp` RecyclerView by construction. `tools/roi_check.py` covers the camera's
+region-of-interest arithmetic, the piece that file itself calls most likely to be
+subtly wrong. `tools/hfit.py` guards the
 other axis — what each grid column is left with once the rail has taken its share.
 `tools/scenes.py` and `tools/sheet.py` render the story scenes and the icon set to
 contact sheets, so artwork gets looked at rather than assumed.

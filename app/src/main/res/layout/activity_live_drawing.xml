@@ -87,13 +87,22 @@
                 android:textColor="@color/red"
                 tools:text="الان بکش: تخت" />
 
-            <LinearLayout
-                android:id="@+id/brief_slots"
+            <!-- Four item cards never fit a phone's brief column, so they scroll
+                 inside it rather than being silently clipped at the third. -->
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:orientation="vertical" />
+                android:fillViewport="true"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/brief_slots"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </ScrollView>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/brief_go_camera"
@@ -117,7 +126,8 @@
         <androidx.camera.view.PreviewView
             android:id="@+id/camera_preview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:scaleType="fitCenter" />
 
         <ir.brandimo.pashmak.ui.livedrawing.RoiOverlayView
             android:id="@+id/camera_overlay"
@@ -164,20 +174,20 @@
             android:text="@string/cam_hint"
             android:textColor="@color/white" />
 
-        <!-- Kept physically on the right whatever the layout direction, because a
-             shutter button belongs under the hand holding the tablet. -->
+        <!-- Physically on the left whatever the layout direction: the back button
+             sits top-right in this RTL app, and the two should not share a side. -->
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="end"
+            android:layout_gravity="start"
             android:layoutDirection="ltr">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/camera_shutter"
                 android:layout_width="78dp"
                 android:layout_height="78dp"
-                android:layout_gravity="center_vertical|end"
-                android:layout_marginEnd="20dp"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginStart="20dp"
                 android:background="@drawable/bg_shutter"
                 android:contentDescription="@string/cam_shutter"
                 android:padding="22dp"

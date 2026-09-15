@@ -183,8 +183,9 @@ public class LiveDrawingActivity extends BaseActivity {
 
         AppCompatImageView thumb = new AppCompatImageView(this);
         thumb.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        int thumbSize = getResources().getDimensionPixelSize(R.dimen.slot_thumb);
         LinearLayout.LayoutParams thumbParams =
-                new LinearLayout.LayoutParams(dp(44), dp(44));
+                new LinearLayout.LayoutParams(thumbSize, thumbSize);
         if (captured != null) {
             Bitmap bitmap = BitmapIO.readSampled(captured.pngPath, 200);
             if (bitmap != null) {
@@ -325,11 +326,17 @@ public class LiveDrawingActivity extends BaseActivity {
                         capturing = false;
                         binding.cameraOverlay.setPulsing(true);
                         if (frame == null) {
-                            viewModel.goTo(LiveDrawingViewModel.Step.CAMERA);
+                            // Don't drop the child back on the camera with no word of
+                            // why — send them to the same "let's try again" panel a
+                            // failed extraction uses.
+                            viewModel.reportCaptureFailed();
                             return;
                         }
+                        // Ask the preview how it is fitting the image rather than
+                        // assuming: getting this wrong crops the child's drawing out
+                        // of its own photo and every capture fails.
                         RectF roi = RoiMapper.toNormalized(roiInView, viewW, viewH,
-                                frame.getWidth(), frame.getHeight());
+                                frame.getWidth(), frame.getHeight(), previewFit());
                         processingStartedAt = System.currentTimeMillis();
                         viewModel.processCapture(frame, roi, currentSlot(),
                                 LiveDrawingActivity.this::onCaptured);
@@ -341,6 +348,15 @@ public class LiveDrawingActivity extends BaseActivity {
                         binding.cameraOverlay.setPulsing(true);
                     }
                 });
+    }
+
+    /** Whether the preview letterboxes the image or crops it. */
+    private RoiMapper.Fit previewFit() {
+        PreviewView.ScaleType type = binding.cameraPreview.getScaleType();
+        boolean crop = type == PreviewView.ScaleType.FILL_CENTER
+                || type == PreviewView.ScaleType.FILL_START
+                || type == PreviewView.ScaleType.FILL_END;
+        return crop ? RoiMapper.Fit.CROP : RoiMapper.Fit.LETTERBOX;
     }
 
     private int currentSlot() {

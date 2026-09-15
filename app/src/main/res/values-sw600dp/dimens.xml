@@ -36,12 +36,14 @@
     <dimen name="mascot_dock_small">104dp</dimen>
     <dimen name="bubble_max_width">292dp</dimen>
 
+    <!-- Thumbnail on a mission item card in the brief column. -->
+    <dimen name="slot_thumb">52dp</dimen>
     <dimen name="slot_size">98dp</dimen>
     <dimen name="swatch_size">52dp</dimen>
     <dimen name="keypad_key">70dp</dimen>
     <dimen name="keypad_width">88dp</dimen>
 
-    <dimen name="lullaby_play">72dp</dimen>
+    <dimen name="lullaby_play">78dp</dimen>
     <dimen name="lullaby_row">54dp</dimen>
     <dimen name="lullaby_step">62dp</dimen>
     <dimen name="story_line_min">110dp</dimen>

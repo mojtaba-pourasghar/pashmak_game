@@ -49,13 +49,15 @@
     <dimen name="mascot_dock_small">66dp</dimen>
     <dimen name="bubble_max_width">168dp</dimen>
 
+    <!-- Thumbnail on a mission item card in the brief column. -->
+    <dimen name="slot_thumb">28dp</dimen>
     <dimen name="slot_size">56dp</dimen>
     <dimen name="swatch_size">32dp</dimen>
     <dimen name="keypad_key">44dp</dimen>
     <dimen name="keypad_width">56dp</dimen>
 
     <!-- Bedtime transport: the play button and the two rows of controls under it. -->
-    <dimen name="lullaby_play">44dp</dimen>
+    <dimen name="lullaby_play">56dp</dimen>
     <dimen name="lullaby_row">34dp</dimen>
     <!-- Prev/next need a real target; a child aims roughly. -->
     <dimen name="lullaby_step">44dp</dimen>
