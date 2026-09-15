@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The companion for a screen that docks him at the TOP of its side column.
+
+     No bubble in here on purpose. A bubble inside a column grows with the length of
+     the line and squeezes everything under it, which is what broke the story screen.
+     These screens put a SpeechBubbleView (id dock_bubble) in their own root instead,
+     floating over the centre stage, so the column's height never changes.
+     BaseActivity#attachCompanion resolves both by id, wherever they sit. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dock_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <ir.brandimo.pashmak.mascot.MascotView
+        android:id="@+id/dock_mascot"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/mascot_dock"
+        android:layout_gravity="end"
+        android:duplicateParentState="false"
+        android:importantForAccessibility="no" />
+</FrameLayout>

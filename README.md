@@ -50,8 +50,13 @@ and its picture rather than hunting through chips inside the game: 60 coloring p
 across themed packs, one stage per Persian letter and per digit (42 in all), and 30
 memory boards — six themed decks, five levels each, unlocked in order, plus a seventh
 deck dealt from the child's own scanned drawings once they have made a few. Alongside them:
-free drawing with real pencils, bubble pop, and an interactive story whose props answer
-back when poked.
+free drawing with real pencils, and bubble pop.
+
+**Stories.** Twenty of them, each its own stage, each happening in a drawn place — a
+seabed, a bakery, the surface of the moon — painted by the same `ScenePainter` the
+live-drawing missions use, so a story kitchen and a mission kitchen are the same
+kitchen. Every story stops to ask the child to find something in the picture and to
+choose where it goes next, so it is a conversation rather than a page of text.
 
 **لالایی شبانه — Bedtime.** A night screen with its own sky: ten lullabies, repeat-one,
 automatic advance to the next, and a sleep timer (۱۵/۳۰/۶۰ minutes) that fades the last
@@ -169,7 +174,15 @@ walks each layout and works out the height it cannot do without — reading `Scr
 `layout_weight`, `GridLayout` wrapping and ConstraintLayout's vertical chains — and
 fails if any screen needs more than the shortest device in its bucket has.
 `tools/gridfit.py` does the same for the games grid, which `vfit` cannot judge
-because the grid is a flexible `0dp` RecyclerView by construction.
+because the grid is a flexible `0dp` RecyclerView by construction. `tools/scenes.py`
+and `tools/sheet.py` render the story scenes and the icon set to contact sheets, so
+artwork gets looked at rather than assumed.
+
+Pashmak sits at the top of the tool column on the screens that have one, and in the
+free bottom corner on the list screens. His speech bubble deliberately lives in the
+screen's own root rather than inside that column: a bubble inside a column grows with
+the length of the line and squeezes everything under it, which is exactly what used to
+break the story screen.
 
 ---
 

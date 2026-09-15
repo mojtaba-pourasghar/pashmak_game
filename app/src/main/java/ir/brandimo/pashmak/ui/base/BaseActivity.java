@@ -123,6 +123,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (dockBubble != null) {
             dockBubble.setOnMuteToggled(() -> mascot.toggleMute());
         }
+        if (!showsBubble() && dockBubble != null) {
+            dockBubble.setVisibility(View.GONE);
+            dockBubble = null;
+        }
         mascot.state().observe(this, state -> {
             if (state == null) {
                 return;
@@ -158,6 +162,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         prefs.starsLive().observe(this, stars ->
                 view.setText(FaNum.of(stars == null ? 0 : stars)));
+    }
+
+    /**
+     * Whether the docked companion gets a speech bubble. A screen that already prints
+     * what Pashmak is saying — the story screen, whose narration box is the line —
+     * turns it off, so the words are not set twice and a long line cannot inflate the
+     * dock and squeeze the rest of the column.
+     */
+    protected boolean showsBubble() {
+        return true;
     }
 
     /** Screens with their own large mascot override this to sync its mouth too. */

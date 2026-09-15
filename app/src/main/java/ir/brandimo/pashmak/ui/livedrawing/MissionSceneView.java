@@ -9,14 +9,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
@@ -24,6 +22,7 @@ import java.util.List;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.data.catalog.MissionScene;
+import ir.brandimo.pashmak.ui.common.ScenePainter;
 import ir.brandimo.pashmak.util.Motion;
 
 /**
@@ -50,14 +49,13 @@ public class MissionSceneView extends View {
     }
 
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-    private final Paint band = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint slotStroke = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint slotLabel = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final android.graphics.Path shapePath = new android.graphics.Path();
     private final RectF rect = new RectF();
     private final Rect source = new Rect();
     private final List<Item> items = new ArrayList<>();
     private final OvershootInterpolator overshoot = new OvershootInterpolator(1.6f);
+    private final ScenePainter painter;
 
     @Nullable
     private MissionScene scene;
@@ -71,6 +69,7 @@ public class MissionSceneView extends View {
 
     public MissionSceneView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        painter = new ScenePainter(context);
         float density = context.getResources().getDisplayMetrics().density;
         slotStroke.setStyle(Paint.Style.STROKE);
         slotStroke.setColor(0x8C2B3742);
@@ -160,63 +159,12 @@ public class MissionSceneView extends View {
         if (scene == null || getWidth() == 0) {
             return;
         }
-        drawBackdrop(canvas);
-        drawShapes(canvas);
-        drawDecor(canvas);
+        painter.paint(canvas, scene, getWidth(), getHeight());
         drawEmptySlots(canvas);
         drawItems(canvas);
 
         if (!Motion.reduced(getContext())) {
             postInvalidateOnAnimation();
-        }
-    }
-
-    private void drawBackdrop(Canvas canvas) {
-        float horizon = getHeight() * scene.horizon;
-        band.setColor(scene.skyColor);
-        canvas.drawRect(0f, 0f, getWidth(), horizon, band);
-        band.setColor(scene.groundColor);
-        canvas.drawRect(0f, horizon, getWidth(), getHeight(), band);
-    }
-
-    /** The room itself: walls, counters, rugs, rails. */
-    private void drawShapes(Canvas canvas) {
-        for (int i = 0; i < scene.shapes.size(); i++) {
-            MissionScene.Shape shape = scene.shapes.get(i);
-            rect.set(shape.x * getWidth(), shape.y * getHeight(),
-                    (shape.x + shape.width) * getWidth(),
-                    (shape.y + shape.height) * getHeight());
-            band.setColor(shape.color);
-            switch (shape.kind) {
-                case OVAL:
-                    canvas.drawOval(rect, band);
-                    break;
-                case ROUND: {
-                    float radius = Math.min(rect.width(), rect.height()) * shape.radius;
-                    canvas.drawRoundRect(rect, radius, radius, band);
-                    break;
-                }
-                case TRIANGLE_UP:
-                    shapePath.reset();
-                    shapePath.moveTo(rect.centerX(), rect.top);
-                    shapePath.lineTo(rect.right, rect.bottom);
-                    shapePath.lineTo(rect.left, rect.bottom);
-                    shapePath.close();
-                    canvas.drawPath(shapePath, band);
-                    break;
-                case TRIANGLE_DOWN:
-                    shapePath.reset();
-                    shapePath.moveTo(rect.left, rect.top);
-                    shapePath.lineTo(rect.right, rect.top);
-                    shapePath.lineTo(rect.centerX(), rect.bottom);
-                    shapePath.close();
-                    canvas.drawPath(shapePath, band);
-                    break;
-                case RECT:
-                default:
-                    canvas.drawRect(rect, band);
-                    break;
-            }
         }
     }
 
@@ -250,23 +198,6 @@ public class MissionSceneView extends View {
             }
         }
         return false;
-    }
-
-    private void drawDecor(Canvas canvas) {
-        float shortest = Math.min(getWidth(), getHeight());
-        for (int i = 0; i < scene.decor.size(); i++) {
-            MissionScene.Decor decor = scene.decor.get(i);
-            Drawable drawable = AppCompatResources.getDrawable(getContext(), decor.icon);
-            if (drawable == null) {
-                continue;
-            }
-            float half = decor.size * shortest / 2f;
-            float cx = decor.x * getWidth();
-            float cy = decor.y * getHeight();
-            drawable.setBounds(Math.round(cx - half), Math.round(cy - half),
-                    Math.round(cx + half), Math.round(cy + half));
-            drawable.draw(canvas);
-        }
     }
 
     private void drawItems(Canvas canvas) {

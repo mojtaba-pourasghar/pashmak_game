@@ -27,17 +27,18 @@
     <dimen name="mascot_hero">200dp</dimen>
     <dimen name="mascot_home">156dp</dimen>
     <dimen name="mascot_inline">126dp</dimen>
-    <dimen name="mascot_dock">84dp</dimen>
-    <dimen name="mascot_dock_small">62dp</dimen>
+    <dimen name="mascot_dock">104dp</dimen>
+    <dimen name="mascot_dock_small">78dp</dimen>
     <dimen name="bubble_max_width">196dp</dimen>
 
     <dimen name="slot_size">64dp</dimen>
     <dimen name="swatch_size">38dp</dimen>
     <dimen name="keypad_key">50dp</dimen>
     <dimen name="keypad_width">64dp</dimen>
-    <dimen name="dock_clearance">96dp</dimen>
+    <dimen name="dock_clearance">116dp</dimen>
 
     <dimen name="lullaby_play">50dp</dimen>
     <dimen name="lullaby_row">38dp</dimen>
+    <dimen name="lullaby_step">50dp</dimen>
     <dimen name="story_line_min">64dp</dimen>
 </resources>

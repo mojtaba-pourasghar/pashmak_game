@@ -206,6 +206,7 @@
 
     <!-- Shared -->
     <string name="stage_locked">اول مرحله‌ی قبلی رو تموم کن تا این باز شه.</string>
+    <string name="stage_story_beats">%1$s تیکه‌ی قصه</string>
     <string name="stage_pick_hint">یه مرحله انتخاب کن و شروع کن!</string>
     <string name="stage_pairs">%1$s جفت</string>
     <string name="stage_letter">حرف %1$s</string>

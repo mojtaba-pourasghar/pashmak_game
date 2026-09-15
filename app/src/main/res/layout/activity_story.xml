@@ -41,15 +41,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/story_header">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/story_list"
+        <include
+            android:id="@+id/story_dock"
+            layout="@layout/view_mascot_dock_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="6"
-            tools:listitem="@layout/item_chip" />
+            android:layout_marginBottom="8dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/story_line"
@@ -103,13 +100,6 @@
             android:background="@drawable/btn_orange"
             android:text="@string/story_next"
             android:textSize="18sp" />
-
-        <include
-            android:id="@+id/story_dock"
-            layout="@layout/view_mascot_dock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp" />
     </LinearLayout>
 
     <ir.brandimo.pashmak.mascot.ConfettiView
@@ -121,4 +111,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <!-- Floats over the centre stage beside Pashmak, so however long a line runs it
+         never takes height from the tool column. -->
+    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+        android:id="@+id/dock_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/bg_speech_bubble"
+        android:paddingStart="11dp"
+        android:paddingTop="9dp"
+        android:paddingEnd="11dp"
+        android:paddingBottom="9dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/story_side"
+        app:layout_constraintTop_toTopOf="@id/story_dock"
+        tools:visibility="visible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

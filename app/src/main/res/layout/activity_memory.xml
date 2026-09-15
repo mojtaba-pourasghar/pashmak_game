@@ -42,6 +42,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/memory_header">
+        <include
+            android:id="@+id/memory_dock"
+            layout="@layout/view_mascot_dock_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/memory_counter"
@@ -66,11 +72,22 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
-
-        <include
-            android:id="@+id/memory_dock"
-            layout="@layout/view_mascot_dock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
     </LinearLayout>
+    <!-- Floats over the centre stage beside Pashmak, so however long a line runs it
+         never takes height from the tool column. -->
+    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+        android:id="@+id/dock_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="6dp"
+        android:background="@drawable/bg_speech_bubble"
+        android:paddingStart="11dp"
+        android:paddingTop="9dp"
+        android:paddingEnd="11dp"
+        android:paddingBottom="9dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/memory_side"
+        app:layout_constraintTop_toTopOf="@id/memory_dock"
+        tools:visibility="visible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

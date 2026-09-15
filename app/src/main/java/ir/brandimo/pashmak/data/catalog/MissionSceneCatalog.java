@@ -1,17 +1,20 @@
 package ir.brandimo.pashmak.data.catalog;
 
-import android.graphics.Color;
-
 import androidx.annotation.NonNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.data.catalog.MissionScene.Anchor;
-import ir.brandimo.pashmak.data.catalog.MissionScene.Decor;
-import ir.brandimo.pashmak.data.catalog.MissionScene.Shape;
+
+import static ir.brandimo.pashmak.data.catalog.SceneBuilder.anchors;
+import static ir.brandimo.pashmak.data.catalog.SceneBuilder.at;
+import static ir.brandimo.pashmak.data.catalog.SceneBuilder.box;
+import static ir.brandimo.pashmak.data.catalog.SceneBuilder.decor;
+import static ir.brandimo.pashmak.data.catalog.SceneBuilder.oval;
+import static ir.brandimo.pashmak.data.catalog.SceneBuilder.rect;
+import static ir.brandimo.pashmak.data.catalog.SceneBuilder.scene;
+import static ir.brandimo.pashmak.data.catalog.SceneBuilder.shapes;
+import static ir.brandimo.pashmak.data.catalog.SceneBuilder.triDown;
+import static ir.brandimo.pashmak.data.catalog.SceneBuilder.triUp;
 
 /**
  * A drawn place for each of the twenty missions — a bedroom with a skirting board,
@@ -420,48 +423,5 @@ public final class MissionSceneCatalog {
                                 new Anchor(0.50f, 0.72f, 0.22f, 0f),
                                 new Anchor(0.80f, 0.62f, 0.26f, 0f))),
         };
-    }
-
-    private static MissionScene scene(String sky, String ground, float horizon,
-                                      List<Shape> shapes, List<Decor> decor,
-                                      List<Anchor> anchors) {
-        return new MissionScene(Color.parseColor(sky), Color.parseColor(ground),
-                horizon, shapes, decor, anchors);
-    }
-
-    private static List<Shape> shapes(Shape... items) {
-        return new ArrayList<>(Arrays.asList(items));
-    }
-
-    private static List<Decor> decor(Decor... items) {
-        return new ArrayList<>(Arrays.asList(items));
-    }
-
-    private static List<Anchor> anchors(Anchor... items) {
-        return new ArrayList<>(Arrays.asList(items));
-    }
-
-    private static Decor at(int icon, float x, float y, float size) {
-        return new Decor(icon, x, y, size);
-    }
-
-    private static Shape rect(String color, float x, float y, float w, float h) {
-        return new Shape(Shape.Kind.RECT, Color.parseColor(color), x, y, w, h, 0f);
-    }
-
-    private static Shape box(String color, float x, float y, float w, float h, float radius) {
-        return new Shape(Shape.Kind.ROUND, Color.parseColor(color), x, y, w, h, radius);
-    }
-
-    private static Shape oval(String color, float x, float y, float w, float h) {
-        return new Shape(Shape.Kind.OVAL, Color.parseColor(color), x, y, w, h, 0f);
-    }
-
-    private static Shape triUp(String color, float x, float y, float w, float h) {
-        return new Shape(Shape.Kind.TRIANGLE_UP, Color.parseColor(color), x, y, w, h, 0f);
-    }
-
-    private static Shape triDown(String color, float x, float y, float w, float h) {
-        return new Shape(Shape.Kind.TRIANGLE_DOWN, Color.parseColor(color), x, y, w, h, 0f);
     }
 }

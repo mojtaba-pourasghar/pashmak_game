@@ -5,7 +5,6 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
@@ -13,6 +12,7 @@ import ir.brandimo.pashmak.data.catalog.Story;
 import ir.brandimo.pashmak.data.catalog.StoryBeat;
 import ir.brandimo.pashmak.data.catalog.StoryCatalog;
 import ir.brandimo.pashmak.data.catalog.StoryProp;
+import ir.brandimo.pashmak.data.catalog.StorySceneCatalog;
 import ir.brandimo.pashmak.databinding.ActivityStoryBinding;
 import ir.brandimo.pashmak.mascot.MascotController;
 import ir.brandimo.pashmak.mascot.MascotState;
@@ -25,11 +25,13 @@ import ir.brandimo.pashmak.ui.base.GameActivity;
  */
 public class StoryActivity extends GameActivity {
 
+    public static final String EXTRA_STORY = "story_index";
+
     private static final int STARS_PER_STORY = 4;
 
     private ActivityStoryBinding binding;
-    private StoryListAdapter storyAdapter;
     private Story story;
+    private int storyIndex;
     private int beatIndex;
 
     @Override
@@ -50,18 +52,10 @@ public class StoryActivity extends GameActivity {
                 ContextCompat.getColor(this, R.color.gold_ink));
         binding.storyHeader.headerAction.setOnClickListener(v -> {
             tap();
-            openStory(StoryCatalog.all().indexOf(story));
+            openStory(storyIndex);
         });
         bindStars(binding.storyHeader.headerStarsValue);
         attachCompanion();
-
-        storyAdapter = new StoryListAdapter(StoryCatalog.all(), index -> {
-            tap();
-            openStory(index);
-        });
-        binding.storyList.setLayoutManager(
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.storyList.setAdapter(storyAdapter);
 
         binding.storyScene.setOnPropTapped(this::onPropTapped);
         binding.storyNext.setOnClickListener(v -> {
@@ -69,13 +63,15 @@ public class StoryActivity extends GameActivity {
             advance(currentBeat().next);
         });
 
-        openStory(0);
+        openStory(getIntent().getIntExtra(EXTRA_STORY, 0));
     }
 
     private void openStory(int index) {
-        story = StoryCatalog.story(Math.max(0, index));
-        storyAdapter.setSelected(StoryCatalog.all().indexOf(story));
+        storyIndex = Math.max(0, index);
+        story = StoryCatalog.story(storyIndex);
         binding.storyHeader.headerTitle.setText(story.title);
+        // The place this story happens in, drawn behind its props.
+        binding.storyScene.setScene(StorySceneCatalog.forStory(storyIndex));
         beatIndex = 0;
         renderBeat();
     }
@@ -84,6 +80,12 @@ public class StoryActivity extends GameActivity {
     @Override
     protected String musicTrack() {
         return AudioManifest.BGM_STORY;
+    }
+
+    /** The narration box already shows the line; a bubble would print it twice. */
+    @Override
+    protected boolean showsBubble() {
+        return false;
     }
 
     private StoryBeat currentBeat() {
@@ -155,6 +157,7 @@ public class StoryActivity extends GameActivity {
     }
 
     private void celebrate() {
+        prefs.setStoryDone(story.id);
         sounds.play(AudioManifest.SFX_FANFARE);
         binding.storyConfetti.burst();
         mascot.addStars(STARS_PER_STORY);

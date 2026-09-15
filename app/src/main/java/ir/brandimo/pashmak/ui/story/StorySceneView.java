@@ -19,12 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ir.brandimo.pashmak.R;
+import ir.brandimo.pashmak.data.catalog.MissionScene;
 import ir.brandimo.pashmak.data.catalog.StoryProp;
+import ir.brandimo.pashmak.ui.common.ScenePainter;
 import ir.brandimo.pashmak.util.Motion;
 
 /**
- * The picture the story happens in. Props drift gently so the scene feels alive,
- * and tapping one makes it jump — which is how the child answers Pashmak.
+ * The picture the story happens in: a drawn place — a forest floor, a kitchen, the
+ * surface of the moon — with the props of this beat standing in it. Props drift
+ * gently so the scene feels alive, and tapping one makes it jump, which is how the
+ * child answers Pashmak.
+ *
+ * <p>The place itself is painted by the same {@link ScenePainter} the live-drawing
+ * missions use, so a story kitchen and a mission kitchen are the same kitchen.
  */
 public class StorySceneView extends View {
 
@@ -39,6 +46,10 @@ public class StorySceneView extends View {
     private final List<StoryProp> props = new ArrayList<>();
     private final List<Drawable> drawables = new ArrayList<>();
 
+    private final ScenePainter painter;
+
+    @Nullable
+    private MissionScene scene;
     @Nullable
     private OnPropTapped listener;
     private int pressedIndex = -1;
@@ -51,12 +62,19 @@ public class StorySceneView extends View {
 
     public StorySceneView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        painter = new ScenePainter(context);
         label.setTextAlign(Paint.Align.CENTER);
         label.setColor(0xFF7A4A02);
         Typeface lalezar = ResourcesCompat.getFont(context, R.font.lalezar_regular);
         if (lalezar != null) {
             label.setTypeface(lalezar);
         }
+    }
+
+    /** The place this beat happens in, drawn behind the props. */
+    public void setScene(@Nullable MissionScene next) {
+        scene = next;
+        invalidate();
     }
 
     public void setProps(@Nullable List<StoryProp> next) {
@@ -96,6 +114,7 @@ public class StorySceneView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        painter.paint(canvas, scene, getWidth(), getHeight());
         if (props.isEmpty()) {
             return;
         }

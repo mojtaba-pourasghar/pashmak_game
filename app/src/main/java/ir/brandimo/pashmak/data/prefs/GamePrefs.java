@@ -149,6 +149,15 @@ public final class GamePrefs {
         prefs.edit().putBoolean("trace_done_" + glyph, true).apply();
     }
 
+    /** Stories the child has reached the end of, keyed by the story's id. */
+    public boolean isStoryDone(String storyId) {
+        return prefs.getBoolean("story_done_" + storyId, false);
+    }
+
+    public void setStoryDone(String storyId) {
+        prefs.edit().putBoolean("story_done_" + storyId, true).apply();
+    }
+
     /** Bedtime settings, remembered so the evening routine is not re-set nightly. */
     public boolean lullabyRepeat() {
         return prefs.getBoolean("lullaby_repeat", false);
