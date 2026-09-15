@@ -38,6 +38,18 @@ public abstract class StagePickerActivity extends BaseActivity
     /** Called for an unlocked stage; a locked one is explained instead. */
     protected abstract void onStageChosen(Stage stage);
 
+    /** Why this stage is locked. Override where "finish the last one" is not the reason. */
+    protected String lockedLine(Stage stage) {
+        return getString(R.string.stage_locked);
+    }
+
+    /** Rebuilds the list — for a screen whose stages arrive after a disk read. */
+    protected void refreshStages() {
+        if (adapter != null) {
+            adapter.submit(buildStages());
+        }
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,14 +77,14 @@ public abstract class StagePickerActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
         // Progress may have changed while a stage was being played.
-        adapter.submit(buildStages());
+        refreshStages();
     }
 
     @Override
     public void onStageClick(Stage stage) {
         tap();
         if (stage.locked) {
-            mascot.say(getString(R.string.stage_locked), MascotState.TALK,
+            mascot.say(lockedLine(stage), MascotState.TALK,
                     MascotController.HOLD_MIN_MS, AudioManifest.VOICE_STAGE_LOCKED);
             return;
         }

@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
+import ir.brandimo.pashmak.data.catalog.MemoryCatalog;
+import ir.brandimo.pashmak.data.repo.MissionRepository;
 import ir.brandimo.pashmak.databinding.ActivityMemoryBinding;
 import ir.brandimo.pashmak.ui.base.GameActivity;
 import ir.brandimo.pashmak.util.FaNum;
@@ -77,11 +79,26 @@ public class MemoryActivity extends GameActivity {
         });
 
         if (viewModel.cards().getValue() == null || viewModel.cards().getValue().isEmpty()) {
-            deal(getIntent().getIntExtra(EXTRA_DECK, 0),
-                    getIntent().getIntExtra(EXTRA_LEVEL, 0));
+            dealFromIntent();
         } else {
             showStageName();
         }
+    }
+
+    /**
+     * The drawings deck is built at runtime, so after the process has been killed and
+     * restored it may not be registered yet. Load it before dealing, and fall back to
+     * the first deck if the drawings are gone.
+     */
+    private void dealFromIntent() {
+        int deckIndex = getIntent().getIntExtra(EXTRA_DECK, 0);
+        int level = getIntent().getIntExtra(EXTRA_LEVEL, 0);
+        if (!MemoryCatalog.isDrawings(deckIndex) || MemoryCatalog.hasDrawings()) {
+            deal(deckIndex, level);
+            return;
+        }
+        MissionRepository.get(this).loadDrawingDeck(available ->
+                deal(available ? deckIndex : 0, level));
     }
 
     private void deal(int deckIndex, int level) {

@@ -9,10 +9,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ir.brandimo.pashmak.R;
+import ir.brandimo.pashmak.data.catalog.MemoryCatalog;
 import ir.brandimo.pashmak.data.db.AppDatabase;
 import ir.brandimo.pashmak.data.db.CapturedItem;
 import ir.brandimo.pashmak.data.db.CapturedItemDao;
@@ -133,5 +136,32 @@ public final class MissionRepository {
 
     public interface CountCallback {
         void onCount(int count);
+    }
+
+    /**
+     * Builds the memory deck made of the child's own scanned drawings and installs it
+     * in {@link MemoryCatalog}, then reports whether there was one. Files that have
+     * been deleted from disk are skipped, so a stale row cannot put a blank card on
+     * the board.
+     */
+    public void loadDrawingDeck(@NonNull DeckCallback callback) {
+        AppExecutors.disk().execute(() -> {
+            List<String> paths = new ArrayList<>();
+            List<CapturedItem> items = dao.recent(MemoryCatalog.MAX_DRAWINGS * 2);
+            for (int i = 0; i < items.size() && paths.size() < MemoryCatalog.MAX_DRAWINGS; i++) {
+                String path = items.get(i).pngPath;
+                if (!path.isEmpty() && new File(path).exists()) {
+                    paths.add(path);
+                }
+            }
+            MemoryCatalog.setDrawings(MemoryCatalog.buildDrawings(
+                    appContext.getString(R.string.memory_deck_drawings),
+                    paths, R.drawable.ic_gallery));
+            AppExecutors.main(() -> callback.onDeckReady(MemoryCatalog.hasDrawings()));
+        });
+    }
+
+    public interface DeckCallback {
+        void onDeckReady(boolean available);
     }
 }

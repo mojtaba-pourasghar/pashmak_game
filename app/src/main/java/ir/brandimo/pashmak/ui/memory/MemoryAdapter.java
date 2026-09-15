@@ -8,10 +8,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import ir.brandimo.pashmak.data.catalog.MemoryDeck;
+import ir.brandimo.pashmak.data.catalog.Palette;
 import ir.brandimo.pashmak.databinding.ItemMemoryCardBinding;
 
 /** Draws the board. A face-down card is always the same, whatever it hides. */
@@ -95,19 +99,38 @@ public class MemoryAdapter extends RecyclerView.Adapter<MemoryAdapter.CardHolder
             float density = binding.getRoot().getResources().getDisplayMetrics().density;
             GradientDrawable card = new GradientDrawable();
             card.setCornerRadius(18f * density);
-            card.setColor(revealed && face != null ? face.tint : 0xFFFFFFFF);
+            if (revealed && face != null) {
+                // Pale ground, full-strength rim: the card still reads as "the red
+                // one" without swallowing artwork drawn in that same red.
+                card.setColor(Palette.pale(face.tint));
+                card.setStroke(Math.round(2f * density), face.tint);
+            } else {
+                card.setColor(0xFFFFFFFF);
+            }
             binding.cardRoot.setBackground(card);
             binding.cardRoot.setAlpha(state == MemoryViewModel.STATE_MATCHED ? 0.5f : 1f);
 
             binding.cardBack.setVisibility(revealed ? View.GONE : View.VISIBLE);
-            boolean picture = revealed && face != null && !face.isGlyph();
             boolean glyph = revealed && face != null && face.isGlyph();
+            boolean picture = revealed && face != null && !glyph;
             binding.cardIcon.setVisibility(picture ? View.VISIBLE : View.GONE);
             binding.cardGlyph.setVisibility(glyph ? View.VISIBLE : View.GONE);
-            if (picture) {
-                binding.cardIcon.setImageResource(face.icon);
-            } else if (glyph) {
+
+            // Always clear first: a recycled holder can still be finishing a load for
+            // whichever card it showed last, which would flash the wrong drawing.
+            Glide.with(binding.cardIcon).clear(binding.cardIcon);
+            if (glyph) {
                 binding.cardGlyph.setText(face.glyph);
+                binding.cardGlyph.setTextColor(face.tint);
+            } else if (picture && face.isPhoto()) {
+                Glide.with(binding.cardIcon)
+                        .load(new File(face.path))
+                        .fitCenter()
+                        .into(binding.cardIcon);
+            } else if (picture) {
+                binding.cardIcon.setImageResource(face.icon);
+            } else {
+                binding.cardIcon.setImageDrawable(null);
             }
 
             binding.cardRoot.setOnClickListener(v -> {

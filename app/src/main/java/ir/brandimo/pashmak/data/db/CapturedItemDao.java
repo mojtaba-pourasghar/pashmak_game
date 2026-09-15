@@ -26,6 +26,10 @@ public interface CapturedItemDao {
     @Query("SELECT * FROM captured_item WHERE missionIndex = :missionIndex ORDER BY slotIndex ASC")
     List<CapturedItem> forMission(int missionIndex);
 
+    /** The newest drawings across every mission, for the memory deck built from them. */
+    @Query("SELECT * FROM captured_item ORDER BY createdAt DESC LIMIT :limit")
+    List<CapturedItem> recent(int limit);
+
     @Query("SELECT COUNT(*) FROM captured_item WHERE missionIndex = :missionIndex")
     int countForMission(int missionIndex);
 

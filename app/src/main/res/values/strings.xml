@@ -125,6 +125,9 @@
     <string name="memory_levels">مرحله‌ها</string>
     <string name="memory_level_label">مرحله %1$s</string>
     <string name="memory_next_level">مرحله‌ی بعد!</string>
+    <string name="memory_deck_drawings">نقاشی‌های من</string>
+    <string name="memory_drawings_empty_sub">اول چند تا نقاشی اسکن کن</string>
+    <string name="memory_drawings_locked">برو تو نقاشی زنده و چند تا نقاشی بکش و عکس بگیر، بعد اینجا با نقاشی‌های خودت بازی می‌کنیم!</string>
     <string name="memory_stage_name">%1$s — مرحله‌ی %2$s</string>
     <string name="memory_locked">اول مرحله‌ی قبلی رو تموم کن.</string>
     <string name="memory_win">همه‌ی جفت‌ها رو پیدا کردی! تو فوق‌العاده‌ای.</string>

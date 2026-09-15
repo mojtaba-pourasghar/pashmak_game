@@ -48,7 +48,8 @@ tap a filled slot to re-scan just that item.
 list built the same way the missions list is, so the child picks a stage by its name
 and its picture rather than hunting through chips inside the game: 60 coloring pages
 across themed packs, one stage per Persian letter and per digit (42 in all), and 30
-memory boards — six themed decks, five levels each, unlocked in order. Alongside them:
+memory boards — six themed decks, five levels each, unlocked in order, plus a seventh
+deck dealt from the child's own scanned drawings once they have made a few. Alongside them:
 free drawing with real pencils, bubble pop, and an interactive story whose props answer
 back when poked.
 

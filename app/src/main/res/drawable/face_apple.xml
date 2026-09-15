@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Generated as part of the memory/story icon set; flat shapes, one
+     underside shade, one highlight, and a face where it is alive. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="48dp" android:height="48dp"
     android:viewportWidth="24" android:viewportHeight="24">
-    <path android:fillColor="#E1251B" android:pathData="M12,15m-8,-6.4a8,6.4 0 1,0 16,0a8,6.4 0 1,0 -16,0" />
-    <path android:fillColor="#8A5A2B" android:pathData="M11.2,4 h1.6 v5 h-1.6 Z" />
-    <path android:fillColor="#43B02A" android:pathData="M13,5.4 q4.4,-2.4 5.6,1.4 q-4,1.8 -5.6,-1.4 Z" />
+    <path android:fillColor="#8A5A2B" android:pathData="M11.3,3.6 q0.9,2.6 0.7,5 h-1.4 q0.2,-2.6 -0.7,-5 Z" />
+    <path android:fillColor="#43B02A" android:pathData="M12.6,5.2 q4.4,-2.6 5.8,1.2 q-4.2,2 -5.8,-1.2 Z" />
+    <path android:fillColor="#2E7A1D" android:pathData="M12.6,5.2 q4.4,-2.6 5.8,1.2 q-3,-2 -5.8,-1.2 Z" />
+    <path android:fillColor="#E1251B" android:pathData="M12,14.6 m-8,0 a8,7.2 0 1,0 16,0 a8,7.2 0 1,0 -16,0" />
+    <path android:fillColor="#B31C14" android:pathData="M4,15.8 a8,7.2 0 0 0 16,0 a8,7.2 0 0 1 -16,0 Z" />
+    <group android:pivotX="8.6" android:pivotY="11.2" android:rotation="-22">
+        <path android:fillColor="#FFFDF8" android:fillAlpha="0.55" android:pathData="M8.6,11.2 m-2,0 a2,2.8 0 1,0 4,0 a2,2.8 0 1,0 -4,0" />
+    </group>
 </vector>

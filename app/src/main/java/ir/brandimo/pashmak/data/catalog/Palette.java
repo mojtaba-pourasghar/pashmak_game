@@ -2,6 +2,8 @@ package ir.brandimo.pashmak.data.catalog;
 
 import android.graphics.Color;
 
+import androidx.core.graphics.ColorUtils;
+
 /** The shared kid-facing color palette, used by coloring, free draw and slots. */
 public final class Palette {
 
@@ -47,6 +49,15 @@ public final class Palette {
 
     public static int hueBorder(int slot) {
         return HUE_BORDER[wrap(slot, HUE_BORDER.length)];
+    }
+
+    /**
+     * A light wash of a swatch, for surfaces that sit behind the artwork. The
+     * pictures are drawn in these same saturated colours, so a red apple on a red
+     * card disappears; on a pale red one it reads at a glance.
+     */
+    public static int pale(int color) {
+        return ColorUtils.blendARGB(color, Color.WHITE, 0.82f);
     }
 
     /** Math.floorMod is API 24+, and this app ships to API 21. */

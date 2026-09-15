@@ -138,7 +138,14 @@ public class MemoryViewModel extends ViewModel {
         }
     }
 
+    /**
+     * The next level has to exist *and* fit in this deck — the drawings deck can be
+     * smaller than the later levels want, and the stage list locks those, so rolling
+     * on to one would contradict it.
+     */
     public boolean hasNextLevel() {
-        return level + 1 < MemoryCatalog.levelCount();
+        int next = level + 1;
+        return next < MemoryCatalog.levelCount()
+                && MemoryCatalog.pairsForLevel(next) <= deck().size();
     }
 }

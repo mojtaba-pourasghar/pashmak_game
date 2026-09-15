@@ -2,6 +2,7 @@ package ir.brandimo.pashmak.data.catalog;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,30 +14,97 @@ import ir.brandimo.pashmak.data.catalog.MemoryDeck.Face;
 
 /**
  * Six themed decks and five levels each, so the memory game grows with the child
- * instead of being the same twelve cards every time.
+ * instead of being the same twelve cards every time — plus a seventh deck, built at
+ * runtime from the drawings the child has scanned, which only exists once there are
+ * enough of them.
  */
 public final class MemoryCatalog {
 
     /** Pairs per level. Three pairs is gentle for a three-year-old; eight is a real test. */
     public static final int[] LEVEL_PAIRS = {3, 4, 5, 6, 8};
 
+    /** The id of the deck made from the child's own drawings. */
+    public static final String DRAWINGS_ID = "drawings";
+
+    /** A board needs at least three pairs, so fewer drawings than this means no deck. */
+    public static final int MIN_DRAWINGS = 3;
+
+    /** At most eight faces, matching the largest level. */
+    public static final int MAX_DRAWINGS = 8;
+
     private static final List<MemoryDeck> DECKS = build();
+
+    /**
+     * The authored decks; the drawings deck sits at this index when it exists.
+     * Derived from DECKS so adding a themed deck cannot silently move it.
+     */
+    public static final int STATIC_COUNT = DECKS.size();
+
+    @Nullable
+    private static volatile MemoryDeck drawings;
+
+    /** DECKS, plus the drawings deck when there is one. Rebuilt only when it changes. */
+    private static volatile List<MemoryDeck> visible = DECKS;
 
     private MemoryCatalog() {
     }
 
     @NonNull
     public static List<MemoryDeck> all() {
-        return DECKS;
+        return visible;
     }
 
     @NonNull
     public static MemoryDeck deck(int index) {
-        return DECKS.get(Palette.wrap(index, DECKS.size()));
+        List<MemoryDeck> decks = visible;
+        return decks.get(Palette.wrap(index, decks.size()));
     }
 
     public static int deckCount() {
-        return DECKS.size();
+        return visible.size();
+    }
+
+    /** True when this index is the drawings deck, whether or not it is loaded. */
+    public static boolean isDrawings(int index) {
+        return index == STATIC_COUNT;
+    }
+
+    public static boolean hasDrawings() {
+        return drawings != null;
+    }
+
+    /**
+     * Installs — or clears, with null — the deck made from the child's scanned
+     * drawings. Called from the repository once the rows have been read off disk.
+     */
+    public static void setDrawings(@Nullable MemoryDeck deck) {
+        drawings = deck;
+        if (deck == null) {
+            visible = DECKS;
+            return;
+        }
+        List<MemoryDeck> combined = new ArrayList<>(DECKS);
+        combined.add(deck);
+        visible = Collections.unmodifiableList(combined);
+    }
+
+    /**
+     * Builds the drawings deck from cut-out PNGs already on disk. Returns null when
+     * there are too few for a board, so callers can keep the stages locked.
+     */
+    @Nullable
+    public static MemoryDeck buildDrawings(@NonNull String name,
+                                           @NonNull List<String> paths,
+                                           @DrawableRes int badge) {
+        if (paths.size() < MIN_DRAWINGS) {
+            return null;
+        }
+        List<Face> faces = new ArrayList<>();
+        for (int i = 0; i < paths.size() && i < MAX_DRAWINGS; i++) {
+            faces.add(new Face(0, null, paths.get(i),
+                    Palette.SWATCHES[i % Palette.SWATCHES.length]));
+        }
+        return new MemoryDeck(DRAWINGS_ID, name, badge, faces);
     }
 
     public static int levelCount() {
@@ -83,7 +151,8 @@ public final class MemoryCatalog {
     private static List<Face> pictures(@DrawableRes int... icons) {
         List<Face> faces = new ArrayList<>(icons.length);
         for (int i = 0; i < icons.length; i++) {
-            faces.add(new Face(icons[i], null, Palette.SWATCHES[i % Palette.SWATCHES.length]));
+            faces.add(new Face(icons[i], null, null,
+                    Palette.SWATCHES[i % Palette.SWATCHES.length]));
         }
         return faces;
     }
@@ -92,7 +161,8 @@ public final class MemoryCatalog {
         List<Face> faces = new ArrayList<>(characters.length);
         List<String> list = Arrays.asList(characters);
         for (int i = 0; i < list.size(); i++) {
-            faces.add(new Face(0, list.get(i), Palette.SWATCHES[i % Palette.SWATCHES.length]));
+            faces.add(new Face(0, list.get(i), null,
+                    Palette.SWATCHES[i % Palette.SWATCHES.length]));
         }
         return faces;
     }

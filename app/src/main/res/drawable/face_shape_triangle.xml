@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Generated as part of the memory/story icon set; flat shapes, one
+     underside shade, one highlight, and a face where it is alive. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="48dp" android:height="48dp"
     android:viewportWidth="24" android:viewportHeight="24">
     <path android:fillColor="#43B02A" android:pathData="M12,3 L21.4,20 L2.6,20 Z" />
+    <path android:fillColor="#2E7A1D" android:pathData="M12,3 L21.4,20 L12,20 Z" />
+    <path android:fillColor="#FFFDF8" android:fillAlpha="0.35" android:pathData="M12,6.6 L15.4,12.8 L8.6,12.8 Z" />
 </vector>
