@@ -32,10 +32,12 @@ def run():
 
         header = d['back_button']
         settings = d['text_chip'] * 1.45 + 16          # Button.Pill, 8dp padding each side
-        grid = viewport - 2 * d['screen_padding_v'] - header - 6 - settings - 8
+        grid = (viewport - 2 * d['screen_padding_v'] - header - 6 - settings - 8
+                - 2 * d['list_box_padding'])           # the grid sits inside a box now
 
         card = max(d['card_min_height'],
-                   d['card_icon_tile'] + 10 + 16)      # icon tile + the card's padding
+                   d['card_icon_tile'] + d['card_padding_top']
+                   + d['card_padding_bottom'])         # icon tile + the card's padding
         needed = rows * (card + 10)                    # 5dp margin each side
 
         ok = needed <= grid

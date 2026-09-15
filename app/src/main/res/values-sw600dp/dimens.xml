@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 7-8" tablet: 960x600 and up. A step up from the phone, not a leap. -->
 <resources>
+    <!-- The end rail the companion stands in on the list screens. -->
     <dimen name="rail_width">140dp</dimen>
     <dimen name="lullaby_column_width">300dp</dimen>
     <dimen name="end_column_width">264dp</dimen>
     <dimen name="screen_padding">22dp</dimen>
     <dimen name="screen_padding_v">16dp</dimen>
+    <dimen name="list_box_padding">12dp</dimen>
     <dimen name="gap">13dp</dimen>
     <dimen name="gap_lg">18dp</dimen>
 
@@ -22,6 +24,9 @@
     <dimen name="text_chip">17sp</dimen>
 
     <dimen name="card_min_height">96dp</dimen>
+    <dimen name="card_padding_top">10dp</dimen>
+    <dimen name="card_padding_bottom">16dp</dimen>
+    <dimen name="card_padding_h">14dp</dimen>
     <dimen name="card_icon_tile">58dp</dimen>
     <dimen name="card_icon">36dp</dimen>
     <dimen name="mascot_hero">320dp</dimen>
@@ -35,7 +40,6 @@
     <dimen name="swatch_size">52dp</dimen>
     <dimen name="keypad_key">70dp</dimen>
     <dimen name="keypad_width">88dp</dimen>
-    <dimen name="dock_clearance">154dp</dimen>
 
     <dimen name="lullaby_play">72dp</dimen>
     <dimen name="lullaby_row">54dp</dimen>

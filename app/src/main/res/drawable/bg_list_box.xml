@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The box a scrolling list lives in. Translucent, so the screen's gradient still
+     reads through it instead of being covered by a slab. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/list_box" />
+    <stroke android:width="2dp" android:color="@color/hairline" />
+    <corners android:radius="22dp" />
+</shape>

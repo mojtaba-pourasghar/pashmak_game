@@ -153,4 +153,7 @@
 
     <color name="scrim">#66000000</color>
     <color name="hairline">#12000000</color>
+    <!-- The box a scrolling list sits in: white enough to hold the cards,
+         sheer enough to let the screen gradient through. -->
+    <color name="list_box">#B8FFFFFF</color>
 </resources>

@@ -4,11 +4,13 @@
     the 7" sizes and the whole app sits small in the middle of a big screen.
 -->
 <resources>
+    <!-- The end rail the companion stands in on the list screens. -->
     <dimen name="rail_width">176dp</dimen>
     <dimen name="lullaby_column_width">366dp</dimen>
     <dimen name="end_column_width">324dp</dimen>
     <dimen name="screen_padding">30dp</dimen>
     <dimen name="screen_padding_v">22dp</dimen>
+    <dimen name="list_box_padding">14dp</dimen>
     <dimen name="gap">17dp</dimen>
     <dimen name="gap_lg">24dp</dimen>
 
@@ -30,6 +32,9 @@
     <dimen name="radius_xl">34dp</dimen>
 
     <dimen name="card_min_height">150dp</dimen>
+    <dimen name="card_padding_top">12dp</dimen>
+    <dimen name="card_padding_bottom">20dp</dimen>
+    <dimen name="card_padding_h">16dp</dimen>
     <dimen name="card_icon_tile">82dp</dimen>
     <dimen name="card_icon">46dp</dimen>
     <dimen name="mascot_hero">420dp</dimen>
@@ -43,7 +48,6 @@
     <dimen name="swatch_size">66dp</dimen>
     <dimen name="keypad_key">90dp</dimen>
     <dimen name="keypad_width">114dp</dimen>
-    <dimen name="dock_clearance">196dp</dimen>
 
     <dimen name="lullaby_play">92dp</dimen>
     <dimen name="lullaby_row">70dp</dimen>

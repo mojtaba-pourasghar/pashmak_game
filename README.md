@@ -174,12 +174,21 @@ walks each layout and works out the height it cannot do without — reading `Scr
 `layout_weight`, `GridLayout` wrapping and ConstraintLayout's vertical chains — and
 fails if any screen needs more than the shortest device in its bucket has.
 `tools/gridfit.py` does the same for the games grid, which `vfit` cannot judge
-because the grid is a flexible `0dp` RecyclerView by construction. `tools/scenes.py`
-and `tools/sheet.py` render the story scenes and the icon set to contact sheets, so
-artwork gets looked at rather than assumed.
+because the grid is a flexible `0dp` RecyclerView by construction. `tools/hfit.py` guards the
+other axis — what each grid column is left with once the rail has taken its share.
+`tools/scenes.py` and `tools/sheet.py` render the story scenes and the icon set to
+contact sheets, so artwork gets looked at rather than assumed.
 
-Pashmak sits at the top of the tool column on the screens that have one, and in the
-free bottom corner on the list screens. His speech bubble deliberately lives in the
+Every scrolling list sits in a box of its own — a translucent panel the cards are
+clipped to. The list screens give Pashmak a rail beside that box rather than the bottom
+corner: in a landscape-locked app height is the scarce dimension and width is not, so a
+rail spends the plentiful one. It also removes a whole class of bug — the lists used to
+pair `clipToPadding="false"` with a bottom padding that was meant to reserve space for
+him, which does the opposite of reserving it: the padding becomes scroll room the list
+still paints into, so cards slid straight across him.
+
+Pashmak sits at the top of the tool column on the screens that have one, in that rail on
+the list screens, and in the free bottom corner on the two screens with neither. His speech bubble deliberately lives in the
 screen's own root rather than inside that column: a bubble inside a column grows with
 the length of the line and squeezes everything under it, which is exactly what used to
 break the story screen.

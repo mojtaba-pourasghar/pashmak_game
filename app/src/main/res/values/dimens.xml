@@ -9,11 +9,13 @@
 -->
 <resources>
     <!-- Landscape three-band layout: start rail | center stage | end column -->
+    <!-- The end rail the companion stands in on the list screens. -->
     <dimen name="rail_width">78dp</dimen>
     <dimen name="lullaby_column_width">200dp</dimen>
     <dimen name="end_column_width">168dp</dimen>
     <dimen name="screen_padding">10dp</dimen>
     <dimen name="screen_padding_v">8dp</dimen>
+    <dimen name="list_box_padding">8dp</dimen>
     <dimen name="gap">8dp</dimen>
     <dimen name="gap_lg">10dp</dimen>
 
@@ -35,6 +37,9 @@
     <dimen name="radius_xl">26dp</dimen>
 
     <dimen name="card_min_height">56dp</dimen>
+    <dimen name="card_padding_top">6dp</dimen>
+    <dimen name="card_padding_bottom">10dp</dimen>
+    <dimen name="card_padding_h">8dp</dimen>
     <dimen name="card_icon_tile">36dp</dimen>
     <dimen name="card_icon">21dp</dimen>
     <dimen name="mascot_hero">168dp</dimen>
@@ -48,7 +53,6 @@
     <dimen name="swatch_size">32dp</dimen>
     <dimen name="keypad_key">44dp</dimen>
     <dimen name="keypad_width">56dp</dimen>
-    <dimen name="dock_clearance">98dp</dimen>
 
     <!-- Bedtime transport: the play button and the two rows of controls under it. -->
     <dimen name="lullaby_play">44dp</dimen>

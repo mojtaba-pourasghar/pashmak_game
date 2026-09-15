@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- The common landscape phone: 640x360 and up, about 336dp of usable height. -->
 <resources>
+    <!-- The end rail the companion stands in on the list screens. -->
     <dimen name="rail_width">96dp</dimen>
     <dimen name="lullaby_column_width">228dp</dimen>
     <dimen name="end_column_width">196dp</dimen>
     <dimen name="screen_padding">14dp</dimen>
     <dimen name="screen_padding_v">10dp</dimen>
+    <dimen name="list_box_padding">10dp</dimen>
     <dimen name="gap">10dp</dimen>
     <dimen name="gap_lg">14dp</dimen>
 
@@ -22,6 +24,9 @@
     <dimen name="text_chip">13sp</dimen>
 
     <dimen name="card_min_height">62dp</dimen>
+    <dimen name="card_padding_top">8dp</dimen>
+    <dimen name="card_padding_bottom">12dp</dimen>
+    <dimen name="card_padding_h">12dp</dimen>
     <dimen name="card_icon_tile">44dp</dimen>
     <dimen name="card_icon">26dp</dimen>
     <dimen name="mascot_hero">200dp</dimen>
@@ -35,7 +40,6 @@
     <dimen name="swatch_size">38dp</dimen>
     <dimen name="keypad_key">50dp</dimen>
     <dimen name="keypad_width">64dp</dimen>
-    <dimen name="dock_clearance">116dp</dimen>
 
     <dimen name="lullaby_play">50dp</dimen>
     <dimen name="lullaby_row">38dp</dimen>

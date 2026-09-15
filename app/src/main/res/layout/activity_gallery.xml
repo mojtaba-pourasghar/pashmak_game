@@ -38,10 +38,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="6dp"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/dock_clearance"
+        android:background="@drawable/bg_list_box"
+        android:padding="@dimen/list_box_padding"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/gallery_rail"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gallery_count"
         tools:itemCount="6"
@@ -61,11 +61,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/gallery_grid" />
 
-    <include
-        android:id="@+id/gallery_dock"
-        layout="@layout/view_mascot_dock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- Pashmak stands in a rail of his own, so the list can fill the height
+         beside him and a scrolled card can never end up drawn across him. -->
+    <LinearLayout
+        android:id="@+id/gallery_rail"
+        android:layout_width="@dimen/rail_width"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/gap"
+        android:clipChildren="false"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gallery_count">
+
+        <include
+            android:id="@+id/gallery_dock"
+            layout="@layout/view_mascot_dock_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
