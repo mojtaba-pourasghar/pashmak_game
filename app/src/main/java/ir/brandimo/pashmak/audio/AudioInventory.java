@@ -14,11 +14,17 @@ import ir.brandimo.pashmak.data.catalog.LullabyCatalog;
 import ir.brandimo.pashmak.data.catalog.Story;
 import ir.brandimo.pashmak.data.catalog.StoryBeat;
 import ir.brandimo.pashmak.data.catalog.StoryCatalog;
+import ir.brandimo.pashmak.data.catalog.Tale;
+import ir.brandimo.pashmak.data.catalog.TaleCatalog;
 
 /**
- * Counts how many of the recordings listed in res/raw/audio_manifest.txt are
- * actually present. Whoever is recording them has no other way to tell whether a
- * file landed under the right name, so the parent screen reports the tally.
+ * Counts how many of the files listed in res/raw/audio_manifest.txt are actually
+ * present. Since Pashmak speaks through the device's text-to-speech engine, every
+ * voice clip is an optional override and none of them has to exist — but whoever
+ * drops one in has no other way to tell whether it landed under the right name,
+ * so the parent screen reports the tally. The three background-music files are
+ * counted separately because they are the ones a parent is actually expected to
+ * supply, and burying them in a tally of hundreds would hide them.
  */
 public final class AudioInventory {
 
@@ -26,16 +32,26 @@ public final class AudioInventory {
     public static final class Report {
         public final int found;
         public final int total;
+        /** Of the three bgm_* files, how many are in res/raw. */
+        public final int musicFound;
+        public final int musicTotal;
         public final List<String> missingSample;
 
-        Report(int found, int total, List<String> missingSample) {
+        Report(int found, int total, int musicFound, int musicTotal,
+               List<String> missingSample) {
             this.found = found;
             this.total = total;
+            this.musicFound = musicFound;
+            this.musicTotal = musicTotal;
             this.missingSample = missingSample;
         }
     }
 
     private static final int SAMPLE_SIZE = 6;
+
+    private static final String[] MUSIC = {
+            AudioManifest.BGM_MENU, AudioManifest.BGM_PLAY, AudioManifest.BGM_STORY
+    };
 
     public static Report scan(@NonNull Context context) {
         Context app = context.getApplicationContext();
@@ -51,16 +67,22 @@ public final class AudioInventory {
                 missing.add(name);
             }
         }
-        return new Report(found, expected.size(), missing);
+        int music = 0;
+        for (String name : MUSIC) {
+            if (resources.getIdentifier(name, "raw", pkg) != 0) {
+                music++;
+            }
+        }
+        return new Report(found, expected.size(), music, MUSIC.length, missing);
     }
 
     /** Every file name the app will ever ask res/raw for. */
     private static List<String> expected(Context app) {
         List<String> names = new ArrayList<>();
 
-        names.add(AudioManifest.BGM_MENU);
-        names.add(AudioManifest.BGM_PLAY);
-        names.add(AudioManifest.BGM_STORY);
+        for (String music : MUSIC) {
+            names.add(music);
+        }
 
         names.add(AudioManifest.VOICE_WELCOME);
         names.add(AudioManifest.VOICE_WIN_1);
@@ -127,6 +149,12 @@ public final class AudioInventory {
                 if (story.beat(beat).type == StoryBeat.Type.ASK_TAP) {
                     names.add(AudioManifest.storyPraise(story.id, beat));
                 }
+            }
+        }
+
+        for (Tale tale : TaleCatalog.all()) {
+            for (int moment = 0; moment < tale.size(); moment++) {
+                names.add(AudioManifest.taleMoment(tale.id, moment));
             }
         }
 

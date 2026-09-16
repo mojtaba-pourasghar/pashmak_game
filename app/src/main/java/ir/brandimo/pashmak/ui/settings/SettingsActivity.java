@@ -94,19 +94,24 @@ public class SettingsActivity extends BaseActivity {
     }
 
     /**
-     * Whoever records the voice files has no way to tell from inside the app
-     * whether one landed under the right name, so say how many were found.
+     * Whoever drops an audio file in has no way to tell from inside the app whether
+     * it landed under the right name, so say what was found. The music is reported
+     * first and on its own: those three files are the only ones a parent is really
+     * expected to supply, and a tally of hundreds of optional voice clips would
+     * otherwise read as though something were broken when nothing is.
      */
     private void renderAudioInventory() {
         AudioInventory.Report report = AudioInventory.scan(this);
-        if (report.found == report.total) {
-            binding.settingsAudio.setText(getString(R.string.settings_audio_all,
-                    FaNum.of(report.total)));
-            return;
-        }
-        binding.settingsAudio.setText(getString(R.string.settings_audio_some,
-                FaNum.of(report.found), FaNum.of(report.total),
-                TextUtils.join("، ", report.missingSample)));
+        String music = report.musicFound == report.musicTotal
+                ? getString(R.string.settings_audio_music_all)
+                : getString(R.string.settings_audio_music_some,
+                        FaNum.of(report.musicFound), FaNum.of(report.musicTotal));
+        String voices = report.found == report.total
+                ? getString(R.string.settings_audio_all, FaNum.of(report.total))
+                : getString(R.string.settings_audio_some,
+                        FaNum.of(report.found), FaNum.of(report.total),
+                        TextUtils.join("، ", report.missingSample));
+        binding.settingsAudio.setText(music + "\n" + voices);
     }
 
     private void setDifficulty(int level) {

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_story"
+    android:clipChildren="false"
+    android:paddingStart="@dimen/screen_padding"
+    android:paddingTop="@dimen/screen_padding_v"
+    android:paddingEnd="@dimen/screen_padding"
+    android:paddingBottom="@dimen/screen_padding_v">
+
+    <include
+        android:id="@+id/tale_header"
+        layout="@layout/view_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ir.brandimo.pashmak.ui.tale.TaleSceneView
+        android:id="@+id/tale_scene"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_frame_scene"
+        app:layout_constraintBottom_toTopOf="@id/tale_line"
+        app:layout_constraintEnd_toStartOf="@id/tale_side"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tale_header" />
+
+    <!-- The passage being read. It is the whole text, not a bubble, because a told
+         tale's sentences are longer than a speech bubble should ever get. -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tale_line"
+        style="@style/Text.Body"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_speech_story"
+        android:minHeight="@dimen/story_line_min"
+        android:padding="12dp"
+        android:textColor="@color/ink_primary"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tale_side"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="شب شده بود و ماه مثل یه قایق نقره‌ای روی آب نشسته بود." />
+
+    <LinearLayout
+        android:id="@+id/tale_side"
+        android:layout_width="@dimen/end_column_width"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/gap"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tale_header">
+
+        <include
+            android:id="@+id/tale_dock"
+            layout="@layout/view_mascot_dock_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tale_progress"
+            style="@style/Text.Chip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/gold_sub"
+            tools:text="۳ از ۱۱" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/tale_prev"
+                style="@style/Button.Round"
+                android:layout_width="@dimen/lullaby_step"
+                android:layout_height="@dimen/lullaby_step"
+                android:background="@drawable/bg_circle_white"
+                android:contentDescription="@string/tale_prev"
+                android:padding="10dp"
+                android:rotation="180"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_next"
+                app:tint="@color/gold_ink" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/tale_play"
+                style="@style/Button.Round"
+                android:layout_width="@dimen/lullaby_play"
+                android:layout_height="@dimen/lullaby_play"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/btn_orange"
+                android:contentDescription="@string/tale_pause"
+                android:padding="14dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_pause"
+                app:tint="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/tale_next"
+                style="@style/Button.Round"
+                android:layout_width="@dimen/lullaby_step"
+                android:layout_height="@dimen/lullaby_step"
+                android:background="@drawable/bg_circle_white"
+                android:contentDescription="@string/tale_next"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_next"
+                app:tint="@color/gold_ink" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/tale_next_tale"
+            style="@style/Button.Chunky"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/btn_yellow"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/tale_next_tale"
+            android:textColor="@color/gold_ink"
+            android:textSize="15sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

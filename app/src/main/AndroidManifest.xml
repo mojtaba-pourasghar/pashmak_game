@@ -63,6 +63,8 @@
             android:screenOrientation="landscape"
             android:exported="false"
             tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".ui.tale.TalePickerActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".ui.tale.TaleActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
         <activity android:name=".ui.gallery.GalleryActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
         <activity android:name=".ui.gallery.GalleryViewerActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
         <activity android:name=".ui.settings.SettingsActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />

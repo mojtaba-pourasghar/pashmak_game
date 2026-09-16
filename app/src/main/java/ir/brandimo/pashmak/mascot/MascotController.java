@@ -96,11 +96,22 @@ public final class MascotController {
      */
     public void say(String text, @Nullable MascotState mood, long holdMs,
                     @NonNull String audio) {
-        speakInternal(text, mood, holdMs, audio);
+        speakInternal(text, mood, holdMs, audio, null);
+    }
+
+    /**
+     * As {@link #say}, but tells the caller when the line has actually finished
+     * sounding. The told tales use it to turn the page on the voice rather than on a
+     * stopwatch — though they keep a stopwatch too, because on a device with no
+     * Persian voice nothing sounds and nothing would ever finish.
+     */
+    public void say(String text, @Nullable MascotState mood, long holdMs,
+                    @NonNull String audio, @Nullable Runnable whenSpoken) {
+        speakInternal(text, mood, holdMs, audio, whenSpoken);
     }
 
     private void speakInternal(String text, @Nullable MascotState mood, long holdMs,
-                               @Nullable String audio) {
+                               @Nullable String audio, @Nullable Runnable whenSpoken) {
         cancelPending();
         String body = text == null ? "" : text;
         MascotState pose = mood == null ? MascotState.TALK : mood;
@@ -113,7 +124,12 @@ public final class MascotController {
         }
         // Pass the words as well as the clip name: a recording wins if one exists,
         // otherwise the device speaks the line itself.
-        if (voice.speak(audio, body, this::idle)) {
+        if (voice.speak(audio, body, () -> {
+            idle();
+            if (whenSpoken != null) {
+                whenSpoken.run();
+            }
+        })) {
             // Something is actually sounding, so keep the mouth going until it ends
             // rather than stopping when the text has finished appearing.
             setSpeaking(true);
@@ -124,7 +140,7 @@ public final class MascotController {
     }
 
     public void speak(@NonNull MascotLine line, long holdMs) {
-        speakInternal(line.text, line.mood, holdMs, line.audio);
+        speakInternal(line.text, line.mood, holdMs, line.audio, null);
     }
 
     /** Celebrates and awards a star, exactly as the prototype's cheer() does. */
@@ -156,9 +172,9 @@ public final class MascotController {
     public void welcome() {
         MascotLine line = dialogues.welcome();
         // The entrance pose first, silent; the clip plays once he has landed.
-        speakInternal(line.text, MascotState.ENTER, HOLD_WELCOME_MS, null);
+        speakInternal(line.text, MascotState.ENTER, HOLD_WELCOME_MS, null, null);
         handler.postDelayed(() -> speakInternal(line.text, line.mood, HOLD_WELCOME_MS,
-                line.audio), DOCK_TRANSITION_MS);
+                line.audio, null), DOCK_TRANSITION_MS);
     }
 
     public void idle() {

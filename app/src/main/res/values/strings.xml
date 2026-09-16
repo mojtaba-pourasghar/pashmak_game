@@ -196,8 +196,10 @@
     <string name="settings_voice_ready">صدای پشمک آماده است؛ متن‌ها رو با صدای بلند می‌خونه.</string>
     <string name="settings_voice_no_persian">این دستگاه صدای فارسی نداره، برای همین پشمک ساکته. از Play Store یک موتور گفتار فارسی نصب کنید (مثلاً «RHVoice» یا موتور گفتار سامسونگ) و بعد در تنظیمات اندروید ← زبان و ورودی ← خروجی گفتار، فارسی رو انتخاب کنید. متن‌ها همیشه روی صفحه نوشته می‌شن.</string>
     <string name="settings_voice_unavailable">روی این دستگاه موتور تبدیل متن به گفتار پیدا نشد. متن‌ها روی صفحه نوشته می‌شن.</string>
-    <string name="settings_audio_all">همه‌ی %1$s فایل صدا پیدا شد. ✔</string>
-    <string name="settings_audio_some">فایل‌های صدا: %1$s از %2$s پیدا شد. بقیه در res/raw/audio_manifest.txt فهرست شده — مثل: %3$s</string>
+    <string name="settings_audio_music_all">موزیک پس‌زمینه: هر سه فایل پیدا شد. ✔</string>
+    <string name="settings_audio_music_some">موزیک پس‌زمینه: %1$s از %2$s فایل پیدا شد. بقیه‌اش رو خود برنامه می‌سازه.</string>
+    <string name="settings_audio_all">صداهای اختیاری: هر %1$s فایل پیدا شد. ✔</string>
+    <string name="settings_audio_some">صداگذاری لازم نیست؛ پشمک همه‌ی متن‌ها رو خودش می‌خونه. اگر خواستید صدای ضبط‌شده جایگزین کنید: %1$s از %2$s فایل اختیاری پیدا شد — مثل %3$s. فهرست کامل در res/raw/audio_manifest.txt</string>
     <string name="settings_info">این اپ کامل آفلاین کار می‌کنه — بدون تبلیغ، بدون حساب کاربری و بدون خرید درون‌برنامه‌ای.</string>
 
     <!-- Mascot dialogue (MascotConfig.js, verbatim) -->
@@ -221,6 +223,17 @@
     <!-- Shared -->
     <string name="stage_locked">اول مرحله‌ی قبلی رو تموم کن تا این باز شه.</string>
     <string name="stage_story_beats">%1$s تیکه‌ی قصه</string>
+    <string name="game_tales_title">قصه‌های پشمک</string>
+    <string name="game_tales_sub">بشین و گوش کن، پشمک قصه می‌گه</string>
+    <string name="tales_hint">یه قصه انتخاب کن و فقط گوش بده.</string>
+    <string name="tale_minutes">حدود %1$s دقیقه</string>
+    <string name="tale_progress">%1$s از %2$s</string>
+    <string name="tale_play">پخش</string>
+    <string name="tale_pause">مکث</string>
+    <string name="tale_next">تیکه‌ی بعدی</string>
+    <string name="tale_prev">تیکه‌ی قبلی</string>
+    <string name="tale_next_tale">قصه‌ی بعدی</string>
+    <string name="tale_finished">قصه تموم شد. خوب گوش دادی!</string>
     <string name="stage_pick_hint">یه مرحله انتخاب کن و شروع کن!</string>
     <string name="stage_pairs">%1$s جفت</string>
     <string name="stage_letter">حرف %1$s</string>

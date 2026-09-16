@@ -158,6 +158,15 @@ public final class GamePrefs {
         prefs.edit().putBoolean("story_done_" + storyId, true).apply();
     }
 
+    /** Told tales the child has heard all the way through. */
+    public boolean isTaleDone(String taleId) {
+        return prefs.getBoolean("tale_done_" + taleId, false);
+    }
+
+    public void setTaleDone(String taleId) {
+        prefs.edit().putBoolean("tale_done_" + taleId, true).apply();
+    }
+
     /** Bedtime settings, remembered so the evening routine is not re-set nightly. */
     public boolean lullabyRepeat() {
         return prefs.getBoolean("lullaby_repeat", false);

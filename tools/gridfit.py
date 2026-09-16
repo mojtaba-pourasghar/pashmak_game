@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Checks the games menu really shows all eight cards without scrolling.
+"""Checks the games menu really shows all nine cards without scrolling.
 
 vfit.py can only say the screen fits — the grid is a 0dp RecyclerView, so it is
 "flexible" by construction and would pass even while cards fall off the bottom.
@@ -9,7 +9,7 @@ import math, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import vfit
 
-CARDS = 8
+CARDS = 9
 
 def run():
     failures = 0
@@ -46,7 +46,7 @@ def run():
               % (label, span, 'wide' if wide else 'flat', rows, needed, grid,
                  'ok' if ok else 'SCROLLS'))
     print('\n%s' % ('FAIL: the games menu scrolls in %d bucket(s)' % failures
-                    if failures else 'PASS: all eight game cards fit in every bucket'))
+                    if failures else 'PASS: all nine game cards fit in every bucket'))
     return 1 if failures else 0
 
 if __name__ == '__main__':

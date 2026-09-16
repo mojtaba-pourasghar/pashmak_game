@@ -20,6 +20,7 @@ import ir.brandimo.pashmak.ui.memory.MemoryPickerActivity;
 import ir.brandimo.pashmak.ui.missions.MissionsActivity;
 import ir.brandimo.pashmak.ui.parentgate.ParentGateDialog;
 import ir.brandimo.pashmak.ui.story.StoryPickerActivity;
+import ir.brandimo.pashmak.ui.tale.TalePickerActivity;
 import ir.brandimo.pashmak.ui.tracing.TracingPickerActivity;
 
 /**
@@ -107,6 +108,11 @@ public class GamesActivity extends BaseActivity {
                 R.color.yellow_shadow, R.string.game_story_title,
                 getString(R.string.game_story_sub), false, true,
                 StoryPickerActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_purple_card, R.drawable.ic_book,
+                R.color.purple, R.string.game_tales_title,
+                getString(R.string.game_tales_sub), false, false,
+                TalePickerActivity.class));
 
         entries.add(new GameEntry(R.drawable.btn_night_card, R.drawable.ic_moon,
                 R.color.night_top, R.string.game_lullaby_title,

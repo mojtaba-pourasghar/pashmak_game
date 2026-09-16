@@ -1,16 +1,28 @@
 Pashmak Game — audio drop-in list
 =================================
-Put the recordings in app/src/main/res/raw/ using exactly these file names.
-Any missing file is skipped silently; the game stays playable and the words
-still appear in the speech bubble. Use .mp3 or .ogg, mono, 44.1 kHz.
+ONLY THE THREE bgm_* FILES IN SECTION 1 ARE NEEDED.
 
-File names must be lowercase with letters, digits and underscores only —
-aapt rejects anything else. Do not write the extension in this list; the
-app looks the file up by name, so welcome.mp3 and welcome.ogg both work.
+Everything else on this list is spoken by the device itself. Pashmak reads
+his lines aloud with the Android text-to-speech engine in a voice pitched
+up and slowed a little so it suits a small woolly creature, so the app
+talks with no recordings at all.
 
-Every line Pashmak speaks in the app is listed below with the exact file it
-looks for. Nothing speaks without a name: MascotController.say() requires a
-clip, so this list is complete.
+The one catch is Persian: most phones ship Google TTS, which has no Persian
+voice, and then Pashmak goes quiet while the words still appear in his
+bubble. Settings says so in plain words and names the free engines that do
+speak Persian, so a parent can fix it in a minute. Nothing in the app is
+blocked either way.
+
+Every name below is an OVERRIDE. Drop a file in and that one line is played
+from the recording instead of being spoken — one line, a whole screen or the
+entire app, in any mix. This is how a real narrator can be added later
+without touching the code.
+
+Put the files in app/src/main/res/raw/ using exactly these names. Use .mp3
+or .ogg, mono, 44.1 kHz. File names must be lowercase with letters, digits
+and underscores only — aapt rejects anything else. Do not write the
+extension; the app looks the file up by name, so welcome.mp3 and
+welcome.ogg both work.
 
 
 1. BACKGROUND MUSIC  (looping, instrumental, no singing)
@@ -98,7 +110,15 @@ These are the three files to drop in for background music:
 
 8. BUBBLES AND FREE DRAWING
 ---------------------------
+  Bubble pop runs in rounds, each with its own rule — one named letter, one
+  named digit, every letter, or every digit. The rule itself is read out from
+  the strings below with the glyph filled in, so it cannot be recorded as one
+  clip; bubble_round is the line between rounds.
+
   bubble_pop             ترکوندیش! ادامه بده.
+  bubble_goal            حرف «…» رو بترکون!
+  bubble_wrong           اون نبود قندعسلم. …
+  bubble_round           آفرین! این دور رو بردی. بریم دور بعد.
   draw_empty             اول یه چیزی بکش تا ذخیره کنم.
 
 9. STAGE LISTS
@@ -336,7 +356,58 @@ These are the three files to drop in for background music:
   story_wrong            نه قندعسلم، یه بار دیگه نگاه کن.
   story_end              قصه تموم شد! یه قصه‌ی دیگه انتخاب کن.
 
-12. SOUND EFFECTS  (short, under a second)
+12. قصه‌های پشمک — THE TOLD TALES
+---------------------------------
+  Forty tales Pashmak tells on his own, a passage at a time, each one a
+  minute or two. Every passage is spoken by the device; a recording is only
+  ever an override. The names run tale_<id>_<n>, numbered from zero in the
+  order the passages appear — tale_moon_boat_0, tale_moon_boat_1 and so on.
+  The passages themselves live in data/catalog/TaleCatalog.java.
+
+  tale_moon_boat_0 …           قایق ماه               10 passage(s)
+  tale_lost_button_0 …         دکمه‌ی گمشده           10 passage(s)
+  tale_cloud_sheep_0 …         گوسفندهای ابری         9 passage(s)
+  tale_brave_snail_0 …         حلزون شجاع             9 passage(s)
+  tale_paper_bird_0 …          پرنده‌ی کاغذی          9 passage(s)
+  tale_shy_star_0 …            ستاره‌ی خجالتی         9 passage(s)
+  tale_teapot_song_0 …         آواز قوری              8 passage(s)
+  tale_mouse_library_0 …       موش کتابخانه           9 passage(s)
+  tale_rain_drum_0 …           طبل بارون              8 passage(s)
+  tale_kite_friend_0 …         بادبادک و باد          9 passage(s)
+  tale_sock_pair_0 …           جوراب تنها             11 passage(s)
+  tale_turtle_race_0 …         لاک‌پشت و جاده         11 passage(s)
+  tale_candle_night_0 …        شمع کوچولو             11 passage(s)
+  tale_bee_garden_0 …          زنبور و سه گل          11 passage(s)
+  tale_shadow_friend_0 …       دوستِ سایه             11 passage(s)
+  tale_fish_rainbow_0 …        ماهی رنگین‌کمان        11 passage(s)
+  tale_bread_smell_0 …         بوی نان                10 passage(s)
+  tale_wind_letter_0 …         نامه‌ی باد             10 passage(s)
+  tale_clock_tick_0 …          ساعت تنبل              10 passage(s)
+  tale_puddle_sky_0 …          آسمون توی گودال        11 passage(s)
+  tale_ant_crumb_0 …           مورچه و خرده‌نان       11 passage(s)
+  tale_snow_bird_0 …           گنجشک و برف            11 passage(s)
+  tale_drum_boy_0 …            پسرک و طبل             11 passage(s)
+  tale_seed_patience_0 …       دانه‌ی صبور            11 passage(s)
+  tale_umbrella_share_0 …      چتر دو نفره            11 passage(s)
+  tale_mirror_pond_0 …         برکه‌ی آینه‌ای         11 passage(s)
+  tale_two_shoes_0 …           دو تا کفش              11 passage(s)
+  tale_night_train_0 …         قطار شب                11 passage(s)
+  tale_green_door_0 …          درِ سبز                11 passage(s)
+  tale_small_wave_0 …          موج کوچولو             12 passage(s)
+  tale_busy_spider_0 …         عنکبوت و باد           11 passage(s)
+  tale_cold_hands_0 …          دست‌های سرد            11 passage(s)
+  tale_pocket_stone_0 …        سنگِ جیبی              11 passage(s)
+  tale_old_tree_0 …            درخت پیر               11 passage(s)
+  tale_humble_spoon_0 …        قاشق چوبی              11 passage(s)
+  tale_first_snow_bear_0 …     خرس و اولین برف        12 passage(s)
+  tale_singing_well_0 …        چاه آوازخوان           11 passage(s)
+  tale_lantern_fish_0 …        فانوس ماهی             10 passage(s)
+  tale_grandma_quilt_0 …       لحاف مادربزرگ          11 passage(s)
+  tale_morning_rooster_0 …     خروس و آفتاب           11 passage(s)
+
+  40 tales, 418 passages in all.
+
+13. SOUND EFFECTS  (short, under a second)
 ------------------------------------------
   sfx_pop       a bubble bursting
   sfx_flip      a memory card turning over

@@ -59,6 +59,9 @@ public final class AudioManifest {
     public static final String VOICE_STORY_WRONG = "story_wrong";
     public static final String VOICE_STORY_END = "story_end";
 
+    /* ---- Told tales ---- */
+    public static final String VOICE_TALE_DONE = "tale_done";
+
     /* ---- Stage lists ---- */
     public static final String VOICE_STAGE_LOCKED = "stage_locked";
 
@@ -113,6 +116,15 @@ public final class AudioManifest {
     /** What Pashmak says when the child taps the right thing in that beat. */
     public static String storyPraise(String storyId, int beat) {
         return "story_" + storyId + "_" + beat + "_yes";
+    }
+
+    /**
+     * One clip per passage of a told tale — tale_moon_boat_0 and so on. These are
+     * spoken by the device unless a recording turns up under the name, which is how
+     * a real narrator could be dropped in later without touching the code.
+     */
+    public static String taleMoment(String taleId, int moment) {
+        return "tale_" + taleId + "_" + moment;
     }
 
     private AudioManifest() {

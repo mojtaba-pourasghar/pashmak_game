@@ -50,13 +50,25 @@ and its picture rather than hunting through chips inside the game: 60 coloring p
 across themed packs, one stage per Persian letter and per digit (42 in all), and 30
 memory boards — six themed decks, five levels each, unlocked in order, plus a seventh
 deck dealt from the child's own scanned drawings once they have made a few. Alongside them:
-free drawing with real pencils, and bubble pop.
+free drawing with real pencils, and bubble pop — which now plays in rounds, each with
+one rule announced before it starts: pop only «چ», only «۷», only the letters, only the
+digits. The hunted glyph is salted into the field so it is always there to find, and
+popping the wrong bubble costs nothing — it is a small child's game, not a test.
 
 **Stories.** Twenty of them, each its own stage, each happening in a drawn place — a
 seabed, a bakery, the surface of the moon — painted by the same `ScenePainter` the
 live-drawing missions use, so a story kitchen and a mission kitchen are the same
 kitchen. Every story stops to ask the child to find something in the picture and to
 choose where it goes next, so it is a conversation rather than a page of text.
+
+**قصه‌های پشمک — Told tales.** Forty more stories, a minute or two each, that ask nothing
+of the child: Pashmak simply tells them, a passage at a time, and the scene changes
+under him as the tale moves — a river at night, a meadow at noon, a room by lamplight,
+cross-faded rather than cut. There is play/pause, back and forward a passage, and the
+next tale at the end. Nothing is locked; a tired child should not have to earn a bedtime
+story. 418 passages, 4,114 words, about 44 minutes of telling in all, and the ten places
+are built by `TaleSceneKit` from a handful of moods, so each tale gets its own set rather
+than sharing one generic backdrop.
 
 **لالایی شبانه — Bedtime.** A night screen with its own sky: ten lullabies, repeat-one,
 automatic advance to the next, and a sleep timer (۱۵/۳۰/۶۰ minutes) that fades the last
@@ -111,16 +123,28 @@ Stars, mute, difficulty and the welcome flag are SharedPreferences.
 
 ## Audio
 
-**Every sound has a file name, and they are all in one list.** Nothing in the app
+**Pashmak speaks for himself — the only files to supply are the three music loops.**
+`audio/SpeechEngine` drives Android's own text-to-speech at pitch 1.35 and rate 0.92, so
+he sounds like a small warm creature rather than a satnav, and every line in the app is
+read aloud with no recordings at all. `VoicePlayer` checks `res/raw` first and falls back
+to speech, which makes a recording always an override: drop one file in and that line is
+played from it, drop in a hundred and a hundred lines are, in any mix, without touching
+the code.
+
+**The Persian catch, said out loud rather than hidden.** Most phones ship Google's
+engine, which has no Persian voice. When that happens Pashmak goes quiet while his words
+still appear in the bubble — nothing in the app is blocked — and the parent screen says
+so in plain words, names two free engines that do speak Persian (RHVoice, Samsung's) and
+gives the exact Android settings path. `SpeechEngine.Status` is `STARTING / READY /
+NO_PERSIAN / UNAVAILABLE`, and settings re-reads it in `onResume`, because the engine may
+still have been starting up when the screen opened.
+
+**Every sound still has a file name, and they are all in one list.** Nothing in the app
 speaks anonymously — `MascotController.say()` requires a clip name, so a new screen
-cannot ship a mouth moving over silence. The complete list of 146 file names, each with
-the exact Persian line it reads and where it is heard, is
+cannot ship a mouth moving over silence. The complete list, each name with the exact
+Persian line it reads and where it is heard, is
 [`app/src/main/res/raw/audio_manifest.txt`](app/src/main/res/raw/audio_manifest.txt).
-Drop the recordings into `app/src/main/res/raw/` under those names — `.mp3` or `.ogg`,
-lowercase with underscores or aapt will reject them. **No recordings ship with this
-repo and none is required**: every clip is resolved by name through
-`Resources#getIdentifier`, so a missing file is a silent no-op and the words still
-appear in the speech bubble.
+Names are lowercase with underscores or aapt will reject them; `.mp3` or `.ogg`.
 
 **Background music** is three files:
 
@@ -137,9 +161,11 @@ real file in and it is used instead, with no code change. Either way the music d
 a whisper whenever Pashmak speaks and comes back up afterwards. The bedtime screen asks
 for silence — the lullaby is the sound there.
 
-**Checking your files landed.** The parent screen (behind the gate) reports how many of
-the 146 clips it can actually find and names a few of the ones it cannot, so a wrong
-file name shows up immediately instead of as a character that never speaks.
+**Checking your files landed.** The parent screen (behind the gate) reports the three
+music files on their own line — they are the ones you are actually expected to supply —
+and the optional voice overrides separately, naming a few it cannot find. A wrong file
+name shows up immediately, and a parent who recorded nothing is told that nothing is
+wrong rather than shown hundreds of missing files.
 
 ---
 
