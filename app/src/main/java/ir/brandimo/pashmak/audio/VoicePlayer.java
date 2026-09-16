@@ -9,8 +9,13 @@ import androidx.annotation.Nullable;
 import ir.brandimo.pashmak.data.prefs.GamePrefs;
 
 /**
- * Mascot voice lines. Mirrors the prototype's behavior of failing silently when a
- * clip has not been recorded yet; background music lives in MusicEngine.
+ * Everything Pashmak says out loud.
+ *
+ * <p>Two sources, in order: a recording dropped into res/raw under the line's clip
+ * name wins if it is there, so a real voice can always be substituted later; if it is
+ * not, the device speaks the words through {@link SpeechEngine}. That way the app has
+ * a voice out of the box without shipping hundreds of files, and a recorded one the
+ * moment anybody records it.
  */
 public final class VoicePlayer {
 
@@ -18,12 +23,14 @@ public final class VoicePlayer {
 
     private final Context appContext;
     private final GamePrefs prefs;
+    private final SpeechEngine speech;
 
     private MediaPlayer voice;
 
     private VoicePlayer(Context context) {
         appContext = context.getApplicationContext();
         prefs = GamePrefs.get(appContext);
+        speech = SpeechEngine.get(appContext);
     }
 
     public static VoicePlayer get(@NonNull Context context) {
@@ -43,10 +50,28 @@ public final class VoicePlayer {
         void onVoiceFinished();
     }
 
-    /** Returns true when a clip actually started, so callers can adjust timing. */
-    public boolean speak(@Nullable String name, @Nullable CompletionCallback callback) {
+    /**
+     * Says a line. Returns true when something actually sounded, so callers can hold
+     * the mascot's mouth open for as long as it lasts.
+     *
+     * @param name the clip name to look for in res/raw, or null to go straight to speech
+     * @param text the words themselves, spoken when there is no recording
+     */
+    public boolean speak(@Nullable String name, @Nullable String text,
+                         @Nullable CompletionCallback callback) {
         stopVoice();
-        if (name == null || prefs.isMuted() || !prefs.soundEnabled()) {
+        if (prefs.isMuted() || !prefs.soundEnabled()) {
+            return false;
+        }
+        if (playRecording(name, callback)) {
+            return true;
+        }
+        return speech.say(text, callback == null ? null : callback::onVoiceFinished);
+    }
+
+    private boolean playRecording(@Nullable String name,
+                                  @Nullable CompletionCallback callback) {
+        if (name == null) {
             return false;
         }
         int resId = resolve(name);
@@ -72,16 +97,19 @@ public final class VoicePlayer {
         }
     }
 
-    /** Whether a mascot clip is currently sounding. */
+    /** Whether a mascot line is currently sounding, from either source. */
     public boolean isSpeaking() {
         try {
-            return voice != null && voice.isPlaying();
-        } catch (Exception e) {
-            return false;
+            if (voice != null && voice.isPlaying()) {
+                return true;
+            }
+        } catch (Exception ignored) {
         }
+        return speech.isSpeaking();
     }
 
     public void stopVoice() {
+        speech.stop();
         if (voice != null) {
             try {
                 if (voice.isPlaying()) {

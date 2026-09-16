@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioInventory;
+import ir.brandimo.pashmak.audio.SpeechEngine;
 import ir.brandimo.pashmak.data.prefs.GamePrefs;
 import ir.brandimo.pashmak.databinding.ActivitySettingsBinding;
 import ir.brandimo.pashmak.ui.base.BaseActivity;
@@ -56,6 +57,40 @@ public class SettingsActivity extends BaseActivity {
 
         renderDifficulty();
         renderAudioInventory();
+        renderVoice();
+    }
+
+    /**
+     * Pashmak speaks through the device, and most Android devices cannot speak
+     * Persian — Google's engine does not ship it. If this one cannot, say so here
+     * rather than leaving a grown-up wondering why the character is mute.
+     */
+    private void renderVoice() {
+        SpeechEngine.Status status = SpeechEngine.get(this).status();
+        int line;
+        switch (status) {
+            case READY:
+                line = R.string.settings_voice_ready;
+                break;
+            case NO_PERSIAN:
+                line = R.string.settings_voice_no_persian;
+                break;
+            case UNAVAILABLE:
+                line = R.string.settings_voice_unavailable;
+                break;
+            case STARTING:
+            default:
+                line = R.string.settings_voice_starting;
+                break;
+        }
+        binding.settingsVoice.setText(line);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // The engine may have finished starting up since the screen opened.
+        renderVoice();
     }
 
     /**

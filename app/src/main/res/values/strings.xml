@@ -113,6 +113,13 @@
     <!-- Bubbles -->
     <string name="bubbles_title">ترکوندن حباب</string>
     <string name="bubbles_banner">هر حباب یه ستاره! سریع بترکونشون</string>
+    <string name="bubbles_goal_letter">حرف «%1$s» رو بترکون!</string>
+    <string name="bubbles_goal_digit">عدد «%1$s» رو بترکون!</string>
+    <string name="bubbles_goal_letters">فقط حرف‌ها رو بترکون، عددها رو ول کن!</string>
+    <string name="bubbles_goal_digits">فقط عددها رو بترکون، حرف‌ها رو ول کن!</string>
+    <string name="bubbles_progress">%1$s  (%2$s از %3$s)</string>
+    <string name="bubbles_not_that">اون نبود قندعسلم. %1$s</string>
+    <string name="bubbles_round_done">آفرین! این دور رو بردی. بریم دور بعد.</string>
     <string name="bubbles_pop_line">ترکوندیش! ادامه بده.</string>
 
     <!-- Memory -->
@@ -185,6 +192,10 @@
     <string name="settings_off">خاموش</string>
     <string name="settings_reset_stars">صفر کردن ستاره‌ها</string>
     <string name="settings_stars_reset">ستاره‌ها صفر شد.</string>
+    <string name="settings_voice_starting">دارم صدای پشمک رو آماده می‌کنم…</string>
+    <string name="settings_voice_ready">صدای پشمک آماده است؛ متن‌ها رو با صدای بلند می‌خونه.</string>
+    <string name="settings_voice_no_persian">این دستگاه صدای فارسی نداره، برای همین پشمک ساکته. از Play Store یک موتور گفتار فارسی نصب کنید (مثلاً «RHVoice» یا موتور گفتار سامسونگ) و بعد در تنظیمات اندروید ← زبان و ورودی ← خروجی گفتار، فارسی رو انتخاب کنید. متن‌ها همیشه روی صفحه نوشته می‌شن.</string>
+    <string name="settings_voice_unavailable">روی این دستگاه موتور تبدیل متن به گفتار پیدا نشد. متن‌ها روی صفحه نوشته می‌شن.</string>
     <string name="settings_audio_all">همه‌ی %1$s فایل صدا پیدا شد. ✔</string>
     <string name="settings_audio_some">فایل‌های صدا: %1$s از %2$s پیدا شد. بقیه در res/raw/audio_manifest.txt فهرست شده — مثل: %3$s</string>
     <string name="settings_info">این اپ کامل آفلاین کار می‌کنه — بدون تبلیغ، بدون حساب کاربری و بدون خرید درون‌برنامه‌ای.</string>

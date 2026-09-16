@@ -5,10 +5,15 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
+import ir.brandimo.pashmak.data.catalog.BubbleRound;
+import ir.brandimo.pashmak.data.catalog.BubbleRoundCatalog;
 import ir.brandimo.pashmak.data.catalog.TraceCatalog;
 import ir.brandimo.pashmak.data.prefs.GamePrefs;
 import ir.brandimo.pashmak.databinding.ActivityBubblePopBinding;
@@ -17,12 +22,19 @@ import ir.brandimo.pashmak.mascot.MascotState;
 import ir.brandimo.pashmak.ui.base.GameActivity;
 import ir.brandimo.pashmak.util.FaNum;
 
-/** Pop the bubbles, collect the stars. Difficulty sets how fast they climb. */
+/**
+ * Pop the bubbles — but only the ones the round asks for. Each round names a rule
+ * ("the letter چ", "any number") and popping something else is a shrug, not a
+ * punishment: the bubble goes, Pashmak says try again, and nothing is lost.
+ */
 public class BubblePopActivity extends GameActivity {
 
-    private static final int CHEER_EVERY = 4;
-
     private ActivityBubblePopBinding binding;
+    private final Set<String> digitSet = new HashSet<>();
+
+    private List<BubbleRound> rounds;
+    private int roundIndex;
+    private int poppedThisRound;
     private int score;
 
     @Override
@@ -37,10 +49,13 @@ public class BubblePopActivity extends GameActivity {
         });
         attachCompanion();
 
+        digitSet.addAll(Arrays.asList(TraceCatalog.digits(this)));
         binding.bubbleField.setLabels(bubbleLabels());
         binding.bubbleField.setSpeedScale(speedForDifficulty());
         binding.bubbleField.setOnBubblePopped(this::onPopped);
-        renderScore();
+
+        rounds = BubbleRoundCatalog.session(this);
+        startRound(0);
     }
 
     private String[] bubbleLabels() {
@@ -68,19 +83,59 @@ public class BubblePopActivity extends GameActivity {
         }
     }
 
-    private void onPopped(String label) {
+    private BubbleRound round() {
+        return rounds.get(Math.max(0, Math.min(roundIndex, rounds.size() - 1)));
+    }
+
+    private void startRound(int index) {
+        roundIndex = index % rounds.size();
+        poppedThisRound = 0;
+        BubbleRound round = round();
+        // Salt the field with what we are asking for; a single letter among thirty
+        // is a waiting game, not a looking game.
+        boolean single = round.kind == BubbleRound.Kind.LETTER
+                || round.kind == BubbleRound.Kind.DIGIT;
+        binding.bubbleField.setFavoured(single ? round.target : null, 0.34f);
+        binding.bubbleField.reset();
+        renderBanner();
+        mascot.say(BubbleRoundCatalog.prompt(this, round), MascotState.TALK,
+                MascotController.HOLD_MIN_MS, AudioManifest.VOICE_BUBBLE_GOAL);
+    }
+
+    private void onPopped(String label, float x, float y) {
+        BubbleRound round = round();
+        boolean isDigit = digitSet.contains(label);
+        if (!round.accepts(label, isDigit)) {
+            sounds.play(AudioManifest.SFX_WRONG);
+            mascot.say(getString(R.string.bubbles_not_that,
+                            BubbleRoundCatalog.prompt(this, round)),
+                    MascotState.ENCOURAGE, MascotController.HOLD_MIN_MS,
+                    AudioManifest.VOICE_BUBBLE_WRONG);
+            return;
+        }
+
         score++;
+        poppedThisRound++;
         sounds.play(AudioManifest.SFX_POP, 0.9f + (score % 5) * 0.05f);
         mascot.addStars(1);
-        renderScore();
-        if (score % CHEER_EVERY == 0) {
-            mascot.say(getString(R.string.bubbles_pop_line), MascotState.CHEER,
-                    MascotController.HOLD_MIN_MS, AudioManifest.VOICE_BUBBLE_POP);
+        renderBanner();
+
+        if (poppedThisRound >= round.goal) {
+            finishRound();
         }
     }
 
-    private void renderScore() {
+    private void finishRound() {
+        sounds.play(AudioManifest.SFX_FANFARE);
+        mascot.say(getString(R.string.bubbles_round_done), MascotState.CHEER,
+                MascotController.HOLD_CHEER_MS, AudioManifest.VOICE_BUBBLE_ROUND);
+        binding.getRoot().postDelayed(() -> startRound(roundIndex + 1), 1600L);
+    }
+
+    private void renderBanner() {
         binding.bubbleScore.setText(FaNum.of(score));
+        binding.bubbleBanner.setText(
+                BubbleRoundCatalog.banner(this, round(), poppedThisRound));
     }
 
     @Override

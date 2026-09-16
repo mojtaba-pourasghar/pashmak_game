@@ -108,6 +108,7 @@ public class TracingActivity extends GameActivity {
         String clip = digitsMode
                 ? AudioManifest.digitVoice(index)
                 : AudioManifest.letterVoice(glyph);
-        VoicePlayer.get(this).speak(clip, null);
+        // The glyph itself is the line — "ب" read aloud.
+        VoicePlayer.get(this).speak(clip, glyph, null);
     }
 }

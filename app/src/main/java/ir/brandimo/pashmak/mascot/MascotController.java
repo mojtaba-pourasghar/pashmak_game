@@ -111,8 +111,10 @@ public final class MascotController {
             setSpeaking(true);
             startTypewriter();
         }
-        if (audio != null && voice.speak(audio, this::idle)) {
-            // A real clip is playing, so keep the mouth going until it finishes
+        // Pass the words as well as the clip name: a recording wins if one exists,
+        // otherwise the device speaks the line itself.
+        if (voice.speak(audio, body, this::idle)) {
+            // Something is actually sounding, so keep the mouth going until it ends
             // rather than stopping when the text has finished appearing.
             setSpeaking(true);
         }

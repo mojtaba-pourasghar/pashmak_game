@@ -93,6 +93,9 @@ public final class AudioInventory {
         names.add(AudioManifest.VOICE_MEMORY_NEXT);
 
         names.add(AudioManifest.VOICE_BUBBLE_POP);
+        names.add(AudioManifest.VOICE_BUBBLE_GOAL);
+        names.add(AudioManifest.VOICE_BUBBLE_WRONG);
+        names.add(AudioManifest.VOICE_BUBBLE_ROUND);
         names.add(AudioManifest.VOICE_DRAW_EMPTY);
         names.add(AudioManifest.VOICE_STAGE_LOCKED);
 

@@ -27,7 +27,8 @@ import ir.brandimo.pashmak.R;
 public class BubbleFieldView extends View {
 
     public interface OnBubblePopped {
-        void onBubblePopped(String label);
+        /** @param x where to put any feedback, in view pixels */
+        void onBubblePopped(String label, float x, float y);
     }
 
     private static final int MAX_BUBBLES = 14;
@@ -54,6 +55,10 @@ public class BubbleFieldView extends View {
     private final Random random = new Random();
 
     private String[] labels = new String[]{"ا", "ب", "پ", "۱", "۲", "۳"};
+    /** Salted into the spawn so the thing being asked for actually turns up. */
+    @Nullable
+    private String favoured;
+    private float favouredShare;
     private long lastFrameMs;
     private long lastSpawnMs;
     private boolean running;
@@ -86,6 +91,18 @@ public class BubbleFieldView extends View {
     }
 
     /** Difficulty makes the bubbles drift up faster. */
+    /**
+     * Makes one label turn up more often than chance. Hunting for a single letter in
+     * a field of thirty is not a game, it is a waiting room.
+     *
+     * @param label the glyph to favour, or null to go back to an even spread
+     * @param share roughly what fraction of new bubbles should carry it
+     */
+    public void setFavoured(@Nullable String label, float share) {
+        favoured = label;
+        favouredShare = share;
+    }
+
     public void setSpeedScale(float scale) {
         speedScale = scale;
     }
@@ -131,7 +148,8 @@ public class BubbleFieldView extends View {
         bubble.drift = (random.nextFloat() - 0.5f) * 26f * density;
         bubble.phase = random.nextFloat() * 6.28f;
         bubble.color = BUBBLE_COLORS[random.nextInt(BUBBLE_COLORS.length)];
-        bubble.label = labels[random.nextInt(labels.length)];
+        bubble.label = favoured != null && random.nextFloat() < favouredShare
+                ? favoured : labels[random.nextInt(labels.length)];
         bubbles.add(bubble);
     }
 
@@ -216,7 +234,7 @@ public class BubbleFieldView extends View {
                 bubble.popping = true;
                 performClick();
                 if (listener != null) {
-                    listener.onBubblePopped(bubble.label);
+                    listener.onBubblePopped(bubble.label, bubble.x, bubble.y);
                 }
                 invalidate();
                 return true;

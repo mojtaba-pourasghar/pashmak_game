@@ -50,6 +50,9 @@ public final class AudioManifest {
 
     /* ---- Bubbles and free drawing ---- */
     public static final String VOICE_BUBBLE_POP = "bubble_pop";
+    public static final String VOICE_BUBBLE_GOAL = "bubble_goal";
+    public static final String VOICE_BUBBLE_WRONG = "bubble_wrong";
+    public static final String VOICE_BUBBLE_ROUND = "bubble_round";
     public static final String VOICE_DRAW_EMPTY = "draw_empty";
 
     /* ---- Stories ---- */
