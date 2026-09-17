@@ -48,19 +48,30 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/story_line"
-            style="@style/Text.Body"
+        <!-- The stories run a minute or two, so a passage can be five lines on a
+             small phone. It scrolls rather than being cut off, and the screen
+             follows the words as Pashmak reads them. -->
+        <ScrollView
+            android:id="@+id/story_line_box"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:background="@drawable/bg_speech_story"
+            android:fillViewport="true"
             android:minHeight="@dimen/story_line_min"
-            android:padding="12dp"
-            android:textColor="@color/ink_primary"
-            android:textSize="15sp"
-            tools:text="یه روز صبح، نقاشیِ تو از کاغذ پرید بیرون…" />
+            android:scrollbars="none">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/story_line"
+                style="@style/Text.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:textColor="@color/ink_primary"
+                android:textSize="15sp"
+                tools:text="یه روز صبح، نقاشیِ تو از کاغذ پرید بیرون…" />
+        </ScrollView>
 
         <LinearLayout
             android:id="@+id/story_choices"
@@ -73,21 +84,19 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/story_choice_a"
-                style="@style/Button.Chunky"
+                style="@style/Button.Chunky.Choice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_purple"
-                android:textSize="16sp"
                 tools:text="بریم جنگل" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/story_choice_b"
-                style="@style/Button.Chunky"
+                style="@style/Button.Chunky.Choice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:background="@drawable/btn_blue"
-                android:textSize="16sp"
                 tools:text="بریم دریا" />
         </LinearLayout>
 

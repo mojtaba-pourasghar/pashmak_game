@@ -20,6 +20,7 @@
     <dimen name="text_display">56sp</dimen>
     <dimen name="text_title">39sp</dimen>
     <dimen name="text_section">31sp</dimen>
+    <dimen name="text_choice">25sp</dimen>
     <dimen name="text_button">31sp</dimen>
     <dimen name="text_button_lg">39sp</dimen>
     <dimen name="text_body">20sp</dimen>

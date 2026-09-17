@@ -57,6 +57,19 @@
         <item name="android:minWidth">0dp</item>
     </style>
 
+    <!--
+        The two story options. Slimmer than a Chunky button because two of them and a
+        passage share one column on a phone; still a full-width, thumb-sized target.
+    -->
+    <style name="Button.Chunky.Choice">
+        <item name="android:textSize">@dimen/text_choice</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:maxLines">2</item>
+    </style>
+
     <style name="Button.Chunky.Large">
         <item name="android:textSize">@dimen/text_button_lg</item>
         <item name="android:paddingTop">14dp</item>

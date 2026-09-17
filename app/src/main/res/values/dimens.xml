@@ -25,6 +25,7 @@
     <dimen name="text_display">28sp</dimen>
     <dimen name="text_title">20sp</dimen>
     <dimen name="text_section">17sp</dimen>
+    <dimen name="text_choice">14sp</dimen>
     <dimen name="text_button">16sp</dimen>
     <dimen name="text_button_lg">20sp</dimen>
     <dimen name="text_body">12sp</dimen>
@@ -62,5 +63,5 @@
     <!-- Prev/next need a real target; a child aims roughly. -->
     <dimen name="lullaby_step">44dp</dimen>
     <!-- The narration must not collapse when the choice buttons appear. -->
-    <dimen name="story_line_min">56dp</dimen>
+    <dimen name="story_line_min">40dp</dimen>
 </resources>

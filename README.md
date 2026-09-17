@@ -55,11 +55,20 @@ one rule announced before it starts: pop only «چ», only «۷», only the lett
 digits. The hunted glyph is salted into the field so it is always there to find, and
 popping the wrong bubble costs nothing — it is a small child's game, not a test.
 
-**Stories.** Twenty of them, each its own stage, each happening in a drawn place — a
-seabed, a bakery, the surface of the moon — painted by the same `ScenePainter` the
-live-drawing missions use, so a story kitchen and a mission kitchen are the same
-kitchen. Every story stops to ask the child to find something in the picture and to
-choose where it goes next, so it is a conversation rather than a page of text.
+**قصه‌ی زنده — Live stories.** Twenty of them, each its own stage, each happening in a
+drawn place — a seabed, a bakery, the surface of the moon — painted by the same
+`ScenePainter` the live-drawing missions use, so a story kitchen and a mission kitchen
+are the same kitchen. Each runs a minute or two and stops six times: three things to
+find in the picture and two decisions that really change what happens next, so it is a
+conversation rather than a page of text. Pashmak reads every passage aloud and the words
+appear in step with his voice rather than all at once, so a child who is still learning
+to read can follow the line being spoken.
+
+The branch targets are beat indices, and a story that jumps into the middle of the wrong
+scene is exactly the fault a read-through misses, so the beats are generated from a spec
+in which a branch names a label: every jump, every prop a beat asks the child to find,
+and every reachable beat is checked when `StoryCatalog.java` is written, and
+`tools/storyfit.py` then checks the passages actually fit the box that prints them.
 
 **قصه‌های پشمک — Told tales.** Forty more stories, a minute or two each, that ask nothing
 of the child: Pashmak simply tells them, a passage at a time, and the scene changes
@@ -193,7 +202,10 @@ Phone and tablet share layouts except where the structure genuinely has to chang
 so far is one screen: the home screen's five buttons are two-up on a phone and a single
 tall column in `layout-sw600dp/`. The games menu adapts through a resource instead — a
 phone drops the headline card's full-width span (`@bool/games_wide_headline`) so all
-eight cards land in three rows and nothing scrolls.
+nine cards land in three rows and nothing scrolls. The story screen does something
+similar: on a phone its side column has to hold Pashmak, the passage being read and two
+option buttons in 266dp, so `@bool/story_dock_small` gives him the smaller dock there
+and the passage gets the room instead.
 
 Because there is no way to eyeball every screen on every device, `tools/vfit.py`
 walks each layout and works out the height it cannot do without — reading `ScrollView`,
@@ -204,6 +216,9 @@ because the grid is a flexible `0dp` RecyclerView by construction. `tools/roi_ch
 region-of-interest arithmetic, the piece that file itself calls most likely to be
 subtly wrong. `tools/hfit.py` guards the
 other axis — what each grid column is left with once the rail has taken its share.
+`tools/storyfit.py` reads the real story passages out of the catalogue and checks they
+fit the narration box — a check for content against its container, which none of the
+others do, and which caught the box collapsing below its own minimum on a choice beat.
 `tools/scenes.py` and `tools/sheet.py` render the story scenes and the icon set to
 contact sheets, so artwork gets looked at rather than assumed.
 

@@ -118,23 +118,28 @@ public final class MascotController {
         pendingText = body;
         typedChars = 0;
         state.setValue(new MascotUiState(pose, body, "", !body.isEmpty(), prefs.isMuted()));
-        if (!body.isEmpty()) {
-            setSpeaking(true);
-            startTypewriter();
-        }
         // Pass the words as well as the clip name: a recording wins if one exists,
         // otherwise the device speaks the line itself.
-        if (voice.speak(audio, body, () -> {
+        boolean sounding = voice.speak(audio, body, () -> {
             idle();
             if (whenSpoken != null) {
                 whenSpoken.run();
             }
-        })) {
-            // Something is actually sounding, so keep the mouth going until it ends
-            // rather than stopping when the text has finished appearing.
+        });
+        if (!body.isEmpty()) {
             setSpeaking(true);
+            // When the line is actually being said, the words appear at the speed it
+            // is said at, so a child follows along instead of reading it and then
+            // waiting. In silence the typewriter keeps its own brisk pace.
+            startTypewriter(sounding ? pace(body) : TYPEWRITER_MS);
         }
         long hold = Math.max(HOLD_MIN_MS, holdMs <= 0 ? HOLD_DEFAULT_MS : holdMs);
+        if (sounding) {
+            // The hold is a fallback for a line nothing says out loud. Letting it fire
+            // while Pashmak is still talking would cut him off mid-sentence, which is
+            // exactly what happened to the longer story passages.
+            hold = Math.max(hold, spokenMs(body));
+        }
         dismiss = this::idle;
         handler.postDelayed(dismiss, hold);
     }
@@ -236,7 +241,23 @@ public final class MascotController {
                 : current.withMuted(muted));
     }
 
-    private void startTypewriter() {
+    /**
+     * Roughly how long a line takes to say aloud: about 110 words a minute, which is
+     * a storyteller's pace rather than a newsreader's, plus a breath at the end. Used
+     * to keep the hold timer out of the voice's way and to pace the typewriter.
+     */
+    private static long spokenMs(String text) {
+        int words = text.trim().isEmpty() ? 0 : text.trim().split("\\s+").length;
+        return (long) (words / 110f * 60000f) + 800L;
+    }
+
+    /** Milliseconds per character so the text lands with the voice, within reason. */
+    private static long pace(String text) {
+        long step = spokenMs(text) / Math.max(1, text.length());
+        return Math.max(TYPEWRITER_MS, Math.min(step, 90L));
+    }
+
+    private void startTypewriter(final long step) {
         typer = new Runnable() {
             @Override
             public void run() {
@@ -248,13 +269,13 @@ public final class MascotController {
                 int end = Math.min(typedChars, pendingText.length());
                 state.setValue(current.withTyped(pendingText.substring(0, end)));
                 if (end < pendingText.length()) {
-                    handler.postDelayed(this, TYPEWRITER_MS);
+                    handler.postDelayed(this, step);
                 } else if (!voice.isSpeaking()) {
                     setSpeaking(false);
                 }
             }
         };
-        handler.postDelayed(typer, TYPEWRITER_MS);
+        handler.postDelayed(typer, step);
     }
 
     private void cancelPending() {

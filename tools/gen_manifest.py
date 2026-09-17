@@ -162,9 +162,10 @@ W('  The titles and the verse under each one live in')
 W('  data/catalog/LullabyCatalog.java — change them there if you record')
 W('  different songs.')
 
-section('11. STORIES  (one clip per line Pashmak narrates)')
-W('  Optional: a story reads perfectly well from the bubble alone. Record these')
-W('  only if you want the stories narrated aloud.')
+section('11. قصه\u200cی زنده — THE LIVE STORIES')
+W('  Twenty stories, a minute or two each. Pashmak reads every passage aloud and')
+W('  the words appear in step with him, so these names are overrides like all the')
+W('  rest. A line marked _yes is the praise for finding the right thing.')
 story_src = io.open(ROOT + '/java/ir/brandimo/pashmak/data/catalog/StoryCatalog.java',
                     encoding='utf-8').read()
 blocks = re.split(r'Story \w+ = new Story\(', story_src)[1:]

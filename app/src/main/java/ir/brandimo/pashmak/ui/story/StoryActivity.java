@@ -56,8 +56,26 @@ public class StoryActivity extends GameActivity {
         });
         bindStars(binding.storyHeader.headerStarsValue);
         attachCompanion();
+        if (getResources().getBoolean(R.bool.story_dock_small)) {
+            // On a phone this column carries the passage and two options as well.
+            shrinkCompanion();
+        }
 
         binding.storyScene.setOnPropTapped(this::onPropTapped);
+
+        // The read-along. The narration box is filled by the mascot's own typewriter
+        // rather than being printed at once, so the words appear while Pashmak says
+        // them instead of sitting there finished before he has started. Lines that
+        // are not the passage — his praise, or "here it is" — are left out of the
+        // box, so the story a child is halfway through reading does not get wiped.
+        // LiveData hands a new observer whatever it is already holding, which can be
+        // a line from the screen before this one — hence the null check on the story.
+        mascot.state().observe(this, state -> {
+            if (story != null && state != null
+                    && state.fullText.equals(currentBeat().text)) {
+                showTyped(state.typedText);
+            }
+        });
 
         openStory(getIntent().getIntExtra(EXTRA_STORY, 0));
     }
@@ -88,9 +106,22 @@ public class StoryActivity extends GameActivity {
         return story.beat(beatIndex);
     }
 
+    /**
+     * Shows however much of the passage has been spoken so far, keeping the end of it
+     * in view: on a small phone a passage is five lines in a box that holds three, and
+     * the line being read has to be the line you can see.
+     */
+    private void showTyped(String typed) {
+        binding.storyLine.setText(typed);
+        binding.storyLineBox.post(() -> {
+            int overflow = binding.storyLine.getHeight() - binding.storyLineBox.getHeight();
+            binding.storyLineBox.scrollTo(0, Math.max(0, overflow));
+        });
+    }
+
     private void renderBeat() {
         StoryBeat beat = currentBeat();
-        binding.storyLine.setText(beat.text);
+        showTyped("");
         binding.storyScene.setProps(beat.props);
         binding.storyScene.setInteractive(beat.type == StoryBeat.Type.ASK_TAP);
 
@@ -130,8 +161,10 @@ public class StoryActivity extends GameActivity {
             });
         }
 
-        // Pashmak narrates every beat, so his mouth moves with the words.
-        mascot.say(beat.text, MascotState.TALK, MascotController.HOLD_DEFAULT_MS,
+        // Pashmak narrates every beat, so his mouth moves with the words — and the
+        // box above fills in step with him, because both run off the same typewriter.
+        mascot.say(beat.text, ended ? MascotState.CHEER : MascotState.TALK,
+                ended ? MascotController.HOLD_CHEER_MS : MascotController.HOLD_DEFAULT_MS,
                 AudioManifest.storyBeat(story.id, beatIndex));
 
         if (ended) {
@@ -205,9 +238,7 @@ public class StoryActivity extends GameActivity {
         sounds.play(AudioManifest.SFX_FANFARE);
         binding.storyConfetti.burst();
         mascot.addStars(STARS_PER_STORY);
-        final int ending = beatIndex;
-        binding.getRoot().postDelayed(() -> mascot.say(currentBeat().text,
-                MascotState.CHEER, MascotController.HOLD_CHEER_MS,
-                AudioManifest.storyBeat(story.id, ending)), 400L);
+        // renderBeat() has already said the ending line, in the cheering pose. Saying
+        // it again here would restart the typewriter and wipe the box mid-sentence.
     }
 }

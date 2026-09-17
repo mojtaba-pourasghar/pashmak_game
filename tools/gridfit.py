@@ -15,10 +15,18 @@ def run():
     failures = 0
     for label, dirs, viewport in vfit.BUCKETS:
         d = vfit.load_values(dirs)
-        wide = any(os.path.exists(os.path.join(vfit.RES, x, 'bools.xml'))
-                   and 'true' in open(os.path.join(vfit.RES, x, 'bools.xml'),
-                                      encoding='utf-8').read()
-                   for x in dirs)
+        # Read the named bool with the later buckets overriding the earlier ones,
+        # the way Android resolves it. Looking for the word 'true' anywhere in the
+        # file answers a different question as soon as a second bool is added.
+        wide = False
+        for x in dirs:
+            p = os.path.join(vfit.RES, x, 'bools.xml')
+            if not os.path.exists(p):
+                continue
+            m = re.search(r'<bool name="games_wide_headline">(true|false)</bool>',
+                          open(p, encoding='utf-8').read())
+            if m:
+                wide = m.group(1) == 'true'
         span = 3
         for x in reversed(dirs):
             p = os.path.join(vfit.RES, x, 'integers.xml')
