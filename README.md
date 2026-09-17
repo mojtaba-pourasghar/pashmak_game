@@ -70,14 +70,22 @@ in which a branch names a label: every jump, every prop a beat asks the child to
 and every reachable beat is checked when `StoryCatalog.java` is written, and
 `tools/storyfit.py` then checks the passages actually fit the box that prints them.
 
-**قصه‌های پشمک — Told tales.** Forty more stories, a minute or two each, that ask nothing
-of the child: Pashmak simply tells them, a passage at a time, and the scene changes
-under him as the tale moves — a river at night, a meadow at noon, a room by lamplight,
-cross-faded rather than cut. There is play/pause, back and forward a passage, and the
-next tale at the end. Nothing is locked; a tired child should not have to earn a bedtime
-story. 418 passages, 4,114 words, about 44 minutes of telling in all, and the ten places
-are built by `TaleSceneKit` from a handful of moods, so each tale gets its own set rather
-than sharing one generic backdrop.
+**قصه‌های پشمک — Told tales.** Forty more stories, 80 to 108 seconds each, that ask
+nothing of the child: Pashmak simply tells them, a passage at a time, and the scene
+changes under him as the tale moves — a river at night, a meadow at noon, a room by
+lamplight, cross-faded rather than cut. There is play/pause, back and forward a passage,
+and the next tale at the end. Nothing is locked; a tired child should not have to earn a
+bedtime story. 578 passages, 5,740 words, about an hour of telling in all, and the ten
+places are built by `TaleSceneKit` from a handful of moods, so each tale gets its own set
+rather than sharing one generic backdrop.
+
+And the thing the tale is about is *in* the picture, moving. That was the fault worth
+fixing: a place with nothing in it meant the brave snail's story showed an empty meadow,
+and half the cards in the picker were a plain grey circle. Each tale names its subject
+once — one of 23 drawings added for them, a snail, a sheep, a turtle, a teapot, a loaf —
+and it becomes both the card and the figure walking, drifting, bobbing or turning in
+every scene of that tale. The motion is computed from elapsed time rather than stored, so
+a dropped frame or a rotation changes nothing.
 
 **لالایی شبانه — Bedtime.** A night screen with its own sky: ten lullabies, repeat-one,
 automatic advance to the next, and a sleep timer (۱۵/۳۰/۶۰ minutes) that fades the last
@@ -259,7 +267,13 @@ other axis — what each grid column is left with once the rail has taken its sh
 `tools/storyfit.py` reads the real story passages out of the catalogue and checks they
 fit the narration box — a check for content against its container, which none of the
 others do, and which caught the box collapsing below its own minimum on a choice beat.
-`tools/portfit.py` covers what only portrait can break: that the variants match id for
+`tools/gen_faces.py` draws the icon set and `tools/actorfit.py` mirrors the placement
+maths and renders it, because neither can be judged by reading the code. Between them
+they caught a turtle whose head and legs were buried under its own shell, a spider with
+dark eyes on a dark head, a spoon that read as a maraca, a subject drawn at a fifth of
+the frame — a sticker stuck on a landscape rather than what the story is about — and a
+kite that began its drift off the edge, so the first seconds of those tales showed an
+empty sky. `tools/portfit.py` covers what only portrait can break: that the variants match id for
 id, that every resource the new files name exists, and that a bottom band leaves its
 line of Persian a width worth reading. `tools/scenes.py` and `tools/sheet.py` render the
 story scenes and the icon set to contact sheets, so artwork gets looked at rather than
