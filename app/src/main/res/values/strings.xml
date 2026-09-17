@@ -195,6 +195,8 @@
     <string name="settings_voice_starting">دارم صدای پشمک رو آماده می‌کنم…</string>
     <string name="settings_voice_ready">صدای پشمک آماده است؛ متن‌ها رو با صدای بلند می‌خونه.</string>
     <string name="settings_voice_no_persian">این دستگاه صدای فارسی نداره، برای همین پشمک ساکته. از Play Store یک موتور گفتار فارسی نصب کنید (مثلاً «RHVoice» یا موتور گفتار سامسونگ) و بعد در تنظیمات اندروید ← زبان و ورودی ← خروجی گفتار، فارسی رو انتخاب کنید. متن‌ها همیشه روی صفحه نوشته می‌شن.</string>
+    <string name="settings_voice_fix">تنظیم صدای فارسی</string>
+    <string name="settings_voice_no_engine">روی این دستگاه صفحه‌ی تنظیمات گفتار پیدا نشد. از Play Store «RHVoice» را نصب کنید.</string>
     <string name="settings_voice_unavailable">روی این دستگاه موتور تبدیل متن به گفتار پیدا نشد. متن‌ها روی صفحه نوشته می‌شن.</string>
     <string name="settings_audio_music_all">موزیک پس‌زمینه: هر سه فایل پیدا شد. ✔</string>
     <string name="settings_audio_music_some">موزیک پس‌زمینه: %1$s از %2$s فایل پیدا شد. بقیه‌اش رو خود برنامه می‌سازه.</string>

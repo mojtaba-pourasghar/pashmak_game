@@ -1,7 +1,10 @@
 package ir.brandimo.pashmak.ui.settings;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -57,6 +60,7 @@ public class SettingsActivity extends BaseActivity {
 
         renderDifficulty();
         renderAudioInventory();
+        binding.settingsVoiceFix.setOnClickListener(v -> openSpeechSettings());
         renderVoice();
     }
 
@@ -84,6 +88,33 @@ public class SettingsActivity extends BaseActivity {
                 break;
         }
         binding.settingsVoice.setText(line);
+        boolean fixable = status == SpeechEngine.Status.NO_PERSIAN
+                || status == SpeechEngine.Status.UNAVAILABLE;
+        binding.settingsVoiceFix.setVisibility(fixable ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Opens the device's speech settings, where a Persian voice is chosen once and
+     * Pashmak can talk from then on. Telling a parent in a paragraph to go and find
+     * that screen is not much use; this takes them to it. Falls back to the Play
+     * Store, and says so plainly if neither can be opened, rather than a button that
+     * appears to do nothing.
+     */
+    private void openSpeechSettings() {
+        tap();
+        Intent settings = new Intent("com.android.settings.TTS_SETTINGS");
+        settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (settings.resolveActivity(getPackageManager()) != null) {
+            startActivity(settings);
+            return;
+        }
+        Intent store = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("market://search?q=text%20to%20speech%20farsi&c=apps"));
+        if (store.resolveActivity(getPackageManager()) != null) {
+            startActivity(store);
+            return;
+        }
+        Toast.makeText(this, R.string.settings_voice_no_engine, Toast.LENGTH_LONG).show();
     }
 
     @Override

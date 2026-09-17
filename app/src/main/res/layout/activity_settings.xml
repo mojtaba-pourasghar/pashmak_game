@@ -227,6 +227,21 @@
                 android:textColor="@color/info_ink"
                 tools:text="صدای پشمک آماده است." />
 
+            <!-- Only shown when there is something to fix. A paragraph telling a
+                 parent to go and find the speech settings is not much use; this
+                 opens them. -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/settings_voice_fix"
+                style="@style/Button.Chunky"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_blue"
+                android:text="@string/settings_voice_fix"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/settings_audio"
                 style="@style/Text.Body"
