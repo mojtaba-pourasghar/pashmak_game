@@ -64,6 +64,7 @@ public final class TaleCatalog {
         List<Tale> tales = new ArrayList<>();
 
         tales.add(new Tale("moon_boat", "قایق ماه", R.drawable.face_boat,
+                R.drawable.face_boat, Tale.Motion.DRIFT,
                 places(river(NIGHT), sea(NIGHT), aloft(NIGHT), river(DAWN)),
                 at(0, "شب شده بود و ماه مثل یه قایق نقره‌ای روی آب نشسته بود."),
                 at(0, "یه بچه‌خرگوش لب رودخونه نشسته بود و به عکس ماه توی آب نگاه می‌کرد."),
@@ -76,7 +77,8 @@ public final class TaleCatalog {
                 at(3, "کم‌کم صبح شد و قایق آروم برگشت و خرگوش رو گذاشت لب رودخونه."),
                 at(3, "از اون روز هر شب به ماه سلام می‌کرد و ماه هم براش چشمک می‌زد.")));
 
-        tales.add(new Tale("lost_button", "دکمه‌ی گمشده", R.drawable.face_shape_circle,
+        tales.add(new Tale("lost_button", "دکمه‌ی گمشده", R.drawable.face_button,
+                R.drawable.face_button, Tale.Motion.SPIN,
                 places(room(INDOORS), garden(NOON), village(NOON), room(DUSK)),
                 at(0, "کت قرمز کوچولو یه دکمه‌ی طلایی داشت که خیلی دوستش داشت."),
                 at(0, "یه روز صبح که بیدار شد، دید جای دکمه‌اش خالیه."),
@@ -89,7 +91,8 @@ public final class TaleCatalog {
                 at(3, "شب مامان دکمه رو محکم دوخت و گفت: «حالا دیگه جایی نمی‌ره.»"),
                 at(3, "کت قرمز دکمه‌شو گرفت و با خیال راحت خوابید.")));
 
-        tales.add(new Tale("cloud_sheep", "گوسفندهای ابری", R.drawable.face_cloud,
+        tales.add(new Tale("cloud_sheep", "گوسفندهای ابری", R.drawable.face_sheep,
+                R.drawable.face_sheep, Tale.Motion.DRIFT,
                 places(meadow(NOON), aloft(NOON), mountain(DUSK), meadow(NIGHT)),
                 at(0, "چوپان کوچولو روی تپه دراز کشیده بود و ابرها رو نگاه می‌کرد."),
                 at(0, "یکی از ابرها درست شکل یه گوسفند بود، با یه دم پنبه‌ای."),
@@ -101,7 +104,8 @@ public final class TaleCatalog {
                 at(3, "شب که رسید، گله‌ی ابری آروم پخش شد و ستاره‌ها بیرون اومدن."),
                 at(3, "چوپان کوچولو گفت: «فردا دوباره میام.» و ابرها منتظرش موندن.")));
 
-        tales.add(new Tale("brave_snail", "حلزون شجاع", R.drawable.face_shape_circle,
+        tales.add(new Tale("brave_snail", "حلزون شجاع", R.drawable.face_snail,
+                R.drawable.face_snail, Tale.Motion.WALK,
                 places(garden(DAWN), garden(NOON), forest(DUSK), garden(NIGHT)),
                 at(0, "یه حلزون کوچولو بود که همیشه آروم راه می‌رفت و کسی صبر نمی‌کرد."),
                 at(0, "یه روز شنید که ته باغچه یه گل شب‌بو شکفته که فقط یه شب می‌مونه."),
@@ -114,6 +118,7 @@ public final class TaleCatalog {
                 at(3, "بوی گل تمام باغچه رو پر کرد و حلزون تنها کسی بود که دیدش.")));
 
         tales.add(new Tale("paper_bird", "پرنده‌ی کاغذی", R.drawable.face_bird,
+                R.drawable.face_bird, Tale.Motion.DRIFT,
                 places(room(INDOORS), village(NOON), aloft(NOON), room(DUSK)),
                 at(0, "از یه ورق کاغذ سفید یه پرنده درست کردیم، با دو تا بال تیز."),
                 at(0, "گذاشتیمش لب پنجره تا باد ببینتش."),
@@ -126,6 +131,7 @@ public final class TaleCatalog {
                 at(3, "گذاشتیمش رو میز و گفتیم: «فردا دوباره می‌فرستیمت.»")));
 
         tales.add(new Tale("shy_star", "ستاره‌ی خجالتی", R.drawable.face_shape_star,
+                R.drawable.face_shape_star, Tale.Motion.BOB,
                 places(aloft(NIGHT), aloft(NIGHT), meadow(NIGHT), meadow(DAWN)),
                 at(0, "یه ستاره‌ی کوچولو بود که خجالت می‌کشید بدرخشه."),
                 at(0, "می‌گفت: «بقیه خیلی روشن‌ترن. کسی منو نمی‌بینه.»"),
@@ -137,7 +143,8 @@ public final class TaleCatalog {
                 at(3, "صبح که شد، همه‌ی دشت از ستاره‌ی کوچولو تعریف کردن."),
                 at(3, "از اون شب دیگه قایم نشد. فهمید نور کم هم می‌تونه راه نشون بده.")));
 
-        tales.add(new Tale("teapot_song", "آواز قوری", R.drawable.face_house,
+        tales.add(new Tale("teapot_song", "آواز قوری", R.drawable.face_teapot,
+                R.drawable.face_teapot, Tale.Motion.BOB,
                 places(room(INDOORS), room(INDOORS), village(DUSK), room(NIGHT)),
                 at(0, "تو آشپزخونه یه قوری قدیمی بود که وقتی جوش می‌اومد، آواز می‌خوند."),
                 at(0, "صداش یه سوت نازک بود: سوووووت، مثل یه پرنده‌ی کوچولو."),
@@ -148,7 +155,8 @@ public final class TaleCatalog {
                 at(3, "شب که همه می‌رفتن، قوری خنک می‌شد و ساکت می‌نشست رو اجاق."),
                 at(3, "ولی صبح دوباره آماده بود که آوازشو بخونه.")));
 
-        tales.add(new Tale("mouse_library", "موش کتابخانه", R.drawable.face_book,
+        tales.add(new Tale("mouse_library", "موش کتابخانه", R.drawable.face_mouse,
+                R.drawable.face_mouse, Tale.Motion.WALK,
                 places(room(INDOORS), room(INDOORS), forest(NOON), room(DUSK)),
                 at(0, "یه موش کوچولو تو کتابخونه زندگی می‌کرد، پشت قفسه‌ی آخر."),
                 at(0, "شب‌ها که همه می‌رفتن، می‌اومد بیرون و کتاب‌ها رو باز می‌کرد."),
@@ -160,7 +168,8 @@ public final class TaleCatalog {
                 at(3, "صبح که بیدار شد، هنوز بوی برگ می‌داد."),
                 at(3, "از اون به بعد هر شب یه کتاب تازه باز می‌کرد و یه جای تازه می‌رفت.")));
 
-        tales.add(new Tale("rain_drum", "طبل بارون", R.drawable.face_drop,
+        tales.add(new Tale("rain_drum", "طبل بارون", R.drawable.face_drum,
+                R.drawable.face_drum, Tale.Motion.BOB,
                 places(village(DUSK), room(INDOORS), village(NIGHT), garden(DAWN)),
                 at(0, "ابرها جمع شدن و اولین قطره خورد به شیروونی: تاپ."),
                 at(0, "بعد دو تا، بعد ده تا. شیروونی شد یه طبل بزرگ."),
@@ -171,7 +180,8 @@ public final class TaleCatalog {
                 at(3, "صبح بارون بند اومده بود و همه‌ی برگ‌ها شسته و براق بودن."),
                 at(3, "یه رنگین‌کمون هم اون بالا بود، مثل تشویق آخر یه کنسرت.")));
 
-        tales.add(new Tale("kite_friend", "بادبادک و باد", R.drawable.face_shape_diamond,
+        tales.add(new Tale("kite_friend", "بادبادک و باد", R.drawable.face_kite,
+                R.drawable.face_kite, Tale.Motion.DRIFT,
                 places(meadow(NOON), aloft(NOON), mountain(DUSK), meadow(DUSK)),
                 at(0, "یه بادبادک قرمز بود که تازه ساخته شده بود و هیچی از آسمون نمی‌دونست."),
                 at(0, "باد اومد و گفت: «سفت بچسب، می‌خوام ببرمت بالا.»"),
@@ -183,7 +193,8 @@ public final class TaleCatalog {
                 at(3, "غروب آروم آوردنش پایین و بادبادک گفت: «فردا بازم میای؟»"),
                 at(3, "باد خندید و برگ‌ها رو تکون داد؛ یعنی آره.")));
 
-        tales.add(new Tale("sock_pair", "جوراب تنها", R.drawable.face_shape_square,
+        tales.add(new Tale("sock_pair", "جوراب تنها", R.drawable.face_sock,
+                R.drawable.face_sock, Tale.Motion.BOB,
                 places(room(INDOORS), room(INDOORS), village(NOON), room(DUSK)),
                 at(0, "یه جوراب راه‌راه بود که جفتش گم شده بود."),
                 at(0, "تو کشو می‌نشست و به بقیه که دوتا دوتا بودن نگاه می‌کرد."),
@@ -197,7 +208,8 @@ public final class TaleCatalog {
                 at(3, "جوراب راه‌راه فهمید تنها بودن یعنی می‌تونی یه چیز تازه بشی."),
                 at(3, "از اون شب هر وقت کسی غصه داشت، بغلش می‌کرد.")));
 
-        tales.add(new Tale("turtle_race", "لاک‌پشت و جاده", R.drawable.face_shape_hexagon,
+        tales.add(new Tale("turtle_race", "لاک‌پشت و جاده", R.drawable.face_turtle,
+                R.drawable.face_turtle, Tale.Motion.WALK,
                 places(desert(DAWN), desert(NOON), river(DUSK), river(NIGHT)),
                 at(0, "یه لاک‌پشت پیر بود که هر سال یه بار سفر می‌کرد."),
                 at(0, "صبح زود راه می‌افتاد، وقتی شن‌ها هنوز خنک بودن."),
@@ -211,7 +223,8 @@ public final class TaleCatalog {
                 at(3, "صبح برگشت و به همه گفت: «رفتن همیشه ارزششو داره.»"),
                 at(3, "و سال بعد دوباره همین راه رو رفت.")));
 
-        tales.add(new Tale("candle_night", "شمع کوچولو", R.drawable.face_shape_star,
+        tales.add(new Tale("candle_night", "شمع کوچولو", R.drawable.face_candle,
+                R.drawable.face_candle, Tale.Motion.BOB,
                 places(room(NIGHT), room(NIGHT), village(NIGHT), room(DAWN)),
                 at(0, "یه شب برق رفت و خونه تاریکِ تاریک شد."),
                 at(0, "بچه‌ها ترسیدن و دست همدیگه رو گرفتن."),
@@ -225,7 +238,8 @@ public final class TaleCatalog {
                 at(3, "ولی بچه‌ها گفتن: «کاش هفته‌ای یه بار برق بره.»"),
                 at(3, "چون اون شب، شب قشنگی بود.")));
 
-        tales.add(new Tale("bee_garden", "زنبور و سه گل", R.drawable.face_flower,
+        tales.add(new Tale("bee_garden", "زنبور و سه گل", R.drawable.face_bee,
+                R.drawable.face_bee, Tale.Motion.DRIFT,
                 places(garden(DAWN), garden(NOON), meadow(DUSK), garden(NIGHT)),
                 at(0, "یه زنبور کوچولو تازه یاد گرفته بود پرواز کنه."),
                 at(0, "مادرش گفت: «برو و از سه تا گل مهمونی بگیر، بعد برگرد.»"),
@@ -239,7 +253,8 @@ public final class TaleCatalog {
                 at(3, "گفت: «که هر گل یه جور باهات حرف می‌زنه.»"),
                 at(3, "مادرش بوسیدش و گفت: «حالا دیگه یه زنبور واقعی شدی.»")));
 
-        tales.add(new Tale("shadow_friend", "دوستِ سایه", R.drawable.face_shape_circle,
+        tales.add(new Tale("shadow_friend", "دوستِ سایه", R.drawable.face_cat,
+                R.drawable.face_cat, Tale.Motion.WALK,
                 places(village(NOON), village(DUSK), room(NIGHT), village(DAWN)),
                 at(0, "یه بچه بود که تازه فهمیده بود سایه‌اش همیشه دنبالشه."),
                 at(0, "می‌دوید، سایه هم می‌دوید. می‌ایستاد، سایه هم می‌ایستاد."),
@@ -254,6 +269,7 @@ public final class TaleCatalog {
                 at(3, "از اون روز دیگه هیچ‌وقت احساس تنهایی نکرد.")));
 
         tales.add(new Tale("fish_rainbow", "ماهی رنگین‌کمان", R.drawable.face_fish,
+                R.drawable.face_fish, Tale.Motion.DRIFT,
                 places(sea(SEA), sea(SEA), sea(NIGHT), sea(SEA)),
                 at(0, "ته دریا یه ماهی بود که فلس‌هاش هفت رنگ بود."),
                 at(0, "همه‌ی ماهی‌ها بهش نگاه می‌کردن، ولی کسی باهاش بازی نمی‌کرد."),
@@ -267,7 +283,8 @@ public final class TaleCatalog {
                 at(3, "از اون روز ته دریا هر شب پر از نور و خنده بود."),
                 at(3, "و ماهی رنگین‌کمان فهمید قشنگی وقتی قشنگه که قسمت بشه.")));
 
-        tales.add(new Tale("bread_smell", "بوی نان", R.drawable.face_pear,
+        tales.add(new Tale("bread_smell", "بوی نان", R.drawable.face_bread,
+                R.drawable.face_bread, Tale.Motion.BOB,
                 places(village(DAWN), village(DAWN), room(INDOORS), village(NOON)),
                 at(0, "هنوز هوا روشن نشده بود که نانوا چراغ مغازه رو روشن کرد."),
                 at(0, "خمیر رو ورز داد، گذاشت استراحت کنه، بعد چونه‌چونه کرد."),
@@ -281,6 +298,7 @@ public final class TaleCatalog {
                 at(3, "چون می‌دونست بوی نونش، صبحِ کل محله رو ساخته.")));
 
         tales.add(new Tale("wind_letter", "نامه‌ی باد", R.drawable.face_cloud,
+                R.drawable.face_cloud, Tale.Motion.DRIFT,
                 places(meadow(NOON), mountain(NOON), sea(SEA), meadow(DUSK)),
                 at(0, "یه برگ زرد از درخت افتاد و باد برش داشت."),
                 at(0, "روی برگ یه بچه با مداد نوشته بود: «سلام، تو کی هستی؟»"),
@@ -293,7 +311,8 @@ public final class TaleCatalog {
                 at(3, "حالا روش رد پای یه بز بود و یه لکه‌ی نمک از دریا."),
                 at(3, "بچه گفت: «پس جواب دادن، فقط با کلمه نیست.»")));
 
-        tales.add(new Tale("clock_tick", "ساعت تنبل", R.drawable.face_shape_circle,
+        tales.add(new Tale("clock_tick", "ساعت تنبل", R.drawable.face_clock,
+                R.drawable.face_clock, Tale.Motion.SPIN,
                 places(room(INDOORS), room(INDOORS), village(NOON), room(NIGHT)),
                 at(0, "یه ساعت دیواری بود که یه روز تصمیم گرفت کار نکنه."),
                 at(0, "گفت: «من خسته‌ام. امروز تیک‌تاک نمی‌کنم.»"),
@@ -307,6 +326,7 @@ public final class TaleCatalog {
                 at(3, "از اون روز فهمید کار کوچیکش، خیلی بزرگه.")));
 
         tales.add(new Tale("puddle_sky", "آسمون توی گودال", R.drawable.face_drop,
+                R.drawable.face_drop, Tale.Motion.BOB,
                 places(village(DUSK), village(DUSK), aloft(NOON), village(NIGHT)),
                 at(0, "بارون تموم شده بود و وسط کوچه یه گودال آب مونده بود."),
                 at(0, "یه بچه خم شد و توش نگاه کرد و آسمون رو دید."),
@@ -320,7 +340,8 @@ public final class TaleCatalog {
                 at(3, "گفت: «تو هم یه گودال بزرگی، نه؟»"),
                 at(3, "و آسمون با یه ستاره‌ی چشمک‌زن جوابش رو داد.")));
 
-        tales.add(new Tale("ant_crumb", "مورچه و خرده‌نان", R.drawable.face_shape_circle,
+        tales.add(new Tale("ant_crumb", "مورچه و خرده‌نان", R.drawable.face_ant,
+                R.drawable.face_ant, Tale.Motion.WALK,
                 places(garden(NOON), garden(NOON), garden(DUSK), garden(NIGHT)),
                 at(0, "یه مورچه‌ی کوچولو یه خرده‌نان پیدا کرد، سه برابر خودش."),
                 at(0, "هلش داد. تکون نخورد. کشیدش. باز هم تکون نخورد."),
@@ -335,6 +356,7 @@ public final class TaleCatalog {
                 at(3, "و اون شب، لونه پر از صدای خنده بود.")));
 
         tales.add(new Tale("snow_bird", "گنجشک و برف", R.drawable.face_bird,
+                R.drawable.face_bird, Tale.Motion.WALK,
                 places(village(SNOW), village(SNOW), room(INDOORS), village(SNOW)),
                 at(0, "برف اومده بود و همه‌جا سفید شده بود."),
                 at(0, "یه گنجشک روی شاخه نشسته بود و می‌لرزید."),
@@ -348,7 +370,8 @@ public final class TaleCatalog {
                 at(3, "بچه هر روز صبح نون می‌ریخت، تا وقتی برف آب شد."),
                 at(3, "بهار که اومد، گنجشک‌ها روی همون پنجره لونه ساختن.")));
 
-        tales.add(new Tale("drum_boy", "پسرک و طبل", R.drawable.face_shape_circle,
+        tales.add(new Tale("drum_boy", "پسرک و طبل", R.drawable.face_drum,
+                R.drawable.face_drum, Tale.Motion.BOB,
                 places(village(NOON), village(NOON), mountain(DUSK), village(NIGHT)),
                 at(0, "یه پسرک یه طبل کوچیک داشت که خیلی بلند صدا می‌داد."),
                 at(0, "هر جا می‌رفت می‌زدش و همه می‌گفتن: «یواش‌تر!»"),
@@ -362,7 +385,8 @@ public final class TaleCatalog {
                 at(3, "چون فهمیده بود جایی هست که صداش اونجا جا می‌شه."),
                 at(3, "از اون به بعد هفته‌ای یه بار می‌رفت پیش کوه.")));
 
-        tales.add(new Tale("seed_patience", "دانه‌ی صبور", R.drawable.face_tree,
+        tales.add(new Tale("seed_patience", "دانه‌ی صبور", R.drawable.face_sprout,
+                R.drawable.face_sprout, Tale.Motion.BOB,
                 places(garden(DAWN), garden(NOON), garden(DUSK), garden(NOON)),
                 at(0, "یه دونه‌ی کوچولو رو گذاشتن تو خاک و روش آب ریختن."),
                 at(0, "گفت: «کِی من درخت می‌شم؟» خاک گفت: «صبر کن.»"),
@@ -377,6 +401,7 @@ public final class TaleCatalog {
                 at(3, "هر وقت یه دونه‌ی تازه می‌دید، می‌گفت: «صبر کن. داره می‌شه.»")));
 
         tales.add(new Tale("umbrella_share", "چتر دو نفره", R.drawable.face_umbrella,
+                R.drawable.face_umbrella, Tale.Motion.WALK,
                 places(village(DUSK), village(DUSK), village(DUSK), room(NIGHT)),
                 at(0, "بارون تند گرفته بود و فقط یه چتر بود."),
                 at(0, "دو تا دوست زیرش ایستاده بودن و هر دو یه شونه‌شون خیس بود."),
@@ -391,6 +416,7 @@ public final class TaleCatalog {
                 at(3, "اون یکی خندید و گفت: «منم همینو می‌خواستم بگم.»")));
 
         tales.add(new Tale("mirror_pond", "برکه‌ی آینه‌ای", R.drawable.face_drop,
+                R.drawable.face_drop, Tale.Motion.BOB,
                 places(forest(DAWN), forest(NOON), forest(DUSK), forest(NIGHT)),
                 at(0, "ته جنگل یه برکه بود که مثل آینه صاف بود."),
                 at(0, "هر حیوونی می‌اومد، خودشو توش می‌دید و یه چیزی می‌فهمید."),
@@ -404,7 +430,8 @@ public final class TaleCatalog {
                 at(3, "از اون شب دیگه از خارهاش خجالت نکشید."),
                 at(3, "و برکه، مثل همیشه، ساکت موند و فقط نشون داد.")));
 
-        tales.add(new Tale("two_shoes", "دو تا کفش", R.drawable.face_shape_square,
+        tales.add(new Tale("two_shoes", "دو تا کفش", R.drawable.face_shoe,
+                R.drawable.face_shoe, Tale.Motion.WALK,
                 places(room(INDOORS), village(NOON), mountain(DUSK), room(NIGHT)),
                 at(0, "دو تا کفش بودن که همیشه کنار هم دم در می‌نشستن."),
                 at(0, "چپی می‌گفت: «من همیشه اول می‌رم.» راستی می‌گفت: «نه، من.»"),
@@ -419,6 +446,7 @@ public final class TaleCatalog {
                 at(3, "راستی گفت: «مهم اینه که باهم می‌رسیم.»")));
 
         tales.add(new Tale("night_train", "قطار شب", R.drawable.face_train,
+                R.drawable.face_train, Tale.Motion.WALK,
                 places(village(NIGHT), mountain(NIGHT), desert(NIGHT), village(DAWN)),
                 at(0, "هر شب ساعت ده یه قطار از پشت خونه‌ها رد می‌شد."),
                 at(0, "صداش از دور می‌اومد: هوووو... و بعد تق‌تق‌تق."),
@@ -432,7 +460,8 @@ public final class TaleCatalog {
                 at(3, "و شب دوباره برمی‌گشت، از پشت همون خونه‌ها."),
                 at(3, "بچه‌ها هر شب منتظرش بودن، مثل یه قرار قدیمی.")));
 
-        tales.add(new Tale("green_door", "درِ سبز", R.drawable.face_house,
+        tales.add(new Tale("green_door", "درِ سبز", R.drawable.face_door,
+                R.drawable.face_door, Tale.Motion.STILL,
                 places(village(NOON), garden(NOON), garden(DUSK), village(NIGHT)),
                 at(0, "ته کوچه یه در سبز بود که همیشه بسته بود."),
                 at(0, "بچه‌ها می‌گفتن پشتش اژدهاست. بعضی‌ها می‌گفتن گنج."),
@@ -447,6 +476,7 @@ public final class TaleCatalog {
                 at(3, "و پیرزن می‌گفت: «بهترین گنج همینه.»")));
 
         tales.add(new Tale("small_wave", "موج کوچولو", R.drawable.face_drop,
+                R.drawable.face_drop, Tale.Motion.DRIFT,
                 places(sea(SEA), sea(SEA), sea(DUSK), sea(NIGHT)),
                 at(0, "یه موج کوچولو بود که از موج‌های بزرگ خجالت می‌کشید."),
                 at(0, "اونا بلند می‌شدن و با صدای بلند می‌خوردن به صخره."),
@@ -461,7 +491,8 @@ public final class TaleCatalog {
                 at(3, "دریا گفت: «می‌دونم. بزرگ بودن همیشه لازم نیست.»"),
                 at(3, "و موج کوچولو آروم خوابید، زیر ماه.")));
 
-        tales.add(new Tale("busy_spider", "عنکبوت و باد", R.drawable.face_shape_hexagon,
+        tales.add(new Tale("busy_spider", "عنکبوت و باد", R.drawable.face_spider,
+                R.drawable.face_spider, Tale.Motion.BOB,
                 places(garden(DAWN), garden(NOON), garden(DUSK), garden(DAWN)),
                 at(0, "یه عنکبوت تمام شب تار بافت، از این شاخه تا اون شاخه."),
                 at(0, "صبح تارش مثل یه توری نقره‌ای بود، پر از شبنم."),
@@ -476,6 +507,7 @@ public final class TaleCatalog {
                 at(3, "چون می‌دونست قشنگیش، از همون دفعه‌ی دومه.")));
 
         tales.add(new Tale("cold_hands", "دست‌های سرد", R.drawable.face_shape_heart,
+                R.drawable.face_shape_heart, Tale.Motion.BOB,
                 places(village(SNOW), village(SNOW), room(INDOORS), room(NIGHT)),
                 at(0, "سرد بود. اون‌قدر سرد که نفس آدم بخار می‌شد."),
                 at(0, "یه پیرمرد داشت از کوچه رد می‌شد و دستاش تو جیبش بود."),
@@ -489,7 +521,8 @@ public final class TaleCatalog {
                 at(3, "گفت: «این یکی مال خودت، اون یکی برای هر وقت لازم شد.»"),
                 at(3, "و بچه اون شب با دست‌های گرم خوابید.")));
 
-        tales.add(new Tale("pocket_stone", "سنگِ جیبی", R.drawable.face_shape_circle,
+        tales.add(new Tale("pocket_stone", "سنگِ جیبی", R.drawable.face_stone,
+                R.drawable.face_stone, Tale.Motion.BOB,
                 places(river(NOON), river(NOON), village(DUSK), room(NIGHT)),
                 at(0, "لب رودخونه هزار تا سنگ بود، ولی یکیش صاف و گرد بود."),
                 at(0, "یه بچه برش داشت و گذاشتش تو جیبش."),
@@ -504,6 +537,7 @@ public final class TaleCatalog {
                 at(3, "ولی صبح دوباره رفت تو جیب، مثل هر روز.")));
 
         tales.add(new Tale("old_tree", "درخت پیر", R.drawable.face_tree,
+                R.drawable.face_tree, Tale.Motion.STILL,
                 places(meadow(DAWN), meadow(NOON), meadow(DUSK), meadow(SNOW)),
                 at(0, "وسط دشت یه درخت پیر بود که هیچ‌کس نمی‌دونست چند سالشه."),
                 at(0, "تنه‌اش کلفت بود و شاخه‌هاش تا آسمون می‌رفت."),
@@ -517,7 +551,8 @@ public final class TaleCatalog {
                 at(3, "ولی نمی‌ترسید، چون می‌دونست بهار دوباره میاد."),
                 at(3, "و هر سال، درست سر وقت، می‌اومد.")));
 
-        tales.add(new Tale("humble_spoon", "قاشق چوبی", R.drawable.face_pear,
+        tales.add(new Tale("humble_spoon", "قاشق چوبی", R.drawable.face_spoon,
+                R.drawable.face_spoon, Tale.Motion.BOB,
                 places(room(INDOORS), room(INDOORS), room(INDOORS), room(NIGHT)),
                 at(0, "تو کشوی آشپزخونه یه قاشق چوبی قدیمی بود."),
                 at(0, "کنارش قاشق‌های براق نقره‌ای بودن که بهش می‌خندیدن."),
@@ -532,6 +567,7 @@ public final class TaleCatalog {
                 at(3, "صاف‌تر و نرم‌تر از همیشه، از بس کار کرده بود.")));
 
         tales.add(new Tale("first_snow_bear", "خرس و اولین برف", R.drawable.face_bear,
+                R.drawable.face_bear, Tale.Motion.WALK,
                 places(forest(SNOW), forest(SNOW), forest(SNOW), forest(NIGHT)),
                 at(0, "یه توله‌خرس بود که تا حالا برف ندیده بود."),
                 at(0, "یه صبح بیدار شد و دید همه‌جا سفیده."),
@@ -546,7 +582,8 @@ public final class TaleCatalog {
                 at(3, "توله‌خرس تو خواب لبخند می‌زد."),
                 at(3, "چون حالا یه فصل تازه هم بلد بود.")));
 
-        tales.add(new Tale("singing_well", "چاه آوازخوان", R.drawable.face_drop,
+        tales.add(new Tale("singing_well", "چاه آوازخوان", R.drawable.face_well,
+                R.drawable.face_well, Tale.Motion.STILL,
                 places(desert(NOON), desert(NOON), desert(DUSK), desert(NIGHT)),
                 at(0, "وسط بیابون یه چاه قدیمی بود که آبش خنک‌ترین آب دنیا بود."),
                 at(0, "هر کی سرشو می‌کرد توش و حرف می‌زد، چاه جوابشو می‌داد."),
@@ -561,6 +598,7 @@ public final class TaleCatalog {
                 at(3, "و از اون به بعد هیچ مسافری تو اون بیابون تشنه نموند.")));
 
         tales.add(new Tale("lantern_fish", "فانوس ماهی", R.drawable.face_fish,
+                R.drawable.face_fish, Tale.Motion.DRIFT,
                 places(sea(NIGHT), sea(NIGHT), sea(NIGHT), sea(SEA)),
                 at(0, "خیلی ته دریا، جایی که نور خورشید نمی‌رسه، تاریکِ تاریکه."),
                 at(0, "اونجا یه ماهی کوچولو زندگی می‌کرد که رو سرش یه چراغ داشت."),
@@ -573,7 +611,8 @@ public final class TaleCatalog {
                 at(3, "گفتن: «تو چراغ ما بودی.» و اون تازه فهمید چراغش برای چیه."),
                 at(3, "از اون شب هر وقت کسی گم می‌شد، آروم آروم می‌درخشید.")));
 
-        tales.add(new Tale("grandma_quilt", "لحاف مادربزرگ", R.drawable.face_shape_square,
+        tales.add(new Tale("grandma_quilt", "لحاف مادربزرگ", R.drawable.face_quilt,
+                R.drawable.face_quilt, Tale.Motion.STILL,
                 places(room(INDOORS), room(INDOORS), room(DUSK), room(NIGHT)),
                 at(0, "مادربزرگ یه لحاف داشت که از صد تا تیکه پارچه دوخته شده بود."),
                 at(0, "هر تیکه یه رنگ بود و هر رنگ یه قصه داشت."),
@@ -587,7 +626,8 @@ public final class TaleCatalog {
                 at(3, "زیرش هیچ‌وقت کسی سردش نمی‌شد."),
                 at(3, "و هیچ‌وقت هم قصه‌ها تموم نشدن.")));
 
-        tales.add(new Tale("morning_rooster", "خروس و آفتاب", R.drawable.face_bird,
+        tales.add(new Tale("morning_rooster", "خروس و آفتاب", R.drawable.face_rooster,
+                R.drawable.face_rooster, Tale.Motion.WALK,
                 places(village(NIGHT), village(DAWN), village(DAWN), village(NOON)),
                 at(0, "یه خروس بود که فکر می‌کرد آفتاب به‌خاطر اون در میاد."),
                 at(0, "هر صبح می‌خوند و بعدش آفتاب می‌زد، پس مطمئن بود."),

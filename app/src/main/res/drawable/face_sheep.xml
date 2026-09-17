@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A subject for the told tales; flat shapes, one underside shade, one
+     highlight, and a face where it is alive. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp" android:height="48dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#FFFDF8" android:pathData="M11.6,13.4 m-7.2,0 a7.2,5.6 0 1,0 14.4,0 a7.2,5.6 0 1,0 -14.4,0" />
+    <path android:fillColor="#E3E8EE" android:pathData="M11.6,15.4 m-7.2,0 a7.2,3.6 0 1,0 14.4,0 a7.2,3.6 0 1,0 -14.4,0" />
+    <path android:fillColor="#FFFDF8" android:pathData="M6.4,10.2 m-2.4,0 a2.4,2.4 0 1,0 4.8,0 a2.4,2.4 0 1,0 -4.8,0" />
+    <path android:fillColor="#FFFDF8" android:pathData="M11.4,8.4 m-2.6,0 a2.6,2.6 0 1,0 5.2,0 a2.6,2.6 0 1,0 -5.2,0" />
+    <path android:fillColor="#FFFDF8" android:pathData="M16.4,10 m-2.4,0 a2.4,2.4 0 1,0 4.8,0 a2.4,2.4 0 1,0 -4.8,0" />
+    <path android:fillColor="#00000000" android:strokeColor="#C9D2DA"
+        android:strokeWidth="1.3" android:strokeLineCap="round"
+        android:pathData="M8.6,19.4 v2.2 M14.6,19.4 v2.2" />
+    <path android:fillColor="#F0B98E" android:pathData="M18.2,13 m-3,0 a3,3.2 0 1,0 6,0 a3,3.2 0 1,0 -6,0" />
+    <path android:fillColor="#D89A69" android:pathData="M15.9,11.6 m-1.5,0 a1.5,1 0 1,0 3,0 a1.5,1 0 1,0 -3,0" />
+    <path android:fillColor="#D89A69" android:pathData="M20.5,11.6 m-1.5,0 a1.5,1 0 1,0 3,0 a1.5,1 0 1,0 -3,0" />
+    <path android:fillColor="#2B3742" android:pathData="M17.4,12.4 m-0.8,0 a0.8,0.8 0 1,0 1.6,0 a0.8,0.8 0 1,0 -1.6,0" />
+    <path android:fillColor="#FFFDF8" android:pathData="M17.136,12.12 m-0.32,0 a0.32,0.32 0 1,0 0.64,0 a0.32,0.32 0 1,0 -0.64,0" />
+    <path android:fillColor="#2B3742" android:pathData="M19.6,12.6 m-0.8,0 a0.8,0.8 0 1,0 1.6,0 a0.8,0.8 0 1,0 -1.6,0" />
+    <path android:fillColor="#FFFDF8" android:pathData="M19.336,12.32 m-0.32,0 a0.32,0.32 0 1,0 0.64,0 a0.32,0.32 0 1,0 -0.64,0" />
+    <path android:fillColor="#2B3742" android:pathData="M18.6,14.4 m-0.7,0 a0.7,0.5 0 1,0 1.4,0 a0.7,0.5 0 1,0 -1.4,0" />
+</vector>

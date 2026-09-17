@@ -138,6 +138,8 @@ public class TaleActivity extends GameActivity {
         Tale.Moment moment = tale.moment(momentIndex);
         binding.taleLine.setText(moment.text);
         binding.taleScene.show(tale.sceneFor(momentIndex));
+        binding.taleScene.setActor(tale.actorFor(momentIndex),
+                tale.motionFor(momentIndex));
         binding.taleProgress.setText(getString(R.string.tale_progress,
                 FaNum.of(momentIndex + 1), FaNum.of(tale.size())));
         renderPlayButton();

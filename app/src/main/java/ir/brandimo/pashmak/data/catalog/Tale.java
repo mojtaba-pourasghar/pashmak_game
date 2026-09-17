@@ -14,16 +14,50 @@ import java.util.List;
  */
 public final class Tale {
 
-    /** One passage of the telling, and the place it happens in. */
+    /**
+     * How the subject of a passage moves.
+     *
+     * <p>A told tale had a place behind it and nothing in the place: the brave
+     * snail's scene was an empty meadow. What a three-year-old is looking for is the
+     * thing being talked about, so each passage names one and says how it moves.
+     */
+    public enum Motion {
+        /** Stays where it is put. */
+        STILL,
+        /** Crosses the ground slowly, the way a walked-to place is reached. */
+        WALK,
+        /** Floats across the sky: clouds, kites, a paper bird. */
+        DRIFT,
+        /** Stays put and bobs, which is what alive-but-waiting looks like. */
+        BOB,
+        /** Climbs slowly out of frame: smoke, a balloon, the moon. */
+        RISE,
+        /** Turns gently on the spot: a wheel, a button, a coin. */
+        SPIN
+    }
+
+    /** One passage of the telling, the place it happens in, and who is in it. */
     public static final class Moment {
         @NonNull
         public final String text;
         /** Index into this tale's own scene list. */
         public final int scene;
+        /** The subject drawn into the scene, or 0 for none. */
+        @DrawableRes
+        public final int actor;
+        @NonNull
+        public final Motion motion;
 
         Moment(@NonNull String text, int scene) {
+            this(text, scene, 0, Motion.STILL);
+        }
+
+        Moment(@NonNull String text, int scene, @DrawableRes int actor,
+               @NonNull Motion motion) {
             this.text = text;
             this.scene = scene;
+            this.actor = actor;
+            this.motion = motion;
         }
 
         /** Roughly how long this passage takes to read aloud, in milliseconds. */
@@ -38,16 +72,41 @@ public final class Tale {
     public final String title;
     @DrawableRes
     public final int badge;
+    /** Who the tale is about, drawn into every scene of it. */
+    @DrawableRes
+    public final int hero;
+    /** How that subject moves — a snail walks, a kite drifts, a clock turns. */
+    @NonNull
+    public final Motion heroMotion;
     public final List<MissionScene> scenes;
     public final List<Moment> moments;
 
-    Tale(String id, String title, @DrawableRes int badge,
-         List<MissionScene> scenes, Moment... moments) {
+    Tale(String id, String title, @DrawableRes int badge, @DrawableRes int hero,
+         @NonNull Motion heroMotion, List<MissionScene> scenes, Moment... moments) {
         this.id = id;
         this.title = title;
         this.badge = badge;
+        this.hero = hero;
+        this.heroMotion = heroMotion;
         this.scenes = Collections.unmodifiableList(scenes);
         this.moments = Collections.unmodifiableList(Arrays.asList(moments));
+    }
+
+    /**
+     * What to draw into the scene at this passage: whatever the passage names, or
+     * the tale's own subject when it names nothing. Nearly every passage wants the
+     * subject of the tale, so it is stated once per tale rather than 418 times.
+     */
+    @DrawableRes
+    public int actorFor(int index) {
+        Moment moment = moment(index);
+        return moment.actor != 0 ? moment.actor : hero;
+    }
+
+    @NonNull
+    public Motion motionFor(int index) {
+        Moment moment = moment(index);
+        return moment.actor != 0 ? moment.motion : heroMotion;
     }
 
     public int size() {

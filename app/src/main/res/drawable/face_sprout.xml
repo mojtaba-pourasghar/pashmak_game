@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A subject for the told tales; flat shapes, one underside shade, one
+     highlight, and a face where it is alive. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp" android:height="48dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#8A5A2B" android:pathData="M3.0,19.6 q9.0,-2.4 18.0,0 v2.4 h-18.0 Z" />
+    <path android:fillColor="#00000000" android:strokeColor="#43B02A"
+        android:strokeWidth="1.2" android:strokeLineCap="round"
+        android:pathData="M12.0,19.4 v-7.0" />
+    <path android:fillColor="#43B02A" android:pathData="M12.0,14.6 q-5.4,-0.8 -5.0,-5.0 q4.6,0.4 5.0,5.0 Z" />
+    <path android:fillColor="#2E7A1D" android:pathData="M12.0,13.4 q5.0,-1.4 5.0,-5.6 q-4.4,1.0 -5.0,5.6 Z" />
+    <path android:fillColor="#2B3742" android:pathData="M10.8,16.6 m-0.7,0 a0.7,0.7 0 1,0 1.4,0 a0.7,0.7 0 1,0 -1.4,0" />
+    <path android:fillColor="#FFFDF8" android:pathData="M10.569,16.355 m-0.28,0 a0.28,0.28 0 1,0 0.56,0 a0.28,0.28 0 1,0 -0.56,0" />
+    <path android:fillColor="#2B3742" android:pathData="M13.2,16.6 m-0.7,0 a0.7,0.7 0 1,0 1.4,0 a0.7,0.7 0 1,0 -1.4,0" />
+    <path android:fillColor="#FFFDF8" android:pathData="M12.969,16.355 m-0.28,0 a0.28,0.28 0 1,0 0.56,0 a0.28,0.28 0 1,0 -0.56,0" />
+    <path android:fillColor="#00000000" android:strokeColor="#2B3742"
+        android:strokeWidth="0.85" android:strokeLineCap="round"
+        android:pathData="M10.4,18 q0.8,1.28 1.6,0" />
+</vector>
