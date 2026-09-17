@@ -15,6 +15,33 @@
         android:name="android.hardware.touchscreen"
         android:required="true" />
 
+    <!--
+        From Android 11 an app cannot see other packages unless it says which ones it
+        cares about. Without this TextToSpeech#getEngines comes back filtered, which
+        would defeat the whole point of asking every installed engine whether it can
+        speak Persian — and the store links below would silently fail to resolve.
+        Nothing here is read or sent anywhere; it only makes these few apps visible.
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+        <intent>
+            <action android:name="android.speech.tts.engine.INSTALL_TTS_DATA" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="market" />
+        </intent>
+        <package android:name="com.farsitel.bazaar" />
+        <package android:name="com.reecedunn.espeak" />
+        <package android:name="com.github.olga_yakovleva.rhvoice.android" />
+    </queries>
+
     <application
         android:name=".PashmakApp"
         android:allowBackup="true"

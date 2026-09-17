@@ -1,7 +1,6 @@
 package ir.brandimo.pashmak.ui.settings;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +11,7 @@ import androidx.annotation.Nullable;
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioInventory;
 import ir.brandimo.pashmak.audio.SpeechEngine;
+import ir.brandimo.pashmak.audio.VoiceInstaller;
 import ir.brandimo.pashmak.data.prefs.GamePrefs;
 import ir.brandimo.pashmak.databinding.ActivitySettingsBinding;
 import ir.brandimo.pashmak.ui.base.BaseActivity;
@@ -21,6 +21,9 @@ import ir.brandimo.pashmak.util.FaNum;
 public class SettingsActivity extends BaseActivity {
 
     private ActivitySettingsBinding binding;
+    /** Held as a field so it can be taken off again in onPause. */
+    private final SpeechEngine.StatusListener voiceWatcher =
+            status -> renderVoice();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,68 +63,118 @@ public class SettingsActivity extends BaseActivity {
 
         renderDifficulty();
         renderAudioInventory();
-        binding.settingsVoiceFix.setOnClickListener(v -> openSpeechSettings());
+        binding.settingsVoiceFix.setOnClickListener(v -> fetchVoice());
         renderVoice();
     }
 
     /**
      * Pashmak speaks through the device, and most Android devices cannot speak
-     * Persian — Google's engine does not ship it. If this one cannot, say so here
-     * rather than leaving a grown-up wondering why the character is mute.
+     * Persian — Google's engine does not ship it. Every installed engine is asked,
+     * so a device that has a Persian one anywhere will use it without the parent
+     * touching Android's settings. When none does, this offers to fetch one.
      */
     private void renderVoice() {
-        SpeechEngine.Status status = SpeechEngine.get(this).status();
-        int line;
+        SpeechEngine speech = SpeechEngine.get(this);
+        SpeechEngine.Status status = speech.status();
+        String line;
         switch (status) {
             case READY:
-                line = R.string.settings_voice_ready;
+                String engine = engineLabel(speech.voiceEngine());
+                line = getString(R.string.settings_voice_ready)
+                        + (engine == null ? ""
+                           : " " + getString(R.string.settings_voice_engine_named, engine));
                 break;
             case NO_PERSIAN:
-                line = R.string.settings_voice_no_persian;
+                // An engine may be installed and still be missing its Persian data,
+                // which is a different errand: open it, do not fetch it again.
+                line = getString(voiceAlreadyInstalled() != null
+                        ? R.string.settings_voice_installed
+                        : R.string.settings_voice_no_persian);
                 break;
             case UNAVAILABLE:
-                line = R.string.settings_voice_unavailable;
+                line = getString(R.string.settings_voice_unavailable);
                 break;
             case STARTING:
             default:
-                line = R.string.settings_voice_starting;
+                line = getString(R.string.settings_voice_starting);
                 break;
         }
         binding.settingsVoice.setText(line);
+
         boolean fixable = status == SpeechEngine.Status.NO_PERSIAN
                 || status == SpeechEngine.Status.UNAVAILABLE;
         binding.settingsVoiceFix.setVisibility(fixable ? View.VISIBLE : View.GONE);
+        binding.settingsVoiceFix.setText(voiceAlreadyInstalled() != null
+                ? R.string.settings_voice_installed_open
+                : R.string.settings_voice_fix);
+    }
+
+    /** An engine we know about that is already on the device, or null. */
+    @Nullable
+    private String voiceAlreadyInstalled() {
+        if (VoiceInstaller.isInstalled(this, VoiceInstaller.ESPEAK)) {
+            return VoiceInstaller.ESPEAK;
+        }
+        if (VoiceInstaller.isInstalled(this, VoiceInstaller.RHVOICE)) {
+            return VoiceInstaller.RHVOICE;
+        }
+        return null;
+    }
+
+    /** A name a parent would recognise, for the engine doing the talking. */
+    @Nullable
+    private String engineLabel(@Nullable String pkg) {
+        if (pkg == null) {
+            return null;
+        }
+        try {
+            PackageManager packages = getPackageManager();
+            return packages.getApplicationLabel(
+                    packages.getApplicationInfo(pkg, 0)).toString();
+        } catch (Exception e) {
+            return pkg;
+        }
     }
 
     /**
-     * Opens the device's speech settings, where a Persian voice is chosen once and
-     * Pashmak can talk from then on. Telling a parent in a paragraph to go and find
-     * that screen is not much use; this takes them to it. Falls back to the Play
-     * Store, and says so plainly if neither can be opened, rather than a button that
-     * appears to do nothing.
+     * Gets a Persian voice onto the device, in the order that actually helps.
+     *
+     * <p>If an engine is already installed, it is opened — an engine whose Persian
+     * data has not been downloaded looks exactly like an engine with no Persian, and
+     * the fix is on its own screen. Otherwise the store: Bazaar first, because that
+     * is the one an Iranian family is likely to have, then Google Play, then the
+     * plain web page.
      */
-    private void openSpeechSettings() {
+    private void fetchVoice() {
         tap();
-        Intent settings = new Intent("com.android.settings.TTS_SETTINGS");
-        settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (settings.resolveActivity(getPackageManager()) != null) {
-            startActivity(settings);
+        String installed = voiceAlreadyInstalled();
+        if (installed != null && VoiceInstaller.launch(this, installed)) {
             return;
         }
-        Intent store = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("market://search?q=text%20to%20speech%20farsi&c=apps"));
-        if (store.resolveActivity(getPackageManager()) != null) {
-            startActivity(store);
-            return;
+        if (VoiceInstaller.open(this, VoiceInstaller.ESPEAK) == null) {
+            Toast.makeText(this, R.string.settings_voice_no_store,
+                    Toast.LENGTH_LONG).show();
         }
-        Toast.makeText(this, R.string.settings_voice_no_engine, Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // The engine may have finished starting up since the screen opened.
+        // Coming back from the store, or from the engine's own screen, is exactly
+        // when a voice may have appeared — so look again rather than trusting what
+        // was found when this screen was first opened.
+        SpeechEngine speech = SpeechEngine.get(this);
+        speech.watch(voiceWatcher);
+        if (speech.status() != SpeechEngine.Status.READY) {
+            speech.restart();
+        }
         renderVoice();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SpeechEngine.get(this).unwatch(voiceWatcher);
     }
 
     /**

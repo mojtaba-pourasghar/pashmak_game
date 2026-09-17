@@ -70,7 +70,7 @@ public abstract class StagePickerActivity extends BaseActivity
         attachCompanion();
 
         adapter = new StageAdapter(accentColor(), this);
-        gridColumns(binding.pickerList,
+        menuColumns(binding.pickerList,
                 getResources().getInteger(R.integer.missions_span), COLUMN_MIN_DP);
         binding.pickerList.setAdapter(adapter);
     }

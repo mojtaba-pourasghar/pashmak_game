@@ -56,7 +56,7 @@ public class GamesActivity extends BaseActivity {
         // On a phone the headline card gives up its full-width row so that all nine
         // cards fit on screen at once; a tablet has the height to keep it.
         final boolean wideHeadline = getResources().getBoolean(R.bool.games_wide_headline);
-        gridColumns(binding.gamesGrid,
+        menuColumns(binding.gamesGrid,
                 getResources().getInteger(R.integer.games_span), COLUMN_MIN_DP);
         final GridLayoutManager manager =
                 (GridLayoutManager) binding.gamesGrid.getLayoutManager();

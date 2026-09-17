@@ -28,7 +28,14 @@ public class PenBar extends View {
         void onPenPicked(int color);
     }
 
-    private static final int COLUMNS = 4;
+    /**
+     * The narrowest a pencil's cell may get. The number of columns comes from the
+     * width and this, rather than being fixed at four: down the side of a landscape
+     * screen four is all that fits, but across the bottom of a phone held upright
+     * all eight go in one row — and four did not, so the tray grew to two rows of
+     * very tall pencils and took half the height away from the paper.
+     */
+    private static final float MIN_CELL_DP = 40f;
     /** How far the chosen pencil rises out of the tray, in dp. */
     private static final float LIFT_DP = 7f;
     private static final float ASPECT = 2.9f;
@@ -73,25 +80,34 @@ public class PenBar extends View {
         this.listener = listener;
     }
 
+    /** How many pencils fit across the width we have been given. */
+    private int columnsFor(int width) {
+        float density = getResources().getDisplayMetrics().density;
+        int fits = (int) (width / Math.max(1f, MIN_CELL_DP * density));
+        return Math.max(1, Math.min(colors.length, fits));
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
-        int rows = (int) Math.ceil(colors.length / (float) COLUMNS);
-        float cellWidth = width / (float) COLUMNS;
+        int columns = columnsFor(width);
+        int rows = (int) Math.ceil(colors.length / (float) columns);
+        float cellWidth = width / (float) columns;
         int height = Math.round(cellWidth * ASPECT * rows);
         setMeasuredDimension(width, height);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int rows = (int) Math.ceil(colors.length / (float) COLUMNS);
-        float cellWidth = getWidth() / (float) COLUMNS;
+        int columns = columnsFor(getWidth());
+        int rows = (int) Math.ceil(colors.length / (float) columns);
+        float cellWidth = getWidth() / (float) columns;
         float cellHeight = getHeight() / (float) rows;
         float density = getResources().getDisplayMetrics().density;
 
         for (int i = 0; i < colors.length; i++) {
-            int column = i % COLUMNS;
-            int row = i / COLUMNS;
+            int column = i % columns;
+            int row = i / columns;
             float centerX = (column + 0.5f) * cellWidth;
             float top = row * cellHeight;
             boolean isSelected = colors[i] == selected;
@@ -173,11 +189,12 @@ public class PenBar extends View {
         if (event.getActionMasked() != MotionEvent.ACTION_DOWN) {
             return true;
         }
-        int rows = (int) Math.ceil(colors.length / (float) COLUMNS);
-        int column = (int) (event.getX() / (getWidth() / (float) COLUMNS));
+        int columns = columnsFor(getWidth());
+        int rows = (int) Math.ceil(colors.length / (float) columns);
+        int column = (int) (event.getX() / (getWidth() / (float) columns));
         int row = (int) (event.getY() / (getHeight() / (float) rows));
-        int index = row * COLUMNS + column;
-        if (column >= 0 && column < COLUMNS && index >= 0 && index < colors.length) {
+        int index = row * columns + column;
+        if (column >= 0 && column < columns && index >= 0 && index < colors.length) {
             setSelected(colors[index]);
             performClick();
             if (listener != null) {

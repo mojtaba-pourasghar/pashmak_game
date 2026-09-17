@@ -194,9 +194,12 @@
     <string name="settings_stars_reset">ستاره‌ها صفر شد.</string>
     <string name="settings_voice_starting">دارم صدای پشمک رو آماده می‌کنم…</string>
     <string name="settings_voice_ready">صدای پشمک آماده است؛ متن‌ها رو با صدای بلند می‌خونه.</string>
-    <string name="settings_voice_no_persian">این دستگاه صدای فارسی نداره، برای همین پشمک ساکته. از Play Store یک موتور گفتار فارسی نصب کنید (مثلاً «RHVoice» یا موتور گفتار سامسونگ) و بعد در تنظیمات اندروید ← زبان و ورودی ← خروجی گفتار، فارسی رو انتخاب کنید. متن‌ها همیشه روی صفحه نوشته می‌شن.</string>
-    <string name="settings_voice_fix">تنظیم صدای فارسی</string>
-    <string name="settings_voice_no_engine">روی این دستگاه صفحه‌ی تنظیمات گفتار پیدا نشد. از Play Store «RHVoice» را نصب کنید.</string>
+    <string name="settings_voice_no_persian">هیچ‌کدوم از موتورهای گفتار این دستگاه فارسی بلد نیستن، برای همین پشمک ساکته. با دکمه‌ی پایین یک موتور گفتار فارسی نصب کنید؛ بعد از نصب خودش پیدا می‌شه و لازم نیست تنظیمات اندروید رو دست بزنید.</string>
+    <string name="settings_voice_fix">نصب صدای فارسی</string>
+    <string name="settings_voice_installed_open">باز کردن موتور گفتار</string>
+    <string name="settings_voice_installed">موتور گفتار نصب شده ولی هنوز صدای فارسیش دانلود نشده. بازش کنید و زبان فارسی رو دانلود کنید.</string>
+    <string name="settings_voice_no_store">نه بازار روی این دستگاه هست نه Play Store. برنامه‌ی «eSpeak NG» رو از هر جایی که می‌تونید نصب کنید؛ فارسی داره و آفلاین کار می‌کنه.</string>
+    <string name="settings_voice_engine_named">صدای پشمک از «%1$s» میاد.</string>
     <string name="settings_voice_unavailable">روی این دستگاه موتور تبدیل متن به گفتار پیدا نشد. متن‌ها روی صفحه نوشته می‌شن.</string>
     <string name="settings_audio_music_all">موزیک پس‌زمینه: هر سه فایل پیدا شد. ✔</string>
     <string name="settings_audio_music_some">موزیک پس‌زمینه: %1$s از %2$s فایل پیدا شد. بقیه‌اش رو خود برنامه می‌سازه.</string>

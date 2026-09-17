@@ -73,10 +73,16 @@ public class StrokeBar extends View {
         invalidate();
     }
 
+    /** The tallest the thickness samples may get, however wide the bar is. */
+    private static final float MAX_HEIGHT_DP = 76f;
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = Math.round(width / (float) steps.length * 1.15f);
+        // Capped, because across the full width of a phone held upright a square-ish
+        // cell would be a hundred points tall and that height belongs to the paper.
+        float max = MAX_HEIGHT_DP * getResources().getDisplayMetrics().density;
+        int height = Math.round(Math.min(width / (float) steps.length * 1.15f, max));
         setMeasuredDimension(width, height);
     }
 

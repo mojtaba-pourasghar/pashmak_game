@@ -42,7 +42,7 @@ public class MissionsActivity extends BaseActivity {
         attachCompanion();
 
         adapter = new MissionAdapter(viewModel.missions(), this::startMission);
-        gridColumns(binding.missionsList,
+        menuColumns(binding.missionsList,
                 getResources().getInteger(R.integer.missions_span), COLUMN_MIN_DP);
         binding.missionsList.setAdapter(adapter);
 

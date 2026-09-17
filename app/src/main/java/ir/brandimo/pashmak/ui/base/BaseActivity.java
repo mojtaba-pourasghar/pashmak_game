@@ -158,6 +158,25 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /** True when the screen is taller than it is wide. */
+    protected boolean isPortrait() {
+        return getResources().getConfiguration().orientation
+                == android.content.res.Configuration.ORIENTATION_PORTRAIT;
+    }
+
+    /**
+     * A menu of cards, one to a row when the screen is upright.
+     *
+     * <p>Two columns across a phone held upright gives each card about 150 points,
+     * which is enough to fit the row but not enough to read it: «رنگ‌آمیزی نقاشی»
+     * came out as «رنگ‌آمیزی ن». A card a child is choosing between should be
+     * readable, and upright there is height to spend on giving each one a row.
+     */
+    protected void menuColumns(@NonNull RecyclerView list, int designedSpan,
+                               int minColumnDp) {
+        gridColumns(list, isPortrait() ? 1 : designedSpan, minColumnDp);
+    }
+
     /**
      * Gives a grid the columns it was designed for, or fewer if the screen will not
      * take them.
