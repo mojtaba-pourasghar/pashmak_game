@@ -193,8 +193,9 @@
     <string name="settings_reset_stars">صفر کردن ستاره‌ها</string>
     <string name="settings_stars_reset">ستاره‌ها صفر شد.</string>
     <string name="settings_voice_starting">دارم صدای پشمک رو آماده می‌کنم…</string>
+    <string name="settings_voice_builtin">صدای پشمک همراه خود برنامه‌ست و همیشه کار می‌کنه — بدون اینترنت و بدون نصب چیز اضافه.</string>
     <string name="settings_voice_ready">صدای پشمک آماده است؛ متن‌ها رو با صدای بلند می‌خونه.</string>
-    <string name="settings_voice_no_persian">پشمک فعلاً بی‌صدا قصه می‌گه؛ متن‌ها همیشه روی صفحه هستن و همه‌چیز کار می‌کنه. اگه دوست دارید صداشو بشنوید، با دکمه‌ی پایین یک صدای فارسی اضافه کنید.</string>
+    <string name="settings_voice_no_persian">پشمک با صدای خودش حرف می‌زنه. اگه دوست دارید صدای طبیعی‌تری داشته باشه، می‌تونید یک موتور گفتار فارسی هم نصب کنید.</string>
     <string name="settings_voice_fix">نصب صدای فارسی</string>
     <string name="settings_voice_installed_open">باز کردن موتور گفتار</string>
     <string name="settings_voice_installed">موتور گفتار نصب شده ولی هنوز صدای فارسیش دانلود نشده. بازش کنید و زبان فارسی رو دانلود کنید.</string>
@@ -203,10 +204,10 @@
     <string name="settings_voice_needs_data">صدای فارسی روی این دستگاه هست ولی هنوز دانلود نشده. با یک لمس دانلودش کنید؛ بعدش پشمک حرف می‌زنه.</string>
     <string name="settings_voice_download">دانلود صدای فارسی</string>
     <string name="settings_voice_unavailable">روی این دستگاه موتور تبدیل متن به گفتار پیدا نشد. متن‌ها روی صفحه نوشته می‌شن.</string>
-    <string name="settings_audio_music_all">موزیک پس‌زمینه: هر سه فایل پیدا شد. ✔</string>
+    <string name="settings_audio_music_all">موزیک پس‌زمینه: هر سه آهنگ سر جاشه. ✔ برای جایگزینی، فایل خودتون رو با همین نام‌ها بذارید.</string>
     <string name="settings_audio_music_some">موزیک پس‌زمینه: %1$s از %2$s فایل پیدا شد. بقیه‌اش رو خود برنامه می‌سازه.</string>
-    <string name="settings_audio_all">صداهای اختیاری: هر %1$s فایل پیدا شد. ✔</string>
-    <string name="settings_audio_some">صداگذاری لازم نیست؛ پشمک همه‌ی متن‌ها رو خودش می‌خونه. اگر خواستید صدای ضبط‌شده جایگزین کنید: %1$s از %2$s فایل اختیاری پیدا شد — مثل %3$s. فهرست کامل در res/raw/audio_manifest.txt</string>
+    <string name="settings_audio_all">هر %1$s فایل صدا سر جاشه. ✔</string>
+    <string name="settings_audio_some">%1$s از %2$s فایل صدا پیدا شد. جاافتاده‌ها مثل %3$s — فهرست کامل در res/raw/audio_manifest.txt</string>
     <string name="settings_info">این اپ کامل آفلاین کار می‌کنه — بدون تبلیغ، بدون حساب کاربری و بدون خرید درون‌برنامه‌ای.</string>
 
     <!-- Mascot dialogue (MascotConfig.js, verbatim) -->

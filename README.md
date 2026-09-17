@@ -140,42 +140,35 @@ Stars, mute, difficulty and the welcome flag are SharedPreferences.
 
 ## Audio
 
-**Pashmak speaks for himself — the only files to supply are the three music loops.**
-`audio/SpeechEngine` drives Android's own text-to-speech at pitch 1.35 and rate 0.92, so
-he sounds like a small warm creature rather than a satnav, and every line in the app is
-read aloud with no recordings at all. `VoicePlayer` checks `res/raw` first and falls back
-to speech, which makes a recording always an override: drop one file in and that line is
-played from it, drop in a hundred and a hundred lines are, in any mix, without touching
-the code.
+**Pashmak carries his own voice.** Every line he has — 1,136 of them, from the
+greeting to all 578 passages of the told tales — is a file in `res/raw`, synthesised
+at build time by `tools/gen_voice.py`. The app talks on any device, offline, with
+nothing to install and nothing to download.
 
-**Finding a Persian voice, rather than accepting the first no.** The engine a phone is
-set to is often the manufacturer's — Samsung's or Xiaomi's — and those do not speak
-Persian. Asking only that one is how the app went mute on devices that had a perfectly
-good Persian voice installed under a different engine. Android lets an app name the
-engine it wants, so every installed engine is asked in turn: Google's first, by name,
-because it is the one most likely to be there and to have language packs; then the
-device default; then everything else. Persian is asked for three ways — `fa-IR`, `fas`
-and bare `fa` — because engines register it under all three. The first that answers is
-the one Pashmak uses, and the device-wide default is never changed.
+It got there the long way round, and the short version is worth knowing. The first
+attempt used the device's own text-to-speech, which is the obvious thing to do and
+does not work: Google's engine has no Persian voice, and neither do Samsung's or
+Xiaomi's. Asking every installed engine instead of just the default helped some
+devices and not the one in front of the child. Offering to install eSpeak NG helped
+nobody who did not want a second app. eSpeak NG *does* speak Persian, so the third
+answer was to stop asking the phone for a voice and carry one: run eSpeak here, once,
+and ship the result.
 
-`SpeechEngine.Status` is `STARTING / READY / NEEDS_DATA / NO_PERSIAN / UNAVAILABLE`.
-`NEEDS_DATA` is kept apart from `NO_PERSIAN` because the remedy is different: an engine
-that knows Persian and has not downloaded it is one tap, not an install. The download
-intent is handed back rather than fired, because opening another app's screen by itself
-would throw a three-year-old out of the middle of a story; the parent screen fires it
-when a grown-up asks.
+It is a synthesiser and it sounds like one. That was the trade — a plain voice that is
+always there is worth more to a three-year-old than a better one that is usually
+absent — and it is reversible line by line, because a file dropped in under the same
+name wins over the generated one.
 
-**Nothing on that screen is a wall.** The app works with no voice at all — every line is
-on screen, and a recording in `res/raw` always wins over synthesis — so a missing voice
-is an offer, never a warning. When there is no speech engine on the device at all the
-block is hidden entirely rather than left sitting there reading like a fault.
+The device's speech engine is still there behind it (`audio/SpeechEngine`, pitch 1.2,
+rate 0.92, Google's engine asked first by name, then the default, then everything
+else) but it is now only a fallback for a line whose clip is missing.
 
-`tools/ttsfit.py` runs the search against made-up devices, because it cannot be run here
-otherwise: a Samsung phone with nothing Persian, Google with Persian, Google with the
-pack missing, a default that already speaks Persian, a third engine that does, a device
-with no engine at all. It reads the pitch, the rate, the locales and the order engines
-are asked in out of the Java, so the mirror cannot quietly drift from the code — deleting
-the line that asks Google first makes it fail.
+**The background music and the sound effects ship too.** Three seamless loops from
+`tools/gen_bgm.py` — the join is made by folding the ringing tail back over the
+opening, and the tool fails if the step across the join is audible — and ten short
+effects from `tools/gen_sfx.py`. Background music was also *off by default*, which is
+why a fresh install opened in silence whatever else was fixed; it is on now, like the
+sound effects and the speech always were.
 
 **Every sound still has a file name, and they are all in one list.** Nothing in the app
 speaks anonymously — `MascotController.say()` requires a clip name, so a new screen
@@ -199,11 +192,15 @@ real file in and it is used instead, with no code change. Either way the music d
 a whisper whenever Pashmak speaks and comes back up afterwards. The bedtime screen asks
 for silence — the lullaby is the sound there.
 
-**Checking your files landed.** The parent screen (behind the gate) reports the three
-music files on their own line — they are the ones you are actually expected to supply —
-and the optional voice overrides separately, naming a few it cannot find. A wrong file
-name shows up immediately, and a parent who recorded nothing is told that nothing is
-wrong rather than shown hundreds of missing files.
+**Checking your files landed.** The parent screen (behind the gate) reports the music
+and the voice clips separately, naming a few it cannot find, so a wrong file name shows
+up immediately rather than as a character who goes quiet in one place.
+
+`tools/voicefit.py` is the check that decides whether Pashmak speaks at all: a clip is
+resolved by name through `Resources#getIdentifier`, and a name that is not there is a
+silent no-op — no crash, no log, nothing. So it works out every name the app can ask
+for, the same way the app works them out, and matches them against the files on disk.
+It found `tale_done` missing on the first run.
 
 ---
 

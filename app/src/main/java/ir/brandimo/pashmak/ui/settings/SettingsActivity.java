@@ -14,6 +14,7 @@ import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioInventory;
 import ir.brandimo.pashmak.audio.SpeechEngine;
 import ir.brandimo.pashmak.audio.VoiceInstaller;
+import ir.brandimo.pashmak.audio.VoicePlayer;
 import ir.brandimo.pashmak.data.prefs.GamePrefs;
 import ir.brandimo.pashmak.databinding.ActivitySettingsBinding;
 import ir.brandimo.pashmak.ui.base.BaseActivity;
@@ -83,6 +84,16 @@ public class SettingsActivity extends BaseActivity {
         SpeechEngine.Status status = speech.status();
         String line = null;
         Integer action = null;
+
+        // Pashmak now carries his own voice: every line he has is a file in res/raw,
+        // synthesised at build time. The device's speech engine is only a fallback for
+        // a line whose clip is missing, so it is no longer the headline fact here.
+        if (VoicePlayer.get(this).hasBuiltInVoice()) {
+            binding.settingsVoice.setVisibility(View.VISIBLE);
+            binding.settingsVoice.setText(R.string.settings_voice_builtin);
+            binding.settingsVoiceFix.setVisibility(View.GONE);
+            return;
+        }
 
         switch (status) {
             case READY:

@@ -69,6 +69,17 @@ public final class VoicePlayer {
         return speech.say(text, callback == null ? null : callback::onVoiceFinished);
     }
 
+    /**
+     * Whether the app is carrying its own voice.
+     *
+     * <p>Checked by looking for the greeting, which is the first thing Pashmak ever
+     * says: if that clip is in res/raw the whole set was built with it, and nothing
+     * on the device needs to speak Persian for the app to.
+     */
+    public boolean hasBuiltInVoice() {
+        return resolve(AudioManifest.VOICE_WELCOME) != 0;
+    }
+
     private boolean playRecording(@Nullable String name,
                                   @Nullable CompletionCallback callback) {
         if (name == null) {

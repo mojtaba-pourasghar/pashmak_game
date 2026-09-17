@@ -1,28 +1,26 @@
 Pashmak Game — audio drop-in list
 =================================
-ONLY THE THREE bgm_* FILES IN SECTION 1 ARE NEEDED.
+EVERYTHING ON THIS LIST IS ALREADY IN res/raw. NOTHING HAS TO BE RECORDED.
 
-Everything else on this list is spoken by the device itself. Pashmak reads
-his lines aloud with the Android text-to-speech engine in a voice pitched
-up and slowed a little so it suits a small woolly creature, so the app
-talks with no recordings at all.
+Pashmak speaks with a voice that ships inside the app. Every line below was
+synthesised at build time with eSpeak NG, which does speak Persian, and the
+result is a file in res/raw. So the app talks on any device, offline, with
+nothing to install and nothing to download. It is a synthesiser and it sounds
+like one; that was the trade, because a plain voice that is always there is
+worth more to a three-year-old than a better one that is usually absent.
 
-The one catch is Persian: most phones ship Google TTS, which has no Persian
-voice, and then Pashmak goes quiet while the words still appear in his
-bubble. Settings says so in plain words and names the free engines that do
-speak Persian, so a parent can fix it in a minute. Nothing in the app is
-blocked either way.
+The three background loops and the ten sound effects are in there too, made
+the same way.
 
-Every name below is an OVERRIDE. Drop a file in and that one line is played
-from the recording instead of being spoken — one line, a whole screen or the
-entire app, in any mix. This is how a real narrator can be added later
-without touching the code.
+TO REPLACE ANY OF IT, drop a file into app/src/main/res/raw/ under the same
+name and it wins — one line, one screen or the whole app, in any mix. That is
+how a real narrator, or your own music, gets in without touching the code.
+Use .mp3 or .ogg, mono, 44.1 kHz. Names must be lowercase with letters,
+digits and underscores only — aapt rejects anything else. Do not write the
+extension; the app looks the file up by name, so welcome.mp3 and welcome.ogg
+both work.
 
-Put the files in app/src/main/res/raw/ using exactly these names. Use .mp3
-or .ogg, mono, 44.1 kHz. File names must be lowercase with letters, digits
-and underscores only — aapt rejects anything else. Do not write the
-extension; the app looks the file up by name, so welcome.mp3 and
-welcome.ogg both work.
+To rebuild the whole set after changing any text: python3 tools/gen_voice.py
 
 
 1. BACKGROUND MUSIC  (looping, instrumental, no singing)
@@ -34,13 +32,14 @@ These are the three files to drop in for background music:
   bgm_play               Every mini-game and the whole live-drawing flow.
   bgm_story              The story screen — softer than the games loop.
 
-  Make each one loop seamlessly; the app loops the file end-to-start with no
-  gap. 60-120 seconds is plenty. The music ducks to a whisper automatically
-  whenever Pashmak speaks and comes back up afterwards.
+  All three are already there: about a minute each of a soft pentatonic loop,
+  written by tools/gen_bgm.py and folded so the join has no click. Replace any
+  of them with a file of the same name. Make yours loop seamlessly too; the app
+  loops the file end-to-start with no gap, and 60-120 seconds is plenty.
 
-  If no file is present the app synthesises a soft wordless loop instead, so
-  music plays either way. The bedtime screen plays no background music at
-  all — the lullaby is the sound there.
+  The music ducks to a whisper automatically whenever Pashmak speaks and comes
+  back up afterwards. The bedtime screen plays no background music at all — the
+  lullaby is the sound there.
 
 2. MASCOT GREETING AND REACTIONS
 --------------------------------

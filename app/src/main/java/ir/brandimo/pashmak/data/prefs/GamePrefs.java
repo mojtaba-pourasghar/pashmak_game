@@ -193,8 +193,16 @@ public final class GamePrefs {
         prefs.edit().putInt("lullaby_sleep", value).apply();
     }
 
+    /**
+     * On unless a grown-up turns it off.
+     *
+     * <p>It used to default to off, which meant the app opened in silence on every
+     * fresh install — no music, whatever was in res/raw and whatever the synthesised
+     * loop could have played. Sound effects and speech were already on by default;
+     * this was the odd one out, and it was not a deliberate choice.
+     */
     public boolean musicEnabled() {
-        return prefs.getBoolean(KEY_MUSIC, false);
+        return prefs.getBoolean(KEY_MUSIC, true);
     }
 
     public void setMusicEnabled(boolean value) {
