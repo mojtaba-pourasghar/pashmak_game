@@ -148,13 +148,34 @@ to speech, which makes a recording always an override: drop one file in and that
 played from it, drop in a hundred and a hundred lines are, in any mix, without touching
 the code.
 
-**The Persian catch, said out loud rather than hidden.** Most phones ship Google's
-engine, which has no Persian voice. When that happens Pashmak goes quiet while his words
-still appear in the bubble — nothing in the app is blocked — and the parent screen says
-so in plain words, names two free engines that do speak Persian (RHVoice, Samsung's) and
-gives the exact Android settings path. `SpeechEngine.Status` is `STARTING / READY /
-NO_PERSIAN / UNAVAILABLE`, and settings re-reads it in `onResume`, because the engine may
-still have been starting up when the screen opened.
+**Finding a Persian voice, rather than accepting the first no.** The engine a phone is
+set to is often the manufacturer's — Samsung's or Xiaomi's — and those do not speak
+Persian. Asking only that one is how the app went mute on devices that had a perfectly
+good Persian voice installed under a different engine. Android lets an app name the
+engine it wants, so every installed engine is asked in turn: Google's first, by name,
+because it is the one most likely to be there and to have language packs; then the
+device default; then everything else. Persian is asked for three ways — `fa-IR`, `fas`
+and bare `fa` — because engines register it under all three. The first that answers is
+the one Pashmak uses, and the device-wide default is never changed.
+
+`SpeechEngine.Status` is `STARTING / READY / NEEDS_DATA / NO_PERSIAN / UNAVAILABLE`.
+`NEEDS_DATA` is kept apart from `NO_PERSIAN` because the remedy is different: an engine
+that knows Persian and has not downloaded it is one tap, not an install. The download
+intent is handed back rather than fired, because opening another app's screen by itself
+would throw a three-year-old out of the middle of a story; the parent screen fires it
+when a grown-up asks.
+
+**Nothing on that screen is a wall.** The app works with no voice at all — every line is
+on screen, and a recording in `res/raw` always wins over synthesis — so a missing voice
+is an offer, never a warning. When there is no speech engine on the device at all the
+block is hidden entirely rather than left sitting there reading like a fault.
+
+`tools/ttsfit.py` runs the search against made-up devices, because it cannot be run here
+otherwise: a Samsung phone with nothing Persian, Google with Persian, Google with the
+pack missing, a default that already speaks Persian, a third engine that does, a device
+with no engine at all. It reads the pitch, the rate, the locales and the order engines
+are asked in out of the Java, so the mirror cannot quietly drift from the code — deleting
+the line that asks Google first makes it fail.
 
 **Every sound still has a file name, and they are all in one list.** Nothing in the app
 speaks anonymously — `MascotController.say()` requires a clip name, so a new screen

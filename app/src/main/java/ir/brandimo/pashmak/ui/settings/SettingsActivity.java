@@ -1,11 +1,13 @@
 package ir.brandimo.pashmak.ui.settings;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import ir.brandimo.pashmak.R;
@@ -68,15 +70,20 @@ public class SettingsActivity extends BaseActivity {
     }
 
     /**
-     * Pashmak speaks through the device, and most Android devices cannot speak
-     * Persian — Google's engine does not ship it. Every installed engine is asked,
-     * so a device that has a Persian one anywhere will use it without the parent
-     * touching Android's settings. When none does, this offers to fetch one.
+     * What the parent is told about the voice, and what they can do about it.
+     *
+     * <p>The rule here is that nothing on this screen is a wall. The app works with
+     * no voice at all — every line is on screen and a recording in res/raw always
+     * wins over synthesis — so a missing voice is an offer, never a warning, and
+     * when there is nothing a parent could usefully do the block is hidden rather
+     * than left sitting there saying something broken.
      */
     private void renderVoice() {
         SpeechEngine speech = SpeechEngine.get(this);
         SpeechEngine.Status status = speech.status();
-        String line;
+        String line = null;
+        Integer action = null;
+
         switch (status) {
             case READY:
                 String engine = engineLabel(speech.voiceEngine());
@@ -84,29 +91,35 @@ public class SettingsActivity extends BaseActivity {
                         + (engine == null ? ""
                            : " " + getString(R.string.settings_voice_engine_named, engine));
                 break;
+            case NEEDS_DATA:
+                // An engine that knows Persian and only wants the pack. One tap.
+                line = getString(R.string.settings_voice_needs_data);
+                action = R.string.settings_voice_download;
+                break;
             case NO_PERSIAN:
-                // An engine may be installed and still be missing its Persian data,
-                // which is a different errand: open it, do not fetch it again.
-                line = getString(voiceAlreadyInstalled() != null
-                        ? R.string.settings_voice_installed
-                        : R.string.settings_voice_no_persian);
+                line = getString(R.string.settings_voice_no_persian);
+                action = voiceAlreadyInstalled() != null
+                        ? R.string.settings_voice_installed_open
+                        : R.string.settings_voice_fix;
                 break;
             case UNAVAILABLE:
-                line = getString(R.string.settings_voice_unavailable);
+                // No engine at all. Saying so helps nobody and reads as a fault, so
+                // the whole block goes away and the app carries on with its text.
                 break;
             case STARTING:
             default:
                 line = getString(R.string.settings_voice_starting);
                 break;
         }
-        binding.settingsVoice.setText(line);
 
-        boolean fixable = status == SpeechEngine.Status.NO_PERSIAN
-                || status == SpeechEngine.Status.UNAVAILABLE;
-        binding.settingsVoiceFix.setVisibility(fixable ? View.VISIBLE : View.GONE);
-        binding.settingsVoiceFix.setText(voiceAlreadyInstalled() != null
-                ? R.string.settings_voice_installed_open
-                : R.string.settings_voice_fix);
+        binding.settingsVoice.setVisibility(line == null ? View.GONE : View.VISIBLE);
+        if (line != null) {
+            binding.settingsVoice.setText(line);
+        }
+        binding.settingsVoiceFix.setVisibility(action == null ? View.GONE : View.VISIBLE);
+        if (action != null) {
+            binding.settingsVoiceFix.setText(action);
+        }
     }
 
     /** An engine we know about that is already on the device, or null. */
@@ -147,6 +160,12 @@ public class SettingsActivity extends BaseActivity {
      */
     private void fetchVoice() {
         tap();
+        // Cheapest errand first: an engine that already knows Persian and only wants
+        // the language pack. That is a download inside an app the device already has.
+        Intent download = SpeechEngine.get(this).voiceDataIntent();
+        if (download != null && start(download)) {
+            return;
+        }
         String installed = voiceAlreadyInstalled();
         if (installed != null && VoiceInstaller.launch(this, installed)) {
             return;
@@ -154,6 +173,16 @@ public class SettingsActivity extends BaseActivity {
         if (VoiceInstaller.open(this, VoiceInstaller.ESPEAK) == null) {
             Toast.makeText(this, R.string.settings_voice_no_store,
                     Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /** Opens another app's screen, answering whether it went anywhere. */
+    private boolean start(@NonNull Intent intent) {
+        try {
+            startActivity(intent);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

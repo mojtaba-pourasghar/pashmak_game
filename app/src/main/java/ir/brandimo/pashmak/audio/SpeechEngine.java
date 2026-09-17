@@ -1,6 +1,7 @@
 package ir.brandimo.pashmak.audio;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,33 +19,49 @@ import java.util.Locale;
 /**
  * Pashmak's voice, spoken by the device rather than played from a file.
  *
- * <p>Two things about this are worth knowing. First, it is pitched and paced to sound
- * like him — a small, warm creature talking to a three-year-old — not like a
- * navigation app. Second, <b>Persian is not a language most Android devices can
- * speak</b>: Google's engine, which is the default almost everywhere, does not ship
- * it.
+ * <p><b>Why this is not simply "ask the default engine".</b> The engine a phone comes
+ * set to is often the manufacturer's — Samsung's or Xiaomi's — and those do not speak
+ * Persian. Asking only that one and giving up is how the app ended up mute on devices
+ * that had a perfectly good Persian voice installed under a different engine. Android
+ * lets an app name the engine it wants, so every installed engine is tried in turn:
+ * Google's first, because it is the one most likely to be there and to have language
+ * packs, then the system default, then everything else. The first that can speak
+ * Persian is the one Pashmak uses, and the device-wide default is never touched.
  *
- * <p>So this does not simply ask the default engine and give up. Android lets an app
- * name the engine it wants, and a device often has one installed that the system
- * default is not — so every installed engine is tried in turn, and the first that can
- * speak Persian is the one Pashmak uses. The parent does not have to go into Android
- * settings and change the device-wide default for a children's app.
- *
- * <p>When none of them can, {@link #status()} says so and the parent screen offers to
- * install one. {@link #restart()} picks it up as soon as it is there.
+ * <p>Nothing here blocks the child. The search runs in the background, the words are
+ * on screen either way, and a recording in res/raw always wins over synthesis — see
+ * {@link VoicePlayer}. If no engine can be found the app simply carries on quietly.
  */
 public final class SpeechEngine {
 
-    /** Higher than life: a small furry animal, not a newsreader. */
-    private static final float PITCH = 1.35f;
-    /** A shade under normal, because the listener is three. */
+    /**
+     * A friendly boyish bear: a little above a grown-up's pitch and a little under
+     * their pace, because the listener is three and the speaker is small and warm.
+     */
+    private static final float PITCH = 1.2f;
     private static final float RATE = 0.92f;
+
+    /** Asked first: the most widely installed engine, and the one with language packs. */
+    public static final String GOOGLE_TTS = "com.google.android.tts";
+
+    /**
+     * Persian answers to more than one code. fa-IR is the full tag, fas is the
+     * ISO 639-2 form some engines register under, and bare fa is what the rest use.
+     */
+    private static final Locale[] PERSIAN = {
+            new Locale("fa", "IR"), new Locale("fas"), new Locale("fa")
+    };
 
     public enum Status {
         /** Still asking the device what it can do. */
         STARTING,
         /** A Persian voice was found and Pashmak can talk. */
         READY,
+        /**
+         * An engine knows Persian but has not downloaded it. One tap fixes this, so
+         * it is deliberately not the same answer as "this device cannot speak Persian".
+         */
+        NEEDS_DATA,
         /** Engines are installed but none of them speaks Persian. */
         NO_PERSIAN,
         /** No usable text-to-speech engine at all. */
@@ -74,8 +91,10 @@ public final class SpeechEngine {
 
     /** Engine packages still to try, in order. */
     private List<String> queue = new ArrayList<>();
-    /** Whether the device has a working engine at all, whatever it can speak. */
+    /** Whether any engine started at all, whatever it could speak. */
     private boolean anyEngineWorks;
+    /** An engine that knows Persian but is missing the data for it. */
+    private String engineNeedingData;
 
     @Nullable
     private DoneListener pending;
@@ -99,53 +118,56 @@ public final class SpeechEngine {
     }
 
     /**
-     * Starts the search again. Called when the screen comes back, because the parent
-     * may have installed an engine while they were away.
+     * Starts the search again. Called when a screen comes back, because a voice may
+     * have been installed or downloaded while the parent was away.
      */
     public void restart() {
         shutdown();
         status = Status.STARTING;
         anyEngineWorks = false;
+        engineNeedingData = null;
         queue = new ArrayList<>();
-        // The system default first: if it can do Persian, nothing else need be asked.
-        queue.add(null);
+        queue.add(GOOGLE_TTS);      // asked first, by name
+        queue.add(null);            // then whatever the device is set to
         tryNext();
     }
 
     private void tryNext() {
         if (queue.isEmpty()) {
-            settle(Status.NO_PERSIAN);
+            settle(finalVerdict());
             return;
         }
         final String engine = queue.remove(0);
         try {
             TextToSpeech.OnInitListener init = code -> {
                 if (code != TextToSpeech.SUCCESS) {
-                    step(engine);
+                    step();
                     return;
                 }
                 anyEngineWorks = true;
                 if (engine == null) {
-                    // First time through: now we know what else is installed.
+                    // The default engine started, so now we can see the rest.
                     collectEngines();
                 }
-                if (applyPersian()) {
-                    voiceEngine = engine;
+                if (applyPersian(engine)) {
+                    voiceEngine = installed(engine) ? engine : safeDefaultEngine();
                     settle(Status.READY);
                 } else {
-                    step(engine);
+                    step();
                 }
             };
             tts = engine == null
                     ? new TextToSpeech(appContext, init)
                     : new TextToSpeech(appContext, init, engine);
         } catch (Exception e) {
-            step(engine);
+            // Naming an engine that is not installed throws; that is not an error,
+            // it is the answer to the question we asked.
+            step();
         }
     }
 
     /** This one cannot do it; let it go and ask the next. */
-    private void step(@Nullable String failed) {
+    private void step() {
         try {
             if (tts != null) {
                 tts.shutdown();
@@ -154,25 +176,32 @@ public final class SpeechEngine {
         }
         tts = null;
         if (queue.isEmpty()) {
-            // Nothing left to try. Which of the two bad endings it is matters: one
-            // asks the parent to install a voice, the other says the device cannot
-            // speak at all, and telling them the wrong one wastes their time.
-            settle(anyEngineWorks ? Status.NO_PERSIAN : Status.UNAVAILABLE);
+            settle(finalVerdict());
             return;
         }
         main.post(this::tryNext);
     }
 
+    /**
+     * Which of the three unhappy endings this is. They are told apart because the
+     * remedy differs: a download, an install, or nothing the parent can do.
+     */
+    private Status finalVerdict() {
+        if (engineNeedingData != null) {
+            return Status.NEEDS_DATA;
+        }
+        return anyEngineWorks ? Status.NO_PERSIAN : Status.UNAVAILABLE;
+    }
+
     /** Every other engine installed on the device, so each gets asked in turn. */
     private void collectEngines() {
         try {
-            String alreadyTried = tts.getDefaultEngine();
             for (TextToSpeech.EngineInfo info : tts.getEngines()) {
                 if (info == null || info.name == null) {
                     continue;
                 }
-                if (info.name.equals(alreadyTried) || queue.contains(info.name)) {
-                    continue;
+                if (GOOGLE_TTS.equals(info.name) || queue.contains(info.name)) {
+                    continue;          // already asked, or already queued
                 }
                 queue.add(info.name);
             }
@@ -180,24 +209,64 @@ public final class SpeechEngine {
         }
     }
 
-    private void settle(Status next) {
-        status = next;
-        final Status settled = next;
-        main.post(() -> {
-            for (int i = 0; i < watchers.size(); i++) {
-                watchers.get(i).onSpeechStatus(settled);
-            }
-        });
+    /**
+     * Whether a named engine is really on the device.
+     *
+     * <p>Asking for an engine that is not installed does not always fail: some
+     * versions quietly hand back the default one instead. Without this check the
+     * screen would report that Pashmak speaks through Google when he does not.
+     */
+    private boolean installed(@Nullable String engine) {
+        if (engine == null) {
+            return false;
+        }
+        try {
+            appContext.getPackageManager().getPackageInfo(engine, 0);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    private boolean applyPersian() {
+    @Nullable
+    private String safeDefaultEngine() {
         try {
-            int result = tts.setLanguage(new Locale("fa", "IR"));
-            if (isMissing(result)) {
-                // Some engines register the language without the country.
-                result = tts.setLanguage(new Locale("fa"));
+            return tts == null ? null : tts.getDefaultEngine();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Asks the engine in hand whether it can say Persian, and sets it up if so.
+     *
+     * <p>{@code isLanguageAvailable} is used to ask rather than {@code setLanguage},
+     * because asking should not change anything until the answer is yes. An engine
+     * that answers MISSING_DATA is remembered: it knows the language and only wants
+     * the pack, which is a one-tap errand rather than a dead end.
+     */
+    private boolean applyPersian(@Nullable String engine) {
+        try {
+            Locale chosen = null;
+            for (Locale locale : PERSIAN) {
+                int answer = tts.isLanguageAvailable(locale);
+                if (answer == TextToSpeech.LANG_AVAILABLE
+                        || answer == TextToSpeech.LANG_COUNTRY_AVAILABLE
+                        || answer == TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE) {
+                    chosen = locale;
+                    break;
+                }
+                if (answer == TextToSpeech.LANG_MISSING_DATA
+                        && engineNeedingData == null) {
+                    // This engine knows Persian and only wants the pack. Remember
+                    // which one, so the download can be pointed at it by name.
+                    engineNeedingData = installed(engine) ? engine : safeDefaultEngine();
+                }
             }
-            if (isMissing(result)) {
+            if (chosen == null) {
+                return false;
+            }
+            if (isMissing(tts.setLanguage(chosen))) {
                 return false;
             }
             tts.setPitch(PITCH);
@@ -228,11 +297,33 @@ public final class SpeechEngine {
                 || result == TextToSpeech.LANG_NOT_SUPPORTED;
     }
 
+    /**
+     * The intent that downloads an engine's missing language data.
+     *
+     * <p>It is handed back rather than fired here on purpose. It opens another app's
+     * screen, and doing that by itself would throw a three-year-old out of the middle
+     * of a story. The parent screen fires it when a grown-up asks for it, which is a
+     * single tap and no hunting through Android's settings.
+     */
+    @Nullable
+    public Intent voiceDataIntent() {
+        if (status != Status.NEEDS_DATA) {
+            return null;
+        }
+        Intent install = new Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+        install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (engineNeedingData != null) {
+            install.setPackage(engineNeedingData);
+        }
+        return install.resolveActivity(appContext.getPackageManager()) == null
+                ? null : install;
+    }
+
     public Status status() {
         return status;
     }
 
-    /** Which engine is doing the talking, or null for the system default. */
+    /** Which engine is doing the talking, or null when nothing is. */
     @Nullable
     public String voiceEngine() {
         return voiceEngine;
@@ -305,6 +396,16 @@ public final class SpeechEngine {
         }
         tts = null;
         voiceEngine = null;
+    }
+
+    private void settle(Status next) {
+        status = next;
+        final Status settled = next;
+        main.post(() -> {
+            for (int i = 0; i < watchers.size(); i++) {
+                watchers.get(i).onSpeechStatus(settled);
+            }
+        });
     }
 
     private void finish() {
