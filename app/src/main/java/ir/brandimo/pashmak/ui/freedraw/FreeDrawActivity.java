@@ -5,9 +5,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
@@ -18,6 +20,7 @@ import ir.brandimo.pashmak.databinding.ActivityFreeDrawBinding;
 import ir.brandimo.pashmak.mascot.MascotController;
 import ir.brandimo.pashmak.mascot.MascotState;
 import ir.brandimo.pashmak.ui.base.GameActivity;
+import ir.brandimo.pashmak.ui.common.CanvasKeeper;
 import ir.brandimo.pashmak.ui.common.PaintCanvasView;
 
 /**
@@ -28,6 +31,7 @@ import ir.brandimo.pashmak.ui.common.PaintCanvasView;
 public class FreeDrawActivity extends GameActivity {
 
     private ActivityFreeDrawBinding binding;
+    private CanvasKeeper keeper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +80,16 @@ public class FreeDrawActivity extends GameActivity {
         wireTools();
         binding.drawCanvas.setOnStrokeListener(() -> sounds.play(AudioManifest.SFX_BRUSH));
         binding.drawSave.setOnClickListener(v -> save());
+
+        // Turning the tablet must not tear up the child's drawing.
+        keeper = new ViewModelProvider(this).get(CanvasKeeper.class);
+        binding.drawCanvas.adoptLayer(keeper.take());
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        keeper.hold(binding.drawCanvas.detachLayer());
     }
 
     private void wireTools() {

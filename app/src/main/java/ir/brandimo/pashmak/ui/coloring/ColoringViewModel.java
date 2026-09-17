@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import ir.brandimo.pashmak.data.catalog.ColorPack;
 import ir.brandimo.pashmak.data.catalog.ColorRegion;
@@ -17,6 +19,8 @@ import ir.brandimo.pashmak.data.catalog.Palette;
 public class ColoringViewModel extends ViewModel {
 
     private final Map<String, Map<String, Integer>> fillsByPage = new HashMap<>();
+    /** Pages whose stars have already been handed out. */
+    private final Set<String> awarded = new HashSet<>();
     private final MutableLiveData<Integer> packIndex = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> pageIndex = new MutableLiveData<>(0);
     private final MutableLiveData<Integer> selectedColor = new MutableLiveData<>(Palette.RED);
@@ -93,7 +97,21 @@ public class ColoringViewModel extends ViewModel {
         return region.targetColor == chosen;
     }
 
+    /**
+     * True the first time a page is finished and false ever after.
+     *
+     * <p>This lives here rather than in the Activity because turning the screen
+     * builds a new Activity, which re-observes the LiveData and is handed the
+     * "page complete" it was already showing — so a flag held up there paid the
+     * stars out again on every rotation. A ViewModel outlives that rebuild.
+     */
+    public boolean claimAward() {
+        return awarded.add(pageKey());
+    }
+
     public void clearPage() {
+        // Clearing genuinely starts the page over, so it can be earned again.
+        awarded.remove(pageKey());
         fillsByPage.put(pageKey(), new HashMap<>());
         fills.setValue(new HashMap<>());
         pageComplete.setValue(false);

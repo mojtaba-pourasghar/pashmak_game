@@ -33,6 +33,15 @@ public class LiveDrawingViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> extractionFailed = new MutableLiveData<>(false);
 
     private Mission mission;
+    /**
+     * How many items had been captured when the finished scene was last saved.
+     *
+     * <p>It lives here and not in the Activity because the Activity is rebuilt on a
+     * rotation with its fields back at their defaults, and the completed mission it
+     * re-renders would then be celebrated and written to the gallery all over again
+     * — one duplicate entry per turn of the tablet.
+     */
+    private int sceneSavedForCount = -1;
     private LiveData<List<CapturedItem>> items;
     private boolean extracting;
 
@@ -143,6 +152,15 @@ public class LiveDrawingViewModel extends AndroidViewModel {
         if (mission != null) {
             repository.deleteSlot(mission.index, slotIndex, null);
         }
+    }
+
+    /** True the first time a finished mission is saved at this item count. */
+    public boolean claimSceneSave(int capturedCount) {
+        if (sceneSavedForCount == capturedCount) {
+            return false;
+        }
+        sceneSavedForCount = capturedCount;
+        return true;
     }
 
     public void clearMission() {

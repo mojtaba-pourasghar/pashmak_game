@@ -23,7 +23,7 @@ simulated (camera, extraction, persistence, gallery) is implemented for real.
 |---|---|
 | Language | 100% Java (17 source/target, core library desugaring on) |
 | minSdk / targetSdk | **21** / 35 |
-| Orientation | Landscape only, RTL-first |
+| Orientation | Both, on phone and tablet; RTL-first |
 | Architecture | MVVM — ViewModel + LiveData + ViewBinding |
 | Package | `ir.brandimo.pashmak` |
 
@@ -187,30 +187,70 @@ device mirrors the whole design the wrong way.
 Pashmak is placed in the control column on screens that have one, and pinned to the free
 corner elsewhere, so he can never end up sitting on a button.
 
-The prototype was a 392×820 portrait phone mock; this app is landscape-locked. The
-recurring portrait pattern — header, flexible body, pinned footer — becomes a three-band
-layout: a start rail, the centre stage, and an end column of actions.
+The prototype was a 392×820 portrait phone mock. Landscape is the app's home ground —
+a game a child props up on a table — so that is the design that was drawn first: the
+recurring portrait pattern of header, flexible body and pinned footer becomes a
+three-band layout of a start rail, the centre stage and an end column of actions. But a
+child turns the tablet, so the app turns with them.
 
-**Height is the scarce dimension.** Landscape-locked means a device's `smallestWidth`
-*is* its height: about 320dp on a small phone, 360dp on a common one, 600dp on a 7″
-tablet and 800dp on a 10″. So there are four dimension buckets — `values/` (tuned for
-the smallest phone, since it is also the fallback), `values-sw360dp`, `values-sw600dp`
-and `values-sw720dp` — covering type scale, touch targets, mascot sizes and grid spans.
-Anything added to one belongs in all four.
+**Whichever edge is short is the one to spend carefully.** `smallestWidth` is the
+device's shorter edge and does not change when the screen is turned, so the four buckets
+— `values/` (tuned for the smallest phone, since it is also the fallback),
+`values-sw360dp`, `values-sw600dp`, `values-sw720dp` — are device sizes, not
+orientations. What flips is which axis is scarce: on its side a small phone has about
+320dp of height and plenty of width; upright it has 320dp of width and plenty of height.
+The same number serves both. Anything added to one bucket belongs in all four.
+
+**Portrait turns the end column into a bottom band.** `res/layout-port/` holds a variant
+of every screen that has a side column: the stage takes the full width, and Pashmak, the
+text and the buttons run across the bottom. On a phone that band is two rows rather than
+one — Pashmak and the words on top, the buttons full width beneath — because three
+things across 300dp left the line of Persian 78dp wide, narrower than the column it was
+replacing. `tools/portfit.py` is what said so.
+
+Two things about that folder are easy to get wrong, so both are checked rather than
+remembered. `smallestWidth` outranks orientation in the resource qualifier order, so on
+a tablet held upright `layout-sw600dp/` beats `layout-port/` — any screen with a sw600
+variant needs a `layout-sw600dp-port/` twin or the tablet gets the sideways design.
+And ViewBinding merges every variant of a layout into one class, where an id missing
+from any one of them becomes a nullable field: the screen still compiles and then throws
+the first time it is opened the other way up. So the variants must carry exactly the
+same ids, and `portfit` fails if they do not.
 
 Phone and tablet share layouts except where the structure genuinely has to change, which
 so far is one screen: the home screen's five buttons are two-up on a phone and a single
 tall column in `layout-sw600dp/`. The games menu adapts through a resource instead — a
 phone drops the headline card's full-width span (`@bool/games_wide_headline`) so all
-nine cards land in three rows and nothing scrolls. The story screen does something
+nine cards land in three rows and nothing scrolls. Grid columns are no longer a fixed
+number per bucket: that was sound while the width was always the long edge, but upright
+the same device has half of it, so a grid now takes the span it was designed for or
+fewer, whichever the measured width will actually hold at a readable column. The story screen does something
 similar: on a phone its side column has to hold Pashmak, the passage being read and two
 option buttons in 266dp, so `@bool/story_dock_small` gives him the smaller dock there
 and the passage gets the room instead.
 
+**Rotation rebuilds the screen, which is its own kind of bug.** Android destroys and
+recreates an Activity when the device turns, and several screens kept what the child was
+doing in Activity fields — so a story would start again from its first line and a bubble
+game would reshuffle its rules and reset the score. Those now go in the instance state,
+and the bubble rounds are rebuilt from a saved seed so they come back the same.
+
+Three faults of a sharper kind came out of the same change: a screen that awards stars
+from a LiveData observer is handed the value it was already showing when it is rebuilt,
+so a finished coloring page, a finished memory board and a finished mission all paid out
+again on every rotation — and the mission wrote a second copy of its scene to the gallery
+each time. Those claims moved into the ViewModels, which survive the rebuild. The
+bedtime player moved there too: the screen is explicit that a lullaby keeps playing when
+the screen dims, and rotating used to stop it. And because `PaintCanvasView` paints into
+a bitmap rather than keeping a list of strokes, a drawing cannot travel in a Bundle;
+`CanvasKeeper` holds it across the rebuild and the drawing is fitted into the new shape
+of the paper instead of being cropped.
+
 Because there is no way to eyeball every screen on every device, `tools/vfit.py`
 walks each layout and works out the height it cannot do without — reading `ScrollView`,
 `layout_weight`, `GridLayout` wrapping and ConstraintLayout's vertical chains — and
-fails if any screen needs more than the shortest device in its bucket has.
+fails if any screen needs more than the shortest device in its bucket has. It resolves
+layouts the way the platform does, so it measures each screen both ways up.
 `tools/gridfit.py` does the same for the games grid, which `vfit` cannot judge
 because the grid is a flexible `0dp` RecyclerView by construction. `tools/roi_check.py` covers the camera's
 region-of-interest arithmetic, the piece that file itself calls most likely to be
@@ -219,13 +259,17 @@ other axis — what each grid column is left with once the rail has taken its sh
 `tools/storyfit.py` reads the real story passages out of the catalogue and checks they
 fit the narration box — a check for content against its container, which none of the
 others do, and which caught the box collapsing below its own minimum on a choice beat.
-`tools/scenes.py` and `tools/sheet.py` render the story scenes and the icon set to
-contact sheets, so artwork gets looked at rather than assumed.
+`tools/portfit.py` covers what only portrait can break: that the variants match id for
+id, that every resource the new files name exists, and that a bottom band leaves its
+line of Persian a width worth reading. `tools/scenes.py` and `tools/sheet.py` render the
+story scenes and the icon set to contact sheets, so artwork gets looked at rather than
+assumed.
 
 Every scrolling list sits in a box of its own — a translucent panel the cards are
 clipped to. The list screens give Pashmak a rail beside that box rather than the bottom
-corner: in a landscape-locked app height is the scarce dimension and width is not, so a
-rail spends the plentiful one. It also removes a whole class of bug — the lists used to
+corner: on its side, height is the scarce dimension and width is not, so the rail spends
+the plentiful one — and upright, where that is reversed, the rail lies down and becomes a
+band along the bottom instead. It also removes a whole class of bug — the lists used to
 pair `clipToPadding="false"` with a bottom padding that was meant to reserve space for
 him, which does the opposite of reserving it: the padding becomes scroll room the list
 still paints into, so cards slid straight across him.

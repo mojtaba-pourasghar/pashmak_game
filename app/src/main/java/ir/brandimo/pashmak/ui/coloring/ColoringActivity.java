@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
@@ -39,7 +40,6 @@ public class ColoringActivity extends GameActivity {
     public static final String EXTRA_PAGE = "page_index";
 
     private ColoringViewModel viewModel;
-    private boolean awardedThisPage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +60,6 @@ public class ColoringActivity extends GameActivity {
                 ContextCompat.getColor(this, R.color.purple));
         binding.paintHeader.headerAction.setOnClickListener(v -> {
             tap();
-            awardedThisPage = false;
             viewModel.clearPage();
         });
         bindStars(binding.paintHeader.headerStarsValue);
@@ -72,7 +71,6 @@ public class ColoringActivity extends GameActivity {
         binding.paintSave.setOnClickListener(v -> saveToGallery());
 
         viewModel.pageIndex().observe(this, index -> {
-            awardedThisPage = false;
             ColoringPage page = viewModel.page();
             binding.paintHeader.headerTitle.setText(getString(R.string.paint_title, page.name));
             binding.paintCanvas.setPage(page, viewModel.fills().getValue());
@@ -88,8 +86,7 @@ public class ColoringActivity extends GameActivity {
                 binding.paintPalette.setSelected(color == null ? Palette.RED : color));
         viewModel.pageComplete().observe(this, complete -> {
             refreshBanner();
-            if (Boolean.TRUE.equals(complete) && !awardedThisPage) {
-                awardedThisPage = true;
+            if (Boolean.TRUE.equals(complete) && viewModel.claimAward()) {
                 prefs.setColoringDone(viewModel.pageKey());
                 mascot.addStars(STARS_PER_PAGE);
                 onCorrect(getString(R.string.paint_all_right), AudioManifest.VOICE_PAINT_DONE);

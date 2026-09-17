@@ -6,7 +6,6 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.data.db.GalleryEntry;
@@ -17,6 +16,10 @@ import ir.brandimo.pashmak.util.FaNum;
 
 /** Everything the child has finished, newest first. */
 public class GalleryActivity extends BaseActivity {
+
+    /** A gallery cell needs this much for a square thumbnail and its caption. */
+    private static final int COLUMN_MIN_DP = 96;
+
 
     private ActivityGalleryBinding binding;
     private GalleryAdapter adapter;
@@ -38,8 +41,8 @@ public class GalleryActivity extends BaseActivity {
         attachCompanion();
 
         adapter = new GalleryAdapter(this::openEntry);
-        binding.galleryGrid.setLayoutManager(new GridLayoutManager(
-                this, getResources().getInteger(R.integer.gallery_span)));
+        gridColumns(binding.galleryGrid,
+                getResources().getInteger(R.integer.gallery_span), COLUMN_MIN_DP);
         binding.galleryGrid.setAdapter(adapter);
 
         GalleryRepository.get(this).observeAll().observe(this, entries -> {

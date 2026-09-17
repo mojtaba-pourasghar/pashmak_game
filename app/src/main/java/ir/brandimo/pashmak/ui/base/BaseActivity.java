@@ -8,8 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
@@ -153,6 +156,38 @@ public abstract class BaseActivity extends AppCompatActivity {
             params.height = getResources().getDimensionPixelSize(R.dimen.mascot_dock_small);
             dockMascot.setLayoutParams(params);
         }
+    }
+
+    /**
+     * Gives a grid the columns it was designed for, or fewer if the screen will not
+     * take them.
+     *
+     * <p>The span used to be a fixed number per device bucket, which was sound while
+     * the app was locked to landscape: smallestWidth was the height and the width was
+     * always the long edge, so there was always plenty of it. Held upright the same
+     * device has barely half that width, and three mission rows across a phone would
+     * be ninety points each. The designed span stays the ceiling — a tablet does not
+     * sprout extra columns — but a narrow screen drops to what it can actually show.
+     *
+     * <p>The minimum is measured, not guessed: it is the width the row needs for its
+     * picture and a readable title, the same floor tools/hfit.py checks.
+     */
+    protected void gridColumns(@NonNull RecyclerView list, int designedSpan,
+                               int minColumnDp) {
+        final GridLayoutManager manager = new GridLayoutManager(this, designedSpan);
+        list.setLayoutManager(manager);
+        list.post(() -> {
+            int usable = list.getWidth() - list.getPaddingLeft() - list.getPaddingRight();
+            if (usable <= 0) {
+                return;
+            }
+            float minPx = minColumnDp * getResources().getDisplayMetrics().density;
+            int fits = (int) (usable / Math.max(1f, minPx));
+            int span = Math.max(1, Math.min(designedSpan, fits));
+            if (span != manager.getSpanCount()) {
+                manager.setSpanCount(span);
+            }
+        });
     }
 
     /** Binds a star counter that follows the shared total. */

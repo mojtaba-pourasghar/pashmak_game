@@ -27,7 +27,17 @@ public final class BubbleRoundCatalog {
 
     @NonNull
     public static List<BubbleRound> session(@NonNull Context context) {
-        Random random = new Random();
+        return session(context, new Random().nextLong());
+    }
+
+    /**
+     * The same seed gives back the same run of rounds. Turning the screen rebuilds
+     * the screen from scratch, and without this the child would be handed a new set
+     * of rules and a score of zero for having tilted the tablet.
+     */
+    @NonNull
+    public static List<BubbleRound> session(@NonNull Context context, long seed) {
+        Random random = new Random(seed);
         String[] letters = TraceCatalog.letters(context);
         String[] digits = TraceCatalog.digits(context);
 

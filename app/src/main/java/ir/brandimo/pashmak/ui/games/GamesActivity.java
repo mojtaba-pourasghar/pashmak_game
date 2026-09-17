@@ -29,6 +29,10 @@ import ir.brandimo.pashmak.ui.tracing.TracingPickerActivity;
  */
 public class GamesActivity extends BaseActivity {
 
+    /** A game card needs this much for its icon tile beside a short title. */
+    private static final int COLUMN_MIN_DP = 132;
+
+
     private ActivityGamesBinding binding;
 
     @Override
@@ -49,18 +53,22 @@ public class GamesActivity extends BaseActivity {
 
         final GameAdapter adapter = new GameAdapter(buildEntries(),
                 entry -> open(entry.destination));
-        int span = getResources().getInteger(R.integer.games_span);
-        // On a phone the headline card gives up its full-width row so that all eight
+        // On a phone the headline card gives up its full-width row so that all nine
         // cards fit on screen at once; a tablet has the height to keep it.
         final boolean wideHeadline = getResources().getBoolean(R.bool.games_wide_headline);
-        GridLayoutManager manager = new GridLayoutManager(this, span);
+        gridColumns(binding.gamesGrid,
+                getResources().getInteger(R.integer.games_span), COLUMN_MIN_DP);
+        final GridLayoutManager manager =
+                (GridLayoutManager) binding.gamesGrid.getLayoutManager();
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return wideHeadline && adapter.entryAt(position).wide ? span : 1;
+                // Asked again after the columns are settled, so it reads the live
+                // count rather than the number the grid started with.
+                return wideHeadline && adapter.entryAt(position).wide
+                        ? manager.getSpanCount() : 1;
             }
         });
-        binding.gamesGrid.setLayoutManager(manager);
         binding.gamesGrid.setAdapter(adapter);
 
         binding.gamesSettings.setOnClickListener(v -> {

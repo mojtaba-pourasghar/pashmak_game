@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Locale;
 
@@ -59,13 +60,21 @@ public class LullabyActivity extends BaseActivity implements LullabyPlayer.Liste
         attachCompanion();
         shrinkCompanion();
 
-        player = new LullabyPlayer(this);
+        // The player belongs to a holder that outlives this Activity, so a rotation
+        // does not stop the song; only leaving the screen does.
+        player = new ViewModelProvider(this).get(LullabyHolder.class).player();
         player.setRepeatOne(prefs.lullabyRepeat());
         player.setAutoNext(prefs.lullabyAutoNext());
         player.setListener(this);
 
         adapter = new LullabyAdapter(LullabyCatalog.all(), this::pick);
         binding.lullabyList.setAdapter(adapter);
+
+        // Nothing calls back until the next tick, so catch the new screen up with
+        // whatever was already playing before it was built.
+        onTrackChanged(player.index());
+        onPlayingChanged(player.isPlaying());
+        onTimerChanged(player.sleepRemainingMs());
 
         binding.lullabyPlay.setOnClickListener(v -> {
             tap();
@@ -133,8 +142,10 @@ public class LullabyActivity extends BaseActivity implements LullabyPlayer.Liste
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // The holder shuts the player down when the screen is really finished with.
+        // Dropping the listener stops a dying Activity being called back into.
         if (player != null) {
-            player.shutdown();
+            player.setListener(null);
         }
     }
 

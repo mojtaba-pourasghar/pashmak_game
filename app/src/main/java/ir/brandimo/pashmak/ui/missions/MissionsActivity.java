@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
@@ -19,6 +18,9 @@ import ir.brandimo.pashmak.ui.livedrawing.LiveDrawingActivity;
 public class MissionsActivity extends BaseActivity {
 
     private ActivityMissionsBinding binding;
+    /** A mission row needs this much for its picture, its lock and a readable title. */
+    private static final int COLUMN_MIN_DP = 150;
+
     private MissionsViewModel viewModel;
     private MissionAdapter adapter;
 
@@ -40,8 +42,8 @@ public class MissionsActivity extends BaseActivity {
         attachCompanion();
 
         adapter = new MissionAdapter(viewModel.missions(), this::startMission);
-        binding.missionsList.setLayoutManager(new GridLayoutManager(
-                this, getResources().getInteger(R.integer.missions_span)));
+        gridColumns(binding.missionsList,
+                getResources().getInteger(R.integer.missions_span), COLUMN_MIN_DP);
         binding.missionsList.setAdapter(adapter);
 
         viewModel.progress().observe(this, done ->

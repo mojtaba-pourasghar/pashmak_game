@@ -3,6 +3,7 @@ package ir.brandimo.pashmak.ui.story;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
@@ -30,6 +31,9 @@ public class StoryActivity extends GameActivity {
     private static final int STARS_PER_STORY = 4;
 
     private ActivityStoryBinding binding;
+    private static final String STATE_STORY = "story_index";
+    private static final String STATE_BEAT = "beat_index";
+
     private Story story;
     private int storyIndex;
     private int beatIndex;
@@ -77,7 +81,22 @@ public class StoryActivity extends GameActivity {
             }
         });
 
-        openStory(getIntent().getIntExtra(EXTRA_STORY, 0));
+        if (savedInstanceState == null) {
+            openStory(getIntent().getIntExtra(EXTRA_STORY, 0));
+        } else {
+            // Turning the tablet must not start the story again from the first line.
+            openStory(savedInstanceState.getInt(STATE_STORY));
+            beatIndex = Math.max(0, Math.min(savedInstanceState.getInt(STATE_BEAT),
+                    story.size() - 1));
+            renderBeat();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_STORY, storyIndex);
+        outState.putInt(STATE_BEAT, beatIndex);
     }
 
     private void openStory(int index) {

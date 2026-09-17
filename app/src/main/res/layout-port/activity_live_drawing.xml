@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Portrait. The camera and processing steps are the same in both
+     orientations — one is a full-bleed preview and the other is a spinner in
+     the middle of the screen. Only the mission brief and the buttons under a
+     finished scene are rearranged. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/live_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/surface">
+
+    <!-- ============================ 1. Mission brief ============================ -->
+    <!-- The room the child is furnishing, with a dashed spot for every item still
+         to be drawn, and Pashmak standing in it. -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/step_brief"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_screen_draw"
+        android:clipChildren="false"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingTop="@dimen/screen_padding_v"
+        android:paddingEnd="@dimen/screen_padding"
+        android:paddingBottom="@dimen/screen_padding_v">
+
+        <include
+            android:id="@+id/brief_header"
+            layout="@layout/view_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/brief_line"
+            style="@style/Text.Body.Bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_speech_draw"
+            android:paddingStart="14dp"
+            android:paddingTop="9dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="9dp"
+            android:textColor="@color/ink_slate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/brief_header"
+            tools:text="پشمک می‌گه: یه «تخت» می‌خوام. روی کاغذ بکشش!" />
+
+        <ir.brandimo.pashmak.ui.livedrawing.MissionSceneView
+            android:id="@+id/brief_scene"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_frame_scene"
+            app:layout_constraintBottom_toTopOf="@id/brief_end_column"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/brief_line" />
+
+        <ir.brandimo.pashmak.mascot.MascotView
+            android:id="@+id/brief_mascot"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mascot_inline"
+            android:layout_marginStart="6dp"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintBottom_toBottomOf="@id/brief_scene"
+            app:layout_constraintStart_toStartOf="@id/brief_scene" />
+
+        <!-- Portrait: the column becomes a band, and the four item cards lie in a
+             row across it instead of a stack down it. LiveDrawingActivity reads the
+             container's orientation and builds the cards to match, so there is one
+             list of items and two shapes for it, not two lists. -->
+        <LinearLayout
+            android:id="@+id/brief_end_column"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/gap"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/band_min"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/brief_now"
+                    style="@style/Text.Section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/red"
+                    tools:text="الان بکش: تخت" />
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:fillViewport="true"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/brief_slots"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+                </ScrollView>
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/brief_go_camera"
+                style="@style/Button.Chunky.Choice"
+                android:layout_width="@dimen/band_tools"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/gap"
+                android:background="@drawable/btn_orange"
+                android:text="@string/draw_go_camera" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ============================== 2. Camera =============================== -->
+    <FrameLayout
+        android:id="@+id/step_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/cam_bg"
+        android:visibility="gone">
+
+        <androidx.camera.view.PreviewView
+            android:id="@+id/camera_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:scaleType="fitCenter" />
+
+        <ir.brandimo.pashmak.ui.livedrawing.RoiOverlayView
+            android:id="@+id/camera_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/camera_back"
+            style="@style/Button.Round"
+            android:layout_gravity="top|start"
+            android:layout_margin="@dimen/screen_padding"
+            android:background="@drawable/bg_circle_translucent"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back"
+            app:tint="@color/red" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/camera_title"
+            style="@style/Text.Section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_margin="@dimen/screen_padding"
+            android:background="@drawable/bg_chip_dark"
+            android:paddingStart="16dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/white"
+            tools:text="«تخت» رو تو قاب بگیر" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/camera_hint"
+            style="@style/Text.Body.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/bg_banner_dark_translucent"
+            android:paddingStart="16dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="10dp"
+            android:text="@string/cam_hint"
+            android:textColor="@color/white" />
+
+        <!-- Physically on the left whatever the layout direction: the back button
+             sits top-right in this RTL app, and the two should not share a side. -->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layoutDirection="ltr">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/camera_shutter"
+                android:layout_width="78dp"
+                android:layout_height="78dp"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/bg_shutter"
+                android:contentDescription="@string/cam_shutter"
+                android:padding="22dp"
+                android:src="@drawable/ic_camera"
+                app:tint="@color/white" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/camera_permission_panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#D9000000"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/camera_permission_text"
+                style="@style/Text.Section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/cam_permission_title"
+                android:textColor="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/camera_permission_button"
+                style="@style/Button.Chunky"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/btn_green"
+                android:paddingStart="28dp"
+                android:paddingEnd="28dp"
+                android:text="@string/cam_permission_action" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- ============================ 3. Processing ============================= -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/step_processing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_screen_processing"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/processing_spinner"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/yellow"
+            app:layout_constraintBottom_toTopOf="@id/processing_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/processing_title"
+            style="@style/Text.Section"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@id/processing_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/processing_spinner"
+            tools:text="دارم «تخت» رو جدا می‌کنم…" />
+
+        <ProgressBar
+            android:id="@+id/processing_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="260dp"
+            android:layout_height="14dp"
+            android:layout_marginTop="16dp"
+            android:max="100"
+            android:progressDrawable="@drawable/progress_processing"
+            app:layout_constraintBottom_toTopOf="@id/processing_percent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/processing_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/processing_percent"
+            style="@style/Text.Body.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="#D1FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/processing_bar"
+            tools:text="۴۰٪" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/processing_back"
+            style="@style/Button.Round"
+            android:layout_margin="@dimen/screen_padding"
+            android:background="@drawable/bg_circle_translucent"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/blue_shadow" />
+
+        <LinearLayout
+            android:id="@+id/processing_failure"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#D90E5A80"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/Text.Section"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/processing_failed"
+                android:textColor="@color/white" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/processing_retry"
+                style="@style/Button.Chunky"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/btn_orange"
+                android:paddingStart="28dp"
+                android:paddingEnd="28dp"
+                android:text="@string/processing_retry" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ========================== 4. It came alive =========================== -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/step_alive"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_screen_alive"
+        android:clipChildren="false"
+        android:visibility="gone"
+        android:paddingStart="@dimen/screen_padding"
+        android:paddingTop="@dimen/screen_padding_v"
+        android:paddingEnd="@dimen/screen_padding"
+        android:paddingBottom="@dimen/screen_padding_v">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/alive_back"
+            style="@style/Button.Round"
+            android:contentDescription="@string/back"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/red" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/alive_headline"
+            style="@style/Text.Section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_chip_white"
+            android:paddingStart="16dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="زنده شد! ۲ از ۴" />
+
+        <!-- The scene we compose and save: drawings gathered around the mascot -->
+        <LinearLayout
+            android:id="@+id/alive_scene"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:clipChildren="false"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/alive_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/alive_headline">
+
+            <ir.brandimo.pashmak.ui.livedrawing.MissionSceneView
+                android:id="@+id/alive_scene_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_frame_scene" />
+
+            <ir.brandimo.pashmak.mascot.MascotView
+                android:id="@+id/alive_mascot"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="12dp" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/alive_line"
+            style="@style/Text.Body.Bold"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_speech_alive"
+            android:paddingStart="15dp"
+            android:paddingTop="11dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="11dp"
+            android:textColor="@color/ink_slate"
+            app:layout_constraintBottom_toTopOf="@id/alive_buttons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="«تخت» اومد کنار پشمک." />
+
+        <!-- Portrait: the three of them will not sit across a phone's width, so the
+             one that carries the mission forward keeps a full-width row of its own. -->
+        <LinearLayout
+            android:id="@+id/alive_buttons"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/alive_next"
+                style="@style/Button.Chunky"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_orange"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="18sp"
+                tools:text="بکش: چراغ" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/gap"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/alive_retake"
+                    style="@style/Button.Chunky.Choice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_blue_deep"
+                    android:text="@string/alive_retake" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/alive_gallery"
+                    style="@style/Button.Chunky.Choice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/gap"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_purple"
+                    android:text="@string/alive_gallery" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ir.brandimo.pashmak.mascot.ConfettiView
+        android:id="@+id/live_confetti"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+</FrameLayout>

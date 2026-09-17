@@ -31,43 +31,38 @@
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
-            android:screenOrientation="landscape"
             android:theme="@style/Theme.Pashmak.Splash"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity">
+            tools:ignore="DiscouragedApi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.home.HomeActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.missions.MissionsActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.games.GamesActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".ui.home.HomeActivity" android:exported="false" />
+        <activity android:name=".ui.missions.MissionsActivity" android:exported="false" />
+        <activity android:name=".ui.games.GamesActivity" android:exported="false" />
         <activity
             android:name=".ui.livedrawing.LiveDrawingActivity"
-            android:screenOrientation="landscape"
-            android:exported="false"
-            tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.coloring.ColoringPickerActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.coloring.ColoringActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.freedraw.FreeDrawActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.tracing.TracingPickerActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.tracing.TracingActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.bubbles.BubblePopActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.memory.MemoryPickerActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.memory.MemoryActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.story.StoryPickerActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.story.StoryActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
+            android:exported="false" />
+        <activity android:name=".ui.coloring.ColoringPickerActivity" android:exported="false" />
+        <activity android:name=".ui.coloring.ColoringActivity" android:exported="false" />
+        <activity android:name=".ui.freedraw.FreeDrawActivity" android:exported="false" />
+        <activity android:name=".ui.tracing.TracingPickerActivity" android:exported="false" />
+        <activity android:name=".ui.tracing.TracingActivity" android:exported="false" />
+        <activity android:name=".ui.bubbles.BubblePopActivity" android:exported="false" />
+        <activity android:name=".ui.memory.MemoryPickerActivity" android:exported="false" />
+        <activity android:name=".ui.memory.MemoryActivity" android:exported="false" />
+        <activity android:name=".ui.story.StoryPickerActivity" android:exported="false" />
+        <activity android:name=".ui.story.StoryActivity" android:exported="false" />
         <activity
             android:name=".ui.lullaby.LullabyActivity"
-            android:screenOrientation="landscape"
-            android:exported="false"
-            tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.tale.TalePickerActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.tale.TaleActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.gallery.GalleryActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.gallery.GalleryViewerActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".ui.settings.SettingsActivity" android:screenOrientation="landscape" android:exported="false" tools:ignore="LockedOrientationActivity" />
+            android:exported="false" />
+        <activity android:name=".ui.tale.TalePickerActivity" android:exported="false" />
+        <activity android:name=".ui.tale.TaleActivity" android:exported="false" />
+        <activity android:name=".ui.gallery.GalleryActivity" android:exported="false" />
+        <activity android:name=".ui.gallery.GalleryViewerActivity" android:exported="false" />
+        <activity android:name=".ui.settings.SettingsActivity" android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -72,7 +73,6 @@ public class LiveDrawingActivity extends BaseActivity {
     private boolean cameraBound;
     private boolean capturing;
     private long processingStartedAt;
-    private int sceneSavedForCount = -1;
     /** Set when a scan lands, so the scene knows which drawing should fly in. */
     private int pendingArrivalSlot = -1;
 
@@ -159,24 +159,44 @@ public class LiveDrawingActivity extends BaseActivity {
         renderAlive(mission, items, captured, complete);
     }
 
+    /**
+     * One card per item in the mission. The container is a column down the side of
+     * the screen in landscape and a row across the bottom in portrait, so rather
+     * than keeping two lists this asks the container which way it runs and builds
+     * the cards to suit: stacked and full width in a column, share-and-share-alike
+     * in a row.
+     */
     private void renderSlots(Mission mission, @Nullable List<CapturedItem> items) {
         LinearLayout container = binding.briefSlots;
+        boolean row = container.getOrientation() == LinearLayout.HORIZONTAL;
         container.removeAllViews();
         for (int slot = 0; slot < mission.size(); slot++) {
             CapturedItem captured = itemForSlot(items, slot);
-            View card = buildSlotCard(mission.itemAt(slot), captured, slot);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.bottomMargin = dp(8);
+            View card = buildSlotCard(mission.itemAt(slot), captured, slot, row);
+            LinearLayout.LayoutParams params = row
+                    ? new LinearLayout.LayoutParams(
+                            0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                    : new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+            if (row) {
+                if (slot > 0) {
+                    params.setMarginStart(dp(6));
+                }
+            } else {
+                params.bottomMargin = dp(8);
+            }
             container.addView(card, params);
         }
     }
 
-    private View buildSlotCard(String label, @Nullable CapturedItem captured, int slot) {
+    private View buildSlotCard(String label, @Nullable CapturedItem captured, int slot,
+                               boolean row) {
         LinearLayout card = new LinearLayout(this);
-        card.setOrientation(LinearLayout.HORIZONTAL);
-        card.setGravity(Gravity.CENTER_VERTICAL);
+        // A card in a row is a quarter of the screen wide, so the name goes under the
+        // picture rather than beside it; there is no width to put them side by side.
+        card.setOrientation(row ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+        card.setGravity(Gravity.CENTER);
         card.setPadding(dp(8), dp(8), dp(8), dp(8));
         card.setBackgroundResource(captured != null
                 ? R.drawable.bg_slot_done : R.drawable.bg_slot_empty);
@@ -198,12 +218,23 @@ public class LiveDrawingActivity extends BaseActivity {
 
         AppCompatTextView text = new AppCompatTextView(this);
         text.setText(label);
-        text.setTextSize(13f);
+        text.setTextSize(row ? 12f : 13f);
+        text.setMaxLines(1);
+        text.setEllipsize(TextUtils.TruncateAt.END);
+        text.setGravity(Gravity.CENTER);
         text.setTextColor(ContextCompat.getColor(this,
                 captured != null ? R.color.ink_slate : R.color.blue_slot_ink));
-        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        textParams.setMarginStart(dp(8));
+        LinearLayout.LayoutParams textParams = row
+                ? new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT)
+                : new LinearLayout.LayoutParams(
+                        0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        if (row) {
+            textParams.topMargin = dp(4);
+        } else {
+            textParams.setMarginStart(dp(8));
+        }
         card.addView(text, textParams);
 
         if (captured != null) {
@@ -440,8 +471,7 @@ public class LiveDrawingActivity extends BaseActivity {
 
         renderAliveItems(mission, items);
 
-        if (complete && sceneSavedForCount != captured) {
-            sceneSavedForCount = captured;
+        if (complete && viewModel.claimSceneSave(captured)) {
             celebrate(mission);
         }
     }

@@ -73,7 +73,7 @@ public class MemoryActivity extends GameActivity {
                         FaNum.of(pairs == null ? 0 : pairs),
                         FaNum.of(viewModel.pairCount()))));
         viewModel.finished().observe(this, done -> {
-            if (Boolean.TRUE.equals(done)) {
+            if (Boolean.TRUE.equals(done) && viewModel.claimLevelAward()) {
                 onLevelFinished();
             }
         });

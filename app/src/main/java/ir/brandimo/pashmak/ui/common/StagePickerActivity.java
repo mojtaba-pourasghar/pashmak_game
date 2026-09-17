@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.ColorRes;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import java.util.List;
 
@@ -22,6 +21,9 @@ import ir.brandimo.pashmak.ui.base.BaseActivity;
  */
 public abstract class StagePickerActivity extends BaseActivity
         implements StageAdapter.OnStageClick {
+
+    /** A stage row needs this much for its chip, its lock and a readable title. */
+    private static final int COLUMN_MIN_DP = 150;
 
     protected ActivityStagePickerBinding binding;
     private StageAdapter adapter;
@@ -68,8 +70,8 @@ public abstract class StagePickerActivity extends BaseActivity
         attachCompanion();
 
         adapter = new StageAdapter(accentColor(), this);
-        binding.pickerList.setLayoutManager(new GridLayoutManager(
-                this, getResources().getInteger(R.integer.missions_span)));
+        gridColumns(binding.pickerList,
+                getResources().getInteger(R.integer.missions_span), COLUMN_MIN_DP);
         binding.pickerList.setAdapter(adapter);
     }
 

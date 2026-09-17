@@ -48,4 +48,10 @@
     <dimen name="lullaby_row">38dp</dimen>
     <dimen name="lullaby_step">50dp</dimen>
     <dimen name="story_line_min">52dp</dimen>
+    <!-- Portrait: the side column becomes a band across the bottom. band_tools is
+         what the buttons at the end of it get, band_min what the band itself cannot
+         go under. In portrait the short edge is the WIDTH, so these are the same
+         budget the landscape column spends on height, turned ninety degrees. -->
+    <dimen name="band_tools">140dp</dimen>
+    <dimen name="band_min">60dp</dimen>
 </resources>

@@ -3,8 +3,10 @@ package ir.brandimo.pashmak.ui.tracing;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import ir.brandimo.pashmak.R;
 import ir.brandimo.pashmak.audio.AudioManifest;
@@ -13,6 +15,7 @@ import ir.brandimo.pashmak.data.catalog.Palette;
 import ir.brandimo.pashmak.data.catalog.TraceCatalog;
 import ir.brandimo.pashmak.databinding.ActivityTracingBinding;
 import ir.brandimo.pashmak.ui.base.GameActivity;
+import ir.brandimo.pashmak.ui.common.CanvasKeeper;
 import ir.brandimo.pashmak.util.FaNum;
 
 /**
@@ -29,6 +32,9 @@ public class TracingActivity extends GameActivity {
     private static final int STARS_PER_GLYPH = 3;
 
     private ActivityTracingBinding binding;
+    private CanvasKeeper keeper;
+    private static final String STATE_GLYPH = "glyph_index";
+
     private String[] glyphs;
     private boolean digitsMode;
     private int index;
@@ -66,8 +72,21 @@ public class TracingActivity extends GameActivity {
 
         digitsMode = getIntent().getBooleanExtra(EXTRA_DIGITS, false);
         glyphs = TraceCatalog.set(this, digitsMode);
-        select(getIntent().getIntExtra(EXTRA_INDEX, 0));
+        select(savedInstanceState == null
+                ? getIntent().getIntExtra(EXTRA_INDEX, 0)
+                : savedInstanceState.getInt(STATE_GLYPH));
+        // select() clears the sheet, so the strokes come back after it, not before.
+        keeper = new ViewModelProvider(this).get(CanvasKeeper.class);
+        binding.traceCanvas.adoptLayer(keeper.take());
+        refreshCoverage();
         mascot.help("trace");
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_GLYPH, index);
+        keeper.hold(binding.traceCanvas.detachLayer());
     }
 
     private void select(int next) {

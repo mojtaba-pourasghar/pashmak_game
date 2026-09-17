@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Portrait. The paper takes the width and the tools lie across the bottom in
+     three short rows: pencils, instruments and thicknesses. Everything is still
+     shown rather than named, which is the point of this screen. -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_plain"
+    android:clipChildren="false"
+    android:paddingStart="@dimen/screen_padding"
+    android:paddingTop="@dimen/screen_padding_v"
+    android:paddingEnd="@dimen/screen_padding"
+    android:paddingBottom="@dimen/screen_padding_v">
+
+    <include
+        android:id="@+id/draw_header"
+        layout="@layout/view_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ir.brandimo.pashmak.ui.common.PaintCanvasView
+        android:id="@+id/draw_canvas"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_frame_draw"
+        app:layout_constraintBottom_toTopOf="@id/draw_tools"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/draw_header" />
+
+    <ScrollView
+        android:id="@+id/draw_tools"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/gap"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <include
+                    android:id="@+id/draw_dock"
+                    layout="@layout/view_mascot_dock_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ir.brandimo.pashmak.ui.common.PenBar
+                    android:id="@+id/draw_pens"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/gap"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/draw_tool_row"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/draw_tool_pencil"
+                        android:layout_width="0dp"
+                        android:layout_height="46dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tool"
+                        android:contentDescription="@string/tool_pencil_thick"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_tool_pencil" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/draw_tool_marker"
+                        android:layout_width="0dp"
+                        android:layout_height="46dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tool"
+                        android:contentDescription="@string/tool_marker"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_tool_marker" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/draw_tool_crayon"
+                        android:layout_width="0dp"
+                        android:layout_height="46dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tool"
+                        android:contentDescription="@string/tool_crayon"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_tool_crayon" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/draw_tool_eraser"
+                        android:layout_width="0dp"
+                        android:layout_height="46dp"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_tool"
+                        android:contentDescription="@string/tool_eraser"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_tool_eraser" />
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/draw_save"
+                    style="@style/Button.Chunky.Choice"
+                    android:layout_width="@dimen/band_tools"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/gap"
+                    android:background="@drawable/btn_green"
+                    android:text="@string/freedraw_save" />
+            </LinearLayout>
+
+            <ir.brandimo.pashmak.ui.common.StrokeBar
+                android:id="@+id/draw_widths"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+        android:id="@+id/dock_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:background="@drawable/bg_speech_bubble"
+        android:paddingStart="11dp"
+        android:paddingTop="9dp"
+        android:paddingEnd="11dp"
+        android:paddingBottom="9dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/draw_tools"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

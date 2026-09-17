@@ -2,6 +2,7 @@ package ir.brandimo.pashmak.ui.tale;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
@@ -29,6 +30,10 @@ public class TaleActivity extends GameActivity {
     public static final String EXTRA_TALE = "tale_index";
 
     private ActivityTaleBinding binding;
+    private static final String STATE_TALE = "tale_index";
+    private static final String STATE_MOMENT = "moment_index";
+    private static final String STATE_PLAYING = "playing";
+
     private Tale tale;
     private int taleIndex;
     private int momentIndex;
@@ -71,7 +76,24 @@ public class TaleActivity extends GameActivity {
             openTale(taleIndex + 1);
         });
 
-        openTale(getIntent().getIntExtra(EXTRA_TALE, 0));
+        if (savedInstanceState == null) {
+            openTale(getIntent().getIntExtra(EXTRA_TALE, 0));
+        } else {
+            // Come back to the same passage of the same tale, paused if it was
+            // paused. A bedtime story that restarts because the child rolled over
+            // with the tablet is worse than no bedtime story.
+            openTale(savedInstanceState.getInt(STATE_TALE));
+            goTo(savedInstanceState.getInt(STATE_MOMENT));
+            setPlaying(savedInstanceState.getBoolean(STATE_PLAYING, true));
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_TALE, taleIndex);
+        outState.putInt(STATE_MOMENT, momentIndex);
+        outState.putBoolean(STATE_PLAYING, playing);
     }
 
     /** The passage is printed in full on screen, so a bubble would say it twice. */

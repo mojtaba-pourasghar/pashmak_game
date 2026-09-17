@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Portrait. The sum and the keypad stack instead of sitting side by
+     side; the twelve keys themselves are unchanged. -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_lock"
+    android:paddingStart="@dimen/screen_padding"
+    android:paddingTop="@dimen/screen_padding_v"
+    android:paddingEnd="@dimen/screen_padding"
+    android:paddingBottom="@dimen/screen_padding_v">
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/gate_close"
+        style="@style/Button.Round"
+        android:background="@drawable/bg_circle_lock"
+        android:contentDescription="@string/back"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/gate_icon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:contentDescription="@string/lock_title"
+        android:src="@drawable/ic_lock"
+        app:layout_constraintBottom_toTopOf="@id/gate_question"
+        app:layout_constraintEnd_toEndOf="@id/gate_question"
+        app:layout_constraintStart_toStartOf="@id/gate_question"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="@color/yellow" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/gate_question"
+        style="@style/Text.Section"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/gate_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gate_icon"
+        tools:text="هفت ضربدر پنج چند می‌شه؟" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/gate_hint"
+        style="@style/Text.Body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/lock_hint"
+        android:textColor="#99FFFFFF"
+        app:layout_constraintBottom_toTopOf="@id/gate_input"
+        app:layout_constraintEnd_toEndOf="@id/gate_question"
+        app:layout_constraintStart_toStartOf="@id/gate_question"
+        app:layout_constraintTop_toBottomOf="@id/gate_question" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/gate_input"
+        style="@style/Text.Display"
+        android:layout_width="180dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_lock_input"
+        android:gravity="center"
+        android:letterSpacing="0.2"
+        android:text="@string/lock_empty"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/gate_keypad"
+        app:layout_constraintEnd_toEndOf="@id/gate_question"
+        app:layout_constraintStart_toStartOf="@id/gate_question"
+        app:layout_constraintTop_toBottomOf="@id/gate_hint" />
+
+    <GridLayout
+        android:id="@+id/gate_keypad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gate_input">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key1"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/bg_key"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="۱"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:tag="1" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key2"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/bg_key"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="۲"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:tag="2" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key3"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/bg_key"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="۳"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:tag="3" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key4"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/bg_key"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="۴"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:tag="4" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key5"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/bg_key"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="۵"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:tag="5" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key6"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/bg_key"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="۶"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:tag="6" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key7"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/bg_key"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="۷"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:tag="7" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key8"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/bg_key"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="۸"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:tag="8" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key9"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/bg_key"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="۹"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:tag="9" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key_backspace"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/bg_key_dim"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="⌫"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key0"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/bg_key"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="۰"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:tag="0" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/key_confirm"
+            style="@style/Button.Chunky"
+            android:layout_width="@dimen/keypad_width"
+            android:layout_height="@dimen/keypad_key"
+            android:layout_columnWeight="1"
+            android:layout_gravity="fill"
+            android:layout_margin="5dp"
+            android:layout_rowWeight="1"
+            android:background="@drawable/btn_green"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:text="✓"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+    </GridLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

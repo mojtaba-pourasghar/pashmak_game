@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -74,6 +75,9 @@ public class PaintCanvasView extends View {
 
     @Nullable
     private Bitmap layer;
+    /** A drawing handed over from the view this one replaced, after a rotation. */
+    @Nullable
+    private Bitmap adopted;
     @Nullable
     private Canvas layerCanvas;
     private Tool tool = Tool.PENCIL;
@@ -248,18 +252,70 @@ public class PaintCanvasView extends View {
         return total == 0 ? 0f : covered / (float) total;
     }
 
+    /**
+     * Takes on a drawing made before the screen was turned.
+     *
+     * <p>The strokes live in a bitmap the size of the view, not in a list, so they
+     * cannot travel in a Bundle — they go in a {@link CanvasKeeper}, which outlives
+     * the rebuild, and arrive here. The paper is a different shape afterwards, so
+     * the drawing is fitted into it.
+     */
+    public void adoptLayer(@Nullable Bitmap saved) {
+        if (saved == null || saved.isRecycled()) {
+            return;
+        }
+        adopted = saved;
+        if (getWidth() > 0 && getHeight() > 0) {
+            installLayer(getWidth(), getHeight());
+        }
+    }
+
+    /**
+     * Hands the drawing over and lets go of it, or null if nothing has been drawn.
+     * The caller owns the bitmap afterwards.
+     */
+    @Nullable
+    public Bitmap detachLayer() {
+        if (!dirty || layer == null || layer.isRecycled()) {
+            return null;
+        }
+        Bitmap out = layer;
+        layer = null;
+        layerCanvas = null;
+        return out;
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (w <= 0 || h <= 0) {
             return;
         }
+        installLayer(w, h);
+    }
+
+    private void installLayer(int w, int h) {
+        boolean adopting = adopted != null;
+        Bitmap previous = adopting ? adopted : layer;
         Bitmap next = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(next);
-        if (layer != null) {
-            canvas.drawBitmap(layer, 0f, 0f, null);
-            layer.recycle();
+        if (previous != null && !previous.isRecycled()) {
+            // Fitted, not pinned to the top-left. Turning a tablet makes the paper a
+            // different shape, and a child's drawing should survive that whole
+            // rather than be cropped at the old edges.
+            float scale = Math.min(w / (float) previous.getWidth(),
+                    h / (float) previous.getHeight());
+            Matrix matrix = new Matrix();
+            matrix.setScale(scale, scale);
+            matrix.postTranslate((w - previous.getWidth() * scale) / 2f,
+                    (h - previous.getHeight() * scale) / 2f);
+            canvas.drawBitmap(previous, matrix, bitmapPaint);
+            if (adopting) {
+                dirty = true;
+            }
+            previous.recycle();
         }
+        adopted = null;
         layer = next;
         layerCanvas = canvas;
     }

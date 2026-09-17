@@ -2,6 +2,7 @@ package ir.brandimo.pashmak.ui.bubbles;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -32,6 +33,12 @@ public class BubblePopActivity extends GameActivity {
     private ActivityBubblePopBinding binding;
     private final Set<String> digitSet = new HashSet<>();
 
+    private static final String STATE_SEED = "round_seed";
+    private static final String STATE_ROUND = "round_index";
+    private static final String STATE_POPPED = "round_popped";
+    private static final String STATE_SCORE = "score";
+
+    private long seed;
     private List<BubbleRound> rounds;
     private int roundIndex;
     private int poppedThisRound;
@@ -54,8 +61,29 @@ public class BubblePopActivity extends GameActivity {
         binding.bubbleField.setSpeedScale(speedForDifficulty());
         binding.bubbleField.setOnBubblePopped(this::onPopped);
 
-        rounds = BubbleRoundCatalog.session(this);
-        startRound(0);
+        seed = savedInstanceState == null
+                ? new java.util.Random().nextLong()
+                : savedInstanceState.getLong(STATE_SEED);
+        rounds = BubbleRoundCatalog.session(this, seed);
+        if (savedInstanceState == null) {
+            startRound(0);
+        } else {
+            // Rotating is not a reason to lose a game. The rules come back from the
+            // seed and the progress through them from the bundle.
+            score = savedInstanceState.getInt(STATE_SCORE);
+            startRound(savedInstanceState.getInt(STATE_ROUND));
+            poppedThisRound = savedInstanceState.getInt(STATE_POPPED);
+            renderBanner();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(STATE_SEED, seed);
+        outState.putInt(STATE_ROUND, roundIndex);
+        outState.putInt(STATE_POPPED, poppedThisRound);
+        outState.putInt(STATE_SCORE, score);
     }
 
     private String[] bubbleLabels() {

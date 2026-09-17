@@ -63,16 +63,29 @@ def layout_path(name):
             return p
     return None
 
-def layout_path_for(name, bucket_dirs):
-    """Honours layout-sw600dp/ for the tablet buckets, layout/ otherwise."""
-    if any('sw600' in d or 'sw720' in d for d in bucket_dirs):
-        p = os.path.join(RES, 'layout-sw600dp', name + '.xml')
+# Which folder the platform would actually pick, per bucket and orientation.
+# smallestWidth outranks orientation in the qualifier order, so on a tablet held
+# upright layout-sw600dp/ beats layout-port/ — which is why the sw600 portrait
+# folder has to exist at all.
+def layout_path_for(name, bucket_dirs, portrait=False):
+    """Resolves a layout the way the platform would, for this bucket and turn."""
+    tablet = any('sw600' in d or 'sw720' in d for d in bucket_dirs)
+    order = []
+    if tablet and portrait:
+        order = ['layout-sw600dp-port', 'layout-sw600dp', 'layout-port', 'layout']
+    elif tablet:
+        order = ['layout-sw600dp', 'layout']
+    elif portrait:
+        order = ['layout-port', 'layout']
+    else:
+        order = ['layout']
+    for d in order:
+        p = os.path.join(RES, d, name + '.xml')
         if os.path.exists(p):
             return p
-    p = os.path.join(RES, 'layout', name + '.xml')
-    return p if os.path.exists(p) else None
+    return None
 
-def height_of(node, dims, dirs, depth=0):
+def height_of(node, dims, dirs, depth=0, portrait=False):
     """Vertical space this view cannot give up, margins included."""
     if depth > 16:
         return 0.0
@@ -95,7 +108,8 @@ def height_of(node, dims, dirs, depth=0):
 
     if tag == 'include':
         m = re.match(r'^@layout/(.+)$', node.get('layout') or '')
-        return (required(m.group(1), dims, dirs, depth + 1) if m else 0.0) + margin
+        return (required(m.group(1), dims, dirs, portrait, depth + 1)
+                if m else 0.0) + margin
 
     fixed = dims.get(STYLE_FIXED[style]) if style in STYLE_FIXED else None
     if fixed is None and h not in ('wrap_content', 'match_parent', '0dp'):
@@ -113,14 +127,14 @@ def height_of(node, dims, dirs, depth=0):
         cols = int(node.get(A + 'columnCount') or 1)
         cells = [c for c in kids if c.get(A + 'visibility') != 'gone']
         rows = -(-len(cells) // max(cols, 1))
-        tallest = max((height_of(c, dims, dirs, depth + 1) for c in cells), default=0.0)
+        tallest = max((height_of(c, dims, dirs, depth + 1, portrait) for c in cells), default=0.0)
         own = rows * tallest + pad
     elif tag.endswith('ConstraintLayout'):
-        own = constraint_height(node, kids, dims, dirs, depth) + pad
+        own = constraint_height(node, kids, dims, dirs, depth, portrait) + pad
     elif tag.endswith('LinearLayout') and node.get(A + 'orientation') == 'vertical':
-        own = sum(height_of(c, dims, dirs, depth + 1) for c in kids) + pad
+        own = sum(height_of(c, dims, dirs, depth + 1, portrait) for c in kids) + pad
     elif kids:
-        own = max(height_of(c, dims, dirs, depth + 1) for c in kids) + pad
+        own = max(height_of(c, dims, dirs, depth + 1, portrait) for c in kids) + pad
     else:
         key = STYLE_SIZE.get(style)
         size = dims.get(key, 0) if key else dp(node.get(A + 'textSize'), dims, 0)
@@ -128,14 +142,14 @@ def height_of(node, dims, dirs, depth=0):
         own = text + pad
     return max(own, min_h) + margin
 
-def constraint_height(root, kids, dims, dirs, depth):
+def constraint_height(root, kids, dims, dirs, depth, portrait=False):
     """The tallest top-to-bottom chain, which is what the parent must be able to show."""
     by_id, heights = {}, {}
     for c in kids:
         cid = (c.get(A + 'id') or '').replace('@+id/', '').replace('@id/', '')
         if cid:
             by_id[cid] = c
-        heights[id(c)] = height_of(c, dims, dirs, depth + 1)
+        heights[id(c)] = height_of(c, dims, dirs, depth + 1, portrait)
 
     def ref(c, attr):
         v = c.get(APP + attr) or ''
@@ -167,15 +181,15 @@ def constraint_height(root, kids, dims, dirs, depth):
         tallest = max(tallest, bottom_of(c))
     return tallest
 
-def required(name, dims, dirs, depth=0):
-    key = (name, tuple(dirs))
+def required(name, dims, dirs, portrait=False, depth=0):
+    key = (name, tuple(dirs), portrait)
     if key in CACHE:
         return CACHE[key]
-    path = layout_path_for(name, dirs)
+    path = layout_path_for(name, dirs, portrait)
     if not path:
         return 0.0
     CACHE[key] = 0.0
-    CACHE[key] = height_of(ET.parse(path).getroot(), dims, dirs, depth)
+    CACHE[key] = height_of(ET.parse(path).getroot(), dims, dirs, depth, portrait)
     return CACHE[key]
 
 # bucket -> (value dirs, the shortest screen that bucket can be selected for)
@@ -211,15 +225,34 @@ def generated_content(dims, viewport):
     return problems
 
 
+# The shortest long edge that goes with each bucket, which is the height a screen
+# has when it is held upright. 480x320, 640x360, 960x600, 1280x800.
+PORTRAIT_HEIGHT = {320: 480, 360: 640, 600: 960, 720: 1280}
+
+
 def main():
     failures = 0
     names = sorted(os.path.basename(f)[:-4]
                    for f in glob.glob(os.path.join(RES, 'layout', 'activity_*.xml')))
     names.append('dialog_parent_gate')
-    for label, dirs, viewport in BUCKETS:
+    failures += run(names, portrait=False)
+    print('')
+    print('Held upright — the same devices, turned. The short edge is the width now,')
+    print('so height is no longer the scarce one; this is a floor check, not a squeeze.')
+    failures += run(names, portrait=True)
+    print('\n%s' % ('FAIL: %d screen/bucket combinations overflow' % failures
+                    if failures else
+                    'PASS: every screen fits every bucket, both ways up'))
+    return 1 if failures else 0
+
+
+def run(names, portrait):
+    failures = 0
+    for label, dirs, sw in BUCKETS:
         CACHE.clear()
         dims = load_values(dirs)
-        rows = [(n, required(n, dims, dirs)) for n in names]
+        viewport = PORTRAIT_HEIGHT[sw] if portrait else sw
+        rows = [(n, required(n, dims, dirs, portrait)) for n in names]
         over = [(n, h) for n, h in rows if h > viewport]
         worst = max(rows, key=lambda r: r[1])
         print('%s  (%ddp tall):' % (label, viewport), end=' ')
@@ -231,12 +264,11 @@ def main():
         else:
             print('all fit  (tightest: %s at ~%.0fdp, %.0fdp spare)'
                   % (worst[0], worst[1], viewport - worst[1]))
-        for problem in generated_content(dims, viewport):
-            failures += 1
-            print('    %s  OVER' % problem)
-    print('\n%s' % ('FAIL: %d screen/bucket combinations overflow' % failures
-                    if failures else 'PASS: every screen fits every bucket'))
-    return 1 if failures else 0
+        if not portrait:
+            for problem in generated_content(dims, viewport):
+                failures += 1
+                print('    %s  OVER' % problem)
+    return failures
 
 if __name__ == '__main__':
     sys.exit(main())

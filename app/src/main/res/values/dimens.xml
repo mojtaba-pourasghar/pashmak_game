@@ -2,10 +2,13 @@
 <!--
     Baseline bucket: the SMALLEST screen the app supports.
 
-    The app is landscape-locked, so a device's smallestWidth is its height — and a
-    480x320 phone gives about 300dp of usable height once the padding is off. Every
-    value here is chosen to fit that, and the sw360/sw600/sw720 buckets step up from
-    it. Anything added here must also be considered for the other three.
+    smallestWidth is the device's SHORTER edge and does not change when the screen is
+    turned, so these four buckets are device sizes, not orientations. What does change
+    is which edge is scarce: in landscape a 480x320 phone gives about 300dp of height
+    and plenty of width, and in portrait exactly the other way round. So the same
+    number serves both — it is the budget for whichever axis is the short one — and
+    the landscape layouts spend it on height while the portrait ones spend it on
+    width. Anything added here must also be considered for the other three buckets.
 -->
 <resources>
     <!-- Landscape three-band layout: start rail | center stage | end column -->
@@ -64,4 +67,10 @@
     <dimen name="lullaby_step">44dp</dimen>
     <!-- The narration must not collapse when the choice buttons appear. -->
     <dimen name="story_line_min">40dp</dimen>
+    <!-- Portrait: the side column becomes a band across the bottom. band_tools is
+         what the buttons at the end of it get, band_min what the band itself cannot
+         go under. In portrait the short edge is the WIDTH, so these are the same
+         budget the landscape column spends on height, turned ninety degrees. -->
+    <dimen name="band_tools">120dp</dimen>
+    <dimen name="band_min">54dp</dimen>
 </resources>

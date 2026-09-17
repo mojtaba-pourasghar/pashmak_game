@@ -34,6 +34,7 @@ public class MemoryViewModel extends ViewModel {
     private int level;
     private int pairCount;
     private boolean locked;
+    private boolean awarded;
 
     public LiveData<List<Integer>> cards() {
         return cards;
@@ -68,7 +69,24 @@ public class MemoryViewModel extends ViewModel {
     }
 
     /** Deals a fresh board for the chosen deck and level. */
+    /**
+     * True the first time this board is finished and false ever after.
+     *
+     * <p>The screen learns the board is finished from LiveData, and a new Activity
+     * after a rotation is handed the "finished" it was already showing — which
+     * without this handed out the stars, the fanfare and the jump to the next level
+     * a second time.
+     */
+    public boolean claimLevelAward() {
+        if (awarded) {
+            return false;
+        }
+        awarded = true;
+        return true;
+    }
+
     public void deal(int deckIndex, int level) {
+        awarded = false;
         this.deckIndex = deckIndex;
         this.level = level;
         MemoryDeck deck = MemoryCatalog.deck(deckIndex);
