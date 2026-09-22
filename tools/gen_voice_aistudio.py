@@ -55,6 +55,12 @@ from voice_moods import mood_for, tally           # noqa: E402  (after sys.path)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(ROOT, 'app/src/main/res/raw')
 LINES = os.path.join(ROOT, 'tools/all_game_lines.json')
+# res/raw already holds a full set of clips from the old espeak run, so "skip
+# what is already on disk" would skip everything. What has actually been spoken
+# by this engine is written down here instead, and that is what a resume reads —
+# which matters, because the free tier stops after ten calls a day and the run
+# has to pick up later, on a different key.
+LEDGER = os.path.join(ROOT, 'tools/voice_done.json')
 ENDPOINT = ('https://generativelanguage.googleapis.com/v1beta/models/'
             '%s:generateContent')
 MODEL = 'gemini-2.5-flash-preview-tts'
@@ -231,6 +237,22 @@ def write_clip(text, name, voice, model, key, path):
 
 # --- the run ------------------------------------------------------------------
 
+def read_ledger():
+    if not os.path.exists(LEDGER):
+        return {'voice': None, 'model': None, 'done': []}
+    return json.load(io.open(LEDGER, encoding='utf-8'))
+
+
+def write_ledger(ledger):
+    """Written after every clip, and moved into place, so a crash mid-write
+    cannot leave a half-file that loses the whole run's record."""
+    staged = LEDGER + '.part'
+    with io.open(staged, 'w', encoding='utf-8') as out:
+        out.write(json.dumps(ledger, ensure_ascii=False, indent=1,
+                             sort_keys=True))
+    os.replace(staged, LEDGER)
+
+
 def load_lines():
     if not os.path.exists(LINES):
         sys.exit('run tools/build_voice_lines.py first — %s is missing' % LINES)
@@ -275,10 +297,15 @@ def do_all(args, key):
     if not os.path.isdir(RAW):
         sys.exit('no res/raw at %s' % RAW)
 
-    todo = [n for n in names
-            if args.force or not os.path.exists(os.path.join(RAW, n + '.ogg'))]
-    print('%d lines, %d to do, voice %s, model %s'
-          % (len(names), len(todo), args.voice, args.model))
+    ledger = read_ledger()
+    if ledger['voice'] and ledger['voice'] != args.voice and not args.force:
+        sys.exit('the ledger is half a run in %s; pass --force to start over in %s'
+                 % (ledger['voice'], args.voice))
+    ledger['voice'], ledger['model'] = args.voice, args.model
+    spoken = set() if args.force else set(ledger['done'])
+    todo = [n for n in names if n not in spoken]
+    print('%d lines, %d already spoken, %d to do, voice %s, model %s'
+          % (len(names), len(names) - len(todo), len(todo), args.voice, args.model))
     for mood, count in sorted(tally(todo).items(), key=lambda kv: -kv[1]):
         print('   %-10s %d' % (mood, count))
     print()
@@ -289,17 +316,31 @@ def do_all(args, key):
         try:
             size = write_clip(lines[name], name, args.voice, args.model, key, path)
             done += 1
+            ledger['done'].append(name)
+            write_ledger(ledger)
             print('[%4d/%4d] %-28s %-10s %6.1f KB'
-                  % (i, len(todo), name, mood_for(name), size / 1024.0))
+                  % (i, len(todo), name, mood_for(name), size / 1024.0),
+                  flush=True)
         except RuntimeError as problem:
             failed += 1
-            print('[%4d/%4d] %-28s FAILED  %s' % (i, len(todo), name, problem))
+            short = ' '.join(str(problem).split())[:110]
+            print('[%4d/%4d] %-28s FAILED  %s' % (i, len(todo), name, short),
+                  flush=True)
+            # The daily cap is not a hiccup to retry through; it is the end of
+            # today's run, and saying so plainly is what lets a new key pick up.
+            if 'quota' in str(problem).lower() or 'RESOURCE_EXHAUSTED' in str(problem):
+                print('\nthe key is out of quota. %d spoken this run, %d in all.'
+                      % (done, len(ledger['done'])))
+                print('give me another key and the same command carries on '
+                      'from %s.' % name)
+                return
             if failed >= 5 and done == 0:
                 sys.exit('five failures and nothing written — stopping before '
                          'this burns through the quota')
         if args.pause:
             time.sleep(args.pause)
-    print('\nwrote %d, failed %d' % (done, failed))
+    print('\nwrote %d, failed %d, %d of %d done in all'
+          % (done, failed, len(ledger['done']), len(names)))
     if failed:
         print('re-run to pick up what is missing; finished clips are skipped')
 

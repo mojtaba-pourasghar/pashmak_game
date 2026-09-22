@@ -1,0 +1,12 @@
+{
+ "done": [
+  "welcome",
+  "bubble_goal",
+  "bubble_pop",
+  "bubble_round",
+  "bubble_wrong",
+  "digit_0"
+ ],
+ "model": "gemini-2.5-flash-preview-tts",
+ "voice": "Umbriel"
+}
