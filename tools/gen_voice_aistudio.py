@@ -65,8 +65,10 @@ MIN_BYTES = 1200
 # The prebuilt voices, with the character Google gives each one. Pashmak is a
 # small soft bear, so the shortlist at the top is the warm mid-pitched end of it.
 VOICES = [
-    ('Sulafat', 'warm'), ('Algieba', 'smooth'), ('Umbriel', 'easy-going'),
-    ('Achernar', 'soft'), ('Vindemiatrix', 'gentle'), ('Despina', 'smooth'),
+    ('Algieba', 'smooth'), ('Achird', 'friendly'), ('Umbriel', 'easy-going'),
+    ('Iapetus', 'clear'), ('Schedar', 'even'),
+    ('Sulafat', 'warm'), ('Achernar', 'soft'), ('Vindemiatrix', 'gentle'),
+    ('Despina', 'smooth'),
     ('Callirrhoe', 'easy-going'), ('Schedar', 'even'), ('Iapetus', 'clear'),
     ('Charon', 'informative'), ('Rasalgethi', 'informative'),
     ('Zephyr', 'bright'), ('Puck', 'upbeat'), ('Leda', 'youthful'),
@@ -77,7 +79,9 @@ VOICES = [
     ('Algenib', 'gravelly'), ('Sadaltager', 'knowledgeable'),
     ('Pulcherrima', 'forward'),
 ]
-DEFAULT_VOICE = 'Sulafat'
+# Pashmak is a boy bear, so the shortlist above leads with the male voices
+# that sit in the middle of the range; Sulafat is warm but reads female.
+DEFAULT_VOICE = 'Algieba'
 
 # Who is speaking, on every single line. This is the "middle pitch and warm"
 # part, said once so it cannot drift between moods.
