@@ -1,6 +1,17 @@
 # -*- coding: utf-8 -*-
-"""Regenerates res/raw/audio_manifest.txt from the strings and the story catalog."""
+"""Rebuilds the audio manifest from the strings and the story catalog.
+
+res/raw/audio_manifest.txt is no longer a generated file. Its Persian has been
+vowelised by hand, line by line, and it is now the source of truth for how every
+clip is pronounced — tools/build_voice_lines.py reads it, and the voice is built
+from it. This script can still rebuild the listing from the Java, but it writes
+to tools/audio_manifest.generated.txt so that a routine run cannot quietly
+degrade the real one. Pass --overwrite to write the shipped file, and expect to
+re-vowelise whatever it reports as changed.
+"""
 import re, io, os, sys
+
+OVERWRITE = '--overwrite' in sys.argv
 
 ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                     'app/src/main')
@@ -14,6 +25,56 @@ def S(key, *subs):
     for i, sub in enumerate(subs):
         text = text.replace('%%%d$s' % (i + 1), sub)
     return text
+
+
+# ---------------------------------------------------------------------------
+# The text in the existing file has been vowelised by hand — every short vowel
+# written in, so a synthesiser reads «شَب شُدِه بُود» instead of guessing at
+# «شب شده بود». That work lives only in this file, and this script rebuilds the
+# file from the Java, so without what follows one routine run would erase all of
+# it. Lines are therefore carried across by clip name.
+#
+# A line whose words have actually changed cannot keep the old vowels, so those
+# are reported: they are the ones that need doing again.
+HARAKAT = '\u064b\u064c\u064d\u064e\u064f\u0650\u0651\u0652\u0670'
+EXISTING = {}
+STALE = []
+
+
+def _bare(value):
+    return ' '.join(c for c in value if c not in HARAKAT).replace('  ', ' ')
+
+
+def _plain(value):
+    return re.sub(r'\s+', ' ', ''.join(
+        c for c in value if c not in HARAKAT)).strip()
+
+
+_manifest_path = ROOT + '/res/raw/audio_manifest.txt'
+if os.path.exists(_manifest_path):
+    for _line in io.open(_manifest_path, encoding='utf-8').read().split('\n'):
+        _stripped = _line.strip()
+        for _sep in (':', ' '):
+            _head, _, _tail = _stripped.partition(_sep)
+            _head = _head.strip()
+            if re.fullmatch(r'[a-z][a-z0-9_]*', _head) and _tail.strip():
+                if any(c in HARAKAT for c in _tail):
+                    if (_head not in EXISTING
+                            or len(_tail.strip()) > len(EXISTING[_head])):
+                        EXISTING[_head] = _tail.strip()
+                break
+
+
+def spoken(name, text):
+    """The vowelised reading of a line, when there is one for these same words."""
+    kept = EXISTING.get(name)
+    if kept is None:
+        return text
+    if _plain(kept) == _plain(text):
+        return kept
+    STALE.append(name)
+    return text
+
 
 out = []
 W = out.append
@@ -49,7 +110,7 @@ def section(title):
     W('-' * len(title))
 
 def row(name, text):
-    W('  %-22s %s' % (name, text))
+    W('  %-22s %s' % (name, spoken(name, text)))
 
 section('1. BACKGROUND MUSIC  (looping, instrumental, no singing)')
 W('These are the three files to drop in for background music:')
@@ -181,10 +242,12 @@ for block in blocks:
         block)
     praise_iter = iter(praises)
     for i, (kind, text) in enumerate(beats):
-        W('    %-20s %s' % ('story_%s_%d' % (sid, i), text))
+        _clip = 'story_%s_%d' % (sid, i)
+        W('    %-20s %s' % (_clip, spoken(_clip, text)))
         if kind == 'ask':
             try:
-                W('    %-20s %s' % ('story_%s_%d_yes' % (sid, i), next(praise_iter)))
+                _yes = 'story_%s_%d_yes' % (sid, i)
+                W('    %-20s %s' % (_yes, spoken(_yes, next(praise_iter))))
             except StopIteration:
                 pass
 W('')
@@ -201,12 +264,17 @@ W('')
 tale_src = io.open(ROOT + '/java/ir/brandimo/pashmak/data/catalog/TaleCatalog.java',
                    encoding='utf-8').read()
 tales = re.findall(r'new Tale\(\s*"([^"]+)",\s*"([^"]+)"', tale_src)
-moments = [len(re.findall(r'\bat\(\d+, "', b))
-           for b in re.split(r'new Tale\(', tale_src)[1:]]
-for (tid, title), count in zip(tales, moments):
-    W('  %-28s %-22s %s passage(s)' % ('tale_%s_0 …' % tid, title, count))
-W('')
-W('  %d tales, %d passages in all.' % (len(tales), sum(moments)))
+# Every passage is listed by name, because that listing is where the vowelised
+# reading of each one lives; a summary row would throw 578 of them away.
+passages = [re.findall(r'\bat\(\d+, "((?:[^"\\]|\\.)*)"', b)
+            for b in re.split(r'new Tale\(', tale_src)[1:]]
+W('  %d tales, %d passages in all:' % (len(tales), sum(len(p) for p in passages)))
+for (tid, title), texts in zip(tales, passages):
+    W('')
+    W('  %s — %s' % (title, tid))
+    for i, text in enumerate(texts):
+        _clip = 'tale_%s_%d' % (tid, i)
+        W('  %-28s %s' % (_clip, spoken(_clip, text)))
 
 section('13. SOUND EFFECTS  (short, under a second)')
 W('  sfx_pop       a bubble bursting')
@@ -221,5 +289,15 @@ W('  sfx_whoosh    a screen or an item moving')
 W('  sfx_fanfare   a mission or a story finishing')
 
 W('')
-io.open(ROOT + '/res/raw/audio_manifest.txt', 'w', encoding='utf-8').write('\n'.join(out))
-print('wrote', len(out), 'lines')
+_target = (ROOT + '/res/raw/audio_manifest.txt' if OVERWRITE
+           else os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'audio_manifest.generated.txt'))
+io.open(_target, 'w', encoding='utf-8').write('\n'.join(out))
+print('wrote %d lines to %s' % (len(out), os.path.relpath(_target, os.getcwd())))
+if not OVERWRITE:
+    print('the shipped res/raw/audio_manifest.txt was left alone, because its')
+    print('vowels are hand-written; pass --overwrite only if you mean to redo them')
+print('vowelised readings carried across: %d' % (len(EXISTING) - len(STALE)))
+if STALE:
+    print('these lines changed wording, so their vowels were dropped and need')
+    print('doing again: %s' % ', '.join(sorted(set(STALE))[:10]))

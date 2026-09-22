@@ -163,6 +163,36 @@ The device's speech engine is still there behind it (`audio/SpeechEngine`, pitch
 rate 0.92, Google's engine asked first by name, then the default, then everything
 else) but it is now only a fallback for a line whose clip is missing.
 
+**Replacing it with a neural voice.** The eSpeak clips are a floor, not the goal, and
+the tooling to lift them is in `tools/gen_voice_neural.py`: it speaks every line with
+`fa-IR-FaridNeural` and writes the same 1,136 file names into `res/raw`, so nothing in
+the app changes — the new files simply win. It reads
+`tools/all_game_lines.json`, which `tools/build_voice_lines.py` builds out of
+`res/raw/audio_manifest.txt`, and that is the point of the exercise: the Persian in the
+manifest has been **vowelised by hand**, every short vowel written in, because Persian
+leaves them out and a synthesiser otherwise guesses. «شب شده بود» and «شَب شُدِه بُود»
+are the same words and two different readings. 1,099 of the 1,136 lines are vowelised
+today.
+
+The pace and the lift change line by line, so praise sounds pleased and a wrong answer
+sounds kind rather than disappointed — six moods, from `-2%/+48Hz` for a win down to
+`-20%/+26Hz` for a lullaby. Each clip is written to a temporary file and moved into
+place only once it is big enough to be speech, so an interrupted run never leaves a
+silent file behind, and re-running it skips what is already done.
+
+It has to run on your own machine, not here: `edge-tts` speaks over a WebSocket and
+this agent's proxy does not carry WebSocket upgrades. `pip install edge-tts`, have
+`ffmpeg` on PATH (or `mpg123`/`lame` plus `oggenc`), then
+
+    python3 tools/build_voice_lines.py
+    python3 tools/gen_voice_neural.py
+
+**`res/raw/audio_manifest.txt` is hand-maintained now.** It started as generated output
+and is no longer: its vowels are the source of truth for pronunciation. So
+`tools/gen_manifest.py` writes to `tools/audio_manifest.generated.txt` instead, and
+only touches the shipped file when passed `--overwrite` — which costs whatever vowels
+it cannot carry across by clip name, and it reports those.
+
 **The background music and the sound effects ship too.** Three seamless loops from
 `tools/gen_bgm.py` — the join is made by folding the ringing tail back over the
 opening, and the tool fails if the step across the join is audible — and ten short
