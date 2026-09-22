@@ -35,6 +35,9 @@ import subprocess
 import sys
 import tempfile
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from voice_moods import mood_for as mood_key   # noqa: E402  (after sys.path)
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(ROOT, 'app/src/main/res/raw')
 LINES = os.path.join(ROOT, 'tools/all_game_lines.json')
@@ -52,49 +55,21 @@ MIN_BYTES = 1200
 # Persian neural voices do not take Azure's express-as style tags, so the feeling
 # is carried by pace, lift and loudness instead — which is most of what a listener
 # actually hears. Ordered: the first pattern that matches a clip name wins.
-# Each rule says how it matches. A pattern that is merely "somewhere in the name"
-# is how thirty passages of the candle tale (tale_candle_night_*) ended up read in
-# the bedtime voice, because 'night_' appears in the middle of them. So prefixes
-# match the start and nothing else, and only the handful of things that genuinely
-# live in the middle of a name are looked for there.
-MOODS = [
-    # Delighted. A child has just got something right and should hear it. '_yes'
-    # is the praise a story gives for finding the right thing — story_<id>_<n>_yes
-    # — which is the one moment in a story that must not sound calm.
-    (('win', 'memory_match', 'memory_win', 'paint_right', 'paint_done',
-      'trace_done', 'bubble_pop', 'bubble_round', 'mission_done', 'item_arrived',
-      'story_end', 'tale_done', 'giggle'),
-     ('_yes',),
-     dict(rate='-2%', pitch='+48Hz', volume='+8%')),
-
-    # Kind. They got it wrong, and nothing here is allowed to sound disappointed.
-    (('try_again', 'memory_miss', 'paint_wrong', 'trace_more', 'story_wrong',
-      'bubble_wrong', 'draw_empty', 'stage_locked'),
-     (),
-     dict(rate='-12%', pitch='+30Hz', volume='-6%')),
-
-    # Bedtime. The slowest and softest thing in the app.
-    (('night_', 'lullaby'), (),
-     dict(rate='-20%', pitch='+26Hz', volume='-12%')),
-
-    # A letter or a digit on its own: said slowly, and only once.
-    (('letter_', 'digit_'), (),
-     dict(rate='-22%', pitch='+38Hz', volume='+0%')),
-
-    # Telling a story: measured, word by word, room to picture it.
-    (('story_', 'tale_'), (),
-     dict(rate='-14%', pitch='+36Hz', volume='+0%')),
-]
-
-# Everything else: the mascot talking during a game. Warm and unhurried.
-DEFAULT_MOOD = dict(rate='-6%', pitch='+42Hz', volume='+0%')
+# How each mood is bent out of a flat reading. Which line is in which mood is
+# not decided here — tools/voice_moods.py holds that, so this script and
+# tools/gen_voice_aistudio.py cannot drift apart on it.
+MOODS = {
+    'delighted': dict(rate='-2%', pitch='+48Hz', volume='+8%'),
+    'kind':      dict(rate='-12%', pitch='+30Hz', volume='-6%'),
+    'bedtime':   dict(rate='-20%', pitch='+26Hz', volume='-12%'),
+    'glyph':     dict(rate='-22%', pitch='+38Hz', volume='+0%'),
+    'story':     dict(rate='-14%', pitch='+36Hz', volume='+0%'),
+    'game':      dict(rate='-6%', pitch='+42Hz', volume='+0%'),
+}
 
 
 def mood_for(name):
-    for starts, contains, mood in MOODS:
-        if name.startswith(starts) or any(bit in name for bit in contains):
-            return mood
-    return DEFAULT_MOOD
+    return MOODS[mood_key(name)]
 
 
 def polish(text):

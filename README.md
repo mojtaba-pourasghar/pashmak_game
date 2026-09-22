@@ -187,6 +187,29 @@ this agent's proxy does not carry WebSocket upgrades. `pip install edge-tts`, ha
     python3 tools/build_voice_lines.py
     python3 tools/gen_voice_neural.py
 
+**Or with Google AI Studio**, which is the better instrument and, unlike edge-tts, can
+run from here: `tools/gen_voice_aistudio.py` calls Gemini TTS over plain HTTPS. The
+difference is that the voice is directed in words rather than in percentages — «sound
+genuinely delighted and proud of the child» is the literal instruction — so the emotion
+comes from the model rather than from bending the pitch of a flat reading. It needs a
+key from <https://aistudio.google.com/apikey> in `GEMINI_API_KEY`, and it decodes the
+returned PCM straight to Vorbis with `oggenc`, so it wants no ffmpeg at all.
+
+    export GEMINI_API_KEY=...
+    python3 tools/gen_voice_aistudio.py --sample     # one line, five voices
+    python3 tools/gen_voice_aistudio.py              # then all 1,136
+
+`--sample` exists because Persian is not on Google's published language list for these
+models. It very likely reads it anyway, but that is a thing to learn from one call
+rather than from 1,136.
+
+Which line is said in which mood lives in `tools/voice_moods.py` and nowhere else, so
+the two generators cannot drift apart on it. That file is where both of the faults
+worth naming were fixed: a story's `_yes` line is its praise for finding the right
+thing and was being read in the calm storytelling voice, and `night_` looked for
+anywhere in a name also matches `tale_candle_night_*`, which read thirty passages of
+that tale as a bedtime whisper.
+
 **`res/raw/audio_manifest.txt` is hand-maintained now.** It started as generated output
 and is no longer: its vowels are the source of truth for pronunciation. So
 `tools/gen_manifest.py` writes to `tools/audio_manifest.generated.txt` instead, and
