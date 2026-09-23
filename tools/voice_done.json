@@ -8,7 +8,9 @@
   "digit_0",
   "digit_1",
   "digit_2",
-  "digit_3"
+  "digit_3",
+  "digit_4",
+  "digit_5"
  ],
  "model": "gemini-2.5-flash-preview-tts",
  "voice": "Umbriel"
