@@ -96,8 +96,14 @@ def engine(args):
     """
     try:
         from f5_tts.api import F5TTS
-    except ImportError:
-        sys.exit('pip install f5-tts soundfile torch')
+    except ImportError as missing:
+        # Naming the interpreter matters: pip on PATH is very often a different
+        # Python from the one running this, and then a package that really was
+        # installed is still not importable here.
+        sys.exit('%s\n\nf5-tts is not importable by this interpreter:\n  %s\n\n'
+                 'install it into that same one:\n  %s -m pip install f5-tts '
+                 'soundfile torch'
+                 % (missing, sys.executable, sys.executable))
 
     tried = []
     for attempt in ('model', 'model_type'):
