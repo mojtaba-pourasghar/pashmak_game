@@ -49,6 +49,7 @@ import wave
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from voice_moods import mood_for, tally               # noqa: E402
+from build_ipa_lines import degeminate                # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(ROOT, 'app/src/main/res/raw')
@@ -81,6 +82,9 @@ def polish(text):
     for verb in ('گفت:', 'پرسید:', 'گفتن:', 'می‌گفت:'):
         t = t.replace(verb, verb[:-1] + '، ')
     t = t.replace('‌', ' ')                      # the half-space is silent
+    # espeak says the *name* of a shadda instead of doubling the consonant,
+    # so «غُصِّه» comes out as "ghosse-tashdid". 76 lines carry one.
+    t = degeminate(t)
     # «!» read flat by espeak; a comma before it gives the sentence somewhere to
     # lift, which is most of what makes a greeting sound pleased.
     return ' '.join(t.split())

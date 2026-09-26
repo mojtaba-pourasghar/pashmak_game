@@ -38,12 +38,36 @@ def from_manifest(names):
         for sep in (':', ' '):
             head, _, tail = stripped.partition(sep)
             head = head.strip()
-            if head in names and tail.strip():
-                # The longest match wins: story_x_1 must not swallow story_x_1_yes.
-                if head not in found or len(tail.strip()) > len(found[head]):
-                    found[head] = tail.strip()
+            tail = tail.strip()
+            if head in names and tail:
+                if _better(tail, found.get(head)):
+                    found[head] = tail
                 break
     return found
+
+
+def _persian(value):
+    return bool(re.search('[\u0600-\u06ff]', value))
+
+
+def _better(candidate, held):
+    """Whether this row is a truer reading of the clip than the one already kept.
+
+    Two rules, and the first exists because the manifest also explains itself in
+    prose. «help_mission is shown with the mission and item names filled in» opens
+    with a clip's name and is longer than the line that clip actually says, so on
+    length alone it won — and Pashmak would have read an English sentence about
+    recording to a Persian four-year-old. A row in Persian always beats one that
+    is not.
+
+    Among rows that are both Persian, the longest wins, so that story_x_1 does not
+    swallow story_x_1_yes.
+    """
+    if held is None:
+        return True
+    if _persian(candidate) != _persian(held):
+        return _persian(candidate)
+    return len(candidate) > len(held)
 
 
 def main():
