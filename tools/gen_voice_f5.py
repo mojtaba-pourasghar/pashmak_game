@@ -120,8 +120,17 @@ def preflight(args):
                             % (module, why, ' '.join(str(broken).split())[:200]))
 
     if not shutil.which('oggenc'):
-        problems.append('oggenc is not on PATH. It turns the model output into the\n'
-                        '    .ogg the app plays. Install vorbis-tools.')
+        if args.sample:
+            print('oggenc is not on PATH, so this sample is written as .wav. That is\n'
+                  'fine to listen to; the full run needs it, because 104 minutes of\n'
+                  'wav is about 300 MB and will not ship in an apk. vorbis-tools.\n',
+                  file=sys.stderr)
+        else:
+            problems.append(
+                'oggenc is not on PATH. The whole set is 104 minutes of speech, which\n'
+                '    is about 300 MB as wav and 25 MB as ogg, so this is not optional\n'
+                '    for the full run. Install vorbis-tools. (--sample works without\n'
+                '    it and writes .wav instead.)')
 
     if not os.path.exists(args.ref):
         problems.append('no reference clip at %s' % args.ref)
@@ -181,7 +190,18 @@ def _pick(files, endings):
 
 
 def to_ogg(wav, path):
-    subprocess.check_call(['oggenc', '-Q', '-q', '3', '-o', path, wav])
+    """Vorbis when oggenc is here; otherwise the wav itself, renamed.
+
+    Android resolves R.raw.<name> by name and does not care about the extension,
+    so a .wav plays as happily as a .ogg — it is only far larger, which is why
+    the full run insists on the encoder and a single sample does not.
+    """
+    if shutil.which('oggenc'):
+        subprocess.check_call(['oggenc', '-Q', '-q', '3', '-o', path, wav])
+        return path
+    fallback = os.path.splitext(path)[0] + '.wav'
+    shutil.copyfile(wav, fallback)
+    return fallback
 
 
 def write_clip(tts, phonemes, mood, args, path):
@@ -198,15 +218,17 @@ def write_clip(tts, phonemes, mood, args, path):
         with wave.open(wav, 'rb') as w:
             if not w.getnframes():
                 raise RuntimeError('the model returned no audio')
-        to_ogg(wav, staged)
-        if os.path.getsize(staged) < MIN_BYTES:
+        written = to_ogg(wav, staged)
+        if os.path.getsize(written) < MIN_BYTES:
             raise RuntimeError('encoded to almost nothing')
-        os.replace(staged, path)
+        final = path if written == staged else os.path.splitext(path)[0] + '.wav'
+        os.replace(written, final)
     finally:
-        for leftover in (wav, staged):
+        for leftover in (wav, staged, staged + '.wav',
+                         os.path.splitext(staged)[0] + '.wav'):
             if os.path.exists(leftover):
                 os.unlink(leftover)
-    return os.path.getsize(path)
+    return final, os.path.getsize(final)
 
 
 def do_sample(args):
@@ -224,8 +246,8 @@ def do_sample(args):
                                'model\'s own'))
     tts = engine(args)
     path = os.path.join(SAMPLES, '%s__f5.ogg' % name)
-    size = write_clip(tts, ipa[name], mood, args, path)
-    print('wrote %s  (%.1f KB)' % (os.path.relpath(path, ROOT), size / 1024.0))
+    written, size = write_clip(tts, ipa[name], mood, args, path)
+    print('wrote %s  (%.1f KB)' % (os.path.relpath(written, ROOT), size / 1024.0))
 
 
 def do_all(args):
@@ -251,7 +273,7 @@ def do_all(args):
     for i, name in enumerate(todo, 1):
         path = os.path.join(RAW, name + '.ogg')
         try:
-            size = write_clip(tts, ipa[name], mood_for(name), args, path)
+            _written, size = write_clip(tts, ipa[name], mood_for(name), args, path)
             done += 1
             ledger['done'].append(name)
             write_ledger(ledger)
