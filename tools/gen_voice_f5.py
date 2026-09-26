@@ -86,12 +86,52 @@ def load(path, what):
 
 
 def engine(args):
-    """The model, loaded once. Importing here keeps --help working without torch."""
+    """The model, loaded once. Imported here so --help works without torch.
+
+    f5-tts has changed how a model is named more than once, and a community model
+    is not one of its built-ins, so three ways are tried in turn rather than
+    betting on one: the repo id straight in, the same as the older `model_type`
+    keyword, and — what usually does it — fetching the checkpoint and the vocab
+    out of the repo and passing those as files.
+    """
     try:
         from f5_tts.api import F5TTS
     except ImportError:
         sys.exit('pip install f5-tts soundfile torch')
-    return F5TTS(model=args.model, device=args.device)
+
+    tried = []
+    for attempt in ('model', 'model_type'):
+        try:
+            return F5TTS(**{attempt: args.model}, device=args.device)
+        except Exception as problem:                       # noqa: BLE001
+            tried.append('%s= -> %s' % (attempt, ' '.join(str(problem).split())[:90]))
+
+    try:
+        from huggingface_hub import list_repo_files, hf_hub_download
+    except ImportError:
+        sys.exit('pip install huggingface_hub\n  ' + '\n  '.join(tried))
+    try:
+        files = list_repo_files(args.model)
+    except Exception as problem:                           # noqa: BLE001
+        sys.exit('cannot reach %s: %s\n  %s'
+                 % (args.model, problem, '\n  '.join(tried)))
+
+    ckpt = args.ckpt or _pick(files, ('.safetensors', '.pt'))
+    vocab = args.vocab or _pick(files, ('vocab.txt',))
+    if not ckpt:
+        sys.exit('no checkpoint in %s — its files are:\n  %s'
+                 % (args.model, '\n  '.join(files)))
+    print('loading %s (%s)' % (args.model, ckpt))
+    kwargs = dict(ckpt_file=hf_hub_download(args.model, ckpt), device=args.device)
+    if vocab:
+        kwargs['vocab_file'] = hf_hub_download(args.model, vocab)
+    return F5TTS(**kwargs)
+
+
+def _pick(files, endings):
+    """The likeliest file, preferring a plain name over a checkpoint-N one."""
+    hits = [f for f in files if f.endswith(endings)]
+    return sorted(hits, key=lambda f: (len(f), f))[0] if hits else None
 
 
 def to_ogg(wav, path):
@@ -186,15 +226,27 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.add_argument('--model', default=MODEL)
     parser.add_argument('--device', default=None, help='cuda, mps or cpu')
-    parser.add_argument('--ref', help='a few seconds of the voice to clone')
-    parser.add_argument('--ref-text', default='',
-                        help='what the reference clip says; F5 can guess it')
+    # The Umbriel greeting is committed as res/raw/welcome.ogg, so the voice you
+    # already chose is the default reference and --sample needs no arguments.
+    parser.add_argument('--ref', default=os.path.join(RAW, 'welcome.ogg'),
+                        help='a few seconds of the voice to clone')
+    parser.add_argument('--ref-text', default=None,
+                        help='what the reference clip says; taken from the '
+                             'manifest when the reference is welcome.ogg')
+    parser.add_argument('--ckpt', help='checkpoint inside the model repo')
+    parser.add_argument('--vocab', help='vocab file inside the model repo')
     parser.add_argument('--seed', type=int, default=1234,
                         help='fixed, so every line sounds like the same bear')
     parser.add_argument('--only', help='only clips whose name starts with this')
     parser.add_argument('--force', action='store_true')
     parser.add_argument('--sample', nargs='?', const='welcome')
     args = parser.parse_args()
+    if args.ref_text is None:
+        same = os.path.abspath(args.ref) == os.path.abspath(
+            os.path.join(RAW, 'welcome.ogg'))
+        args.ref_text = load(TEXT, 'build_voice_lines.py')['welcome'] if same else ''
+    if not os.path.exists(args.ref):
+        sys.exit('no reference clip at %s' % args.ref)
     if args.sample:
         do_sample(args)
     else:
