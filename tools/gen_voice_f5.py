@@ -37,6 +37,7 @@ import argparse
 import io
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -46,7 +47,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from voice_moods import mood_for, tally                  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RAW = os.path.join(ROOT, 'app/src/main/res/raw')
+RAW = os.path.normpath(os.path.join(ROOT, 'app/src/main/res/raw'))
 IPA = os.path.join(ROOT, 'tools/all_game_ipa.json')
 TEXT = os.path.join(ROOT, 'tools/all_game_lines.json')
 LEDGER = os.path.join(ROOT, 'tools/voice_done_f5.json')
@@ -85,6 +86,53 @@ def load(path, what):
     return json.load(io.open(path, encoding='utf-8'))
 
 
+def preflight(args):
+    """Every environment problem at once, in words, before anything slow starts.
+
+    Each of these has already cost a round trip on its own, and each arrived as a
+    traceback rather than as a thing to do. Note that a broken torch raises
+    OSError, not ImportError — on Windows it is WinError 1114 out of c10.dll —
+    so catching ImportError alone lets the ugliest of them through.
+    """
+    problems = []
+
+    if sys.version_info[:2] >= (3, 14):
+        problems.append(
+            'Python %d.%d is newer than PyTorch builds for. That is what a DLL\n'
+            '    initialization failure in c10.dll means. Install Python 3.12 and\n'
+            '    make a venv with it:\n'
+            '      py -3.12 -m venv .venv\n'
+            '      .venv\\Scripts\\activate      (Windows)\n'
+            '      python -m pip install f5-tts soundfile torch'
+            % sys.version_info[:2])
+
+    for module, why in (('torch', 'the model runs on it'),
+                        ('soundfile', 'the audio is written with it'),
+                        ('f5_tts', 'the model itself')):
+        try:
+            __import__(module)
+        except ImportError:
+            problems.append('%s is not installed (%s):\n      %s -m pip install %s'
+                            % (module, why, sys.executable,
+                               'f5-tts' if module == 'f5_tts' else module))
+        except OSError as broken:
+            problems.append('%s is installed but will not load (%s):\n    %s'
+                            % (module, why, ' '.join(str(broken).split())[:200]))
+
+    if not shutil.which('oggenc'):
+        problems.append('oggenc is not on PATH. It turns the model output into the\n'
+                        '    .ogg the app plays. Install vorbis-tools.')
+
+    if not os.path.exists(args.ref):
+        problems.append('no reference clip at %s' % args.ref)
+
+    if problems:
+        print('\nthis machine is not ready yet:\n', file=sys.stderr)
+        for i, problem in enumerate(problems, 1):
+            print('  %d. %s\n' % (i, problem), file=sys.stderr)
+        sys.exit(1)
+
+
 def engine(args):
     """The model, loaded once. Imported here so --help works without torch.
 
@@ -94,16 +142,8 @@ def engine(args):
     keyword, and — what usually does it — fetching the checkpoint and the vocab
     out of the repo and passing those as files.
     """
-    try:
-        from f5_tts.api import F5TTS
-    except ImportError as missing:
-        # Naming the interpreter matters: pip on PATH is very often a different
-        # Python from the one running this, and then a package that really was
-        # installed is still not importable here.
-        sys.exit('%s\n\nf5-tts is not importable by this interpreter:\n  %s\n\n'
-                 'install it into that same one:\n  %s -m pip install f5-tts '
-                 'soundfile torch'
-                 % (missing, sys.executable, sys.executable))
+    preflight(args)
+    from f5_tts.api import F5TTS
 
     tried = []
     for attempt in ('model', 'model_type'):
