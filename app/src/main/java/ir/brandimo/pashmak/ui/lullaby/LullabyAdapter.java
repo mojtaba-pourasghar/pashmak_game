@@ -73,7 +73,6 @@ public class LullabyAdapter extends RecyclerView.Adapter<LullabyAdapter.LullabyH
 
         void bind(Lullaby lullaby, int position) {
             binding.lullabyTitle.setText(lullaby.title);
-            binding.lullabyLine.setText(lullaby.line);
             binding.lullabyIcon.setImageResource(lullaby.icon);
             binding.lullabyLength.setText(clock(lullaby.seconds));
             boolean isCurrent = position == current;

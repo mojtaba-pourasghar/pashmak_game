@@ -163,22 +163,23 @@ help_mission:بِریم سُراغِ …! اَوَّل … رو رویِ کاغ�
   night_missing          لالاییِ «…» هَنوز ضَبط نَشُده. یکی دیگه رو اِنتِخاب کُن.
 
 
-  And the lullabies themselves — full songs, any length:
-  lullaby_lay_lay        لای‌لایِ گُلِ پونه
-  lullaby_mahe_man       ماهِ مَن بِخواب
-  lullaby_gonjeshk       گُنجِشکِ لالایی
-  lullaby_setare         سِتاره‌ها بیدارَن
-  lullaby_abr_narm       اَبرِ نَرم
-  lullaby_baran          صِدایِ بارون
-  lullaby_ahoo           آهویِ کوچولو
-  lullaby_darya          دَریایِ خواب
-  lullaby_pashmak        لالاییِ پَشمَک
-  lullaby_shab_bekheir   شَب بِه‌خیر ماه
+  And the lullabies themselves. These ten are recordings that ship with the app,
+  not lines to be spoken, so they carry no vowels — a recording sings its own
+  words. Running times were measured from the files.
 
+  lullaby_gonjeshk_sanjab   گنجشک لالا سنجاب لالا      2:10
+  lullaby_mahtab_omade      لالایی مهتاب اومده         3:12
+  lullaby_ghadimi           لالایی قدیمی               5:06
+  lullaby_gahvare_ghadimi   لالایی قدیمی گهواره        5:06
+  lullaby_arusak_jun        عروسک جون                  4:05
+  lullaby_dastan_sorayi     لالایی داستان سورایی       8:17
+  lullaby_la_la_jangal      لالایی لا لا جنگل          3:02
+  lullaby_shab_shode_baz    لالایی شب شده باز          4:14
+  lullaby_farzand_ziba      فرزند زیبا                 5:02
+  lullaby_madar_mikhune     مادر میخونه                3:02
 
-  The titles and the verse under each one live in
-  data/catalog/LullabyCatalog.java — change them there if you record
-  different songs.
+  The titles and the running times live in data/catalog/LullabyCatalog.java.
+  Replace any of these by dropping a file in under the same name.
 
 11. قصه‌ی زنده — THE LIVE STORIES
 ---------------------------------

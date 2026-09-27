@@ -87,16 +87,6 @@
                 android:textSize="18sp"
                 tools:text="لای‌لای گل پونه" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/lullaby_now_line"
-                style="@style/Text.Sub"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="1"
-                android:textColor="@color/night_sub"
-                tools:text="بخواب ای ماه تابونه" />
 
             <LinearLayout
                 android:layout_width="match_parent"

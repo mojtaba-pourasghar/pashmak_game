@@ -204,7 +204,6 @@ public class LullabyActivity extends BaseActivity implements LullabyPlayer.Liste
     private void showTrack(int index) {
         Lullaby lullaby = LullabyCatalog.at(index);
         binding.lullabyNowTitle.setText(lullaby.title);
-        binding.lullabyNowLine.setText(lullaby.line);
         adapter.setCurrent(index, player.isPlaying());
         binding.lullabyList.scrollToPosition(index);
     }
