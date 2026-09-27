@@ -150,7 +150,7 @@ def _context():
     return ssl.create_default_context()
 
 
-def speak(text, name, voice, model, key, tries=5):
+def speak(text, name, voice, model, key, tries=9):
     """One line of Persian, returned as raw PCM plus its sample rate."""
     body = json.dumps({
         'contents': [{'parts': [{'text': '%s\n\n%s' % (direction(name),
@@ -310,7 +310,7 @@ def do_all(args, key):
         print('   %-10s %d' % (mood, count))
     print()
 
-    done = failed = 0
+    done = failed = starved = 0
     for i, name in enumerate(todo, 1):
         path = os.path.join(RAW, name + '.ogg')
         try:
@@ -318,22 +318,30 @@ def do_all(args, key):
             done += 1
             ledger['done'].append(name)
             write_ledger(ledger)
-            print('[%4d/%4d] %-28s %-10s %6.1f KB'
-                  % (i, len(todo), name, mood_for(name), size / 1024.0),
-                  flush=True)
+            starved = 0
+            if i % 20 == 0 or i == len(todo):
+                print('[%4d/%4d] %-28s %-10s %6.1f KB'
+                      % (i, len(todo), name, mood_for(name), size / 1024.0),
+                      flush=True)
         except RuntimeError as problem:
             failed += 1
             short = ' '.join(str(problem).split())[:110]
             print('[%4d/%4d] %-28s FAILED  %s' % (i, len(todo), name, short),
                   flush=True)
-            # The daily cap is not a hiccup to retry through; it is the end of
-            # today's run, and saying so plainly is what lets a new key pick up.
+            # A single quota error is not the end any more. On the free tier it
+            # was, but a paid key hits a per-minute ceiling constantly and that
+            # is a pause, not a wall — speak() already waits it out. Only a run
+            # of them in a row, after all that waiting, means the key is spent.
             if 'quota' in str(problem).lower() or 'RESOURCE_EXHAUSTED' in str(problem):
-                print('\nthe key is out of quota. %d spoken this run, %d in all.'
-                      % (done, len(ledger['done'])))
-                print('give me another key and the same command carries on '
-                      'from %s.' % name)
-                return
+                starved += 1
+                if starved >= 3:
+                    print('\nthe key is out of quota. %d spoken this run, %d in '
+                          'all.' % (done, len(ledger['done'])))
+                    print('give me another key and the same command carries on '
+                          'from %s.' % name)
+                    return
+            else:
+                starved = 0
             if failed >= 5 and done == 0:
                 sys.exit('five failures and nothing written — stopping before '
                          'this burns through the quota')
