@@ -102,6 +102,51 @@ def preflight(args):
         sys.exit(1)
 
 
+# What a Chatterbox checkpoint is made of. Everything else in a fine-tune's
+# repository — optimizer states, intermediate steps, training logs — is weight
+# without value here.
+CHECKPOINT = ('.safetensors', '.pt', '.json', '.txt')
+TRAINING = ('optimizer', 'scheduler', 'global_step', 'checkpoint-', 'runs/',
+            'training_args', 'rng_state', 'trainer_state', '.ckpt')
+
+
+def repo_files(model):
+    """Every file in the repository with its size, from the API alone.
+
+    This costs nothing to run and is what should happen before any download.
+    """
+    from huggingface_hub import HfApi
+    info = HfApi().model_info(model, files_metadata=True)
+    return sorted(((f.rfilename, f.size or 0) for f in info.siblings),
+                  key=lambda row: -row[1])
+
+
+def weigh(args):
+    """The files worth fetching: a checkpoint, without its training."""
+    if args.files:
+        wanted = set(n.strip() for n in args.files.split(',') if n.strip())
+        return [(n, s) for n, s in repo_files(args.model) if n in wanted]
+    plan = []
+    for name, size in repo_files(args.model):
+        lower = name.lower()
+        if any(mark in lower for mark in TRAINING):
+            continue
+        if lower.endswith(CHECKPOINT):
+            plan.append((name, size))
+    return plan
+
+
+def do_list(args):
+    rows = repo_files(args.model)
+    print('%s holds %d file(s), %.2f GB in all:\n'
+          % (args.model, len(rows), sum(s for _, s in rows) / 1e9))
+    for name, size in rows:
+        print('  %9.3f GB  %s' % (size / 1e9, name))
+    plan = weigh(args)
+    print('\nwhat this tool would fetch: %d file(s), %.2f GB'
+          % (len(plan), sum(s for _, s in plan) / 1e9))
+
+
 def engine(args):
     """The model, loaded once.
 
@@ -133,12 +178,31 @@ def engine(args):
             tried.append('%s -> %s' % (how, ' '.join(str(problem).split())[:100]))
 
     # The usual route for a fine-tune: fetch the repository, then load the folder.
+    #
+    # With a filter. An unfiltered snapshot_download takes everything the
+    # repository holds, and a fine-tune's repository holds its training as well
+    # as its result — which is how this pulled 20 GB before anyone could stop
+    # it. Only the files a checkpoint is made of are fetched, the plan is printed
+    # first, and anything over --max-gb stops rather than starts.
     try:
-        from huggingface_hub import snapshot_download, list_repo_files
+        from huggingface_hub import snapshot_download
     except ImportError:
         sys.exit('pip install huggingface_hub\n  ' + '\n  '.join(tried))
+    plan = weigh(args)
+    if not plan:
+        sys.exit('nothing in %s looks like a checkpoint. run --list and send me '
+                 'what it prints.' % args.model)
+    total = sum(size for _, size in plan) / 1e9
+    print('\nfetching %d file(s), %.2f GB:' % (len(plan), total))
+    for name, size in plan:
+        print('   %8.2f GB  %s' % (size / 1e9, name))
+    if total > args.max_gb:
+        sys.exit('that is %.2f GB, over the --max-gb limit of %.2f. run --list to '
+                 'see everything, then pass --files with the ones you want.'
+                 % (total, args.max_gb))
     try:
-        folder = snapshot_download(args.model)
+        folder = snapshot_download(args.model,
+                                   allow_patterns=[name for name, _ in plan])
     except Exception as problem:                           # noqa: BLE001
         sys.exit('cannot fetch %s: %s\n  %s'
                  % (args.model, problem, '\n  '.join(tried)))
@@ -310,7 +374,16 @@ def main():
     parser.add_argument('--only', help='only clips whose name starts with this')
     parser.add_argument('--force', action='store_true')
     parser.add_argument('--sample', nargs='?', const='welcome')
+    parser.add_argument('--list', action='store_true',
+                        help='print the repository\'s files and sizes, download '
+                             'nothing — do this first')
+    parser.add_argument('--files', help='comma-separated, exactly which to fetch')
+    parser.add_argument('--max-gb', type=float, default=4.0,
+                        help='stop rather than start above this (default 4)')
     args = parser.parse_args()
+    if args.list:
+        do_list(args)
+        return
     if args.sample:
         do_sample(args)
     else:
