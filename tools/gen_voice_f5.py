@@ -52,6 +52,7 @@ IPA = os.path.join(ROOT, 'tools/all_game_ipa.json')
 TEXT = os.path.join(ROOT, 'tools/all_game_lines.json')
 LEDGER = os.path.join(ROOT, 'tools/voice_done_f5.json')
 SAMPLES = os.path.join(ROOT, 'tools/voice_samples')
+REFERENCE = os.path.join(ROOT, 'tools/reference')
 MODEL = 'KiaBush/Persian-IPA-to-Speech-F5'
 MIN_BYTES = 900
 
@@ -294,9 +295,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.add_argument('--model', default=MODEL)
     parser.add_argument('--device', default=None, help='cuda, mps or cpu')
-    # The Umbriel greeting is committed as res/raw/welcome.ogg, so the voice you
-    # already chose is the default reference and --sample needs no arguments.
-    parser.add_argument('--ref', default=os.path.join(RAW, 'welcome.ogg'),
+    # Not res/raw/welcome.ogg: that was Umbriel when this was written, and the
+    # Piper run has overwritten it since, so cloning from it would reproduce the
+    # voice that was rejected. tools/reference holds the real Umbriel greeting,
+    # kept out of res/raw precisely so nothing regenerates over it.
+    parser.add_argument('--ref', default=os.path.join(REFERENCE, 'umbriel_welcome.ogg'),
                         help='a few seconds of the voice to clone')
     parser.add_argument('--ref-text', default=None,
                         help='what the reference clip says; taken from the '
@@ -311,7 +314,7 @@ def main():
     args = parser.parse_args()
     if args.ref_text is None:
         same = os.path.abspath(args.ref) == os.path.abspath(
-            os.path.join(RAW, 'welcome.ogg'))
+            os.path.join(REFERENCE, 'umbriel_welcome.ogg'))
         args.ref_text = load(TEXT, 'build_voice_lines.py')['welcome'] if same else ''
     if not os.path.exists(args.ref):
         sys.exit('no reference clip at %s' % args.ref)
