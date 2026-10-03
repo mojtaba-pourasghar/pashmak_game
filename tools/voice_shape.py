@@ -15,9 +15,10 @@ result:
     and muddies consonants. sosfiltfilt runs a Butterworth section forwards and
     backwards, so the frequency shaping lands with no phase shift at all.
 
-The chain, in order: warmth, then the pitch move, then levelling, then the
-edges. Pitch last among the spectral steps, so the filters act on the voice as
-the model made it.
+The chain, in order: warmth, presence, then the pitch move, then levelling, then
+the edges. The two filters come before the pitch move, so they act on the voice
+as the model made it; and presence — a few dB across 2-4 kHz, where consonants
+live — is what makes a line carry to a child who is not listening carefully.
 """
 import math
 
@@ -76,6 +77,23 @@ def _ratio(value, limit=240):
     return best
 
 
+def presence(audio, rate, low_hz=2000.0, high_hz=4200.0, lift_db=3.0):
+    """Lift the band that carries intelligibility.
+
+    This is what «رسا» means in a filter: 2-4 kHz is where consonants live, and
+    a few dB there is the difference between a child catching every word and
+    only most of them. It is a band-pass added back, not a peak, so it widens the
+    voice rather than making it shrill — and it is deliberately below the 7 kHz
+    where warm() takes the edge off, so the two do not fight.
+    """
+    audio = np.asarray(audio, dtype=np.float64)
+    nyquist = rate / 2.0
+    top = min(high_hz / nyquist, 0.99)
+    band = sosfiltfilt(butter(2, [low_hz / nyquist, top], btype='band',
+                              output='sos'), audio)
+    return audio + band * (10.0 ** (lift_db / 20.0) - 1.0)
+
+
 def level(audio, threshold=0.45, ratio=3.0, peak=0.89):
     """Soft-knee compression, then one fixed peak for every line in the app.
 
@@ -113,6 +131,7 @@ def to_pcm16(audio):
 def shape(audio, rate, drop=1.0):
     """The whole chain. Returns 16-bit samples ready to encode."""
     worked = warm(audio, rate)
+    worked = presence(worked, rate)
     worked = drop_pitch(worked, drop)
     worked = level(worked)
     worked = edges(worked, rate)
