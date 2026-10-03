@@ -55,24 +55,74 @@ PACE = {
 }
 
 
+def probe(module):
+    """Why a module will not import, told apart properly.
+
+    "Not installed" and "installed but broken" are different problems with
+    different fixes, and an ImportError alone does not distinguish them: an
+    ImportError also comes from a failed import *inside* a package that is
+    perfectly well installed. find_spec answers the question — a spec means the
+    package is on disk, so any failure after that is internal and the real
+    message is the useful thing to print.
+    """
+    import importlib
+    import importlib.util
+    try:
+        spec = importlib.util.find_spec(module)
+    except (ImportError, ValueError):
+        spec = None
+    if spec is None:
+        return 'missing', ''
+    try:
+        importlib.import_module(module)
+        return 'ok', ''
+    except BaseException as problem:                       # noqa: BLE001
+        return 'broken', '%s: %s' % (type(problem).__name__,
+                                     ' '.join(str(problem).split())[:300])
+
+
+# The Coqui runtime has been imported under more than one name across versions.
+RUNTIME = ('TTS', 'coqui_tts')
+
+
+def runtime_module():
+    """Whichever name the installed Coqui package answers to."""
+    for name in RUNTIME:
+        state, _ = probe(name)
+        if state == 'ok':
+            return name
+    return None
+
+
 def preflight():
     problems = []
-    for module, why, install in (
-            ('torch', 'the model runs on it', 'coqui-tts'),
-            ('TTS', 'the Coqui runtime', 'coqui-tts'),
-            ('numpy', 'the audio maths', 'numpy'),
-            ('scipy', 'the filters', 'scipy'),
-            ('huggingface_hub', 'fetching the weights', 'huggingface_hub')):
-        try:
-            __import__(module)
-        except ImportError:
+
+    for module, why, install in (('torch', 'the model runs on it', 'torch'),
+                                 ('numpy', 'the audio maths', 'numpy'),
+                                 ('scipy', 'the filters', 'scipy'),
+                                 ('huggingface_hub', 'fetching the weights',
+                                  'huggingface_hub')):
+        state, detail = probe(module)
+        if state == 'missing':
             problems.append('%s is not installed (%s):\n      %s -m pip install %s'
                             % (module, why, sys.executable, install))
-        except OSError as broken:
-            # A broken torch raises OSError, not ImportError — WinError 1114 out
-            # of c10.dll on Windows — so ImportError alone lets it through.
-            problems.append('%s is installed but will not load (%s):\n    %s'
-                            % (module, why, ' '.join(str(broken).split())[:200]))
+        elif state == 'broken':
+            problems.append('%s is installed but will not import (%s):\n    %s'
+                            % (module, why, detail))
+
+    states = [(name,) + probe(name) for name in RUNTIME]
+    if not any(state == 'ok' for _n, state, _d in states):
+        if all(state == 'missing' for _n, state, _d in states):
+            problems.append('the Coqui runtime is not installed:\n'
+                            '      %s -m pip install coqui-tts' % sys.executable)
+        else:
+            for name, state, detail in states:
+                if state == 'broken':
+                    problems.append(
+                        'coqui-tts IS installed, but importing %s fails. This is the\n'
+                        '    real error, and it is not a missing package:\n    %s'
+                        % (name, detail))
+
     if problems:
         print('\nthis machine is not ready yet:\n', file=sys.stderr)
         for i, problem in enumerate(problems, 1):
@@ -142,7 +192,9 @@ def engine(args):
     if not checkpoint or not config:
         sys.exit('cannot find a checkpoint and a config — run --check')
     local = fetch(args.model, [checkpoint, config])
-    from TTS.utils.synthesizer import Synthesizer
+    import importlib
+    name = runtime_module()
+    Synthesizer = importlib.import_module('%s.utils.synthesizer' % name).Synthesizer
     synth = Synthesizer(tts_checkpoint=local[checkpoint],
                         tts_config_path=local[config],
                         use_cuda=bool(args.cuda))
