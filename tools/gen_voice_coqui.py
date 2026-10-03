@@ -351,6 +351,81 @@ def do_check(args):
             print('\nIt reads characters directly, so no espeak is needed.')
 
 
+# XTTS's text preprocessing has a hardcoded list of languages, and a fine-tune to
+# a new one extends the model and the vocabulary without touching it. So the model
+# knows Persian, the library does not, and inference stops at
+# NotImplementedError: Language 'fa' is not supported.
+TAUGHT = ('fa',)
+
+
+def teach(runtime, language):
+    """Let the installed tokenizer accept a language the fine-tune added.
+
+    The fine-tune's vocab.json is a BPE trained on Persian, so the text wants
+    passing through rather than running through cleaners built for other
+    alphabets: collapsing whitespace is the whole job. What was patched is
+    printed, because a silent monkeypatch that misses a second gate is worse than
+    none at all.
+    """
+    import importlib
+    if language.split('-')[0] not in TAUGHT:
+        return
+    module = importlib.import_module('%s.tts.layers.xtts.tokenizer' % runtime)
+    tokenizer = getattr(module, 'VoiceBpeTokenizer', None)
+    if tokenizer is None:
+        print('warning: no VoiceBpeTokenizer to teach; inference may still refuse '
+              '%s' % language, file=sys.stderr)
+        return
+
+    done = []
+    original = tokenizer.preprocess_text
+
+    def preprocess_text(self, txt, lang):
+        if str(lang).split('-')[0] in TAUGHT:
+            return ' '.join(str(txt).split())
+        return original(self, txt, lang)
+
+    tokenizer.preprocess_text = preprocess_text
+    done.append('preprocess_text')
+
+    # A per-language length cap sits in a dict somewhere nearby and raises a
+    # KeyError on an unknown key, which would be the next wall along.
+    for holder, label in ((module, 'module'), (tokenizer, 'class')):
+        for name in dir(holder):
+            if 'limit' not in name.lower():
+                continue
+            value = getattr(holder, name, None)
+            if isinstance(value, dict) and 'en' in value:
+                for code in TAUGHT:
+                    value.setdefault(code, value['en'])
+                done.append('%s.%s' % (label, name))
+
+    print('taught the tokenizer %s: %s' % (', '.join(TAUGHT), ', '.join(done)))
+
+
+def do_notebook(args):
+    """Print the inference notebook the model's own author shipped.
+
+    When a guess about a library's internals is needed, the author's own code is
+    the place to look, and it is a few kilobytes next to a 5.6 GB checkpoint.
+    """
+    files = repo_files(args.model, args.token)
+    books = [n for n, _ in files if n.endswith('.ipynb')]
+    if not books:
+        sys.exit('no notebook in %s' % args.model)
+    local = fetch(args.model, books, args.token)
+    for name in books:
+        spec = json.load(io.open(local[name], encoding='utf-8'))
+        print('=== %s ===\n' % name)
+        for cell in spec.get('cells', []):
+            if cell.get('cell_type') != 'code':
+                continue
+            body = ''.join(cell.get('source', [])).strip()
+            if body:
+                print(body + '\n' + '-' * 60)
+
+
+
 class VitsVoice(object):
     """A plain Coqui model: text in, audio out, paced by length_scale."""
 
@@ -436,6 +511,7 @@ def engine(args):
         if args.cuda:
             model.cuda()
         language = args.language or _language_for(xtts_config)
+        teach(runtime, language)
         print('cloning %s, speaking «%s», writing at %d Hz'
               % (os.path.relpath(args.ref, ROOT), language,
                  _output_rate(xtts_config)))
@@ -588,11 +664,15 @@ def main():
                                         'gated model')
     parser.add_argument('--only', help='only clips whose name starts with this')
     parser.add_argument('--force', action='store_true')
+    parser.add_argument('--notebook', action='store_true',
+                        help='print the author\'s own inference notebook')
     parser.add_argument('--check', action='store_true',
                         help='print the repository and what the config needs')
     parser.add_argument('--sample', nargs='?', const='welcome')
     args = parser.parse_args()
-    if args.check:
+    if args.notebook:
+        do_notebook(args)
+    elif args.check:
         preflight()
         do_check(args)
     elif args.sample:
