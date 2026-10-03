@@ -214,14 +214,56 @@ def kind_of(spec):
     return 'xtts' if 'xtts' in name or 'gpt' in name else 'vits'
 
 
-def fetch(model, names):
+def fetch(model, names, token=None):
+    """The named files, with a gated repository explained rather than raised.
+
+    A gate is not a bug and not a network fault: the listing is public and the
+    download is not, so it fails only once something is actually wanted. Saying
+    what to click beats thirty lines of urllib traceback.
+    """
     from huggingface_hub import hf_hub_download
+    from huggingface_hub.errors import GatedRepoError, RepositoryNotFoundError
     got = {}
     for name in names:
-        if name:
-            print('   fetching %s' % name, flush=True)
-            got[name] = hf_hub_download(model, name)
+        if not name:
+            continue
+        print('   fetching %s' % name, flush=True)
+        try:
+            got[name] = hf_hub_download(model, name, token=token or _token())
+        except GatedRepoError:
+            sys.exit(_gated(model))
+        except RepositoryNotFoundError:
+            sys.exit('%s does not exist, or is private to someone else.' % model)
     return got
+
+
+def _token():
+    """Whatever token this machine already holds, if any."""
+    for key in ('HF_TOKEN', 'HUGGING_FACE_HUB_TOKEN', 'HUGGINGFACEHUB_API_TOKEN'):
+        if os.environ.get(key):
+            return os.environ[key]
+    try:
+        from huggingface_hub import HfFolder
+        return HfFolder.get_token()
+    except Exception:                                      # noqa: BLE001
+        return None
+
+
+def _gated(model):
+    return (
+        '\n%s is a gated model. Its file list is public; downloading is not.\n'
+        '\nThree steps, and the first one has to happen in a browser:\n'
+        '\n  1. open https://huggingface.co/%s and accept the access terms\n'
+        '     (some repos grant it at once, some wait for the author)\n'
+        '  2. make a token at https://huggingface.co/settings/tokens — "read" is\n'
+        '     enough\n'
+        '  3. give it to this shell, either way round:\n'
+        '       set HF_TOKEN=hf_xxxxxxxx\n'
+        '     or, once and for all:\n'
+        '       %s -m huggingface_hub.commands.huggingface_cli login\n'
+        '\nThen run the same command again. A token already in the environment or\n'
+        'saved by a previous login is picked up without being asked for.'
+        % (model, model, sys.executable))
 
 
 def do_check(args):
@@ -234,7 +276,7 @@ def do_check(args):
     _unused, config = pick(files)
     if not config:
         sys.exit('\nno config.json in that repository — send me the list above.')
-    local = fetch(args.model, [config])
+    local = fetch(args.model, [config], args.token)
     spec = json.load(io.open(local[config], encoding='utf-8'))
     kind = kind_of(spec)
     wanted, _c = pick(files, kind)
@@ -319,13 +361,13 @@ def engine(args):
     _first, config = pick(files)
     if not config:
         sys.exit('no config in that repository — run --check')
-    local = fetch(args.model, [config])
+    local = fetch(args.model, [config], args.token)
     spec = json.load(io.open(local[config], encoding='utf-8'))
     kind = kind_of(spec)
     wanted, _c = pick(files, kind)
     if not wanted:
         sys.exit('nothing in that repository looks like weights — run --check')
-    local.update(fetch(args.model, wanted))
+    local.update(fetch(args.model, wanted, args.token))
     folder = os.path.dirname(local[wanted[0]])
 
     import importlib
@@ -488,6 +530,8 @@ def main():
                         'tools/reference/umbriel_welcome.wav'),
                         help='for a cloning model: the voice to copy')
     parser.add_argument('--language', help='override the tag XTTS is given')
+    parser.add_argument('--token', help='a Hugging Face read token, for a '
+                                        'gated model')
     parser.add_argument('--only', help='only clips whose name starts with this')
     parser.add_argument('--force', action='store_true')
     parser.add_argument('--check', action='store_true',
