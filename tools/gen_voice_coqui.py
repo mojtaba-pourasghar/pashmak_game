@@ -365,6 +365,18 @@ class VitsVoice(object):
         return self.synth.tts(text)
 
 
+def _output_rate(config):
+    """The rate XTTS actually emits at, looked for where it really lives."""
+    for holder, field in ((getattr(config, 'model_args', None), 'output_sample_rate'),
+                          (getattr(config, 'audio', None), 'output_sample_rate'),
+                          (getattr(config, 'audio', None), 'sample_rate')):
+        value = getattr(holder, field, None) if holder is not None else None
+        if value:
+            return int(value)
+    return 24000
+
+
+
 class XttsVoice(object):
     """XTTS: clones a reference clip, and needs no phonemiser of its own.
 
@@ -376,8 +388,11 @@ class XttsVoice(object):
     def __init__(self, model, config, reference, language):
         self.model = model
         self.language = language
-        self.rate = (config.audio.output_sample_rate
-                     if hasattr(config.audio, 'output_sample_rate') else 24000)
+        # XTTS trains at one rate and emits at another — 22050 in, 24000 out —
+        # and the config reports both. Taking the input rate would play every
+        # clip about 9% slow and a tone flat, which sounds like a tired voice
+        # rather than like a bug, so it is the output rate or nothing.
+        self.rate = _output_rate(config)
         self.latent, self.embedding = model.get_conditioning_latents(
             audio_path=[reference])
 
@@ -421,8 +436,9 @@ def engine(args):
         if args.cuda:
             model.cuda()
         language = args.language or _language_for(xtts_config)
-        print('cloning %s, speaking «%s»'
-              % (os.path.relpath(args.ref, ROOT), language))
+        print('cloning %s, speaking «%s», writing at %d Hz'
+              % (os.path.relpath(args.ref, ROOT), language,
+                 _output_rate(xtts_config)))
         return XttsVoice(model, xtts_config, args.ref, language)
 
     Synthesizer = importlib.import_module(
