@@ -94,6 +94,27 @@ def runtime_module():
     return None
 
 
+# Breaks that are not this project's fault and have a known answer. Worth naming,
+# because the exception alone sends you reading an unrelated traceback.
+KNOWN = (
+    (('isin_mps_friendly', 'transformers.pytorch_utils'),
+     'transformers 5 removed what coqui-tts imports from it. Pin it back:\n'
+     '      %(python)s -m pip install "transformers<5"'),
+    (('torchaudio',),
+     'coqui-tts imports torchaudio without depending on it:\n'
+     '      %(python)s -m pip install torchaudio --index-url '
+     'https://download.pytorch.org/whl/cpu'),
+)
+
+
+def _known(detail):
+    """A line of actual advice when the failure is one that has an answer."""
+    for marks, advice in KNOWN:
+        if all(mark in detail for mark in marks):
+            return '\n\n    ' + advice % {'python': sys.executable}
+    return ''
+
+
 def preflight():
     problems = []
 
@@ -126,8 +147,8 @@ def preflight():
                 if state == 'broken':
                     problems.append(
                         'coqui-tts IS installed, but importing %s fails. This is the\n'
-                        '    real error, and it is not a missing package:\n    %s'
-                        % (name, detail))
+                        '    real error, and it is not a missing package:\n    %s%s'
+                        % (name, detail, _known(detail)))
 
     if problems:
         print('\nthis machine is not ready yet:\n', file=sys.stderr)
