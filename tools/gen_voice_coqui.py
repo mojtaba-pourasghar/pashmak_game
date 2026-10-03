@@ -100,6 +100,10 @@ KNOWN = (
     (('isin_mps_friendly', 'transformers.pytorch_utils'),
      'transformers 5 removed what coqui-tts imports from it. Pin it back:\n'
      '      %(python)s -m pip install "transformers<5"'),
+    (('torchcodec',),
+     'PyTorch 2.9 moved audio IO onto torchcodec, which coqui-tts keeps behind\n'
+     '    an extra rather than a dependency:\n'
+     '      %(python)s -m pip install "coqui-tts[codec]"'),
     (('torchaudio',),
      'coqui-tts imports torchaudio without depending on it:\n'
      '      %(python)s -m pip install torchaudio --index-url '
