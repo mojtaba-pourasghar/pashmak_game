@@ -169,17 +169,34 @@ def repo_files(model):
                   key=lambda row: -row[1])
 
 
-def pick(files):
-    """The checkpoint worth having, and the config.
+# XTTS does not load from one checkpoint: the vocabulary and the speaker files
+# sit beside it and it will not start without them.
+XTTS_WANTED = ('model.pth', 'config.json', 'vocab.json', 'speakers_xtts.pth',
+               'dvae.pth', 'mel_stats.pth')
 
-    A training repository holds every checkpoint it ever wrote — this one has
-    twelve, a gigabyte each. Two rules sort them. A file named best_model is the
-    one the trainer kept because it scored best, so those beat a plain
-    checkpoint; and among equals the highest step number is the latest. Taking
-    whichever happened to come first instead meant downloading a gigabyte of an
-    earlier, worse model.
+
+def pick(files, kind='vits'):
+    """The files worth fetching, and the config, for this kind of model.
+
+    A training repository holds every checkpoint it ever wrote — the Kamtera one
+    has twelve, a gigabyte each. Two rules sort them: a file named best_model is
+    the one the trainer kept because it scored best, so those beat a plain
+    checkpoint, and among equals the highest step is the latest. Taking whichever
+    came first meant downloading a gigabyte of an earlier, worse model.
+
+    XTTS is different. It is a set — weights, vocabulary, speaker statistics —
+    and missing any of them is a failure to start rather than a worse voice.
     """
-    weights = [n for n, _ in files
+    names = [n for n, _ in files]
+    config = next((n for n in names if os.path.basename(n) == 'config.json'), None)
+    if not config:
+        config = next((n for n in names if n.endswith('.json')), None)
+
+    if kind == 'xtts':
+        wanted = [n for n in names if os.path.basename(n) in XTTS_WANTED]
+        return wanted, config
+
+    weights = [n for n in names
                if n.endswith(('.pth', '.pt')) and 'speaker' not in n.lower()]
 
     def rank(name):
@@ -188,12 +205,13 @@ def pick(files):
         step = int(digits[-1]) if digits else -1
         return (1 if base.startswith('best_model') else 0, step)
 
-    checkpoint = max(weights, key=rank) if weights else None
-    # config.json exactly, not config-0.json or a dated copy of it.
-    config = next((n for n, _ in files if os.path.basename(n) == 'config.json'), None)
-    if not config:
-        config = next((n for n, _ in files if n.endswith('.json')), None)
-    return checkpoint, config
+    return ([max(weights, key=rank)] if weights else []), config
+
+
+def kind_of(spec):
+    """Whether this config describes an XTTS model or a plain one."""
+    name = str(spec.get('model', '')).lower()
+    return 'xtts' if 'xtts' in name or 'gpt' in name else 'vits'
 
 
 def fetch(model, names):
@@ -212,49 +230,139 @@ def do_check(args):
           % (args.model, len(files), sum(s for _, s in files) / 1e6))
     for name, size in files:
         print('  %8.1f MB  %s' % (size / 1e6, name))
-    checkpoint, config = pick(files)
-    print('\ncheckpoint: %s\nconfig    : %s' % (checkpoint, config))
-    if not checkpoint or not config:
-        sys.exit('\ncannot see both a checkpoint and a config — send me that list.')
 
+    _unused, config = pick(files)
+    if not config:
+        sys.exit('\nno config.json in that repository — send me the list above.')
     local = fetch(args.model, [config])
     spec = json.load(io.open(local[config], encoding='utf-8'))
-    phonemes = spec.get('use_phonemes')
-    print('\nsample rate   : %s' % spec.get('audio', {}).get('sample_rate'))
-    print('use_phonemes  : %s' % phonemes)
-    print('phonemizer    : %s' % spec.get('phonemizer'))
-    print('language      : %s' % spec.get('phoneme_language'))
-    if phonemes:
-        print('\nThis model speaks phonemes, so espeak-ng has to be on this machine\n'
-              'or it will produce nothing. On Windows: install espeak-ng, then set\n'
-              '  set PHONEMIZER_ESPEAK_LIBRARY=C:\\Program Files\\eSpeak NG\\libespeak-ng.dll\n'
-              'in the same shell before running --sample.')
+    kind = kind_of(spec)
+    wanted, _c = pick(files, kind)
+
+    print('\nmodel     : %s  (read as %s)' % (spec.get('model'), kind))
+    print('sample rate: %s' % (spec.get('audio', {}).get('sample_rate')
+                               or spec.get('audio', {}).get('output_sample_rate')))
+    print('will fetch : %d file(s), %.0f MB'
+          % (len(wanted) + 1,
+             sum(sz for n, sz in files if n in wanted) / 1e6))
+    for name in wanted:
+        print('   %s' % name)
+
+    if kind == 'xtts':
+        languages = spec.get('languages') or spec.get('model_args', {}).get('languages')
+        print('\nlanguages  : %s' % (', '.join(languages) if languages else 'not listed'))
+        if languages and 'fa' not in languages:
+            print('\nNote: «fa» is not in that list. XTTS only speaks the languages its\n'
+                  'tokenizer was built for, so a Persian fine-tune should name fa here.\n'
+                  'If it does not, the sample will come out as nonsense and the right\n'
+                  'language tag has to come from the model card.')
+        print('\nThis is a cloning model, so no espeak is needed — it takes a reference\n'
+              'clip instead. The default is the Umbriel greeting already in the repo.')
     else:
-        print('\nIt reads characters directly, so no espeak is needed.')
+        phonemes = spec.get('use_phonemes')
+        print('\nuse_phonemes: %s\nphonemizer  : %s\nlanguage    : %s'
+              % (phonemes, spec.get('phonemizer'), spec.get('phoneme_language')))
+        if phonemes:
+            print('\nThis model speaks phonemes, so espeak-ng has to be on this machine\n'
+                  'or it will produce nothing. On Windows: install espeak-ng, then set\n'
+                  '  set PHONEMIZER_ESPEAK_LIBRARY=C:\\Program Files\\eSpeak NG\\libespeak-ng.dll\n'
+                  'in the same shell before running --sample.')
+        else:
+            print('\nIt reads characters directly, so no espeak is needed.')
+
+
+class VitsVoice(object):
+    """A plain Coqui model: text in, audio out, paced by length_scale."""
+
+    def __init__(self, synth):
+        self.synth = synth
+        self.rate = synth.output_sample_rate
+
+    def say(self, text, pace, _reference):
+        model = getattr(self.synth, 'tts_model', None)
+        if model is not None and hasattr(model, 'length_scale'):
+            model.length_scale = pace
+        return self.synth.tts(text)
+
+
+class XttsVoice(object):
+    """XTTS: clones a reference clip, and needs no phonemiser of its own.
+
+    The conditioning is computed once from the reference and reused for every
+    line, which is both faster and the thing that keeps 1,136 clips sounding
+    like one bear rather than 1,136 cousins.
+    """
+
+    def __init__(self, model, config, reference, language):
+        self.model = model
+        self.language = language
+        self.rate = (config.audio.output_sample_rate
+                     if hasattr(config.audio, 'output_sample_rate') else 24000)
+        self.latent, self.embedding = model.get_conditioning_latents(
+            audio_path=[reference])
+
+    def say(self, text, pace, _reference):
+        # speed is XTTS's pace control; older builds do not take it, and a
+        # TypeError here should not read as a failure to speak.
+        try:
+            out = self.model.inference(text, self.language, self.latent,
+                                       self.embedding, speed=pace)
+        except TypeError:
+            out = self.model.inference(text, self.language, self.latent,
+                                       self.embedding)
+        return out['wav'] if isinstance(out, dict) else out
 
 
 def engine(args):
     preflight()
     files = repo_files(args.model)
-    checkpoint, config = pick(files)
-    if not checkpoint or not config:
-        sys.exit('cannot find a checkpoint and a config — run --check')
-    local = fetch(args.model, [checkpoint, config])
+    _first, config = pick(files)
+    if not config:
+        sys.exit('no config in that repository — run --check')
+    local = fetch(args.model, [config])
+    spec = json.load(io.open(local[config], encoding='utf-8'))
+    kind = kind_of(spec)
+    wanted, _c = pick(files, kind)
+    if not wanted:
+        sys.exit('nothing in that repository looks like weights — run --check')
+    local.update(fetch(args.model, wanted))
+    folder = os.path.dirname(local[wanted[0]])
+
     import importlib
-    name = runtime_module()
-    Synthesizer = importlib.import_module('%s.utils.synthesizer' % name).Synthesizer
-    synth = Synthesizer(tts_checkpoint=local[checkpoint],
-                        tts_config_path=local[config],
-                        use_cuda=bool(args.cuda))
-    return synth
+    runtime = runtime_module()
+
+    if kind == 'xtts':
+        xtts_config = importlib.import_module(
+            '%s.tts.configs.xtts_config' % runtime).XttsConfig()
+        xtts_config.load_json(local[config])
+        Xtts = importlib.import_module('%s.tts.models.xtts' % runtime).Xtts
+        model = Xtts.init_from_config(xtts_config)
+        model.load_checkpoint(xtts_config, checkpoint_dir=folder, eval=True)
+        if args.cuda:
+            model.cuda()
+        language = args.language or _language_for(xtts_config)
+        print('cloning %s, speaking «%s»'
+              % (os.path.relpath(args.ref, ROOT), language))
+        return XttsVoice(model, xtts_config, args.ref, language)
+
+    Synthesizer = importlib.import_module(
+        '%s.utils.synthesizer' % runtime).Synthesizer
+    return VitsVoice(Synthesizer(tts_checkpoint=local[wanted[0]],
+                                 tts_config_path=local[config],
+                                 use_cuda=bool(args.cuda)))
 
 
-def say(synth, text, pace):
-    """One line, at the pace this mood asks for."""
-    model = getattr(synth, 'tts_model', None)
-    if model is not None and hasattr(model, 'length_scale'):
-        model.length_scale = pace
-    return synth.tts(text)
+def _language_for(config):
+    """Persian when the model admits to it, and said plainly when it does not."""
+    languages = list(getattr(config, 'languages', None) or [])
+    if 'fa' in languages:
+        return 'fa'
+    if languages:
+        print('warning: this model lists %s and not fa. Using %s; if the result is\n'
+              'nonsense, the right tag is on the model card — pass --language.'
+              % (', '.join(languages), languages[0]), file=sys.stderr)
+        return languages[0]
+    return 'fa'
 
 
 def write(samples, rate, path, shaped=True):
@@ -309,12 +417,12 @@ def do_sample(args):
         sys.exit('no line called %s' % args.sample)
     if not os.path.isdir(SAMPLES):
         os.makedirs(SAMPLES)
-    synth = engine(args)
-    rate = synth.output_sample_rate
+    voice = engine(args)
+    rate = voice.rate
     mood = mood_for(args.sample)
     print('\nline : %s   (mood %s, pace %.2f)' % (args.sample, mood, PACE[mood]))
     print('text : %s\n' % lines[args.sample])
-    audio = say(synth, lines[args.sample], PACE[mood])
+    audio = voice.say(lines[args.sample], PACE[mood], args.ref)
     for tag, shaped in (('plain', False), ('shaped', True)):
         path = os.path.join(SAMPLES, 'coqui_%s.ogg' % tag)
         final, size, pcm = write(audio, rate, path, shaped=shaped)
@@ -342,13 +450,13 @@ def do_all(args):
     for mood, count in sorted(tally(todo).items(), key=lambda kv: -kv[1]):
         print('   %-10s %4d   pace %.2f' % (mood, count, PACE[mood]))
     print()
-    synth = engine(args)
-    rate = synth.output_sample_rate
+    voice = engine(args)
+    rate = voice.rate
     done = failed = 0
     for i, name in enumerate(todo, 1):
         path = os.path.join(RAW, name + '.ogg')
         try:
-            audio = say(synth, lines[name], PACE[mood_for(name)])
+            audio = voice.say(lines[name], PACE[mood_for(name)], args.ref)
             staged = path + '.part'
             final, size, _pcm = write(audio, rate, staged, shaped=True)
             if size < MIN_BYTES:
@@ -376,6 +484,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.add_argument('--model', default=MODEL)
     parser.add_argument('--cuda', action='store_true')
+    parser.add_argument('--ref', default=os.path.join(ROOT,
+                        'tools/reference/umbriel_welcome.wav'),
+                        help='for a cloning model: the voice to copy')
+    parser.add_argument('--language', help='override the tag XTTS is given')
     parser.add_argument('--only', help='only clips whose name starts with this')
     parser.add_argument('--force', action='store_true')
     parser.add_argument('--check', action='store_true',
