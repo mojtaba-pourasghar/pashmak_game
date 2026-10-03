@@ -486,7 +486,17 @@ class XttsVoice(object):
     PUNCTUATION = {'؟': '?', '،': ',', '؛': ';', '«': '"', '»': '"',
                    '٬': ',', 'ـ': '-', '…': '...'}
 
-    def __init__(self, model, config, reference, language, rate):
+    # The short vowels, and the shadda. Hand-written into the manifest because
+    # espeak and an IPA model cannot read Persian without them — and very likely
+    # poison here, because this model's vocabulary is a BPE trained on ordinary
+    # Persian, where they simply do not appear. An unknown token in the middle of
+    # every other word is exactly what a ruined reading sounds like.
+    HARAKAT = '\u064b\u064c\u064d\u064e\u064f\u0650\u0651\u0652\u0670'
+
+    def __init__(self, model, config, reference, language, rate,
+                 vowels=False, speed=True):
+        self.vowels = vowels
+        self.speed = speed
         self.model = model
         self.config = config
         self.language = language
@@ -522,6 +532,8 @@ class XttsVoice(object):
     def _fold(self, text):
         for persian, plain in self.PUNCTUATION.items():
             text = text.replace(persian, plain)
+        if not self.vowels:
+            text = ''.join(c for c in text if c not in self.HARAKAT)
         return ' '.join(text.split())
 
     def say(self, text, pace, _reference):
@@ -534,13 +546,17 @@ class XttsVoice(object):
         with torch.inference_mode():
             for piece in pieces:
                 how = dict(self.SAMPLING)
+                # speed is this file's addition, not the author's. It is cheap to
+                # ask for and it does cost quality, so it is switchable.
+                if self.speed:
+                    how['speed'] = pace
                 try:
                     result = self.model.inference(
                         text=piece, language=self.language,
                         gpt_cond_latent=self.latent,
-                        speaker_embedding=self.embedding, speed=pace, **how)
+                        speaker_embedding=self.embedding, **how)
                 except TypeError:
-                    # Older builds have no speed; the pace is lost, not the line.
+                    how.pop('speed', None)
                     result = self.model.inference(
                         text=piece, language=self.language,
                         gpt_cond_latent=self.latent,
@@ -593,7 +609,8 @@ def engine(args):
         rate = _output_rate(xtts_config)
         print('cloning %s, speaking «%s» on %s, writing at %d Hz'
               % (os.path.relpath(args.ref, ROOT), language, device, rate))
-        return XttsVoice(model, xtts_config, args.ref, language, rate)
+        return XttsVoice(model, xtts_config, args.ref, language, rate,
+                         vowels=bool(args.vowels), speed=not args.no_speed)
 
     Synthesizer = importlib.import_module(
         '%s.utils.synthesizer' % runtime).Synthesizer
@@ -730,6 +747,47 @@ def do_all(args):
           % (done, failed, len(ledger['done']), len(names)))
 
 
+def do_probe(args):
+    """Four readings of one line, to find out which of my guesses was wrong.
+
+    A bad result from a cloning model has a small number of likely causes, and
+    arguing about them one round trip at a time is slower than hearing all four:
+
+      vowels   the manifest's harakat, which this model's vocabulary has never
+               seen — the first suspect
+      speed    XTTS's pace control, which this file asked for and the author's
+               notebook does not
+    """
+    import voice_shape as shaping
+    lines = load_lines()
+    if args.probe not in lines:
+        sys.exit('no line called %s' % args.probe)
+    if not os.path.isdir(SAMPLES):
+        os.makedirs(SAMPLES)
+    mood = mood_for(args.probe)
+    print('\nline : %s\ntext : %s\n' % (args.probe, lines[args.probe]))
+    voice = engine(args)
+    for vowels in (False, True):
+        for speed in (False, True):
+            voice.vowels, voice.speed = vowels, speed
+            tag = '%s_%s' % ('vowels' if vowels else 'plain',
+                             'paced' if speed else 'natural')
+            path = os.path.join(SAMPLES, 'xtts_%s.ogg' % tag)
+            try:
+                audio = voice.say(lines[args.probe], PACE[mood], args.ref)
+                final, size, pcm = write(audio, voice.rate, path, shaped=False)
+                print('  %-16s %5.2f s  %3.0f Hz  %6.1f KB  %s'
+                      % (tag, len(pcm) / float(voice.rate),
+                         shaping.fundamental(pcm, voice.rate), size / 1024.0,
+                         os.path.basename(final)))
+            except Exception as problem:                   # noqa: BLE001
+                print('  %-16s FAILED %s'
+                      % (tag, ' '.join(str(problem).split())[:120]))
+    print('\nplain_natural is the author\'s own recipe exactly. If that one is\n'
+          'good and the others are not, the cause is named.')
+
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.add_argument('--model', default=MODEL)
@@ -742,13 +800,21 @@ def main():
                                         'gated model')
     parser.add_argument('--only', help='only clips whose name starts with this')
     parser.add_argument('--force', action='store_true')
+    parser.add_argument('--probe', nargs='?', const='welcome',
+                        help='one line, four ways, to find what is spoiling it')
+    parser.add_argument('--vowels', action='store_true',
+                        help='keep the harakat (off by default for this model)')
+    parser.add_argument('--no-speed', action='store_true',
+                        help='do not ask XTTS to change pace')
     parser.add_argument('--notebook', action='store_true',
                         help='print the author\'s own inference notebook')
     parser.add_argument('--check', action='store_true',
                         help='print the repository and what the config needs')
     parser.add_argument('--sample', nargs='?', const='welcome')
     args = parser.parse_args()
-    if args.notebook:
+    if args.probe:
+        do_probe(args)
+    elif args.notebook:
         do_notebook(args)
     elif args.check:
         preflight()
