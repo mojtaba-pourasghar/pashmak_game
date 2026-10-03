@@ -29,6 +29,7 @@ import argparse
 import io
 import json
 import os
+import re
 import shutil
 import sys
 
@@ -169,10 +170,26 @@ def repo_files(model):
 
 
 def pick(files):
-    """The checkpoint and the config, by the names Coqui models actually use."""
-    checkpoint = next((n for n, _ in files
-                       if n.endswith(('.pth', '.pt')) and 'speaker' not in n.lower()),
-                      None)
+    """The checkpoint worth having, and the config.
+
+    A training repository holds every checkpoint it ever wrote — this one has
+    twelve, a gigabyte each. Two rules sort them. A file named best_model is the
+    one the trainer kept because it scored best, so those beat a plain
+    checkpoint; and among equals the highest step number is the latest. Taking
+    whichever happened to come first instead meant downloading a gigabyte of an
+    earlier, worse model.
+    """
+    weights = [n for n, _ in files
+               if n.endswith(('.pth', '.pt')) and 'speaker' not in n.lower()]
+
+    def rank(name):
+        base = os.path.basename(name).lower()
+        digits = re.findall(r'\d+', base)
+        step = int(digits[-1]) if digits else -1
+        return (1 if base.startswith('best_model') else 0, step)
+
+    checkpoint = max(weights, key=rank) if weights else None
+    # config.json exactly, not config-0.json or a dated copy of it.
     config = next((n for n, _ in files if os.path.basename(n) == 'config.json'), None)
     if not config:
         config = next((n for n, _ in files if n.endswith('.json')), None)
