@@ -60,8 +60,21 @@ def client(args):
         from gradio_client import Client
     except ImportError:
         sys.exit('%s -m pip install gradio_client' % sys.executable)
+    # gradio_client has renamed the token argument between majors — 1.x takes
+    # hf_token, 2.x does not — so the signature is read rather than guessed.
+    extra = {}
+    if args.token:
+        import inspect
+        accepted = inspect.signature(Client.__init__).parameters
+        for name in ('hf_token', 'token', 'auth'):
+            if name in accepted:
+                extra[name] = args.token
+                break
+        else:
+            print('this gradio_client takes no token argument (%s); continuing '
+                  'without one' % ', '.join(sorted(accepted))[:120], file=sys.stderr)
     try:
-        return Client(args.space, hf_token=args.token or None)
+        return Client(args.space, **extra)
     except Exception as problem:                           # noqa: BLE001
         text = ' '.join(str(problem).split())
         if 'sleep' in text.lower() or 'not found' in text.lower():
