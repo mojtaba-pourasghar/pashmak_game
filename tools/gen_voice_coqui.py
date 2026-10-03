@@ -453,34 +453,101 @@ def _output_rate(config):
 
 
 class XttsVoice(object):
-    """XTTS: clones a reference clip, and needs no phonemiser of its own.
+    """XTTS, driven the way ParsVoice's own inference notebook drives it.
 
-    The conditioning is computed once from the reference and reused for every
-    line, which is both faster and the thing that keeps 1,136 clips sounding
-    like one bear rather than 1,136 cousins.
+    Five things here come from that notebook rather than from guessing, and each
+    one was wrong in the first version of this file:
+
+    The checkpoint and the vocabulary are named separately. A fine-tune's
+    vocab.json is the thing that makes it speak a new language at all, and
+    pointing load_checkpoint at a directory lets it find some other vocabulary —
+    or none.
+
+    The reference clip is normalised first: mono, 24 kHz, RMS brought to about
+    -20 dBFS, peak-limited. Cloning reads level as part of the voice, so an
+    un-normalised reference is a different speaker.
+
+    Persian punctuation is folded to ASCII. The tokenizer was trained that way,
+    so «؟» unfolded is an unknown token in the middle of every question.
+
+    Long text is split into sentences and synthesised one at a time. XTTS has a
+    length limit per call, and a story passage is well past it.
+
+    And the sampling is the author's: temperature 0.1 with repetition_penalty 10
+    is a deliberately tight, repetition-averse setting, nothing like the defaults.
     """
 
-    def __init__(self, model, config, reference, language):
+    # The notebook's values. Low temperature and a heavy repetition penalty are
+    # what keep a long Persian line from wandering.
+    SAMPLING = dict(temperature=0.1, length_penalty=1.0, repetition_penalty=10.0,
+                    top_k=10, top_p=0.3)
+
+    # Folded because the tokenizer was trained on the folded forms.
+    PUNCTUATION = {'؟': '?', '،': ',', '؛': ';', '«': '"', '»': '"',
+                   '٬': ',', 'ـ': '-', '…': '...'}
+
+    def __init__(self, model, config, reference, language, rate):
         self.model = model
+        self.config = config
         self.language = language
-        # XTTS trains at one rate and emits at another — 22050 in, 24000 out —
-        # and the config reports both. Taking the input rate would play every
-        # clip about 9% slow and a tone flat, which sounds like a tired voice
-        # rather than like a bug, so it is the output rate or nothing.
-        self.rate = _output_rate(config)
+        self.rate = rate
         self.latent, self.embedding = model.get_conditioning_latents(
-            audio_path=[reference])
+            audio_path=self._normalised(reference),
+            gpt_cond_len=getattr(config, 'gpt_cond_len', 30),
+            max_ref_length=getattr(config, 'max_ref_len', 10),
+            sound_norm_refs=getattr(config, 'sound_norm_refs', False))
+
+    def _normalised(self, path):
+        """Mono, 24 kHz, about -20 dBFS: the reference as the model expects it."""
+        import torch
+        import torchaudio
+        import torchaudio.functional as F
+        wav, rate = torchaudio.load(path)
+        if wav.shape[0] > 1:
+            wav = wav.mean(dim=0, keepdim=True)
+        if rate != self.rate:
+            wav = F.resample(wav, orig_freq=rate, new_freq=self.rate)
+        rms = wav.pow(2).mean().sqrt()
+        wav = wav * ((10 ** (-20 / 20.0)) / (rms + 1e-9))
+        peak = wav.abs().max()
+        if peak > 1.0:
+            wav = wav / peak
+        out = os.path.join(SAMPLES, '.reference_24k.wav')
+        if not os.path.isdir(SAMPLES):
+            os.makedirs(SAMPLES)
+        torchaudio.save(out, wav, self.rate)
+        print('reference normalised to %d Hz mono at about -20 dBFS' % self.rate)
+        return out
+
+    def _fold(self, text):
+        for persian, plain in self.PUNCTUATION.items():
+            text = text.replace(persian, plain)
+        return ' '.join(text.split())
 
     def say(self, text, pace, _reference):
-        # speed is XTTS's pace control; older builds do not take it, and a
-        # TypeError here should not read as a failure to speak.
-        try:
-            out = self.model.inference(text, self.language, self.latent,
-                                       self.embedding, speed=pace)
-        except TypeError:
-            out = self.model.inference(text, self.language, self.latent,
-                                       self.embedding)
-        return out['wav'] if isinstance(out, dict) else out
+        import torch
+        pieces = [p.strip() for p in re.split(r'(?<=[.!?])\s+', self._fold(text))
+                  if p.strip()]
+        if not pieces:
+            raise RuntimeError('nothing to say')
+        chunks = []
+        with torch.inference_mode():
+            for piece in pieces:
+                how = dict(self.SAMPLING)
+                try:
+                    result = self.model.inference(
+                        text=piece, language=self.language,
+                        gpt_cond_latent=self.latent,
+                        speaker_embedding=self.embedding, speed=pace, **how)
+                except TypeError:
+                    # Older builds have no speed; the pace is lost, not the line.
+                    result = self.model.inference(
+                        text=piece, language=self.language,
+                        gpt_cond_latent=self.latent,
+                        speaker_embedding=self.embedding, **how)
+                wav = result['wav'] if isinstance(result, dict) else result
+                chunks.append(torch.as_tensor(wav).flatten())
+        return torch.cat(chunks).cpu().numpy()
 
 
 def engine(args):
@@ -507,15 +574,26 @@ def engine(args):
         xtts_config.load_json(local[config])
         Xtts = importlib.import_module('%s.tts.models.xtts' % runtime).Xtts
         model = Xtts.init_from_config(xtts_config)
-        model.load_checkpoint(xtts_config, checkpoint_dir=folder, eval=True)
-        if args.cuda:
-            model.cuda()
+        vocab = next((local[n] for n in wanted
+                      if os.path.basename(n) == 'vocab.json'), None)
+        if not vocab:
+            sys.exit('no vocab.json came down — a fine-tune cannot speak its new '
+                     'language without it')
+        # Named, not discovered: the vocabulary is what makes this model Persian.
+        model.load_checkpoint(xtts_config,
+                              checkpoint_path=local[
+                                  next(n for n in wanted
+                                       if os.path.basename(n) == 'model.pth')],
+                              vocab_path=vocab, use_deepspeed=False)
         language = args.language or _language_for(xtts_config)
+        import torch
+        device = 'cuda:0' if (args.cuda and torch.cuda.is_available()) else 'cpu'
+        model.to(device)
         teach(runtime, language)
-        print('cloning %s, speaking «%s», writing at %d Hz'
-              % (os.path.relpath(args.ref, ROOT), language,
-                 _output_rate(xtts_config)))
-        return XttsVoice(model, xtts_config, args.ref, language)
+        rate = _output_rate(xtts_config)
+        print('cloning %s, speaking «%s» on %s, writing at %d Hz'
+              % (os.path.relpath(args.ref, ROOT), language, device, rate))
+        return XttsVoice(model, xtts_config, args.ref, language, rate)
 
     Synthesizer = importlib.import_module(
         '%s.utils.synthesizer' % runtime).Synthesizer
