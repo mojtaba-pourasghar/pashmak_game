@@ -77,6 +77,19 @@ def client(args):
         return Client(args.space, **extra)
     except Exception as problem:                           # noqa: BLE001
         text = ' '.join(str(problem).split())
+        # A static Space is a web page, not an app: HTML and JavaScript served to
+        # a browser, with nothing running on the server and so nothing to call.
+        # Gradio reports it as a missing config, which sounds like a fault and is
+        # not one.
+        if '.static.hf.space' in text or 'could not fetch config' in text.lower():
+            sys.exit(
+                '%s is a static Space: a web page, not an app. There is no API and\n'
+                'no model on the server — whatever it plays was made in advance, so\n'
+                'it cannot read our lines.\n'
+                '\nIt is still worth opening in a browser to compare voices by ear.\n'
+                'For generating, the model has to run somewhere: on this machine, or\n'
+                'committed to the repository so it can run in the sandbox.'
+                % args.space)
         if 'sleep' in text.lower() or 'not found' in text.lower():
             sys.exit('%s would not open: %s\n\nA Space that has gone to sleep wakes '
                      'when you open its page in a browser. Try that, wait for it to '
