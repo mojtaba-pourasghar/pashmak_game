@@ -45,6 +45,23 @@ from voice_moods import mood_for, tally                   # noqa: E402
 from build_ipa_lines import degeminate                    # noqa: E402
 import voice_bear as shaping                              # noqa: E402
 
+
+def _utf8_console():
+    """Let Persian reach a Windows console.
+
+    cmd defaults to cp1252, which cannot encode a single Persian letter, so a
+    tool that prints the line it is about to speak dies on the print and not on
+    the work — and the traceback points at codecs, which is no help at all.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding='utf-8', errors='replace')
+        except (AttributeError, ValueError):               # pre-3.7, or a pipe
+            pass
+
+
+_utf8_console()
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.normpath(os.path.join(ROOT, 'app/src/main/res/raw'))
 LINES = os.path.join(ROOT, 'tools/all_game_lines.json')
