@@ -68,6 +68,38 @@ VOCODER = 'vctk_hifigan.v1'
 MIN_BYTES = 900
 
 
+# Breaks with known answers, named so they are not mistaken for this tool's fault.
+KNOWN = (
+    (('parallel_wavegan', 'No module named'),
+     'parallel-wavegan is not installed. It is an old package whose setup.py\n'
+     '    imports pip, which modern build isolation does not provide, so it needs\n'
+     '    building inside this environment instead:\n'
+     '      %(python)s -m pip install setuptools wheel\n'
+     '      %(python)s -m pip install --no-build-isolation parallel-wavegan'),
+    (('scipy',),
+     'scipy has to be 1.12 for this model\'s code:\n'
+     '      %(python)s -m pip install "scipy==1.12.0"'),
+)
+
+
+def advice(detail):
+    for marks, words in KNOWN:
+        if all(mark in detail for mark in marks):
+            return '\n\n    ' + words % {'python': sys.executable}
+    return ''
+
+
+def need(module, why):
+    """Import something, and when it will not, say what to do about it."""
+    try:
+        return __import__(module)
+    except (ImportError, OSError) as problem:
+        text = '%s: %s' % (type(problem).__name__,
+                           ' '.join(str(problem).split())[:200])
+        sys.exit('%s is needed (%s).\n  %s%s'
+                 % (module, why, text, advice('%s %s' % (module, text))))
+
+
 def final_models():
     return os.path.join(CODE, 'saved_models', 'final_models')
 
@@ -95,20 +127,16 @@ def do_setup(args):
         print('speaker encoder in place')
 
     if not os.path.exists(os.path.join(target, 'synthesizer.pt')):
-        try:
-            from huggingface_hub import hf_hub_download
-        except ImportError:
-            sys.exit('%s -m pip install huggingface_hub' % sys.executable)
+        hf_hub_download = need('huggingface_hub',
+                               'the synthesiser comes from there').hf_hub_download
         print('fetching synthesizer.pt (371 MB, once)')
         got = hf_hub_download(MODEL, 'synthesizer.pt', token=args.token)
         shutil.copyfile(got, os.path.join(target, 'synthesizer.pt'))
         print('synthesiser in place')
 
     if not os.path.exists(os.path.join(target, 'vocoder_HiFiGAN.pkl')):
-        try:
-            from parallel_wavegan.utils import download_pretrained_model
-        except ImportError:
-            sys.exit('%s -m pip install parallel-wavegan' % sys.executable)
+        need('parallel_wavegan', 'it fetches and runs the vocoder')
+        from parallel_wavegan.utils import download_pretrained_model
         print('fetching the vocoder')
         where = download_pretrained_model(VOCODER, WORK)
         # It returns the checkpoint; the config sits beside it under either name.
