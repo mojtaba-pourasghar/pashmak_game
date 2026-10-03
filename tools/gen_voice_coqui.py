@@ -162,11 +162,46 @@ def preflight():
         sys.exit(1)
 
 
-def repo_files(model):
+def repo_files(model, token=None):
     from huggingface_hub import HfApi
-    info = HfApi().model_info(model, files_metadata=True)
+    try:
+        info = HfApi().model_info(model, files_metadata=True,
+                                 token=token or _token())
+    except Exception as problem:                           # noqa: BLE001
+        _network_or_raise(problem)
+        raise
     return sorted(((f.rfilename, f.size or 0) for f in info.siblings),
                   key=lambda row: -row[1])
+
+
+def _network_or_raise(problem):
+    """Exit with advice when the connection is being cut, rather than a traceback.
+
+    SSLEOFError is not a certificate problem and not an authentication problem —
+    it is the connection dying mid-handshake, which is what interference looks
+    like from inside. A token cannot fix it and neither can retrying in a loop,
+    so the remedies worth naming are a mirror or a different route out.
+    """
+    text = ' '.join(str(problem).split())
+    marks = ('UNEXPECTED_EOF_WHILE_READING', 'SSLEOFError', 'MaxRetryError',
+             'ConnectionResetError', 'ConnectionError', 'EOF occurred in violation')
+    if not any(mark in text for mark in marks):
+        return
+    sys.exit(
+        '\nthe connection to Hugging Face was cut mid-handshake:\n  %s\n'
+        '\nThat is not the token and not this script. It is what interference on\n'
+        'the way out looks like from here, and no amount of retrying in a loop\n'
+        'fixes it. Three things do, in order of least effort:\n'
+        '\n  1. just run it again — it is often intermittent\n'
+        '  2. point huggingface_hub at a mirror, in this same shell:\n'
+        '       set HF_ENDPOINT=https://hf-mirror.com\n'
+        '     (a gated model may not be served by a mirror; if it refuses,\n'
+        '      that is the gate rather than the network)\n'
+        '  3. the same route you used when pypi was doing this\n'
+        '\nOne other thing worth checking: the login said HF_TOKEN is already set\n'
+        'in your environment and takes precedence over the token it just saved.\n'
+        'If that older one is stale, `set HF_TOKEN=` clears it for this shell and\n'
+        'the saved login is used instead.' % text[:200])
 
 
 # XTTS does not load from one checkpoint: the vocabulary and the speaker files
@@ -234,6 +269,9 @@ def fetch(model, names, token=None):
             sys.exit(_gated(model))
         except RepositoryNotFoundError:
             sys.exit('%s does not exist, or is private to someone else.' % model)
+        except Exception as problem:                       # noqa: BLE001
+            _network_or_raise(problem)
+            raise
     return got
 
 
@@ -267,7 +305,7 @@ def _gated(model):
 
 
 def do_check(args):
-    files = repo_files(args.model)
+    files = repo_files(args.model, args.token)
     print('%s holds %d file(s), %.1f MB:\n'
           % (args.model, len(files), sum(s for _, s in files) / 1e6))
     for name, size in files:
@@ -357,7 +395,7 @@ class XttsVoice(object):
 
 def engine(args):
     preflight()
-    files = repo_files(args.model)
+    files = repo_files(args.model, args.token)
     _first, config = pick(files)
     if not config:
         sys.exit('no config in that repository — run --check')
