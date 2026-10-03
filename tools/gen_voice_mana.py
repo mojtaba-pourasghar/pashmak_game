@@ -76,6 +76,17 @@ KNOWN = (
      '    building inside this environment instead:\n'
      '      %(python)s -m pip install setuptools wheel\n'
      '      %(python)s -m pip install --no-build-isolation parallel-wavegan'),
+    (('NumPy 1.x', 'numpy.core.multiarray'),
+     'scipy 1.12 was built against numpy 1.x and will not load under numpy 2, so\n'
+     '    both have to be pinned, and last of all — pip raises them again whenever\n'
+     '    anything else is installed:\n'
+     '      %(python)s -m pip install --force-reinstall --no-deps \\\n'
+     '          "numpy==1.26.4" "scipy==1.12.0"'),
+    (('multiarray failed to import',),
+     'scipy 1.12 was built against numpy 1.x and this environment has numpy 2.\n'
+     '    Pin both, last of all:\n'
+     '      %(python)s -m pip install --force-reinstall --no-deps \\\n'
+     '          "numpy==1.26.4" "scipy==1.12.0"'),
     (('kaiser',),
      'scipy 1.13 moved signal.kaiser into signal.windows and dropped the old\n'
      '    name, which parallel-wavegan still imports. Installing\n'
@@ -175,13 +186,20 @@ def check_scipy():
     try:
         from scipy.signal import kaiser                    # noqa: F401
         return
-    except ImportError:
-        pass
+    except Exception as problem:                           # noqa: BLE001
+        # Two different faults land here and they need different answers: the
+        # name is gone (scipy too new), or scipy will not load at all (built
+        # against numpy 1.x, running under numpy 2).
+        text = '%s: %s' % (type(problem).__name__,
+                           ' '.join(str(problem).split())[:300])
+    try:
+        import numpy
+        import scipy
+        have = 'numpy %s, scipy %s' % (numpy.__version__, scipy.__version__)
     except Exception:                                      # noqa: BLE001
-        return
-    import scipy
-    sys.exit('scipy %s cannot do what this model\'s vocoder needs.%s'
-             % (scipy.__version__, advice('kaiser')))
+        have = 'numpy or scipy will not import at all'
+    sys.exit('this model\'s vocoder cannot use what is installed (%s).\n  %s%s'
+             % (have, text, advice(text)))
 
 
 def check_ready(args):
