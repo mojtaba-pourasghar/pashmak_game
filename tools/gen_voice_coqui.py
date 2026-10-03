@@ -98,6 +98,12 @@ def preflight():
     problems = []
 
     for module, why, install in (('torch', 'the model runs on it', 'torch'),
+                                 # coqui-tts imports torchaudio and does not
+                                 # depend on it, so it goes missing quietly and
+                                 # surfaces as the runtime failing to import.
+                                 ('torchaudio', 'coqui-tts imports it',
+                                  'torchaudio --index-url '
+                                  'https://download.pytorch.org/whl/cpu'),
                                  ('numpy', 'the audio maths', 'numpy'),
                                  ('scipy', 'the filters', 'scipy'),
                                  ('huggingface_hub', 'fetching the weights',
