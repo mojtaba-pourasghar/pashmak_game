@@ -76,9 +76,15 @@ KNOWN = (
      '    building inside this environment instead:\n'
      '      %(python)s -m pip install setuptools wheel\n'
      '      %(python)s -m pip install --no-build-isolation parallel-wavegan'),
+    (('kaiser',),
+     'scipy 1.13 moved signal.kaiser into signal.windows and dropped the old\n'
+     '    name, which parallel-wavegan still imports. Installing\n'
+     '    parallel-wavegan upgrades scipy past the pin, so it has to go back\n'
+     '    afterwards — and without deps, or it takes scipy up again:\n'
+     '      %(python)s -m pip install --force-reinstall --no-deps "scipy==1.12.0"'),
     (('scipy',),
      'scipy has to be 1.12 for this model\'s code:\n'
-     '      %(python)s -m pip install "scipy==1.12.0"'),
+     '      %(python)s -m pip install --force-reinstall --no-deps "scipy==1.12.0"'),
 )
 
 
@@ -158,7 +164,28 @@ def do_setup(args):
               % (os.path.getsize(os.path.join(target, name)) / 1e6, name))
 
 
+def check_scipy():
+    """Catch the scipy that parallel-wavegan broke, before anything slow starts.
+
+    Installing parallel-wavegan upgrades scipy past the 1.12 its own code needs,
+    so the pin silently stops holding. The symptom arrives much later, inside a
+    subprocess, as an ImportError about a window function — which is a long way
+    from the cause.
+    """
+    try:
+        from scipy.signal import kaiser                    # noqa: F401
+        return
+    except ImportError:
+        pass
+    except Exception:                                      # noqa: BLE001
+        return
+    import scipy
+    sys.exit('scipy %s cannot do what this model\'s vocoder needs.%s'
+             % (scipy.__version__, advice('kaiser')))
+
+
 def check_ready(args):
+    check_scipy()
     missing = [n for n in ('encoder.pt', 'synthesizer.pt', 'vocoder_HiFiGAN.pkl',
                            'config.yml')
                if not os.path.exists(os.path.join(final_models(), n))]
