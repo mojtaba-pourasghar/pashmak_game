@@ -79,6 +79,7 @@ _utf8_console()
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'tools'))
 from voice_moods import mood_for, tally                    # noqa: E402
+import voice_output                                        # noqa: E402
 
 RAW = os.path.normpath(os.path.join(ROOT, 'app/src/main/res/raw'))
 LINES = os.path.join(ROOT, 'tools/all_game_lines.json')
@@ -315,75 +316,14 @@ def failed(command, done):
             % (why, advice(why), os.path.relpath(log, ROOT)))
 
 
-def encoder():
-    """Whatever on this machine can write an ogg: oggenc, or ffmpeg.
-
-    vorbis-tools is a package Windows mostly does not have and cannot install in
-    one step. ffmpeg encodes the same format, is already on many machines, and
-    installs with one winget line, so either one is accepted and neither is
-    insisted on.
-    """
-    for tool in ('oggenc', 'ffmpeg'):
-        if shutil.which(tool):
-            return tool
-    return None
-
-
-NEED_ENCODER = (
-    'nothing here can write an ogg. An hour and a half of speech does not ship\n'
-    'as wav — it is ten times the size — and res/raw cannot hold welcome.ogg and\n'
-    'welcome.wav at once: two files of one name are one resource and aapt refuses\n'
-    'the build. Either of these is enough:\n'
-    '\n  winget install Gyan.FFmpeg          (then open a new shell)\n'
-    '  or install vorbis-tools, which brings oggenc\n'
-    '\n--sample and --probe work without it.')
-
-
-def check_encoder():
-    """Prove the encoder works, here, before anything is deleted.
-
-    Being on PATH is not the same as being able to do the job: an ffmpeg built
-    without libvorbis finds the file, starts, and fails on the first clip. A
-    tenth of a second of silence through the real command line answers that in
-    no time at all, and this is the check that has to hold — the step after it
-    deletes the app's whole voice.
-    """
-    if not encoder():
-        sys.exit(NEED_ENCODER)
-    import wave
-    folder = os.path.join(WORK, 'check')
-    if not os.path.isdir(folder):
-        os.makedirs(folder)
-    source, target = os.path.join(folder, 'q.wav'), os.path.join(folder, 'q.ogg')
-    with wave.open(source, 'wb') as out:
-        out.setnchannels(1)
-        out.setsampwidth(2)
-        out.setframerate(22050)
-        out.writeframes(b'\0\0' * 2205)
-    if os.path.exists(target):
-        os.unlink(target)
-    try:
-        written = write(source, target)
-    except Exception as problem:                           # noqa: BLE001
-        sys.exit('%s is on PATH but could not write an ogg:\n  %s\n\n%s'
-                 % (encoder(), ' '.join(str(problem).split())[:200], NEED_ENCODER))
-    if not written.endswith('.ogg') or not os.path.getsize(written):
-        sys.exit('%s produced no ogg from a test clip.\n\n%s'
-                 % (encoder(), NEED_ENCODER))
-
-
 def write(source, path):
-    tool = encoder()
-    if tool == 'oggenc':
-        subprocess.check_call(['oggenc', '-Q', '-q', '4', '-o', path, source])
-        return path
-    if tool == 'ffmpeg':
-        subprocess.check_call(['ffmpeg', '-v', 'error', '-y', '-i', source,
-                               '-c:a', 'libvorbis', '-q:a', '4', path])
-        return path
-    final = os.path.splitext(path)[0] + '.wav'
-    shutil.copyfile(source, final)
-    return final
+    """The finished wav as an ogg, or as a wav when nothing here can encode."""
+    try:
+        return voice_output.encode(source, path)
+    except RuntimeError:
+        final = os.path.splitext(path)[0] + '.wav'
+        shutil.copyfile(source, final)
+        return final
 
 
 def read_ledger():
@@ -460,51 +400,16 @@ def do_probe(args):
 def do_fresh(args):
     """Clear out the spoken clips and build the whole set again from the manifest.
 
-    "Delete everything in res/raw" cannot be taken literally, and the reason is
-    the request itself: audio_manifest.txt lives in that folder, and it is the
-    hand-vowelised source every clip is generated from. So do the ten bought
-    lullaby recordings, which no model can make again, and the thirteen sound
-    effects and music beds. Emptying the folder would take all of that with it.
-
-    Instead the clips to delete are named from the line list — <name>.* for each
-    of the 1,136 lines, whatever extension the last voice wrote — so anything
-    that is not speech is untouched by construction rather than by a list that
-    could fall out of date. What stays is printed, because deleting is the one
-    thing here that cannot be undone by running the tool again.
+    Everything that could stop the run is checked before a single file is
+    deleted. The first version of this deleted first and then found there was no
+    encoder, which left the app with no speech and nothing to show for it — and
+    a missing res/raw file is worse than a silence, because the Java refers to
+    every clip by name, so it is a compile error.
     """
-    # Everything that could stop the run is checked before a single file is
-    # deleted. The first version of this deleted first and then found there was
-    # no encoder, which left the app with no speech at all and nothing to show
-    # for it — and a missing res/raw file is a compile error, not a silence.
     check_ready(args)
-    check_encoder()
-
-    print('rebuilding the line list from audio_manifest.txt')
-    build = os.path.join(ROOT, 'tools/build_voice_lines.py')
-    done = subprocess.run([sys.executable, build], capture_output=True, text=True)
-    if done.returncode:
-        sys.exit('could not rebuild the line list:\n%s'
-                 % (done.stderr or done.stdout).strip())
-    for row in (done.stdout or '').strip().splitlines():
-        print('  %s' % row)
-
-    lines = load_lines()
-    gone = kept = 0
-    for entry in sorted(os.listdir(RAW)):
-        stem, ext = os.path.splitext(entry)
-        # Only the formats a voice run writes. The bought lullabies are mp3,
-        # so leaving that extension out means no name clash could ever reach
-        # them — they cannot be made again.
-        if stem in lines and ext.lower() in ('.ogg', '.wav'):
-            os.unlink(os.path.join(RAW, entry))
-            gone += 1
-        else:
-            kept += 1
-    print('\ndeleted %d spoken clips, kept %d other files in res/raw:' % (gone, kept))
-    for entry in sorted(os.listdir(RAW)):
-        stem = os.path.splitext(entry)[0]
-        if stem not in lines:
-            print('   %s' % entry)
+    voice_output.check_encoder(os.path.join(WORK, 'check'))
+    voice_output.rebuild_lines(ROOT)
+    voice_output.clear_spoken(RAW, load_lines())
 
     if os.path.exists(LEDGER):
         os.unlink(LEDGER)
@@ -513,7 +418,7 @@ def do_fresh(args):
 
 def do_all(args):
     check_ready(args)
-    check_encoder()
+    voice_output.check_encoder(os.path.join(WORK, 'check'))
     lines = load_lines()
     names = sorted(lines)
     if args.only:

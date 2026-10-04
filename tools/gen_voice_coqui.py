@@ -11,6 +11,7 @@ this was written in cannot reach.
     python tools/gen_voice_coqui.py --check      # look before leaping
     python tools/gen_voice_coqui.py --sample     # one line, plain and shaped
     python tools/gen_voice_coqui.py             # all 1,136 into res/raw
+    python tools/gen_voice_coqui.py --fresh      # the same, over another voice
 
 The voice that was chosen by ear is male1, the Coqui VITS one. It is its own
 repository, which is the default above, and it is also a folder in the eight-voice
@@ -43,6 +44,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from voice_moods import mood_for, tally                    # noqa: E402
+import voice_output                                        # noqa: E402
 
 
 def _utf8_console():
@@ -692,10 +694,10 @@ def write(samples, rate, path, shaped=True):
         w.setframerate(rate)
         w.writeframes(np.asarray(pcm, dtype='<i2').tobytes())
     try:
-        subprocess.check_call(['oggenc', '-Q', '-q', '4', '-o', path, wav])
+        voice_output.encode(wav, path)
         os.unlink(wav)
         final = path
-    except (OSError, subprocess.CalledProcessError):
+    except (OSError, RuntimeError, subprocess.CalledProcessError):
         final = os.path.splitext(path)[0] + '.wav'
         os.replace(wav, final)
     return final, os.path.getsize(final), pcm
@@ -742,16 +744,31 @@ def do_sample(args):
     print('\na grown man is near 110 Hz, a small child near 280.')
 
 
-def do_all(args):
+def do_fresh(args):
+    """Start the whole set again: the lines from the manifest, the clips deleted.
+
+    The checks all run before the first deletion. res/raw holding a name the
+    Java refers to is not optional — a clip missing from it is a compile error,
+    not a silence — so nothing is removed until it is certain the run can
+    replace it.
+    """
+    voice_output.check_encoder(os.path.join(SAMPLES, 'check'))
+    voice = engine(args)               # the model loads and speaks, or we stop
+    voice_output.rebuild_lines(ROOT)
+    voice_output.clear_spoken(RAW, load_lines())
+    if os.path.exists(LEDGER):
+        os.unlink(LEDGER)
+    do_all(args, voice)
+
+
+def do_all(args, voice=None):
     lines = load_lines()
     names = sorted(lines)
     if args.only:
         names = [n for n in names if n.startswith(args.only)]
         if not names:
             sys.exit('nothing starts with %r' % args.only)
-    if not shutil.which('oggenc'):
-        sys.exit('oggenc is not on PATH. Over an hour of speech does not ship as\n'
-                 'wav — install vorbis-tools. (--sample works without it.)')
+    voice_output.check_encoder(os.path.join(SAMPLES, 'check'))
     ledger = read_ledger()
     spoken = set() if args.force else set(ledger['done'])
     todo = [n for n in names if n not in spoken]
@@ -760,7 +777,7 @@ def do_all(args):
     for mood, count in sorted(tally(todo).items(), key=lambda kv: -kv[1]):
         print('   %-10s %4d   pace %.2f' % (mood, count, PACE[mood]))
     print()
-    voice = engine(args)
+    voice = voice or engine(args)
     rate = voice.rate
     done = failed = 0
     for i, name in enumerate(todo, 1):
@@ -850,6 +867,9 @@ def main():
                         help='one line, four ways, to find what is spoiling it')
     parser.add_argument('--vowels', action='store_true',
                         help='keep the harakat (off by default for this model)')
+    parser.add_argument('--fresh', action='store_true',
+                        help='rebuild the lines from the manifest, delete the '
+                             'clips of the last voice, and speak them all again')
     parser.add_argument('--plain', action='store_true',
                         help='write the model\'s own sound, unshaped — pick this\n'
                              'if the plain sample from --sample was the better one')
@@ -870,6 +890,8 @@ def main():
         do_check(args)
     elif args.sample:
         do_sample(args)
+    elif args.fresh:
+        do_fresh(args)
     else:
         do_all(args)
 
