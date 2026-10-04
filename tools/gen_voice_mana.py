@@ -36,6 +36,7 @@ import argparse
 import io
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -175,35 +176,49 @@ def do_setup(args):
               % (os.path.getsize(os.path.join(target, name)) / 1e6, name))
 
 
-def check_scipy():
-    """Catch the scipy that parallel-wavegan broke, before anything slow starts.
+_FAULT = re.compile(r'^([A-Za-z_][\w.]*(?:Error|Exception|Exit|Interrupt))\b')
 
-    Installing parallel-wavegan upgrades scipy past the 1.12 its own code needs,
-    so the pin silently stops holding. The symptom arrives much later, inside a
-    subprocess, as an ImportError about a window function — which is a long way
-    from the cause.
-    """
-    try:
-        from scipy.signal import kaiser                    # noqa: F401
-        return
-    except Exception as problem:                           # noqa: BLE001
-        # Two different faults land here and they need different answers: the
-        # name is gone (scipy too new), or scipy will not load at all (built
-        # against numpy 1.x, running under numpy 2).
-        text = '%s: %s' % (type(problem).__name__,
-                           ' '.join(str(problem).split())[:300])
+
+def fault(text):
+    """The last exception line of a traceback — the one that says why."""
+    for line in reversed((text or '').strip().splitlines()):
+        line = line.strip()
+        if _FAULT.match(line):
+            return line
+    return ''
+
+
+def versions():
     try:
         import numpy
         import scipy
-        have = 'numpy %s, scipy %s' % (numpy.__version__, scipy.__version__)
+        return 'numpy %s, scipy %s' % (numpy.__version__, scipy.__version__)
     except Exception:                                      # noqa: BLE001
-        have = 'numpy or scipy will not import at all'
-    sys.exit('this model\'s vocoder cannot use what is installed (%s).\n  %s%s'
-             % (have, text, advice(text)))
+        return 'numpy or scipy will not import at all'
+
+
+def check_vocoder_code():
+    """Import what inference.py imports on its line 8, before anything slow starts.
+
+    That one line is the piece that keeps breaking — the package is missing, or
+    scipy moved out from under it — and every one of those faults otherwise
+    surfaces minutes later, from inside a subprocess, as a cut-off traceback.
+    Importing it here means the answer arrives in a second, with the fix beside
+    it. The subprocess runs this same interpreter, so what imports here imports
+    there.
+    """
+    try:
+        from parallel_wavegan.utils import load_model      # noqa: F401
+        return
+    except Exception as problem:                           # noqa: BLE001
+        text = '%s: %s' % (type(problem).__name__,
+                           ' '.join(str(problem).split())[:300])
+    sys.exit('the vocoder\'s code will not load with what is installed (%s).\n'
+             '  %s%s' % (versions(), text, advice(text)))
 
 
 def check_ready(args):
-    check_scipy()
+    check_vocoder_code()
     missing = [n for n in ('encoder.pt', 'synthesizer.pt', 'vocoder_HiFiGAN.pkl',
                            'config.yml')
                if not os.path.exists(os.path.join(final_models(), n))]
@@ -228,16 +243,33 @@ def say(args, text, name):
     out = os.path.join(results, name + '.wav')
     if os.path.exists(out):
         os.unlink(out)
-    done = subprocess.run(
-        [sys.executable, 'inference.py', '--vocoder', 'HiFiGAN',
-         '--text', text, '--ref_wav_path', os.path.abspath(args.ref),
-         '--test_name', name],
-        cwd=CODE, capture_output=True, text=True)
+    command = [sys.executable, 'inference.py', '--vocoder', 'HiFiGAN',
+               '--text', text, '--ref_wav_path', os.path.abspath(args.ref),
+               '--test_name', name]
+    done = subprocess.run(command, cwd=CODE, capture_output=True, text=True)
     if not os.path.exists(out):
-        tail = (done.stderr or done.stdout or '').strip().splitlines()
-        raise RuntimeError('no wav came out: %s'
-                           % ' '.join(tail[-3:])[:200] if tail else 'silent failure')
+        raise RuntimeError(failed(command, done))
     return out
+
+
+def failed(command, done):
+    """Say why the run produced nothing, and keep the whole of it to read.
+
+    A traceback's last line is the one that names the fault; the lines above it
+    are the road there. Cutting the text to a fixed width, as this used to,
+    throws away exactly the part that matters, so the full output goes to a file
+    and only the naming line is printed.
+    """
+    log = os.path.join(WORK, 'last_run.log')
+    with io.open(log, 'w', encoding='utf-8', errors='replace') as sink:
+        sink.write('command: %s\n\n--- stdout ---\n%s\n--- stderr ---\n%s\n'
+                   % (' '.join(command), done.stdout or '', done.stderr or ''))
+    text = ((done.stderr or '') + '\n' + (done.stdout or '')).strip()
+    why = fault(text)
+    if not why:
+        why = text.splitlines()[-1].strip() if text else 'it printed nothing at all'
+    return ('no wav came out.\n  %s%s\n\n  the whole run is in %s'
+            % (why, advice(why), os.path.relpath(log, ROOT)))
 
 
 def write(source, path):
