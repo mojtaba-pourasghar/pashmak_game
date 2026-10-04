@@ -315,9 +315,71 @@ def failed(command, done):
             % (why, advice(why), os.path.relpath(log, ROOT)))
 
 
+def encoder():
+    """Whatever on this machine can write an ogg: oggenc, or ffmpeg.
+
+    vorbis-tools is a package Windows mostly does not have and cannot install in
+    one step. ffmpeg encodes the same format, is already on many machines, and
+    installs with one winget line, so either one is accepted and neither is
+    insisted on.
+    """
+    for tool in ('oggenc', 'ffmpeg'):
+        if shutil.which(tool):
+            return tool
+    return None
+
+
+NEED_ENCODER = (
+    'nothing here can write an ogg. An hour and a half of speech does not ship\n'
+    'as wav — it is ten times the size — and res/raw cannot hold welcome.ogg and\n'
+    'welcome.wav at once: two files of one name are one resource and aapt refuses\n'
+    'the build. Either of these is enough:\n'
+    '\n  winget install Gyan.FFmpeg          (then open a new shell)\n'
+    '  or install vorbis-tools, which brings oggenc\n'
+    '\n--sample and --probe work without it.')
+
+
+def check_encoder():
+    """Prove the encoder works, here, before anything is deleted.
+
+    Being on PATH is not the same as being able to do the job: an ffmpeg built
+    without libvorbis finds the file, starts, and fails on the first clip. A
+    tenth of a second of silence through the real command line answers that in
+    no time at all, and this is the check that has to hold — the step after it
+    deletes the app's whole voice.
+    """
+    if not encoder():
+        sys.exit(NEED_ENCODER)
+    import wave
+    folder = os.path.join(WORK, 'check')
+    if not os.path.isdir(folder):
+        os.makedirs(folder)
+    source, target = os.path.join(folder, 'q.wav'), os.path.join(folder, 'q.ogg')
+    with wave.open(source, 'wb') as out:
+        out.setnchannels(1)
+        out.setsampwidth(2)
+        out.setframerate(22050)
+        out.writeframes(b'\0\0' * 2205)
+    if os.path.exists(target):
+        os.unlink(target)
+    try:
+        written = write(source, target)
+    except Exception as problem:                           # noqa: BLE001
+        sys.exit('%s is on PATH but could not write an ogg:\n  %s\n\n%s'
+                 % (encoder(), ' '.join(str(problem).split())[:200], NEED_ENCODER))
+    if not written.endswith('.ogg') or not os.path.getsize(written):
+        sys.exit('%s produced no ogg from a test clip.\n\n%s'
+                 % (encoder(), NEED_ENCODER))
+
+
 def write(source, path):
-    if shutil.which('oggenc'):
+    tool = encoder()
+    if tool == 'oggenc':
         subprocess.check_call(['oggenc', '-Q', '-q', '4', '-o', path, source])
+        return path
+    if tool == 'ffmpeg':
+        subprocess.check_call(['ffmpeg', '-v', 'error', '-y', '-i', source,
+                               '-c:a', 'libvorbis', '-q:a', '4', path])
         return path
     final = os.path.splitext(path)[0] + '.wav'
     shutil.copyfile(source, final)
@@ -410,6 +472,13 @@ def do_fresh(args):
     could fall out of date. What stays is printed, because deleting is the one
     thing here that cannot be undone by running the tool again.
     """
+    # Everything that could stop the run is checked before a single file is
+    # deleted. The first version of this deleted first and then found there was
+    # no encoder, which left the app with no speech at all and nothing to show
+    # for it — and a missing res/raw file is a compile error, not a silence.
+    check_ready(args)
+    check_encoder()
+
     print('rebuilding the line list from audio_manifest.txt')
     build = os.path.join(ROOT, 'tools/build_voice_lines.py')
     done = subprocess.run([sys.executable, build], capture_output=True, text=True)
@@ -444,12 +513,7 @@ def do_fresh(args):
 
 def do_all(args):
     check_ready(args)
-    if not shutil.which('oggenc'):
-        # write() falls back to wav, and res/raw cannot hold welcome.ogg and
-        # welcome.wav at once: two files of one name are one resource, and aapt
-        # refuses the build. An hour and a half of wav is also ten times the size.
-        sys.exit('oggenc is not on PATH — install vorbis-tools. (--sample and\n'
-                 '--probe work without it; the full set does not.)')
+    check_encoder()
     lines = load_lines()
     names = sorted(lines)
     if args.only:
