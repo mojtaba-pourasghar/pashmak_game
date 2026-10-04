@@ -27,6 +27,15 @@ breaks whichever was there first.
     .venv-mana\\Scripts\\activate
     python -m pip install "scipy==1.12.0" parallel-wavegan torch soundfile huggingface_hub
 
+What was chosen by ear: the male reference already in the repo,
+tools/reference/umbriel_welcome.wav, with the vowel marks stripped. Both are the
+defaults now, so the whole set is one command:
+
+    python3 tools/gen_voice_mana.py --fresh
+
+--fresh rebuilds the line list from the manifest, deletes the clips of a previous
+voice, and speaks all 1,136 again.
+
 What the first sample taught: it came out an adult woman with an accent, from a
 reference that was the model's own demo clip. ManaTTS is one female narrator —
 that is the corpus — so fine-tuning on it pulls every voice back towards her, and
@@ -386,8 +395,61 @@ def do_probe(args):
     print('\nListen to all of them and say which, if any, is a boy.')
 
 
+def do_fresh(args):
+    """Clear out the spoken clips and build the whole set again from the manifest.
+
+    "Delete everything in res/raw" cannot be taken literally, and the reason is
+    the request itself: audio_manifest.txt lives in that folder, and it is the
+    hand-vowelised source every clip is generated from. So do the ten bought
+    lullaby recordings, which no model can make again, and the thirteen sound
+    effects and music beds. Emptying the folder would take all of that with it.
+
+    Instead the clips to delete are named from the line list — <name>.* for each
+    of the 1,136 lines, whatever extension the last voice wrote — so anything
+    that is not speech is untouched by construction rather than by a list that
+    could fall out of date. What stays is printed, because deleting is the one
+    thing here that cannot be undone by running the tool again.
+    """
+    print('rebuilding the line list from audio_manifest.txt')
+    build = os.path.join(ROOT, 'tools/build_voice_lines.py')
+    done = subprocess.run([sys.executable, build], capture_output=True, text=True)
+    if done.returncode:
+        sys.exit('could not rebuild the line list:\n%s'
+                 % (done.stderr or done.stdout).strip())
+    for row in (done.stdout or '').strip().splitlines():
+        print('  %s' % row)
+
+    lines = load_lines()
+    gone = kept = 0
+    for entry in sorted(os.listdir(RAW)):
+        stem, ext = os.path.splitext(entry)
+        # Only the formats a voice run writes. The bought lullabies are mp3,
+        # so leaving that extension out means no name clash could ever reach
+        # them — they cannot be made again.
+        if stem in lines and ext.lower() in ('.ogg', '.wav'):
+            os.unlink(os.path.join(RAW, entry))
+            gone += 1
+        else:
+            kept += 1
+    print('\ndeleted %d spoken clips, kept %d other files in res/raw:' % (gone, kept))
+    for entry in sorted(os.listdir(RAW)):
+        stem = os.path.splitext(entry)[0]
+        if stem not in lines:
+            print('   %s' % entry)
+
+    if os.path.exists(LEDGER):
+        os.unlink(LEDGER)
+    do_all(args)
+
+
 def do_all(args):
     check_ready(args)
+    if not shutil.which('oggenc'):
+        # write() falls back to wav, and res/raw cannot hold welcome.ogg and
+        # welcome.wav at once: two files of one name are one resource, and aapt
+        # refuses the build. An hour and a half of wav is also ten times the size.
+        sys.exit('oggenc is not on PATH — install vorbis-tools. (--sample and\n'
+                 '--probe work without it; the full set does not.)')
     lines = load_lines()
     names = sorted(lines)
     if args.only:
@@ -434,7 +496,9 @@ def do_all(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
-    parser.add_argument('--ref', help='a clean wav of the voice to clone')
+    parser.add_argument('--ref', default=MALE_REF,
+                        help='a clean wav of the voice to clone (default: '
+                             'the male reference in tools/reference)')
     parser.add_argument('--token', help='a Hugging Face token, if needed')
     parser.add_argument('--only')
     parser.add_argument('--force', action='store_true')
@@ -445,6 +509,9 @@ def main():
     parser.add_argument('--harakat', choices=('strip', 'keep'), default='strip',
                         help='the vowel marks: strip them (the default — this '
                              'model was trained on plain prose) or keep them')
+    parser.add_argument('--fresh', action='store_true',
+                        help='rebuild the lines from the manifest, delete the '
+                             'clips of the last voice, and speak them all again')
     parser.add_argument('--probe', action='store_true',
                         help='every reference against both forms of the text')
     parser.add_argument('--refs', nargs='+',
@@ -452,6 +519,8 @@ def main():
     args = parser.parse_args()
     if args.setup:
         do_setup(args)
+    elif args.fresh:
+        do_fresh(args)
     elif args.probe:
         args.sample = args.sample or 'welcome'
         do_probe(args)
