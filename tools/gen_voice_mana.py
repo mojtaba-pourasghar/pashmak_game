@@ -27,6 +27,20 @@ breaks whichever was there first.
     .venv-mana\\Scripts\\activate
     python -m pip install "scipy==1.12.0" parallel-wavegan torch soundfile huggingface_hub
 
+What the first sample taught: it came out an adult woman with an accent, from a
+reference that was the model's own demo clip. ManaTTS is one female narrator —
+that is the corpus — so fine-tuning on it pulls every voice back towards her, and
+--ref only nudges. Two things can be wrong at once here, the cloned voice and the
+vowel marks in the text, so --probe speaks one line with every reference against
+both forms of it and names each clip after what made it:
+
+    python3 tools/gen_voice_mana.py --probe
+
+The vowel marks are stripped by default now. The manifest is hand-vowelised for
+espeak and the IPA models; a Tacotron2 trained on plain prose has never seen a
+fatha, and a line full of characters it cannot place is mispronounced in a way
+that sounds like an accent.
+
 Being multi-speaker is the point: it clones from --ref, so the voice can be the
 natural recording that sounded best, or any clean recording of whoever should be
 Pashmak. One caution worth saying once: a real person's voice is theirs. Check what
@@ -116,6 +130,26 @@ def need(module, why):
                            ' '.join(str(problem).split())[:200])
         sys.exit('%s is needed (%s).\n  %s%s'
                  % (module, why, text, advice('%s %s' % (module, text))))
+
+
+HARAKAT = ''.join(chr(c) for c in list(range(0x64b, 0x653)) + [0x670])
+MALE_REF = os.path.join(ROOT, 'tools/reference/umbriel_welcome.wav')
+
+
+def bare(text):
+    """The line without its vowel marks.
+
+    The manifest is hand-vowelised, which espeak and the IPA models need. A
+    Tacotron2 trained on ordinary Persian prose has never seen a fatha, so every
+    one of them is either dropped or read as something — and a line full of
+    characters the model cannot place comes out mispronounced in a way that
+    sounds like an accent rather than a bug.
+    """
+    return ''.join(c for c in text if c not in HARAKAT)
+
+
+def spoken(args, text):
+    return text if args.harakat == 'keep' else bare(text)
 
 
 def final_models():
@@ -244,7 +278,7 @@ def say(args, text, name):
     if os.path.exists(out):
         os.unlink(out)
     command = [sys.executable, 'inference.py', '--vocoder', 'HiFiGAN',
-               '--text', text, '--ref_wav_path', os.path.abspath(args.ref),
+               '--text', spoken(args, text), '--ref_wav_path', os.path.abspath(args.ref),
                '--test_name', name]
     done = subprocess.run(command, cwd=CODE, capture_output=True, text=True)
     if not os.path.exists(out):
@@ -315,6 +349,43 @@ def do_sample(args):
           % (os.path.relpath(final, ROOT), os.path.getsize(final) / 1024.0))
 
 
+def do_probe(args):
+    """Every reference against both forms of the text, in one run.
+
+    Two things can make a sample wrong at once — the voice it cloned and the
+    vowel marks in the text — and judging them one at a time costs a round trip
+    each. Four clips, named after what made them, settle both by ear.
+    """
+    refs = args.refs or [r for r in (args.ref, MALE_REF) if r]
+    refs = [r for r in dict.fromkeys(refs) if os.path.exists(r)]
+    if not refs:
+        sys.exit('--probe needs at least one reference wav, via --ref or --refs')
+    args.ref = refs[0]
+    check_ready(args)
+    lines = load_lines()
+    if args.sample not in lines:
+        sys.exit('no line called %s' % args.sample)
+    if not os.path.isdir(SAMPLES):
+        os.makedirs(SAMPLES)
+    text = lines[args.sample]
+    print('line : %s\ntext : %s\n' % (args.sample, text))
+    for ref in refs:
+        for marks in ('strip', 'keep'):
+            args.ref, args.harakat = ref, marks
+            stem = os.path.splitext(os.path.basename(ref))[0][:24]
+            name = 'mana_probe_%s_%s' % (stem, marks)
+            print('%-34s %-5s  ' % (stem, marks), end='', flush=True)
+            try:
+                made = say(args, text, name)
+            except Exception as problem:                   # noqa: BLE001
+                print('FAILED %s' % ' '.join(str(problem).split())[:90])
+                continue
+            final = write(made, os.path.join(SAMPLES, name + '.ogg'))
+            print('%6.1f KB  %s'
+                  % (os.path.getsize(final) / 1024.0, os.path.relpath(final, ROOT)))
+    print('\nListen to all of them and say which, if any, is a boy.')
+
+
 def do_all(args):
     check_ready(args)
     lines = load_lines()
@@ -369,10 +440,21 @@ def main():
     parser.add_argument('--force', action='store_true')
     parser.add_argument('--setup', action='store_true',
                         help='assemble the four pieces; run this first')
-    parser.add_argument('--sample', nargs='?', const='welcome')
+    parser.add_argument('--sample', nargs='?', const='welcome',
+                        help='speak one line and stop (default welcome)')
+    parser.add_argument('--harakat', choices=('strip', 'keep'), default='strip',
+                        help='the vowel marks: strip them (the default — this '
+                             'model was trained on plain prose) or keep them')
+    parser.add_argument('--probe', action='store_true',
+                        help='every reference against both forms of the text')
+    parser.add_argument('--refs', nargs='+',
+                        help='with --probe: the references to try')
     args = parser.parse_args()
     if args.setup:
         do_setup(args)
+    elif args.probe:
+        args.sample = args.sample or 'welcome'
+        do_probe(args)
     elif args.sample:
         do_sample(args)
     else:
