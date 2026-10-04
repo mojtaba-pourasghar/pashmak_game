@@ -12,6 +12,14 @@ this was written in cannot reach.
     python tools/gen_voice_coqui.py --sample     # one line, plain and shaped
     python tools/gen_voice_coqui.py             # all 1,136 into res/raw
 
+The voice that was chosen by ear is male1, the Coqui VITS one. It is its own
+repository, which is the default above, and it is also a folder in the eight-voice
+shelf whose demo clips were the ones listened to. --folder takes that route, and
+is the way to be sure the weights are the very ones behind the clip:
+
+    python tools/gen_voice_coqui.py --check --model karim23657/persian-tts-vits \
+        --folder persian-tts-male1-vits-coqui
+
 --check is worth doing first and costs one small download. It prints what the
 repository holds, then reads the model's own config and says whether it wants
 espeak — a VITS model trained on phonemes will not speak a word without it, and
@@ -179,7 +187,15 @@ def preflight():
         sys.exit(1)
 
 
-def repo_files(model, token=None):
+def repo_files(model, token=None, folder=None):
+    """What the repository holds, biggest first, or just one folder of it.
+
+    Some repositories are a shelf rather than a model: karim23657/persian-tts-vits
+    is eight Persian voices, each in its own folder with its own config. Keeping
+    the whole listing would let pick() choose a checkpoint from one voice and the
+    config of another, which starts and then sounds wrong, so the folder is cut
+    down to here where it still means something.
+    """
     from huggingface_hub import HfApi
     try:
         info = HfApi().model_info(model, files_metadata=True,
@@ -187,8 +203,18 @@ def repo_files(model, token=None):
     except Exception as problem:                           # noqa: BLE001
         _network_or_raise(problem)
         raise
-    return sorted(((f.rfilename, f.size or 0) for f in info.siblings),
-                  key=lambda row: -row[1])
+    files = sorted(((f.rfilename, f.size or 0) for f in info.siblings),
+                   key=lambda row: -row[1])
+    if not folder:
+        return files
+    prefix = folder.strip('/') + '/'
+    inside = [row for row in files if row[0].startswith(prefix)]
+    if not inside:
+        sys.exit('%s has no folder called %s. Its folders are:\n  %s'
+                 % (model, folder, '\n  '.join(sorted(
+                     {n.split('/')[0] for n, _ in files if '/' in n}) or
+                     ['(none — the files sit at the top level)'])))
+    return inside
 
 
 def _network_or_raise(problem):
@@ -322,7 +348,7 @@ def _gated(model):
 
 
 def do_check(args):
-    files = repo_files(args.model, args.token)
+    files = repo_files(args.model, args.token, args.folder)
     print('%s holds %d file(s), %.1f MB:\n'
           % (args.model, len(files), sum(s for _, s in files) / 1e6))
     for name, size in files:
@@ -426,7 +452,7 @@ def do_notebook(args):
     When a guess about a library's internals is needed, the author's own code is
     the place to look, and it is a few kilobytes next to a 5.6 GB checkpoint.
     """
-    files = repo_files(args.model, args.token)
+    files = repo_files(args.model, args.token, args.folder)
     books = [n for n, _ in files if n.endswith('.ipynb')]
     if not books:
         sys.exit('no notebook in %s' % args.model)
@@ -585,7 +611,7 @@ class XttsVoice(object):
 
 def engine(args):
     preflight()
-    files = repo_files(args.model, args.token)
+    files = repo_files(args.model, args.token, args.folder)
     _first, config = pick(files)
     if not config:
         sys.exit('no config in that repository — run --check')
@@ -742,7 +768,8 @@ def do_all(args):
         try:
             audio = voice.say(lines[name], PACE[mood_for(name)], args.ref)
             staged = path + '.part'
-            final, size, _pcm = write(audio, rate, staged, shaped=True)
+            final, size, _pcm = write(audio, rate, staged,
+                                      shaped=not args.plain)
             if size < MIN_BYTES:
                 raise RuntimeError('encoded to almost nothing')
             os.replace(final, path)
@@ -808,6 +835,8 @@ def do_probe(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.add_argument('--model', default=MODEL)
+    parser.add_argument('--folder', help='one voice folder inside a repo '
+                                         'that holds several')
     parser.add_argument('--cuda', action='store_true')
     parser.add_argument('--ref', default=os.path.join(ROOT,
                         'tools/reference/umbriel_welcome.wav'),
@@ -821,6 +850,9 @@ def main():
                         help='one line, four ways, to find what is spoiling it')
     parser.add_argument('--vowels', action='store_true',
                         help='keep the harakat (off by default for this model)')
+    parser.add_argument('--plain', action='store_true',
+                        help='write the model\'s own sound, unshaped — pick this\n'
+                             'if the plain sample from --sample was the better one')
     parser.add_argument('--no-speed', action='store_true',
                         help='do not ask XTTS to change pace')
     parser.add_argument('--notebook', action='store_true',
