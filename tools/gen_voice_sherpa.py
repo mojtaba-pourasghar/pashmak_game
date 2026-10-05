@@ -36,7 +36,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from voice_moods import PACE, mood_for, tally                # noqa: E402
-from voice_text import bare                                  # noqa: E402
+from voice_text import HARAKAT, bare                         # noqa: E402
 import voice_output                                          # noqa: E402
 
 
@@ -61,6 +61,10 @@ MODEL = 'karim23657/persian-tts-vits'
 FOLDER = 'persian-tts-male1-vits-coqui'
 WANTED = ('model.onnx', 'tokens.txt')
 MIN_BYTES = 900
+
+# Plain Persian, no vowel marks, for the first listen. This is the welcome line
+# as a person would write it, which is what this model was trained on.
+PLAIN = 'سلام قند عسلم! من پشمکم، دوست جدیدت! آماده‌ای باهم کلی بازی کنیم؟'
 
 # Where espeak-ng's data can be found, best first. The pip package carries a
 # complete copy, Persian voice included, and needs no administrator and no PATH,
@@ -304,6 +308,34 @@ def do_sample(args):
     print('\na grown man is near 110 Hz, a small child near 280.')
 
 
+def do_text(args):
+    """Speak a sentence given on the command line, and nothing else.
+
+    Judging a voice from the app's own lines means judging two things at once,
+    because those lines are vowelised and this model never saw a vowel mark. A
+    plain sentence typed in separates them: if this sounds right, the voice is
+    right and only the text needs work.
+    """
+    tts = engine(args)
+    if not os.path.isdir(SAMPLES):
+        os.makedirs(SAMPLES)
+    import voice_shape as shaping
+    text = args.text if isinstance(args.text, str) and args.text.strip() else PLAIN
+    marks = sum(1 for c in text if c in HARAKAT)
+    print('text : %s' % text)
+    print('       %d characters%s, pace %.2f'
+          % (len(text), ', %d vowel marks (removed)' % marks if marks else
+             ', plain already', args.pace))
+    samples, rate = speak(tts, text, args.pace, args.vowels)
+    for tag, shaped in (('plain', False), ('shaped', True)):
+        path = os.path.join(SAMPLES, 'sherpa_text_%s.ogg' % tag)
+        final, size, pcm = voice_output.write_clip(samples, rate, path, shaped)
+        print('  %-7s %5.2f s  %3.0f Hz  %6.1f KB  %s'
+              % (tag, len(pcm) / float(rate), shaping.fundamental(pcm, rate),
+                 size / 1024.0, os.path.relpath(final, ROOT)))
+    print('\na grown man is near 110 Hz, a small child near 280.')
+
+
 def do_fresh(args):
     """Start the whole set again, checking everything before deleting anything.
 
@@ -385,12 +417,20 @@ def main():
     parser.add_argument('--check', action='store_true',
                         help='the vocabulary, and the app\'s text against it')
     parser.add_argument('--sample', nargs='?', const='welcome')
+    parser.add_argument('--text', nargs='?', const=PLAIN,
+                        help='speak this sentence instead of a line of the app; '
+                             'with no sentence, a plain Persian one')
+    parser.add_argument('--pace', type=float, default=1.08,
+                        help='length scale: larger is slower (default 1.08, the '
+                             'pace the mascot talks at in a game)')
     parser.add_argument('--fresh', action='store_true',
                         help='rebuild the lines from the manifest, delete the '
                              'clips of the last voice, and speak them all again')
     args = parser.parse_args()
     if args.check:
         do_check(args)
+    elif args.text:
+        do_text(args)
     elif args.sample:
         do_sample(args)
     elif args.fresh:
