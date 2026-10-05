@@ -18,3 +18,33 @@ def bare(text):
     rather than a bug — which is how it was first heard.
     """
     return ''.join(c for c in text if c not in HARAKAT)
+
+
+SHADDA = '\u0651'
+
+
+def degeminate(text):
+    """Writes a shadda out as the doubled consonant it stands for.
+
+    espeak does not understand it: given «غُصِّه» it says the *name* of the mark,
+    so the line comes back as ɢˌosetˈaʃdidh — Pashmak announcing "ghosse-tashdid".
+    76 of the 1,136 lines were doing that. Persian gemination is just the
+    consonant twice, so that is what espeak is handed; the manifest itself is
+    never touched, because the shadda is correct there and a neural voice reads
+    it properly.
+    """
+    if SHADDA not in text:
+        return text
+    out = list(text)
+    i = len(out) - 1
+    while i >= 0:
+        if out[i] == SHADDA:
+            # Back up over this consonant's vowels to reach the consonant itself.
+            j = i - 1
+            while j >= 0 and out[j] in HARAKAT:
+                j -= 1
+            del out[i]
+            if j >= 0:
+                out.insert(j + 1, out[j])
+        i -= 1
+    return ''.join(out)

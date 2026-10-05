@@ -36,7 +36,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from voice_moods import PACE, mood_for, tally                # noqa: E402
-from voice_text import HARAKAT, bare                         # noqa: E402
+from voice_text import HARAKAT, bare, degeminate             # noqa: E402
 import voice_output                                          # noqa: E402
 
 
@@ -203,6 +203,9 @@ def engine(args):
     sherpa = need('sherpa_onnx', 'it runs the ONNX voice', 'sherpa-onnx')
     paths = grab(args)
     symbols = tokens_of(paths['tokens.txt'])
+    args.marks = marks_for(args, symbols)
+    print('vowel marks : %s  (%s vocabulary)'
+          % (args.marks, 'phoneme' if phonemic(symbols) else 'letter'))
     vits = sherpa.OfflineTtsVitsModelConfig(
         model=paths['model.onnx'],
         tokens=paths['tokens.txt'],
@@ -230,10 +233,34 @@ def engine(args):
         sys.exit('sherpa-onnx would not load the voice:\n  %s%s' % (text[:400], hint))
 
 
-def speak(tts, text, pace, vowels=False):
+def said_as(text, marks):
+    """The text in the form this model should be handed.
+
+    Gemination is first written out whichever way it goes: espeak does not know
+    a shadda and says the name of the mark, and taking the mark off without
+    doubling the consonant loses the gemination instead — «غصه» for «غصّه».
+
+    Then the marks stay or go. Which is right is not a matter of taste, it is a
+    property of the model: one with Persian letters in its vocabulary never saw a
+    fatha, while one that phonemises through espeak depends on them, because
+    Persian script leaves the short vowels out and espeak otherwise has to guess
+    them. Guessed wrong is exactly what mispronunciation sounds like.
+    """
+    text = degeminate(text)
+    return text if marks == 'keep' else bare(text)
+
+
+def speak(tts, text, pace, marks='strip'):
     """One line. sherpa's speed is the pace the other way up: larger is faster."""
-    said = tts.generate(text if vowels else bare(text), sid=0, speed=1.0 / pace)
+    said = tts.generate(said_as(text, marks), sid=0, speed=1.0 / pace)
     return said.samples, said.sample_rate
+
+
+def marks_for(args, symbols):
+    """keep or strip, with auto meaning "whatever this model was built for"."""
+    if args.harakat != 'auto':
+        return args.harakat
+    return 'keep' if phonemic(symbols) else 'strip'
 
 
 def read_ledger():
@@ -255,6 +282,39 @@ def load_lines():
     return json.load(io.open(LINES, encoding='utf-8'))
 
 
+def do_list(args):
+    """Every voice in the repository, and which of them this tool can run.
+
+    These shelves hold exports of several kinds side by side. A folder with a
+    model.onnx and a tokens.txt is one this tool drives; one with a .pth is for
+    the Coqui tool instead. Listing costs nothing and saves fetching 114 MB of
+    the wrong thing.
+    """
+    hub = need('huggingface_hub', 'the listing comes from there')
+    try:
+        info = hub.HfApi().model_info(args.model, files_metadata=True,
+                                      token=args.token)
+    except Exception as problem:                           # noqa: BLE001
+        sys.exit('could not list %s:\n  %s'
+                 % (args.model, ' '.join(str(problem).split())[:200]))
+    folders = {}
+    for f in info.siblings:
+        folder = os.path.dirname(f.rfilename) or '(top level)'
+        folders.setdefault(folder, []).append((os.path.basename(f.rfilename),
+                                               f.size or 0))
+    print('%s holds %d folder(s):\n' % (args.model, len(folders)))
+    for folder in sorted(folders):
+        names = [n for n, _ in folders[folder]]
+        size = sum(s for _, s in folders[folder]) / 1e6
+        onnx = 'model.onnx' in names and 'tokens.txt' in names
+        print('  %-42s %6.1f MB  %s' % (folder, size,
+              'runs here' if onnx else 'not an ONNX export (%s)'
+              % ', '.join(sorted(names)[:3])))
+    print('\n  --folder <name> picks one. The demo clip in each folder is what\n'
+          '  tools/hear_voices.py fetched, so the name beside the clip you liked\n'
+          '  is the name to pass.')
+
+
 def do_check(args):
     paths = grab(args)
     print('%s/%s' % (args.model, args.folder or ''))
@@ -268,9 +328,10 @@ def do_check(args):
     print('  %s' % ' '.join(sorted(s for s in symbols if s.strip())[:48]))
 
     lines = load_lines()
+    marks = marks_for(args, symbols)
     used = set()
     for text in lines.values():
-        used |= set(bare(text))
+        used |= set(said_as(text, marks))
     if not phonemic(symbols):
         absent = sorted(c for c in used if c not in symbols and c.strip())
         print('\nthe app uses %d distinct characters; %d have no token:\n  %s'
@@ -298,7 +359,7 @@ def do_sample(args):
     mood = mood_for(args.sample)
     print('line : %s   (mood %s, pace %.2f)' % (args.sample, mood, PACE[mood]))
     print('text : %s\n' % lines[args.sample])
-    samples, rate = speak(tts, lines[args.sample], PACE[mood], args.vowels)
+    samples, rate = speak(tts, lines[args.sample], PACE[mood], args.marks)
     for tag, shaped in (('plain', False), ('shaped', True)):
         path = os.path.join(SAMPLES, 'sherpa_%s.ogg' % tag)
         final, size, pcm = voice_output.write_clip(samples, rate, path, shaped)
@@ -320,13 +381,20 @@ def do_text(args):
     if not os.path.isdir(SAMPLES):
         os.makedirs(SAMPLES)
     import voice_shape as shaping
-    text = args.text if isinstance(args.text, str) and args.text.strip() else PLAIN
+    if isinstance(args.text, str) and args.text.strip():
+        text = args.text
+    elif args.marks == 'keep':
+        # This model wants the marks, so the sentence it is judged on should
+        # have them: the app's own welcome line, as the manifest writes it.
+        text = load_lines().get('welcome', PLAIN)
+    else:
+        text = PLAIN
     marks = sum(1 for c in text if c in HARAKAT)
-    print('text : %s' % text)
-    print('       %d characters%s, pace %.2f'
-          % (len(text), ', %d vowel marks (removed)' % marks if marks else
-             ', plain already', args.pace))
-    samples, rate = speak(tts, text, args.pace, args.vowels)
+    print('text  : %s' % text)
+    print('spoken: %s' % said_as(text, args.marks))
+    print('        %d characters, %d vowel marks, pace %.2f'
+          % (len(text), marks, args.pace))
+    samples, rate = speak(tts, text, args.pace, args.marks)
     for tag, shaped in (('plain', False), ('shaped', True)):
         path = os.path.join(SAMPLES, 'sherpa_text_%s.ogg' % tag)
         final, size, pcm = voice_output.write_clip(samples, rate, path, shaped)
@@ -374,7 +442,7 @@ def do_all(args, tts=None):
         path = os.path.join(RAW, name + '.ogg')
         try:
             samples, rate = speak(tts, lines[name], PACE[mood_for(name)],
-                                  args.vowels)
+                                  args.marks)
             staged = path + '.part'
             final, size, _pcm = voice_output.write_clip(
                 samples, rate, staged, shaped=not args.plain)
@@ -410,10 +478,15 @@ def main():
     parser.add_argument('--threads', type=int, default=4)
     parser.add_argument('--only', help='only clips whose name starts with this')
     parser.add_argument('--force', action='store_true')
-    parser.add_argument('--vowels', action='store_true',
-                        help='keep the harakat (off by default)')
+    parser.add_argument('--harakat', choices=('auto', 'keep', 'strip'),
+                        default='auto',
+                        help='the vowel marks. auto keeps them for a model that '
+                             'phonemises through espeak, which needs them, and '
+                             'strips them for one whose vocabulary is letters')
     parser.add_argument('--plain', action='store_true',
                         help='the model\'s own sound, unshaped')
+    parser.add_argument('--list', action='store_true', dest='listing',
+                        help='every voice in the repository, and which run here')
     parser.add_argument('--check', action='store_true',
                         help='the vocabulary, and the app\'s text against it')
     parser.add_argument('--sample', nargs='?', const='welcome')
@@ -427,7 +500,9 @@ def main():
                         help='rebuild the lines from the manifest, delete the '
                              'clips of the last voice, and speak them all again')
     args = parser.parse_args()
-    if args.check:
+    if args.listing:
+        do_list(args)
+    elif args.check:
         do_check(args)
     elif args.text:
         do_text(args)
