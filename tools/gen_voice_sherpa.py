@@ -13,16 +13,18 @@ something better than expected about it: the folder is not a Coqui checkpoint.
 That means no torch, no coqui-tts, no 2 GB of dependencies — one wheel that runs
 the model on the processor:
 
-    python -m pip install sherpa-onnx soundfile numpy scipy
+    python -m pip install sherpa-onnx espeakng-loader numpy scipy
     python tools/gen_voice_sherpa.py --check     # the vocabulary, and the text against it
     python tools/gen_voice_sherpa.py --sample    # one line, plain and shaped
     python tools/gen_voice_sherpa.py --fresh     # all 1,136 into res/raw
 
---check is the one to run first, and it earns its keep: it reads tokens.txt and
-says whether the model's vocabulary is Persian letters or IPA phonemes. That one
-fact decides everything. A letter model takes the text as it is; a phoneme model
-needs espeak-ng's data beside it and, without it, produces silence rather than an
-error. Then it holds every character of the app's 1,136 lines against that
+--check is the one to run first, and it earned its keep immediately: this voice
+turned out to have 152 tokens of IPA, not Persian letters. That one fact decides
+everything. A letter model takes the text as it is; a phoneme model needs
+espeak-ng's data beside it and, without it, produces silence rather than an
+error. The data is found by itself in any of four places, and the espeakng-loader
+package above is the one that needs no administrator — it carries a complete
+copy, Persian voice included. Then it holds every character of the app's 1,136 lines against that
 vocabulary and names the ones the model has no token for, which is the difference
 between knowing and finding out after an hour of synthesis.
 """
@@ -60,14 +62,18 @@ FOLDER = 'persian-tts-male1-vits-coqui'
 WANTED = ('model.onnx', 'tokens.txt')
 MIN_BYTES = 900
 
-# Where espeak-ng keeps its data when it is installed the usual way. A phoneme
-# model needs this folder; a letter model never looks at it.
+# Where espeak-ng's data can be found, best first. The pip package carries a
+# complete copy, Persian voice included, and needs no administrator and no PATH,
+# which is why it is tried before the installed program.
+ESPEAK_ENV = ('ESPEAK_DATA_PATH', 'ESPEAKNG_DATA_PATH', 'PHONEMIZER_ESPEAK_DATA')
 ESPEAK_GUESSES = (
     r'C:\Program Files\eSpeak NG\espeak-ng-data',
     r'C:\Program Files (x86)\eSpeak NG\espeak-ng-data',
     '/usr/share/espeak-ng-data',
     '/usr/local/share/espeak-ng-data',
 )
+# The Persian voice inside that folder. espeak keeps Iranian languages under ira.
+FARSI_VOICE = os.path.join('lang', 'ira', 'fa')
 
 
 def need(module, why, install=None):
@@ -126,23 +132,67 @@ def phonemic(symbols):
     return len(PERSIAN & symbols) < 8
 
 
+def looks_like_espeak(folder):
+    """Whether this folder really is espeak's data, and knows Persian.
+
+    Pointing at the wrong folder is not an error either — it is the same silence
+    as having none, so the two files that must be in a real one are checked: the
+    phoneme tables, and the Persian voice itself.
+    """
+    if not folder or not os.path.isdir(folder):
+        return False
+    return (os.path.exists(os.path.join(folder, 'phontab'))
+            and os.path.exists(os.path.join(folder, FARSI_VOICE)))
+
+
+def found_espeak():
+    """Every place worth looking, in order, with what it was."""
+    for key in ESPEAK_ENV:
+        if os.environ.get(key):
+            yield os.environ[key], key
+    try:
+        import espeakng_loader
+        yield str(espeakng_loader.get_data_path()), 'the espeakng-loader package'
+    except Exception:                                      # noqa: BLE001
+        pass
+    try:
+        import piper_phonemize
+        yield (os.path.join(os.path.dirname(piper_phonemize.__file__),
+                            'espeak-ng-data'), 'the piper-phonemize package')
+    except Exception:                                      # noqa: BLE001
+        pass
+    for guess in ESPEAK_GUESSES:
+        yield guess, 'the installed espeak-ng'
+
+
+NEED_ESPEAK = (
+    'this model speaks phonemes, so it needs espeak-ng\'s data folder — the\n'
+    'phoneme tables and the Persian voice — and nothing here has one.\n'
+    '\nThe easiest way needs no administrator and no PATH: a pip package carries\n'
+    'a complete copy, Persian included.\n'
+    '\n  %s -m pip install espeakng-loader\n'
+    '\nThen run the same command again; it is found by itself. An installed\n'
+    'espeak-ng works too (winget install espeak-ng), and so does pointing at any\n'
+    'copy of the folder:\n'
+    '\n  --data-dir "C:\\Program Files\\eSpeak NG\\espeak-ng-data"\n'
+    '\nWithout it the model is handed characters it has no token for, and the\n'
+    'result is silence rather than a complaint.')
+
+
 def espeak_data(args, symbols):
+    """The data folder this model needs, or nothing when it needs none."""
     if not phonemic(symbols):
         return ''
     if args.data_dir:
-        if not os.path.isdir(args.data_dir):
-            sys.exit('%s is not a folder' % args.data_dir)
+        if not looks_like_espeak(args.data_dir):
+            sys.exit('%s is not espeak-ng data: a real one holds phontab and %s.'
+                     % (args.data_dir, FARSI_VOICE))
         return args.data_dir
-    for guess in ESPEAK_GUESSES:
-        if os.path.isdir(guess):
-            return guess
-    sys.exit(
-        'this model speaks phonemes, so it needs espeak-ng\'s data folder, and\n'
-        'none of the usual places has one:\n  %s\n'
-        '\nInstall espeak-ng (winget install espeak-ng), then pass the folder:\n'
-        '  --data-dir "C:\\Program Files\\eSpeak NG\\espeak-ng-data"\n'
-        '\nWithout it the model is handed letters it has no token for, and the\n'
-        'result is silence rather than a complaint.' % '\n  '.join(ESPEAK_GUESSES))
+    for folder, source in found_espeak():
+        if looks_like_espeak(folder):
+            print('espeak data : %s\n              (%s)' % (folder, source))
+            return folder
+    sys.exit(NEED_ESPEAK % sys.executable)
 
 
 def engine(args):
@@ -161,7 +211,19 @@ def engine(args):
         # asked for from being applied to a batch instead of a line.
         max_num_sentences=1)
     config.validate()
-    return sherpa.OfflineTts(config)
+    try:
+        return sherpa.OfflineTts(config)
+    except Exception as problem:                           # noqa: BLE001
+        text = ' '.join(str(problem).split())
+        hint = ''
+        if 'data_dir' in text or 'espeak' in text.lower():
+            hint = '\n\n' + NEED_ESPEAK % sys.executable
+        elif 'voice' in text.lower() or 'language' in text.lower():
+            hint = ('\n\n  The model has to say which language it was trained on,'
+                    ' in its own\n  metadata, for espeak to phonemise for it. If'
+                    ' it does not, this export\n  cannot be driven this way — send'
+                    ' me the message above.')
+        sys.exit('sherpa-onnx would not load the voice:\n  %s%s' % (text[:400], hint))
 
 
 def speak(tts, text, pace, vowels=False):
