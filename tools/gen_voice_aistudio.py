@@ -50,7 +50,9 @@ import urllib.error
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from voice_moods import mood_for, tally           # noqa: E402  (after sys.path)
+from voice_text import polish                              # noqa: E402
+from voice_moods import (MOOD_DIRECTION, PERSONA, direction,
+                         mood_for, tally)           # noqa: E402  (after sys.path)
 
 
 def _utf8_console():
@@ -105,48 +107,6 @@ VOICES = [
 # Pashmak is a boy bear, so the shortlist above leads with the male voices
 # that sit in the middle of the range; Sulafat is warm but reads female.
 DEFAULT_VOICE = 'Algieba'
-
-# Who is speaking, on every single line. This is the "middle pitch and warm"
-# part, said once so it cannot drift between moods.
-PERSONA = (
-    'You are Pashmak, a small soft kind boy bear — a chubby, sweet cartoon mascot '
-    'who talks to a Persian-speaking child aged three to eight. Speak Persian in a '
-    'warm, mid-pitched voice: not high and not deep. Be natural and expressive, '
-    'clear enough for a small child to catch every single word, and never shouty, '
-    'never sing-song, never baby talk.'
-)
-
-# And how this particular line is said. Directed in words, which is the whole
-# point of using this engine.
-MOOD_DIRECTION = {
-    'delighted': 'Sound genuinely delighted and proud of the child, bright and '
-                 'smiling, lifting at the end.',
-    'kind': 'Sound kind and reassuring. The child has just got something wrong, '
-            'so there must be no trace of disappointment — only warmth and a '
-            'nudge to try again.',
-    'bedtime': 'Almost a whisper. Very slow and very soft, as if the child is '
-               'already half asleep.',
-    'glyph': 'Say this one letter slowly and very clearly, just once, with a '
-             'small friendly lilt.',
-    'story': 'Tell this the way a storyteller would: unhurried and measured, '
-             'with room after each phrase for the child to picture it.',
-    'game': 'Warm, unhurried and companionable, like a friend sitting beside them.',
-}
-
-
-def direction(name):
-    return '%s %s' % (PERSONA, MOOD_DIRECTION[mood_for(name)])
-
-
-def polish(text):
-    """Small repairs so the reading is of Persian and not of its typography."""
-    t = text.strip()
-    t = t.replace('ي', 'ی').replace('ك', 'ک')      # the Arabic forms of two letters
-    # A breath where someone starts speaking, so quoted dialogue does not run on.
-    for verb in ('گفت:', 'پرسید:', 'گفتن:', 'می‌گفت:'):
-        t = t.replace(verb, verb[:-1] + '، ')
-    return ' '.join(t.split())
-
 
 # --- talking to the API -------------------------------------------------------
 

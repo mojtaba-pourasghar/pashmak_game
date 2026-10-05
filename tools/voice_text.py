@@ -48,3 +48,13 @@ def degeminate(text):
                 out.insert(j + 1, out[j])
         i -= 1
     return ''.join(out)
+
+
+def polish(text):
+    """Small repairs so the reading is of Persian and not of its typography."""
+    t = text.strip()
+    t = t.replace('ي', 'ی').replace('ك', 'ک')      # the Arabic forms of two letters
+    # A breath where someone starts speaking, so quoted dialogue does not run on.
+    for verb in ('گفت:', 'پرسید:', 'گفتن:', 'می‌گفت:'):
+        t = t.replace(verb, verb[:-1] + '، ')
+    return ' '.join(t.split())
