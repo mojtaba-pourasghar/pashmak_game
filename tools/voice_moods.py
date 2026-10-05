@@ -45,6 +45,20 @@ RULES = [
 DEFAULT = 'game'
 
 
+# How long each mood takes, as a length scale: 1.0 is the model's own pace and
+# larger is slower. It is written that way because that is what a VITS model
+# takes; sherpa-onnx wants the reciprocal, so ask it for speed_for() instead of
+# inverting this by hand in two places.
+PACE = {
+    'delighted': 0.95,
+    'kind': 1.18,
+    'bedtime': 1.40,
+    'glyph': 1.45,
+    'story': 1.18,
+    'game': 1.08,
+}
+
+
 def mood_for(name):
     """The mood a clip is spoken in, by clip name."""
     for mood, starts, contains in RULES:
@@ -60,3 +74,13 @@ def tally(names):
         mood = mood_for(name)
         counts[mood] = counts.get(mood, 0) + 1
     return counts
+
+
+def pace_for(name):
+    """The length scale for a clip: larger is slower."""
+    return PACE[mood_for(name)]
+
+
+def speed_for(name):
+    """The same pace the other way up, which is what sherpa-onnx asks for."""
+    return 1.0 / PACE[mood_for(name)]

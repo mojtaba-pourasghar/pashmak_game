@@ -79,6 +79,7 @@ _utf8_console()
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'tools'))
 from voice_moods import mood_for, tally                    # noqa: E402
+from voice_text import bare                                # noqa: E402
 import voice_output                                        # noqa: E402
 
 RAW = os.path.normpath(os.path.join(ROOT, 'app/src/main/res/raw'))
@@ -142,20 +143,7 @@ def need(module, why):
                  % (module, why, text, advice('%s %s' % (module, text))))
 
 
-HARAKAT = ''.join(chr(c) for c in list(range(0x64b, 0x653)) + [0x670])
 MALE_REF = os.path.join(ROOT, 'tools/reference/umbriel_welcome.wav')
-
-
-def bare(text):
-    """The line without its vowel marks.
-
-    The manifest is hand-vowelised, which espeak and the IPA models need. A
-    Tacotron2 trained on ordinary Persian prose has never seen a fatha, so every
-    one of them is either dropped or read as something — and a line full of
-    characters the model cannot place comes out mispronounced in a way that
-    sounds like an accent rather than a bug.
-    """
-    return ''.join(c for c in text if c not in HARAKAT)
 
 
 def spoken(args, text):

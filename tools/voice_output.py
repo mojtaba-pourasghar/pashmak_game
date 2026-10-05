@@ -126,3 +126,34 @@ def clear_spoken(raw, names):
     for entry in kept:
         print('   %s' % entry)
     return gone, kept
+
+
+def write_clip(samples, rate, path, shaped=True):
+    """Samples to an ogg on disk: the shaping, the wav, the encoder, the size.
+
+    Returns (path written, its size, the pcm) — the pcm so a caller can measure
+    what it just wrote without reading it back. When nothing can encode, the wav
+    is kept instead, which is right for one sample clip and refused for a run of
+    1,136.
+    """
+    import numpy as np
+    import voice_shape as shaping
+    audio = np.asarray(samples, dtype=np.float64)
+    if audio.size and np.max(np.abs(audio)) <= 1.5:
+        audio = audio * 32767.0                            # float models
+    pcm = (shaping.shape(audio, rate) if shaped
+           else shaping.to_pcm16(audio / max(np.max(np.abs(audio)), 1.0) * 0.89))
+    wav = os.path.splitext(path)[0] + '.tmp.wav'
+    with wave.open(wav, 'wb') as out:
+        out.setnchannels(1)
+        out.setsampwidth(2)
+        out.setframerate(rate)
+        out.writeframes(np.asarray(pcm, dtype='<i2').tobytes())
+    try:
+        encode(wav, path)
+        os.unlink(wav)
+        final = path
+    except (OSError, RuntimeError, subprocess.CalledProcessError):
+        final = os.path.splitext(path)[0] + '.wav'
+        os.replace(wav, final)
+    return final, os.path.getsize(final), pcm

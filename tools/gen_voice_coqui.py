@@ -43,7 +43,7 @@ import shutil
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from voice_moods import mood_for, tally                    # noqa: E402
+from voice_moods import PACE, mood_for, tally              # noqa: E402
 import voice_output                                        # noqa: E402
 
 
@@ -73,14 +73,7 @@ MIN_BYTES = 900
 
 # VITS paces itself with length_scale: 1.0 is the model's own speed, higher is
 # slower. That is the only lever this kind of model has, so the moods are paces.
-PACE = {
-    'delighted': 0.95,
-    'kind': 1.18,
-    'bedtime': 1.40,
-    'glyph': 1.45,
-    'story': 1.18,
-    'game': 1.08,
-}
+
 
 
 def probe(module):
@@ -358,6 +351,16 @@ def do_check(args):
 
     _unused, config = pick(files)
     if not config:
+        names = [os.path.basename(n) for n, _ in files]
+        if any(n.endswith('.onnx') for n in names):
+            sys.exit(
+                '\nthis is not a Coqui checkpoint: it is an ONNX export, with a\n'
+                'tokens.txt instead of a config.json. That is the easier road, not\n'
+                'a dead end — no torch and no coqui-tts, one wheel that runs the\n'
+                'model on the processor. It has its own tool:\n'
+                '\n  %s -m pip install sherpa-onnx\n'
+                '  %s tools/gen_voice_sherpa.py --check --model %s --folder %s'
+                % (sys.executable, sys.executable, args.model, args.folder or ''))
         sys.exit('\nno config.json in that repository — send me the list above.')
     local = fetch(args.model, [config], args.token)
     spec = json.load(io.open(local[config], encoding='utf-8'))
@@ -678,29 +681,8 @@ def _language_for(config):
 
 
 def write(samples, rate, path, shaped=True):
-    import numpy as np
-    import wave
-    import subprocess
-    import voice_shape as shaping
-    audio = np.asarray(samples, dtype=np.float64)
-    if audio.size and np.max(np.abs(audio)) <= 1.5:
-        audio = audio * 32767.0                            # Coqui returns floats
-    pcm = shaping.shape(audio, rate) if shaped else shaping.to_pcm16(
-        audio / max(np.max(np.abs(audio)), 1.0) * 0.89 / 32767.0 * 32767.0)
-    wav = os.path.splitext(path)[0] + '.tmp.wav'
-    with wave.open(wav, 'wb') as w:
-        w.setnchannels(1)
-        w.setsampwidth(2)
-        w.setframerate(rate)
-        w.writeframes(np.asarray(pcm, dtype='<i2').tobytes())
-    try:
-        voice_output.encode(wav, path)
-        os.unlink(wav)
-        final = path
-    except (OSError, RuntimeError, subprocess.CalledProcessError):
-        final = os.path.splitext(path)[0] + '.wav'
-        os.replace(wav, final)
-    return final, os.path.getsize(final), pcm
+    """Shared with the other generators, since all three write the same clip."""
+    return voice_output.write_clip(samples, rate, path, shaped)
 
 
 def read_ledger():
