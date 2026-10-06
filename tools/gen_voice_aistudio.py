@@ -126,8 +126,25 @@ def _context():
     return ssl.create_default_context()
 
 
-def speak(text, name, voice, model, key, tries=9):
-    """One line of Persian, returned as raw PCM plus its sample rate."""
+def speak(text, name, voice, model, key, tries=9, empty_tries=3):
+    """One line of Persian, returned as raw PCM plus its sample rate.
+
+    A reply shaped like an answer but with no audio in it — finishReason OTHER —
+    happens now and then on a short line, and it is transient: the same request
+    sent again comes back with speech. So it is retried like a rate limit rather
+    than counted as a failure, which is what scattered single losses through a
+    run of 1,136.
+    """
+    for attempt in range(empty_tries):
+        try:
+            return _once(text, name, voice, model, key, tries)
+        except RuntimeError as problem:
+            if 'no audio came back' not in str(problem) or attempt == empty_tries - 1:
+                raise
+            time.sleep(2.0 * (attempt + 1))
+
+
+def _once(text, name, voice, model, key, tries=9):
     body = json.dumps({
         'contents': [{'parts': [{'text': '%s\n\n%s' % (direction(name),
                                                        polish(text))}]}],
