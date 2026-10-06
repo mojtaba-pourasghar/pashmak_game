@@ -10,3 +10,8 @@
 local.properties
 /app/build/
 /app/release/
+
+# Scratch written by the voice tools to prove the encoder works.
+tools/aistudio/
+tools/gcloud/
+tools/mana/check/
