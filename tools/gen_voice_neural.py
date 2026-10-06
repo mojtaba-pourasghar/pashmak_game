@@ -28,6 +28,7 @@ agent proxy does not carry WebSocket upgrades. Run it on your own machine.
 """
 import argparse
 import asyncio
+import io
 import json
 import os
 import shutil
@@ -37,6 +38,7 @@ import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from voice_moods import mood_for as mood_key   # noqa: E402  (after sys.path)
+import voice_output                           # noqa: E402
 
 
 def _utf8_console():
@@ -176,6 +178,68 @@ async def speak(name, text, how, sem, force, stats):
     return False
 
 
+async def one(args, text, name, stem):
+    """Speak a single line into tools/voice_samples, never into res/raw.
+
+    A sample has to be listened to before 1,136 clips are committed to a voice,
+    and it must not touch what the app loads while it is being judged.
+    """
+    import edge_tts
+    how = encoder()
+    if how is None:
+        print('No encoder. Install ffmpeg, or mpg123/lame together with oggenc.')
+        return 1
+    out = os.path.join(ROOT, 'tools/voice_samples')
+    os.makedirs(out, exist_ok=True)
+    mood = mood_for(name)
+    words = polish(text)
+    print('voice : %s' % VOICE)
+    print('mood  : %-10s rate %s  pitch %s  volume %s'
+          % (mood_key(name), mood['rate'], mood['pitch'], mood['volume']))
+    print('text  : %s' % words)
+    mp3 = os.path.join(out, 'neural_%s.mp3' % stem)
+    ogg = os.path.join(out, 'neural_%s.ogg' % stem)
+    talk = edge_tts.Communicate(words, VOICE, rate=mood['rate'],
+                                pitch=mood['pitch'], volume=mood['volume'])
+    await talk.save(mp3)
+    to_ogg(mp3, ogg, how)
+    os.remove(mp3)
+    print('\nwrote %s  (%.1f KB)'
+          % (os.path.relpath(ogg, ROOT), os.path.getsize(ogg) / 1024.0))
+    return 0
+
+
+async def fresh(args):
+    """Start the whole set again, checking everything before deleting anything.
+
+    The encoder is proved and the engine has actually answered with audio before
+    a single clip goes, because a name missing from res/raw is not a silence —
+    the Java refers to each one by name, so it is a compile error.
+    """
+    import edge_tts
+    if encoder() is None:
+        print('No encoder. Install ffmpeg, or mpg123/lame together with oggenc.')
+        return 1
+    with io.open(LINES, encoding='utf-8') as handle:
+        lines = json.load(handle)
+    print('one test call before anything is deleted ... ', end='', flush=True)
+    probe = os.path.join(ROOT, 'tools/voice_samples')
+    os.makedirs(probe, exist_ok=True)
+    mp3 = os.path.join(probe, 'neural_probe.mp3')
+    talk = edge_tts.Communicate(polish(lines.get('welcome', 'سلام')), VOICE)
+    await talk.save(mp3)
+    size = os.path.getsize(mp3)
+    os.remove(mp3)
+    if size < MIN_BYTES:
+        print('the engine returned almost nothing (%d bytes) — stopping' % size)
+        return 1
+    print('%d bytes of mp3' % size)
+    voice_output.rebuild_lines(ROOT)
+    voice_output.clear_spoken(RAW, lines)
+    args.force = True
+    return await run(args)
+
+
 async def run(args):
     with open(LINES, encoding='utf-8') as f:
         lines = json.load(f)
@@ -237,6 +301,13 @@ def main():
                         help='how many lines to speak at once (default 8)')
     parser.add_argument('--list-voices', action='store_true',
                         help='show the Persian voices the engine offers')
+    parser.add_argument('--sample', nargs='?', const='welcome',
+                        help='speak one line into tools/voice_samples and stop')
+    parser.add_argument('--text', nargs='?', const='',
+                        help='speak this sentence instead, and stop')
+    parser.add_argument('--fresh', action='store_true',
+                        help='rebuild the lines from the manifest, delete the '
+                             'clips of the last voice, and speak them all again')
     args = parser.parse_args()
 
     try:
@@ -251,6 +322,18 @@ def main():
               '    python3 tools/build_voice_lines.py'
               % os.path.relpath(LINES, ROOT))
         return 1
+    with io.open(LINES, encoding='utf-8') as handle:
+        lines = json.load(handle)
+    if args.text is not None:
+        text = args.text.strip() or lines.get('welcome', 'سلام')
+        return asyncio.run(one(args, text, 'welcome', 'text'))
+    if args.sample:
+        if args.sample not in lines:
+            print('no line called %s' % args.sample)
+            return 1
+        return asyncio.run(one(args, lines[args.sample], args.sample, 'sample'))
+    if args.fresh:
+        return asyncio.run(fresh(args))
     return asyncio.run(run(args))
 
 
