@@ -42,14 +42,13 @@ import json
 import io
 import os
 import ssl
-import subprocess
 import sys
-import tempfile
 import time
 import urllib.error
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import voice_output                                        # noqa: E402
 from voice_text import polish                              # noqa: E402
 from voice_moods import (MOOD_DIRECTION, PERSONA, direction,
                          mood_for, tally)           # noqa: E402  (after sys.path)
@@ -106,7 +105,7 @@ VOICES = [
 ]
 # Pashmak is a boy bear, so the shortlist above leads with the male voices
 # that sit in the middle of the range; Sulafat is warm but reads female.
-DEFAULT_VOICE = 'Algieba'
+DEFAULT_VOICE = 'Umbriel'
 
 # --- talking to the API -------------------------------------------------------
 
@@ -183,33 +182,25 @@ def speak(text, name, voice, model, key, tries=9):
 
 # --- turning that PCM into something Android will play ------------------------
 
-def to_ogg(pcm, rate, path):
-    """16-bit mono PCM straight into Vorbis. No ffmpeg needed; oggenc reads raw."""
-    with tempfile.NamedTemporaryFile(suffix='.raw', delete=False) as scratch:
-        scratch.write(pcm)
-        source = scratch.name
-    try:
-        subprocess.check_call(
-            ['oggenc', '-Q', '-r', '-B', '16', '-C', '1', '-R', str(rate),
-             '-q', '3', '-o', path, source])
-    finally:
-        os.unlink(source)
+def write_clip(text, name, voice, model, key, path, shaped=True):
+    """One clip, staged, so an interrupted run never leaves a silent file.
 
-
-def write_clip(text, name, voice, model, key, path):
-    """Staged, so an interrupted run never leaves a silent file behind."""
+    The encoding and the shaping are voice_output's, the same as the other
+    generators use: either oggenc or ffmpeg, the presence lift that makes a line
+    carry to a child who is not listening carefully, and one level for the whole
+    app. This used to call oggenc directly with raw-PCM flags, which meant no
+    shaping and a hard dependency on vorbis-tools.
+    """
+    import numpy as np
     pcm, rate = speak(text, name, voice, model, key)
+    samples = np.frombuffer(pcm, dtype='<i2')
     staged = path + '.part'
-    try:
-        to_ogg(pcm, rate, staged)
-        if os.path.getsize(staged) < MIN_BYTES:
-            raise RuntimeError('encoded to almost nothing (%d bytes)'
-                               % os.path.getsize(staged))
-        os.replace(staged, path)
-    finally:
-        if os.path.exists(staged):
-            os.unlink(staged)
-    return os.path.getsize(path)
+    final, size, _pcm = voice_output.write_clip(samples, rate, staged, shaped)
+    if size < MIN_BYTES:
+        os.unlink(final)
+        raise RuntimeError('encoded to almost nothing (%d bytes)' % size)
+    os.replace(final, path)
+    return size
 
 
 # --- the run ------------------------------------------------------------------
@@ -264,6 +255,26 @@ def do_sample(args, key):
           'without --sample does all of them.')
 
 
+def do_fresh(args, key):
+    """Start the whole set again: nothing deleted until it can be replaced.
+
+    The encoder is proved and the API has actually answered with audio before a
+    single clip goes, because a name missing from res/raw is not a silence — the
+    Java refers to each one by name, so it is a compile error.
+    """
+    voice_output.check_encoder(os.path.join(ROOT, 'tools/aistudio'))
+    lines = load_lines()
+    print('one test call before anything is deleted ... ', end='', flush=True)
+    pcm, rate = speak(lines.get('welcome', 'سَلام!'), 'welcome', args.voice,
+                      args.model, key)
+    print('%d bytes of audio at %d Hz' % (len(pcm), rate))
+    voice_output.rebuild_lines(ROOT)
+    voice_output.clear_spoken(RAW, load_lines())
+    if os.path.exists(LEDGER):
+        os.unlink(LEDGER)
+    do_all(args, key)
+
+
 def do_all(args, key):
     lines = load_lines()
     names = sorted(lines)
@@ -291,7 +302,8 @@ def do_all(args, key):
     for i, name in enumerate(todo, 1):
         path = os.path.join(RAW, name + '.ogg')
         try:
-            size = write_clip(lines[name], name, args.voice, args.model, key, path)
+            size = write_clip(lines[name], name, args.voice, args.model,
+                              key, path, shaped=not args.plain)
             done += 1
             ledger['done'].append(name)
             write_ledger(ledger)
@@ -343,21 +355,24 @@ def main():
                         help='render one line in several voices and stop')
     parser.add_argument('--voices', help='comma-separated, for --sample')
     parser.add_argument('--list-voices', action='store_true')
+    parser.add_argument('--plain', action='store_true',
+                        help='the model\'s own sound, unshaped')
+    parser.add_argument('--fresh', action='store_true',
+                        help='rebuild the lines from the manifest, delete the '
+                             'clips of the last voice, and speak them all again')
     args = parser.parse_args()
 
     if args.list_voices:
         for name, character in VOICES:
             print('  %-16s %s' % (name, character))
         return
-    if not os.access('/usr/bin/oggenc', os.X_OK) and not any(
-            os.access(os.path.join(d, 'oggenc'), os.X_OK)
-            for d in os.environ.get('PATH', '').split(os.pathsep)):
-        sys.exit('oggenc is not here (apt-get install vorbis-tools)')
-
     key = api_key()
     if args.sample:
         do_sample(args, key)
+    elif args.fresh:
+        do_fresh(args, key)
     else:
+        voice_output.check_encoder(os.path.join(ROOT, 'tools/aistudio'))
         do_all(args, key)
 
 
