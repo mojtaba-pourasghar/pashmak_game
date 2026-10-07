@@ -79,7 +79,8 @@
   "story_bakery_16",
   "story_bakery_17",
   "story_bakery_18",
-  "story_bakery_18_yes"
+  "story_bakery_18_yes",
+  "story_bakery_19"
  ],
  "model": "gemini-2.5-flash-preview-tts",
  "voice": "Umbriel"
