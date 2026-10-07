@@ -83,6 +83,10 @@ ENDPOINT = ('https://generativelanguage.googleapis.com/v1beta/models/'
             '%s:generateContent')
 MODEL = 'gemini-2.5-flash-preview-tts'
 
+# In drip mode a quota refusal is not worth waiting out: another firing is an
+# hour away, and the backoff ladder would spend the whole visit on one clip.
+DRIP = False
+
 # Under this and it is a failed encode, not speech.
 MIN_BYTES = 1200
 
@@ -170,6 +174,8 @@ def _once(text, name, voice, model, key, tries=9):
             detail = problem.read().decode('utf-8', 'replace')[:300]
             # Rate limits and server trouble are worth waiting out; a bad key or
             # a malformed request will never get better by asking again.
+            if problem.code == 429 and DRIP:
+                raise RuntimeError('HTTP 429: quota (drip mode, not waiting)')
             if problem.code in (429, 500, 502, 503, 504) and attempt < tries - 1:
                 time.sleep(delay)
                 delay *= 2
@@ -340,7 +346,7 @@ def do_all(args, key):
             # of them in a row, after all that waiting, means the key is spent.
             if 'quota' in str(problem).lower() or 'RESOURCE_EXHAUSTED' in str(problem):
                 starved += 1
-                if starved >= 3:
+                if starved >= (1 if DRIP else 3):
                     print('\nthe key is out of quota. %d spoken this run, %d in '
                           'all.' % (done, len(ledger['done'])))
                     print('give me another key and the same command carries on '
@@ -374,6 +380,9 @@ def main():
     parser.add_argument('--list-voices', action='store_true')
     parser.add_argument('--plain', action='store_true',
                         help='the model\'s own sound, unshaped')
+    parser.add_argument('--drip', action='store_true',
+                        help='take whatever quota has freed up and leave at the '
+                             'first refusal, for an hourly visit')
     parser.add_argument('--fresh', action='store_true',
                         help='rebuild the lines from the manifest, delete the '
                              'clips of the last voice, and speak them all again')
@@ -384,6 +393,9 @@ def main():
             print('  %-16s %s' % (name, character))
         return
     key = api_key()
+    if args.drip:
+        global DRIP
+        DRIP = True
     if args.sample:
         do_sample(args, key)
     elif args.fresh:
