@@ -113,12 +113,29 @@ DEFAULT_VOICE = 'Umbriel'
 
 # --- talking to the API -------------------------------------------------------
 
-def api_key():
-    key = os.environ.get('GEMINI_API_KEY') or os.environ.get('GOOGLE_API_KEY')
-    if not key:
-        sys.exit('set GEMINI_API_KEY first — make one at '
-                 'https://aistudio.google.com/apikey')
-    return key
+def api_keys():
+    """Every credential available, in the order they should be spent.
+
+    The daily cap is per project, so several keys are several allowances: when
+    one is out, the next one starts where it left off. GEMINI_API_KEYS takes a
+    list separated by commas, spaces or newlines; GEMINI_API_KEY still takes one.
+    They are read from the environment and never written to a file, printed, or
+    committed — only the position in the list is ever shown.
+    """
+    many = os.environ.get('GEMINI_API_KEYS', '')
+    keys = [k.strip() for k in many.replace(',', ' ').split() if k.strip()]
+    one = os.environ.get('GEMINI_API_KEY') or os.environ.get('GOOGLE_API_KEY')
+    if one and one not in keys:
+        keys.append(one)
+    if not keys:
+        sys.exit('set GEMINI_API_KEY, or GEMINI_API_KEYS for several — make them '
+                 'at https://aistudio.google.com/apikey')
+    return keys
+
+
+def out_of_quota(problem):
+    text = str(problem)
+    return 'quota' in text.lower() or 'RESOURCE_EXHAUSTED' in text
 
 
 def _context():
@@ -295,10 +312,16 @@ def do_fresh(args, key):
     voice_output.clear_spoken(RAW, load_lines())
     if os.path.exists(LEDGER):
         os.unlink(LEDGER)
-    do_all(args, key)
+    do_all(args, keys)
 
 
-def do_all(args, key):
+def do_all(args, keys):
+    """Speak what is left, moving to the next key each time one runs dry.
+
+    The loop steps forward only on a clip that was written, so the line a key
+    died on is the first line the next key speaks — nothing is skipped over by
+    the changeover.
+    """
     lines = load_lines()
     names = sorted(lines)
     if args.only:
@@ -315,45 +338,57 @@ def do_all(args, key):
     ledger['voice'], ledger['model'] = args.voice, args.model
     spoken = set() if args.force else set(ledger['done'])
     todo = [n for n in names if n not in spoken]
-    print('%d lines, %d already spoken, %d to do, voice %s, model %s'
-          % (len(names), len(names) - len(todo), len(todo), args.voice, args.model))
+    print('%d lines, %d already spoken, %d to do, voice %s, model %s, %d key(s)'
+          % (len(names), len(names) - len(todo), len(todo), args.voice,
+             args.model, len(keys)))
     for mood, count in sorted(tally(todo).items(), key=lambda kv: -kv[1]):
         print('   %-10s %d' % (mood, count))
     print()
 
     done = failed = starved = 0
-    for i, name in enumerate(todo, 1):
+    which = 0
+    at = 0
+    while at < len(todo):
+        name = todo[at]
         path = os.path.join(RAW, name + '.ogg')
         try:
             size = write_clip(lines[name], name, args.voice, args.model,
-                              key, path, shaped=not args.plain)
+                              keys[which], path, shaped=not args.plain)
             done += 1
+            at += 1
             ledger['done'].append(name)
             write_ledger(ledger)
             starved = 0
-            if i % 20 == 0 or i == len(todo):
-                print('[%4d/%4d] %-28s %-10s %6.1f KB'
-                      % (i, len(todo), name, mood_for(name), size / 1024.0),
+            if done % 20 == 0 or at == len(todo):
+                print('[%4d/%4d] %-28s %-10s %6.1f KB  key %d'
+                      % (at, len(todo), name, mood_for(name), size / 1024.0,
+                         which + 1),
                       flush=True)
         except RuntimeError as problem:
-            failed += 1
             short = ' '.join(str(problem).split())[:110]
-            print('[%4d/%4d] %-28s FAILED  %s' % (i, len(todo), name, short),
-                  flush=True)
-            # A single quota error is not the end any more. On the free tier it
-            # was, but a paid key hits a per-minute ceiling constantly and that
-            # is a pause, not a wall — speak() already waits it out. Only a run
-            # of them in a row, after all that waiting, means the key is spent.
-            if 'quota' in str(problem).lower() or 'RESOURCE_EXHAUSTED' in str(problem):
+            # A single quota error is not the end: a key hits a per-minute
+            # ceiling constantly and speak() waits that out. A run of them in a
+            # row, after all that waiting, means this key's day is spent.
+            if out_of_quota(problem):
                 starved += 1
                 if starved >= (1 if DRIP else 3):
-                    print('\nthe key is out of quota. %d spoken this run, %d in '
-                          'all.' % (done, len(ledger['done'])))
-                    print('give me another key and the same command carries on '
-                          'from %s.' % name)
-                    return
-            else:
-                starved = 0
+                    print('key %d of %d is out of quota after %d clips'
+                          % (which + 1, len(keys), done), flush=True)
+                    which += 1
+                    starved = 0
+                    if which >= len(keys):
+                        print('\nevery key is out of quota. %d spoken this run, '
+                              '%d of %d in all.'
+                              % (done, len(ledger['done']), len(names)))
+                        print('the next run carries on from %s.' % name)
+                        return
+                    print('moving to key %d' % (which + 1), flush=True)
+                continue                       # same line, with the next key
+            failed += 1
+            at += 1
+            starved = 0
+            print('[%4d/%4d] %-28s FAILED  %s' % (at, len(todo), name, short),
+                  flush=True)
             if failed >= 5 and done == 0:
                 sys.exit('five failures and nothing written — stopping before '
                          'this burns through the quota')
@@ -392,17 +427,17 @@ def main():
         for name, character in VOICES:
             print('  %-16s %s' % (name, character))
         return
-    key = api_key()
+    keys = api_keys()
     if args.drip:
         global DRIP
         DRIP = True
     if args.sample:
-        do_sample(args, key)
+        do_sample(args, keys[0])
     elif args.fresh:
-        do_fresh(args, key)
+        do_fresh(args, keys[0])
     else:
         voice_output.check_encoder(os.path.join(ROOT, 'tools/aistudio'))
-        do_all(args, key)
+        do_all(args, keys)
 
 
 if __name__ == '__main__':
