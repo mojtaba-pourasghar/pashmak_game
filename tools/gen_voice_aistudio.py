@@ -138,6 +138,20 @@ def out_of_quota(problem):
     return 'quota' in text.lower() or 'RESOURCE_EXHAUSTED' in text
 
 
+def credential_dead(problem):
+    """A key that will not work again today, however many times it is asked.
+
+    These tokens expire, and a project can be cut off entirely, and neither is
+    a quota: 401 says the credential is stale, 403 says the project is denied.
+    Both mean move to the next key rather than stop the run — which is what the
+    first five-key attempt did, giving up on an expired first key while three
+    good ones sat behind it.
+    """
+    text = str(problem)
+    return ('HTTP 401' in text or 'HTTP 403' in text
+            or 'UNAUTHENTICATED' in text or 'PERMISSION_DENIED' in text)
+
+
 def _context():
     """Trust whatever CA bundle this machine was told to use."""
     bundle = (os.environ.get('SSL_CERT_FILE')
@@ -369,6 +383,17 @@ def do_all(args, keys):
             # A single quota error is not the end: a key hits a per-minute
             # ceiling constantly and speak() waits that out. A run of them in a
             # row, after all that waiting, means this key's day is spent.
+            if credential_dead(problem):
+                print('key %d of %d will not authenticate (%s)'
+                      % (which + 1, len(keys), short[:60]), flush=True)
+                which += 1
+                starved = 0
+                if which >= len(keys):
+                    print('\nno key left that works. %d spoken this run, %d of '
+                          '%d in all.' % (done, len(ledger['done']), len(names)))
+                    return
+                print('moving to key %d' % (which + 1), flush=True)
+                continue                       # same line, with the next key
             if out_of_quota(problem):
                 starved += 1
                 if starved >= (1 if DRIP else 3):
