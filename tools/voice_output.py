@@ -42,13 +42,23 @@ NEED_ENCODER = (
 
 
 def encode(source, path):
-    """A wav to an ogg, by whichever encoder is here. Raises if it cannot."""
+    """A wav to an ogg, by whichever encoder is here. Raises if it cannot.
+
+    The container is named rather than inferred. Every generator writes its clip
+    to a staged path first — name.ogg.part — so an interrupted run cannot leave a
+    half file behind, and ffmpeg picks the muxer from the extension it is given:
+    .part is not a format it knows, so it refuses the file. It then fell through
+    to the wav fallback below, which renamed the wav to the clip's own name, and
+    four clips shipped as 350 KB of RIFF called .ogg. -f ogg says what to write
+    whatever the file is called.
+    """
     tool = encoder()
     if tool == 'oggenc':
         subprocess.check_call(['oggenc', '-Q', '-q', '4', '-o', path, source])
     elif tool == 'ffmpeg':
         subprocess.check_call(['ffmpeg', '-v', 'error', '-y', '-i', source,
-                               '-c:a', 'libvorbis', '-q:a', '4', path])
+                               '-c:a', 'libvorbis', '-q:a', '4', '-f', 'ogg',
+                               path])
     else:
         raise RuntimeError(NEED_ENCODER)
     return path

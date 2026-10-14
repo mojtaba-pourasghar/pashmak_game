@@ -816,7 +816,14 @@
   "tale_mirror_pond_10",
   "tale_mirror_pond_11",
   "tale_mirror_pond_12",
-  "tale_mirror_pond_13"
+  "tale_mirror_pond_13",
+  "tale_mirror_pond_14",
+  "tale_mirror_pond_2",
+  "tale_mirror_pond_3",
+  "tale_mirror_pond_4",
+  "tale_mirror_pond_5",
+  "tale_mirror_pond_6",
+  "tale_mirror_pond_7"
  ],
  "model": "gemini-2.5-flash-preview-tts",
  "voice": "Umbriel"

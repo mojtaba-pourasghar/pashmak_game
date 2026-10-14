@@ -250,6 +250,14 @@ def write_clip(text, name, voice, model, key, path, shaped=True):
     samples = np.frombuffer(pcm, dtype='<i2')
     staged = path + '.part'
     final, size, _pcm = voice_output.write_clip(samples, rate, staged, shaped)
+    if final != staged:
+        # write_clip keeps the wav when nothing could encode it, which is right
+        # for a single --sample and wrong here: moved into place under the
+        # clip's own name it is a wav called .ogg, ten times the size, and
+        # nothing says so. Fail the clip instead; the next run redoes it.
+        os.unlink(final)
+        raise RuntimeError('could not encode an ogg (kept %s)'
+                           % os.path.basename(final))
     if size < MIN_BYTES:
         os.unlink(final)
         raise RuntimeError('encoded to almost nothing (%d bytes)' % size)
