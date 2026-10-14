@@ -15,7 +15,7 @@
 set -u
 cd "$(dirname "$0")/.."
 
-BRANCH="${VOICE_BRANCH:-claude/elegant-heisenberg-1o0hec}"
+BRANCH="${VOICE_BRANCH:-main}"
 
 if [ -z "${GEMINI_API_KEYS:-}${GEMINI_API_KEY:-}" ]; then
     echo "no key in the environment — set GEMINI_API_KEYS" >&2
