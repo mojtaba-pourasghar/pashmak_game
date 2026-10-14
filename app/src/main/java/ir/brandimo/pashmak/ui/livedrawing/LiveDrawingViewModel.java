@@ -117,10 +117,28 @@ public class LiveDrawingViewModel extends AndroidViewModel {
         step.setValue(Step.PROCESSING);
 
         AppExecutors.imaging().execute(() -> {
-            ExtractionResult result = DrawingExtractor.extract(frame, roi,
-                    percent -> progress.postValue(percent));
-            if (!frame.isRecycled()) {
-                frame.recycle();
+            ExtractionResult result;
+            try {
+                result = DrawingExtractor.extract(frame, roi,
+                        percent -> progress.postValue(percent));
+            } catch (RuntimeException | OutOfMemoryError trouble) {
+                // The extractor works on a full-resolution photo and can run out
+                // of heap on a cheap tablet, and arithmetic on an odd frame can
+                // throw. Either way the flag has to come back down: it is what
+                // stops two scans at once, and left raised it turns every later
+                // scan into a silent no-op — the child presses the shutter, the
+                // bar never moves, the retry button goes back to the camera and
+                // the next capture is dropped on the floor. The screen is stuck
+                // for the rest of the session and nothing in the log says why.
+                AppExecutors.main(() -> {
+                    extracting = false;
+                    extractionFailed.setValue(true);
+                });
+                return;
+            } finally {
+                if (!frame.isRecycled()) {
+                    frame.recycle();
+                }
             }
             if (!result.success || result.cutout == null) {
                 AppExecutors.main(() -> {
