@@ -25,7 +25,7 @@ simulated (camera, extraction, persistence, gallery) is implemented for real.
 | minSdk / targetSdk | **21** / 35 |
 | Orientation | Both, on phone and tablet; RTL-first |
 | Architecture | MVVM — ViewModel + LiveData + ViewBinding |
-| Package | `ir.brandimo.pashmak` |
+| Package | `com.pashmak.app` |
 
 Key dependencies: AppCompat, Material, ConstraintLayout, RecyclerView, Lifecycle
 (ViewModel/LiveData), Room, CameraX (core/camera2/lifecycle/view), Glide, ExifInterface.
