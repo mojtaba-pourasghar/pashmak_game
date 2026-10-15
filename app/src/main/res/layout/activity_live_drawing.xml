@@ -47,7 +47,7 @@
             app:layout_constraintTop_toBottomOf="@id/brief_header"
             tools:text="پشمک می‌گه: یه «تخت» می‌خوام. روی کاغذ بکشش!" />
 
-        <ir.brandimo.pashmak.ui.livedrawing.MissionSceneView
+        <com.pashmak.app.ui.livedrawing.MissionSceneView
             android:id="@+id/brief_scene"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -58,7 +58,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/brief_line" />
 
-        <ir.brandimo.pashmak.mascot.MascotView
+        <com.pashmak.app.mascot.MascotView
             android:id="@+id/brief_mascot"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/mascot_inline"
@@ -129,7 +129,7 @@
             android:layout_height="match_parent"
             app:scaleType="fitCenter" />
 
-        <ir.brandimo.pashmak.ui.livedrawing.RoiOverlayView
+        <com.pashmak.app.ui.livedrawing.RoiOverlayView
             android:id="@+id/camera_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -381,14 +381,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/alive_headline">
 
-            <ir.brandimo.pashmak.ui.livedrawing.MissionSceneView
+            <com.pashmak.app.ui.livedrawing.MissionSceneView
                 android:id="@+id/alive_scene_view"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/bg_frame_scene" />
 
-            <ir.brandimo.pashmak.mascot.MascotView
+            <com.pashmak.app.mascot.MascotView
                 android:id="@+id/alive_mascot"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -457,7 +457,7 @@
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ir.brandimo.pashmak.mascot.ConfettiView
+    <com.pashmak.app.mascot.ConfettiView
         android:id="@+id/live_confetti"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

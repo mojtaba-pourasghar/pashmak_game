@@ -1,0 +1,132 @@
+package com.pashmak.app.ui.games;
+
+import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.pashmak.app.R;
+import com.pashmak.app.databinding.ActivityGamesBinding;
+import com.pashmak.app.ui.base.BaseActivity;
+import com.pashmak.app.ui.bubbles.BubblePopActivity;
+import com.pashmak.app.ui.coloring.ColoringPickerActivity;
+import com.pashmak.app.ui.freedraw.FreeDrawActivity;
+import com.pashmak.app.ui.lullaby.LullabyActivity;
+import com.pashmak.app.ui.memory.MemoryPickerActivity;
+import com.pashmak.app.ui.missions.MissionsActivity;
+import com.pashmak.app.ui.parentgate.ParentGateDialog;
+import com.pashmak.app.ui.story.StoryPickerActivity;
+import com.pashmak.app.ui.tale.TalePickerActivity;
+import com.pashmak.app.ui.tracing.TracingPickerActivity;
+
+/**
+ * The games menu. The headline card spans the row and the other seven fall into
+ * rows beneath it, laid out by the grid rather than placed by hand.
+ */
+public class GamesActivity extends BaseActivity {
+
+    /** A game card needs this much for its icon tile beside a short title. */
+    private static final int COLUMN_MIN_DP = 132;
+
+
+    private ActivityGamesBinding binding;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityGamesBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        binding.gamesHeader.headerTitle.setText(R.string.games_title);
+        binding.gamesHeader.headerTitle.setTextColor(
+                ContextCompat.getColor(this, R.color.red));
+        binding.gamesHeader.headerBack.setOnClickListener(v -> {
+            tap();
+            finish();
+        });
+        bindStars(binding.gamesHeader.headerStarsValue);
+        attachCompanion();
+
+        final GameAdapter adapter = new GameAdapter(buildEntries(),
+                entry -> open(entry.destination));
+        // On a phone the headline card gives up its full-width row so that all nine
+        // cards fit on screen at once; a tablet has the height to keep it.
+        final boolean wideHeadline = getResources().getBoolean(R.bool.games_wide_headline);
+        menuColumns(binding.gamesGrid,
+                getResources().getInteger(R.integer.games_span), COLUMN_MIN_DP);
+        final GridLayoutManager manager =
+                (GridLayoutManager) binding.gamesGrid.getLayoutManager();
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                // Asked again after the columns are settled, so it reads the live
+                // count rather than the number the grid started with.
+                return wideHeadline && adapter.entryAt(position).wide
+                        ? manager.getSpanCount() : 1;
+            }
+        });
+        binding.gamesGrid.setAdapter(adapter);
+
+        binding.gamesSettings.setOnClickListener(v -> {
+            tap();
+            ParentGateDialog.show(this);
+        });
+    }
+
+    private List<GameEntry> buildEntries() {
+        String name = getString(R.string.mascot_name);
+        List<GameEntry> entries = new ArrayList<>();
+
+        entries.add(new GameEntry(R.drawable.btn_orange_card, R.drawable.ic_camera,
+                R.color.orange, R.string.game_live_title,
+                getString(R.string.game_live_sub, name), true, false,
+                MissionsActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_purple_card, R.drawable.ic_palette,
+                R.color.purple, R.string.game_paint_title,
+                getString(R.string.game_paint_sub), false, false,
+                ColoringPickerActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_cyan, R.drawable.ic_brush,
+                R.color.cyan, R.string.game_freedraw_title,
+                getString(R.string.game_freedraw_sub), false, false,
+                FreeDrawActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_green, R.drawable.ic_pencil,
+                R.color.green, R.string.game_trace_title,
+                getString(R.string.game_trace_sub), false, false,
+                TracingPickerActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_blue_deep, R.drawable.ic_bubbles,
+                R.color.blue_deep, R.string.game_bubbles_title,
+                getString(R.string.game_bubbles_sub), false, false,
+                BubblePopActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_red, R.drawable.ic_memory_cards,
+                R.color.red, R.string.game_memory_title,
+                getString(R.string.game_memory_sub), false, false,
+                MemoryPickerActivity.class));
+
+        // The yellow card is pale, so its text goes dark instead of white.
+        entries.add(new GameEntry(R.drawable.btn_yellow, R.drawable.ic_book,
+                R.color.yellow_shadow, R.string.game_story_title,
+                getString(R.string.game_story_sub), false, true,
+                StoryPickerActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_purple_card, R.drawable.ic_book,
+                R.color.purple, R.string.game_tales_title,
+                getString(R.string.game_tales_sub), false, false,
+                TalePickerActivity.class));
+
+        entries.add(new GameEntry(R.drawable.btn_night_card, R.drawable.ic_moon,
+                R.color.night_top, R.string.game_lullaby_title,
+                getString(R.string.game_lullaby_sub), false, false,
+                LullabyActivity.class));
+
+        return entries;
+    }
+}

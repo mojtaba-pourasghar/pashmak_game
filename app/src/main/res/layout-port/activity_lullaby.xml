@@ -12,7 +12,7 @@
     android:background="@drawable/bg_screen_night"
     android:clipChildren="false">
 
-    <ir.brandimo.pashmak.ui.lullaby.NightSkyView
+    <com.pashmak.app.ui.lullaby.NightSkyView
         android:id="@+id/lullaby_sky"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -247,7 +247,7 @@
             </LinearLayout>
     </LinearLayout>
 
-    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+    <com.pashmak.app.mascot.SpeechBubbleView
         android:id="@+id/dock_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

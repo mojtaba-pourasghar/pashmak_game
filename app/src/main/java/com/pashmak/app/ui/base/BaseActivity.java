@@ -1,0 +1,255 @@
+package com.pashmak.app.ui.base;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.pashmak.app.R;
+import com.pashmak.app.audio.AudioManifest;
+import com.pashmak.app.audio.MusicEngine;
+import com.pashmak.app.audio.SoundBank;
+import com.pashmak.app.data.prefs.GamePrefs;
+import com.pashmak.app.mascot.MascotController;
+import com.pashmak.app.mascot.MascotView;
+import com.pashmak.app.mascot.SpeechBubbleView;
+import com.pashmak.app.util.FaNum;
+import com.pashmak.app.util.LocaleUtil;
+
+/**
+ * Shared plumbing for every screen: the docked companion, the star counter and
+ * an immersive, kid-proof window.
+ */
+public abstract class BaseActivity extends AppCompatActivity {
+
+    protected MascotController mascot;
+    protected GamePrefs prefs;
+    protected SoundBank sounds;
+
+    private boolean observingSpeech;
+
+    @Nullable
+    private MascotView dockMascot;
+    @Nullable
+    private SpeechBubbleView dockBubble;
+
+    /** The app is Persian-only; it must not inherit the device's language. */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleUtil.persian(newBase));
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        mascot = MascotController.get(this);
+        prefs = GamePrefs.get(this);
+        sounds = SoundBank.get(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Registered here, not in onCreate: LiveData delivers immediately, and the
+        // subclass's view binding does not exist yet during super.onCreate().
+        if (!observingSpeech) {
+            observingSpeech = true;
+            mascot.speaking().observe(this, speaking -> {
+                boolean value = Boolean.TRUE.equals(speaking);
+                if (dockMascot != null) {
+                    dockMascot.setSpeaking(value);
+                }
+                onSpeakingChanged(value);
+            });
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        goImmersive();
+        String track = musicTrack();
+        if (track == null) {
+            // A screen that makes its own sound (bedtime) asks for silence here.
+            MusicEngine.get(this).stop();
+        } else {
+            MusicEngine.get(this).play(track);
+        }
+    }
+
+    /** Which loop this screen wants, or null for silence. */
+    @Nullable
+    protected String musicTrack() {
+        return AudioManifest.BGM_MENU;
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            goImmersive();
+        }
+    }
+
+    /** Small hands rest on the edges of a tablet; keep the system bars out of the way. */
+    private void goImmersive() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            return;
+        }
+        View decor = getWindow().getDecorView();
+        decor.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    /**
+     * Wires the corner companion if the layout includes one. The mascot itself is
+     * decorative and non-clickable so it can never steal a tap from the game.
+     */
+    protected void attachCompanion() {
+        dockMascot = findViewById(R.id.dock_mascot);
+        dockBubble = findViewById(R.id.dock_bubble);
+        if (dockBubble != null) {
+            dockBubble.setOnMuteToggled(() -> mascot.toggleMute());
+        }
+        if (!showsBubble() && dockBubble != null) {
+            dockBubble.setVisibility(View.GONE);
+            dockBubble = null;
+        }
+        mascot.state().observe(this, state -> {
+            if (state == null) {
+                return;
+            }
+            if (dockMascot != null) {
+                dockMascot.setState(state.mood);
+            }
+            if (dockBubble != null) {
+                dockBubble.bind(state);
+            }
+        });
+    }
+
+    /**
+     * Shrinks the docked companion, for screens whose side column is already full
+     * of tools. An include can only resize its own root, so this is done in code.
+     */
+    protected void shrinkCompanion() {
+        if (dockMascot == null) {
+            return;
+        }
+        ViewGroup.LayoutParams params = dockMascot.getLayoutParams();
+        if (params != null) {
+            params.height = getResources().getDimensionPixelSize(R.dimen.mascot_dock_small);
+            dockMascot.setLayoutParams(params);
+        }
+    }
+
+    /** True when the screen is taller than it is wide. */
+    protected boolean isPortrait() {
+        return getResources().getConfiguration().orientation
+                == android.content.res.Configuration.ORIENTATION_PORTRAIT;
+    }
+
+    /**
+     * A menu of cards, one to a row when the screen is upright.
+     *
+     * <p>Two columns across a phone held upright gives each card about 150 points,
+     * which is enough to fit the row but not enough to read it: «رنگ‌آمیزی نقاشی»
+     * came out as «رنگ‌آمیزی ن». A card a child is choosing between should be
+     * readable, and upright there is height to spend on giving each one a row.
+     */
+    protected void menuColumns(@NonNull RecyclerView list, int designedSpan,
+                               int minColumnDp) {
+        gridColumns(list, isPortrait() ? 1 : designedSpan, minColumnDp);
+    }
+
+    /**
+     * Gives a grid the columns it was designed for, or fewer if the screen will not
+     * take them.
+     *
+     * <p>The span used to be a fixed number per device bucket, which was sound while
+     * the app was locked to landscape: smallestWidth was the height and the width was
+     * always the long edge, so there was always plenty of it. Held upright the same
+     * device has barely half that width, and three mission rows across a phone would
+     * be ninety points each. The designed span stays the ceiling — a tablet does not
+     * sprout extra columns — but a narrow screen drops to what it can actually show.
+     *
+     * <p>The minimum is measured, not guessed: it is the width the row needs for its
+     * picture and a readable title, the same floor tools/hfit.py checks.
+     */
+    protected void gridColumns(@NonNull RecyclerView list, int designedSpan,
+                               int minColumnDp) {
+        final GridLayoutManager manager = new GridLayoutManager(this, designedSpan);
+        list.setLayoutManager(manager);
+        list.post(() -> {
+            int usable = list.getWidth() - list.getPaddingLeft() - list.getPaddingRight();
+            if (usable <= 0) {
+                return;
+            }
+            float minPx = minColumnDp * getResources().getDisplayMetrics().density;
+            int fits = (int) (usable / Math.max(1f, minPx));
+            int span = Math.max(1, Math.min(designedSpan, fits));
+            if (span != manager.getSpanCount()) {
+                manager.setSpanCount(span);
+            }
+        });
+    }
+
+    /** Binds a star counter that follows the shared total. */
+    protected void bindStars(@Nullable TextView view) {
+        if (view == null) {
+            return;
+        }
+        prefs.starsLive().observe(this, stars ->
+                view.setText(FaNum.of(stars == null ? 0 : stars)));
+    }
+
+    /**
+     * Whether the docked companion gets a speech bubble. A screen that already prints
+     * what Pashmak is saying — the story screen, whose narration box is the line —
+     * turns it off, so the words are not set twice and a long line cannot inflate the
+     * dock and squeeze the rest of the column.
+     */
+    protected boolean showsBubble() {
+        return true;
+    }
+
+    /** Screens with their own large mascot override this to sync its mouth too. */
+    protected void onSpeakingChanged(boolean speaking) {
+    }
+
+    protected void tap() {
+        sounds.play(AudioManifest.SFX_TAP);
+    }
+
+    protected void open(Class<?> activity) {
+        tap();
+        startActivity(new Intent(this, activity));
+    }
+
+    protected void openAndFinish(Class<?> activity) {
+        tap();
+        startActivity(new Intent(this, activity));
+        finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+}

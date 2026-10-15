@@ -58,13 +58,13 @@
         app:layout_constraintStart_toEndOf="@id/home_title"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ir.brandimo.pashmak.mascot.MascotView
+        <com.pashmak.app.mascot.MascotView
             android:id="@+id/home_mascot"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/mascot_home" />
     </FrameLayout>
 
-    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+    <com.pashmak.app.mascot.SpeechBubbleView
         android:id="@+id/home_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

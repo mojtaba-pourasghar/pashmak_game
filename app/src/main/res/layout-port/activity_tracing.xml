@@ -25,7 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ir.brandimo.pashmak.ui.common.PaintCanvasView
+    <com.pashmak.app.ui.common.PaintCanvasView
         android:id="@+id/trace_canvas"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -130,7 +130,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+    <com.pashmak.app.mascot.SpeechBubbleView
         android:id="@+id/dock_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

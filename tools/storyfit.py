@@ -50,7 +50,7 @@ def dims(dirs):
 
 def passages():
     """Every line the box ever shows, longest first."""
-    src = io.open(os.path.join(ROOT, 'app/src/main/java/ir/brandimo/pashmak/'
+    src = io.open(os.path.join(ROOT, 'app/src/main/java/com/pashmak/app/'
                                      'data/catalog/StoryCatalog.java'),
                   encoding='utf-8').read()
     out = []
@@ -85,7 +85,7 @@ def text_height(d, text):
 
 def options():
     """The two option labels on every choice beat — they sit on one-line buttons."""
-    src = io.open(os.path.join(ROOT, 'app/src/main/java/ir/brandimo/pashmak/'
+    src = io.open(os.path.join(ROOT, 'app/src/main/java/com/pashmak/app/'
                                      'data/catalog/StoryCatalog.java'),
                   encoding='utf-8').read()
     out = []

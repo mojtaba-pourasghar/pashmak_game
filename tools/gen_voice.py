@@ -23,7 +23,7 @@ import io, os, re, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MAIN = os.path.join(ROOT, 'app/src/main')
 RAW = os.path.join(MAIN, 'res/raw')
-CATALOG = os.path.join(MAIN, 'java/ir/brandimo/pashmak/data/catalog')
+CATALOG = os.path.join(MAIN, 'java/com/pashmak/app/data/catalog')
 
 # A small warm creature, not a newsreader. eSpeak's pitch runs 0-99 (50 is neutral)
 # and its speed is words a minute (175 is neutral), so these are the same choice the

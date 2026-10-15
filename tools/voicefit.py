@@ -12,7 +12,7 @@ import io, os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MAIN = os.path.join(ROOT, 'app/src/main')
 RAW = os.path.join(MAIN, 'res/raw')
-JAVA = os.path.join(MAIN, 'java/ir/brandimo/pashmak')
+JAVA = os.path.join(MAIN, 'java/com/pashmak/app')
 CATALOG = os.path.join(JAVA, 'data/catalog')
 
 

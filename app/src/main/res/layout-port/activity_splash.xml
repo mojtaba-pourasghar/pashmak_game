@@ -12,7 +12,7 @@
     android:background="@drawable/bg_screen_splash"
     android:clipChildren="false">
 
-    <ir.brandimo.pashmak.mascot.MascotView
+    <com.pashmak.app.mascot.MascotView
         android:id="@+id/splash_mascot"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/mascot_hero"

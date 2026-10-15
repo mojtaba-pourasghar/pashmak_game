@@ -32,10 +32,10 @@ def lengthen(tid, moments):
     return out
 
 ALL = tales_a.TALES + tales_b.TALES + tales_c.TALES
-OUT = ('/home/claude/pashmak_game/app/src/main/java/ir/brandimo/pashmak/'
+OUT = ('/home/claude/pashmak_game/app/src/main/java/com/pashmak/app/'
        'data/catalog/TaleCatalog.java')
 
-head = '''package ir.brandimo.pashmak.data.catalog;
+head = '''package com.pashmak.app.data.catalog;
 
 import androidx.annotation.NonNull;
 
@@ -43,26 +43,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import ir.brandimo.pashmak.R;
+import com.pashmak.app.R;
 
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.DAWN;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.DUSK;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.INDOORS;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.NIGHT;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.NOON;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.SEA;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.SNOW;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.aloft;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.desert;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.forest;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.garden;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.meadow;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.mountain;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.places;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.river;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.room;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.sea;
-import static ir.brandimo.pashmak.data.catalog.TaleSceneKit.village;
+import static com.pashmak.app.data.catalog.TaleSceneKit.DAWN;
+import static com.pashmak.app.data.catalog.TaleSceneKit.DUSK;
+import static com.pashmak.app.data.catalog.TaleSceneKit.INDOORS;
+import static com.pashmak.app.data.catalog.TaleSceneKit.NIGHT;
+import static com.pashmak.app.data.catalog.TaleSceneKit.NOON;
+import static com.pashmak.app.data.catalog.TaleSceneKit.SEA;
+import static com.pashmak.app.data.catalog.TaleSceneKit.SNOW;
+import static com.pashmak.app.data.catalog.TaleSceneKit.aloft;
+import static com.pashmak.app.data.catalog.TaleSceneKit.desert;
+import static com.pashmak.app.data.catalog.TaleSceneKit.forest;
+import static com.pashmak.app.data.catalog.TaleSceneKit.garden;
+import static com.pashmak.app.data.catalog.TaleSceneKit.meadow;
+import static com.pashmak.app.data.catalog.TaleSceneKit.mountain;
+import static com.pashmak.app.data.catalog.TaleSceneKit.places;
+import static com.pashmak.app.data.catalog.TaleSceneKit.river;
+import static com.pashmak.app.data.catalog.TaleSceneKit.room;
+import static com.pashmak.app.data.catalog.TaleSceneKit.sea;
+import static com.pashmak.app.data.catalog.TaleSceneKit.village;
 
 /**
  * Forty tales Pashmak simply tells, each about a minute or so long.

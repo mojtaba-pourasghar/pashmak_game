@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ir.brandimo.pashmak.ui.common.PaintCanvasView
+    <com.pashmak.app.ui.common.PaintCanvasView
         android:id="@+id/draw_canvas"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -63,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <ir.brandimo.pashmak.ui.common.PenBar
+                <com.pashmak.app.ui.common.PenBar
                     android:id="@+id/draw_pens"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
                     android:text="@string/freedraw_save" />
             </LinearLayout>
 
-            <ir.brandimo.pashmak.ui.common.StrokeBar
+            <com.pashmak.app.ui.common.StrokeBar
                 android:id="@+id/draw_widths"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+    <com.pashmak.app.mascot.SpeechBubbleView
         android:id="@+id/dock_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

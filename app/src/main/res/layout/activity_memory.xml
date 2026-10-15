@@ -75,7 +75,7 @@
     </LinearLayout>
     <!-- Floats over the centre stage beside Pashmak, so however long a line runs it
          never takes height from the tool column. -->
-    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+    <com.pashmak.app.mascot.SpeechBubbleView
         android:id="@+id/dock_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

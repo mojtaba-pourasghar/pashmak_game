@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ir.brandimo.pashmak.ui.coloring.ColoringCanvasView
+    <com.pashmak.app.ui.coloring.ColoringCanvasView
         android:id="@+id/paint_canvas"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -53,7 +53,7 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:text="یه رنگ انتخاب کن و روی قسمت درست بزن" />
 
-    <ir.brandimo.pashmak.ui.common.SwatchBar
+    <com.pashmak.app.ui.common.SwatchBar
         android:id="@+id/paint_palette"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+    <com.pashmak.app.mascot.SpeechBubbleView
         android:id="@+id/dock_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

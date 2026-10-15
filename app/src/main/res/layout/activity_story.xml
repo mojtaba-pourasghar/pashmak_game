@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ir.brandimo.pashmak.ui.story.StorySceneView
+    <com.pashmak.app.ui.story.StorySceneView
         android:id="@+id/story_scene"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -111,7 +111,7 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <ir.brandimo.pashmak.mascot.ConfettiView
+    <com.pashmak.app.mascot.ConfettiView
         android:id="@+id/story_confetti"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -122,7 +122,7 @@
         app:layout_constraintTop_toTopOf="parent" />
     <!-- Floats over the centre stage beside Pashmak, so however long a line runs it
          never takes height from the tool column. -->
-    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+    <com.pashmak.app.mascot.SpeechBubbleView
         android:id="@+id/dock_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

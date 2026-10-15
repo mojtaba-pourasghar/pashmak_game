@@ -213,7 +213,7 @@ row('night_goodnight', S('lullaby_goodnight'))
 row('night_missing', S('lullaby_missing', '…'))
 W('')
 W('  And the lullabies themselves — full songs, any length:')
-cat = io.open(ROOT + '/java/ir/brandimo/pashmak/data/catalog/LullabyCatalog.java',
+cat = io.open(ROOT + '/java/com/pashmak/app/data/catalog/LullabyCatalog.java',
               encoding='utf-8').read()
 for clip, title in re.findall(r'new Lullaby\("([^"]+)", "([^"]+)"', cat):
     row(clip, title)
@@ -226,7 +226,7 @@ section('11. قصه\u200cی زنده — THE LIVE STORIES')
 W('  Twenty stories, a minute or two each. Pashmak reads every passage aloud and')
 W('  the words appear in step with him, so these names are overrides like all the')
 W('  rest. A line marked _yes is the praise for finding the right thing.')
-story_src = io.open(ROOT + '/java/ir/brandimo/pashmak/data/catalog/StoryCatalog.java',
+story_src = io.open(ROOT + '/java/com/pashmak/app/data/catalog/StoryCatalog.java',
                     encoding='utf-8').read()
 blocks = re.split(r'Story \w+ = new Story\(', story_src)[1:]
 for block in blocks:
@@ -261,7 +261,7 @@ W('  ever an override. The names run tale_<id>_<n>, numbered from zero in the')
 W('  order the passages appear — tale_moon_boat_0, tale_moon_boat_1 and so on.')
 W('  The passages themselves live in data/catalog/TaleCatalog.java.')
 W('')
-tale_src = io.open(ROOT + '/java/ir/brandimo/pashmak/data/catalog/TaleCatalog.java',
+tale_src = io.open(ROOT + '/java/com/pashmak/app/data/catalog/TaleCatalog.java',
                    encoding='utf-8').read()
 tales = re.findall(r'new Tale\(\s*"([^"]+)",\s*"([^"]+)"', tale_src)
 # Every passage is listed by name, because that listing is where the vowelised

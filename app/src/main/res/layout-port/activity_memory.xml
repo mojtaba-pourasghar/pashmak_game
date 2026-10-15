@@ -81,7 +81,7 @@
 
     <!-- Floats over the board just above the band, on Pashmak's side of it, so it
          never covers a card the child is about to turn over. -->
-    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+    <com.pashmak.app.mascot.SpeechBubbleView
         android:id="@+id/dock_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

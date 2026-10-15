@@ -8,7 +8,7 @@
     android:background="@drawable/bg_screen_bubbles"
     android:clipChildren="false">
 
-    <ir.brandimo.pashmak.ui.bubbles.BubbleFieldView
+    <com.pashmak.app.ui.bubbles.BubbleFieldView
         android:id="@+id/bubble_field"
         android:layout_width="0dp"
         android:layout_height="0dp"

@@ -10,7 +10,7 @@
     android:gravity="end"
     android:orientation="vertical">
 
-    <ir.brandimo.pashmak.mascot.SpeechBubbleView
+    <com.pashmak.app.mascot.SpeechBubbleView
         android:id="@+id/dock_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
         android:paddingBottom="9dp"
         android:visibility="gone" />
 
-    <ir.brandimo.pashmak.mascot.MascotView
+    <com.pashmak.app.mascot.MascotView
         android:id="@+id/dock_mascot"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/mascot_dock"

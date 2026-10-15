@@ -11,7 +11,7 @@ from PIL import Image, ImageDraw
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, 'app/src/main/res')
-SRC = os.path.join(ROOT, 'app/src/main/java/ir/brandimo/pashmak/data/catalog')
+SRC = os.path.join(ROOT, 'app/src/main/java/com/pashmak/app/data/catalog')
 W, H = 300, 190
 
 sys.path.insert(0, os.path.join(ROOT, 'tools'))

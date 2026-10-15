@@ -13,7 +13,7 @@ from the Java line by line and the constants are read out of it rather than rety
 import io, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = os.path.join(ROOT, 'app/src/main/java/ir/brandimo/pashmak/audio/SpeechEngine.java')
+SRC = os.path.join(ROOT, 'app/src/main/java/com/pashmak/app/audio/SpeechEngine.java')
 
 AVAILABLE, MISSING, NOT_SUPPORTED = 'available', 'missing_data', 'not_supported'
 
