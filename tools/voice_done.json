@@ -832,7 +832,14 @@
   "tale_moon_boat_11",
   "tale_moon_boat_12",
   "tale_moon_boat_13",
-  "tale_moon_boat_2"
+  "tale_moon_boat_2",
+  "tale_moon_boat_3",
+  "tale_moon_boat_4",
+  "tale_moon_boat_5",
+  "tale_moon_boat_6",
+  "tale_moon_boat_7",
+  "tale_moon_boat_8",
+  "tale_moon_boat_9"
  ],
  "model": "gemini-2.5-flash-preview-tts",
  "voice": "Umbriel"
