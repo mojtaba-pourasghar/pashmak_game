@@ -839,7 +839,22 @@
   "tale_moon_boat_6",
   "tale_moon_boat_7",
   "tale_moon_boat_8",
-  "tale_moon_boat_9"
+  "tale_moon_boat_9",
+  "tale_morning_rooster_0",
+  "tale_morning_rooster_1",
+  "tale_morning_rooster_10",
+  "tale_morning_rooster_11",
+  "tale_morning_rooster_12",
+  "tale_morning_rooster_13",
+  "tale_morning_rooster_14",
+  "tale_morning_rooster_2",
+  "tale_morning_rooster_3",
+  "tale_morning_rooster_4",
+  "tale_morning_rooster_5",
+  "tale_morning_rooster_6",
+  "tale_morning_rooster_7",
+  "tale_morning_rooster_8",
+  "tale_morning_rooster_9"
  ],
  "model": "gemini-2.5-flash-preview-tts",
  "voice": "Umbriel"
