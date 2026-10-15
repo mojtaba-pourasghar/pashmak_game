@@ -15,3 +15,8 @@ local.properties
 tools/aistudio/
 tools/gcloud/
 tools/mana/check/
+
+# Transient files a voice run leaves in res/raw while it works.
+*.ogg.part
+*.tmp.wav
+tools/.scratch/

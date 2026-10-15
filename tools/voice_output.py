@@ -153,7 +153,14 @@ def write_clip(samples, rate, path, shaped=True):
         audio = audio * 32767.0                            # float models
     pcm = (shaping.shape(audio, rate) if shaped
            else shaping.to_pcm16(audio / max(np.max(np.abs(audio)), 1.0) * 0.89))
-    wav = os.path.splitext(path)[0] + '.tmp.wav'
+    # The scratch wav goes well away from res/raw. Beside the clip, as it used
+    # to be, it is briefly a file called <name>.ogg.tmp.wav inside the app's
+    # resources — a name aapt rejects outright, since a resource may hold one
+    # dot. A build that happened to land mid-run would fail on it.
+    scratch = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.scratch')
+    if not os.path.isdir(scratch):
+        os.makedirs(scratch)
+    wav = os.path.join(scratch, os.path.basename(path) + '.wav')
     with wave.open(wav, 'wb') as out:
         out.setnchannels(1)
         out.setsampwidth(2)

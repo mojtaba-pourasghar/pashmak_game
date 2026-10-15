@@ -827,7 +827,12 @@
   "tale_mirror_pond_8",
   "tale_mirror_pond_9",
   "tale_moon_boat_0",
-  "tale_moon_boat_1"
+  "tale_moon_boat_1",
+  "tale_moon_boat_10",
+  "tale_moon_boat_11",
+  "tale_moon_boat_12",
+  "tale_moon_boat_13",
+  "tale_moon_boat_2"
  ],
  "model": "gemini-2.5-flash-preview-tts",
  "voice": "Umbriel"
