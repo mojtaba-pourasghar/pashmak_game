@@ -892,7 +892,11 @@
   "tale_old_tree_14",
   "tale_old_tree_2",
   "tale_old_tree_3",
-  "tale_old_tree_4"
+  "tale_old_tree_4",
+  "tale_old_tree_5",
+  "tale_old_tree_6",
+  "tale_old_tree_7",
+  "tale_old_tree_8"
  ],
  "model": "gemini-2.5-flash-preview-tts",
  "voice": "Umbriel"
