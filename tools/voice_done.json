@@ -946,7 +946,10 @@
   "tale_rain_drum_10",
   "tale_rain_drum_11",
   "tale_rain_drum_2",
-  "tale_rain_drum_3"
+  "tale_rain_drum_3",
+  "tale_rain_drum_4",
+  "tale_rain_drum_5",
+  "tale_rain_drum_6"
  ],
  "model": "gemini-2.5-flash-preview-tts",
  "voice": "Umbriel"
