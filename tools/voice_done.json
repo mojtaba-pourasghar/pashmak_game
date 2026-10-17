@@ -984,7 +984,15 @@
   "tale_shadow_friend_8",
   "tale_shadow_friend_9",
   "tale_shy_star_0",
-  "tale_shy_star_1"
+  "tale_shy_star_1",
+  "tale_shy_star_10",
+  "tale_shy_star_11",
+  "tale_shy_star_12",
+  "tale_shy_star_2",
+  "tale_shy_star_3",
+  "tale_shy_star_4",
+  "tale_shy_star_5",
+  "tale_shy_star_6"
  ],
  "model": "gemini-2.5-flash-preview-tts",
  "voice": "Umbriel"
