@@ -85,7 +85,7 @@ public final class StoryCatalog {
                 StoryBeat.narrate("لب دریا موج‌ها آروم می‌اومدن و می‌رفتن، مثل نفس کشیدن.",
                         boat, fish),
                 StoryBeat.narrateTo(
-                        "یه قایق قرمز پهلو گرفت و گفت: «سوار شید، من راه رو بلدم.»",
+                        "یه قایق قرمز پهلو گرفت و گفت: «سوار شید، من راه رو بلدم.»", 9,
                         boat, sun),
                 StoryBeat.narrate("راه که رفتیم، یه صدای قشنگ از بالای سرمون اومد.",
                         tree, sun, bird),
@@ -101,7 +101,7 @@ public final class StoryCatalog {
                 StoryBeat.narrate("در خونه باز بود و بوی نون تازه تا حیاط می‌اومد.",
                         house, sun),
                 StoryBeat.narrateTo(
-                        "کنار هم نشستیم و نقاشی برامون از جاهایی که دیده بود گفت.",
+                        "کنار هم نشستیم و نقاشی برامون از جاهایی که دیده بود گفت.", 17,
                         house, tree),
                 StoryBeat.narrate("زیر درخت برگ‌ها مثل سقف بالای سرمون بودن.",
                         tree, bird),
@@ -439,7 +439,7 @@ public final class StoryCatalog {
                 StoryBeat.narrate("یه سنگ صاف و آبی برداشتیم که تو مشتمون جا می‌شد.",
                         shell, seaFish),
                 StoryBeat.narrateTo(
-                        "ماهی گفت: «سنگ اشکالی نداره؛ ولی جونداره‌ها باید بمونن.»",
+                        "ماهی گفت: «سنگ اشکالی نداره؛ ولی جونداره‌ها باید بمونن.»", 17,
                         seaFish, starfish),
                 StoryBeat.narrate("پشمک گفت: «اینجا خونه‌شونه. بهتره دست نزنیم.»",
                         starfish, seaFish),
