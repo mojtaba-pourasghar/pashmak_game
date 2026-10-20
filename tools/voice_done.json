@@ -1127,7 +1127,14 @@
   "tale_wind_letter_6",
   "tale_wind_letter_7",
   "tale_wind_letter_8",
-  "tale_wind_letter_9"
+  "tale_wind_letter_9",
+  "trace_done",
+  "trace_more",
+  "try_again1",
+  "try_again2",
+  "welcome",
+  "win1",
+  "win2"
  ],
  "model": "gemini-2.5-flash-preview-tts",
  "voice": "Umbriel"
