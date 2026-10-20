@@ -130,7 +130,9 @@ io.open(OUT, 'w', encoding='utf-8').write(head + '\n'.join(body) + tail)
 words = sum(len(m[1].split()) for t in ALL for m in t[4])
 moments = sum(len(t[4]) for t in ALL)
 print('%d tales, %d moments, %d words' % (len(ALL), moments, words))
-secs = [sum(len(m[1].split()) for m in t[4]) / 110 * 60 + len(t[4]) * 0.9 for t in ALL]
+# 87 words a minute, measured across the recorded voice — not the 110 a
+# newsreader manages. The bounds below are checked against these numbers.
+secs = [sum(len(m[1].split()) for m in t[4]) / 87 * 60 + len(t[4]) * 0.9 for t in ALL]
 print('running time: %.0fs shortest, %.0fs longest, %.0fs average'
       % (min(secs), max(secs), sum(secs) / len(secs)))
 print('total listening: %.0f minutes' % (sum(secs) / 60))

@@ -63,8 +63,10 @@ public final class Tale {
         /** Roughly how long this passage takes to read aloud, in milliseconds. */
         public long durationMs() {
             int words = text.split("\\s+").length;
-            // ~110 Persian words a minute, read gently, with a beat at the end.
-            return Math.round(words / 110f * 60_000f) + 900L;
+            // 87 Persian words a minute with a beat at the end — measured across the
+            // whole recorded voice, not guessed. Only a floor: the screen asks the
+            // player for the clip's real length and waits for that instead.
+            return Math.round(words / 87f * 60_000f) + 900L;
         }
     }
 

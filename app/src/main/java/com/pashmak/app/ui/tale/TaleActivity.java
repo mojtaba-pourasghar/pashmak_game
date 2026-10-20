@@ -33,6 +33,8 @@ public class TaleActivity extends GameActivity {
     private static final String STATE_TALE = "tale_index";
     private static final String STATE_MOMENT = "moment_index";
     private static final String STATE_PLAYING = "playing";
+    /** The breath between one moment's last word and the next one starting. */
+    private static final long PAGE_PAUSE_MS = 500L;
 
     private Tale tale;
     private int taleIndex;
@@ -150,17 +152,19 @@ public class TaleActivity extends GameActivity {
 
     private void speakMoment(Tale.Moment moment) {
         final int mine = ++token;
-        long hold = moment.durationMs();
-        mascot.say(moment.text, MascotState.TALK, hold,
+        // say() hands back the moment's real length — the recording's own, when there
+        // is one — so the page turns after the last word instead of over it. The text
+        // estimate in the catalogue is only the floor for a device that says nothing.
+        long said = mascot.say(moment.text, MascotState.TALK, moment.durationMs(),
                 AudioManifest.taleMoment(tale.id, momentIndex),
                 () -> {
                     // The voice got there first; drop the stopwatch.
                     if (mine == token && playing) {
                         binding.getRoot().removeCallbacks(advance);
-                        binding.getRoot().postDelayed(advance, 500L);
+                        binding.getRoot().postDelayed(advance, PAGE_PAUSE_MS);
                     }
                 });
-        binding.getRoot().postDelayed(advance, hold);
+        binding.getRoot().postDelayed(advance, said + PAGE_PAUSE_MS);
     }
 
     private void setPlaying(boolean value) {

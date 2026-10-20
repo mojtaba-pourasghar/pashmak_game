@@ -29,6 +29,8 @@ public class MemoryActivity extends GameActivity {
 
     private static final long MATCH_PAUSE_MS = 460L;
     private static final long MISS_PAUSE_MS = 800L;
+    /** The breath between winning a level and the next one being dealt. */
+    private static final long LEVEL_PAUSE_MS = 400L;
 
     private ActivityMemoryBinding binding;
     private MemoryViewModel viewModel;
@@ -177,16 +179,19 @@ public class MemoryActivity extends GameActivity {
         sounds.play(AudioManifest.SFX_FANFARE);
         prefs.setMemoryProgress(viewModel.deck().id, viewModel.level());
         mascot.addStars(viewModel.pairCount());
-        onCorrect(getString(R.string.memory_win), AudioManifest.VOICE_MEMORY_WIN);
+        long said = onCorrect(getString(R.string.memory_win),
+                AudioManifest.VOICE_MEMORY_WIN);
         if (viewModel.hasNextLevel()) {
             int next = viewModel.level() + 1;
+            // "You won" runs nearly five seconds; deal the next level after it, not
+            // 2.4 seconds in, or the two lines speak over each other.
             binding.getRoot().postDelayed(() -> {
                 mascot.say(getString(R.string.memory_next_level),
                         com.pashmak.app.mascot.MascotState.CHEER,
                         com.pashmak.app.mascot.MascotController.HOLD_MIN_MS,
                         AudioManifest.VOICE_MEMORY_NEXT);
                 deal(viewModel.deckIndex(), next);
-            }, 2400L);
+            }, said + LEVEL_PAUSE_MS);
         }
     }
 }

@@ -22,26 +22,31 @@ public abstract class GameActivity extends BaseActivity {
         return AudioManifest.BGM_PLAY;
     }
 
-    /** Correct answer: celebrate and hand out a star. */
-    protected void onCorrect() {
+    /**
+     * Correct answer: celebrate and hand out a star. Returns how long the praise
+     * lasts, so a screen that moves on afterwards can wait for it rather than for a
+     * number somebody typed.
+     */
+    protected long onCorrect() {
         sounds.play(AudioManifest.SFX_MATCH);
-        mascot.cheer();
+        return mascot.cheer();
     }
 
     /** Correct, with this screen's own words — and the clip that reads them. */
-    protected void onCorrect(String line, @NonNull String clip) {
+    protected long onCorrect(String line, @NonNull String clip) {
         sounds.play(AudioManifest.SFX_MATCH);
         mascot.addStars(1);
-        mascot.say(line, MascotState.CHEER, MascotController.HOLD_CHEER_MS, clip);
+        return mascot.say(line, MascotState.CHEER, MascotController.HOLD_CHEER_MS, clip);
     }
 
     /** Wrong answer: never a scolding, always a nudge. */
-    protected void onWrong() {
-        mascot.encourage();
+    protected long onWrong() {
+        return mascot.encourage();
     }
 
-    protected void onWrong(String line, @NonNull String clip) {
+    protected long onWrong(String line, @NonNull String clip) {
         sounds.play(AudioManifest.SFX_WRONG);
-        mascot.say(line, MascotState.ENCOURAGE, MascotController.HOLD_ENCOURAGE_MS, clip);
+        return mascot.say(line, MascotState.ENCOURAGE,
+                MascotController.HOLD_ENCOURAGE_MS, clip);
     }
 }

@@ -37,6 +37,8 @@ public class BubblePopActivity extends GameActivity {
     private static final String STATE_ROUND = "round_index";
     private static final String STATE_POPPED = "round_popped";
     private static final String STATE_SCORE = "score";
+    /** The breath between a round being declared over and the next one starting. */
+    private static final long ROUND_PAUSE_MS = 400L;
 
     private long seed;
     private List<BubbleRound> rounds;
@@ -155,9 +157,12 @@ public class BubblePopActivity extends GameActivity {
 
     private void finishRound() {
         sounds.play(AudioManifest.SFX_FANFARE);
-        mascot.say(getString(R.string.bubbles_round_done), MascotState.CHEER,
+        // The next round starts once he has finished saying this one is over; the
+        // clip runs four seconds and the 1.6 that used to be here talked over it.
+        long said = mascot.say(getString(R.string.bubbles_round_done), MascotState.CHEER,
                 MascotController.HOLD_CHEER_MS, AudioManifest.VOICE_BUBBLE_ROUND);
-        binding.getRoot().postDelayed(() -> startRound(roundIndex + 1), 1600L);
+        binding.getRoot().postDelayed(() -> startRound(roundIndex + 1),
+                said + ROUND_PAUSE_MS);
     }
 
     private void renderBanner() {

@@ -29,6 +29,13 @@ public class StoryActivity extends GameActivity {
     public static final String EXTRA_STORY = "story_index";
 
     private static final int STARS_PER_STORY = 4;
+    /**
+     * The pause between Pashmak finishing a line and the story moving on. It is added
+     * to the line's own length, never used instead of it: the praise clips run three
+     * and a half seconds and the "here it is" one nearly six, and the 1.5-second waits
+     * that used to be here cut every one of them off.
+     */
+    private static final long PAGE_PAUSE_MS = 400L;
 
     private ActivityStoryBinding binding;
     private static final String STATE_STORY = "story_index";
@@ -208,9 +215,10 @@ public class StoryActivity extends GameActivity {
                 break;
             }
         }
-        mascot.say(getString(R.string.story_here_it_is, label), MascotState.TALK,
-                MascotController.HOLD_MIN_MS, AudioManifest.VOICE_HELP_DEFAULT);
-        binding.getRoot().postDelayed(() -> advance(beat.next), 1600L);
+        long said = mascot.say(getString(R.string.story_here_it_is, label),
+                MascotState.TALK, MascotController.HOLD_MIN_MS,
+                AudioManifest.VOICE_HELP_DEFAULT);
+        binding.getRoot().postDelayed(() -> advance(beat.next), said + PAGE_PAUSE_MS);
     }
 
     /** The story is over; roll straight into the next one, or back to the list. */
@@ -232,10 +240,11 @@ public class StoryActivity extends GameActivity {
             binding.storyScene.bounce(prop.id);
             mascot.addStars(1);
             String praise = beat.praise == null ? "" : beat.praise;
-            mascot.say(praise, MascotState.CHEER, MascotController.HOLD_CHEER_MS,
+            long said = mascot.say(praise, MascotState.CHEER,
+                    MascotController.HOLD_CHEER_MS,
                     AudioManifest.storyPraise(story.id, beatIndex));
             binding.storyScene.setInteractive(false);
-            binding.getRoot().postDelayed(() -> advance(beat.next), 1500L);
+            binding.getRoot().postDelayed(() -> advance(beat.next), said + PAGE_PAUSE_MS);
         } else {
             onWrong(getString(R.string.story_wrong), AudioManifest.VOICE_STORY_WRONG);
         }

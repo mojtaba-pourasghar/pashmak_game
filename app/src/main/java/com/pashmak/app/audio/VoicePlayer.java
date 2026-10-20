@@ -26,6 +26,8 @@ public final class VoicePlayer {
     private final SpeechEngine speech;
 
     private MediaPlayer voice;
+    /** How long the recording now playing lasts; 0 when nothing is, or when it is TTS. */
+    private long soundingMs;
 
     private VoicePlayer(Context context) {
         appContext = context.getApplicationContext();
@@ -60,6 +62,7 @@ public final class VoicePlayer {
     public boolean speak(@Nullable String name, @Nullable String text,
                          @Nullable CompletionCallback callback) {
         stopVoice();
+        soundingMs = 0L;
         if (prefs.isMuted() || !prefs.soundEnabled()) {
             return false;
         }
@@ -100,12 +103,25 @@ public final class VoicePlayer {
                     callback.onVoiceFinished();
                 }
             });
+            // The exact length of the line, straight from the file. Everything that
+            // waits for Pashmak to finish talking waits on this number, so nothing
+            // has to guess from the word count and cut him off when the guess is low.
+            soundingMs = Math.max(0, voice.getDuration());
             voice.start();
             return true;
         } catch (Exception e) {
             releaseVoice();
             return false;
         }
+    }
+
+    /**
+     * How long the line just started lasts, in milliseconds, or 0 when that cannot be
+     * known — the device's own voice does not say in advance, and nothing sounding at
+     * all has no length. Valid from the moment {@link #speak} returns true.
+     */
+    public long soundingMs() {
+        return soundingMs;
     }
 
     /** Whether a mascot line is currently sounding, from either source. */
@@ -133,6 +149,7 @@ public final class VoicePlayer {
     }
 
     private void releaseVoice() {
+        soundingMs = 0L;
         if (voice != null) {
             try {
                 voice.release();

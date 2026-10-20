@@ -30,6 +30,8 @@ public class TracingActivity extends GameActivity {
 
     private static final float PASS_COVERAGE = 0.55f;
     private static final int STARS_PER_GLYPH = 3;
+    /** The breath between the praise for one letter and the next one being named. */
+    private static final long GLYPH_PAUSE_MS = 400L;
 
     private ActivityTracingBinding binding;
     private CanvasKeeper keeper;
@@ -114,9 +116,12 @@ public class TracingActivity extends GameActivity {
         if (coverage >= PASS_COVERAGE) {
             prefs.setTraceDone(glyphs[index]);
             mascot.addStars(STARS_PER_GLYPH);
-            onCorrect(getString(R.string.trace_award), AudioManifest.VOICE_TRACE_DONE);
+            long said = onCorrect(getString(R.string.trace_award),
+                    AudioManifest.VOICE_TRACE_DONE);
             binding.traceCanvas.clear();
-            binding.getRoot().postDelayed(() -> select(index + 1), 900L);
+            // The next letter is spoken as soon as it is selected, and that stops
+            // whatever is sounding — so wait for the praise to finish first.
+            binding.getRoot().postDelayed(() -> select(index + 1), said + GLYPH_PAUSE_MS);
         } else {
             onWrong(getString(R.string.trace_incomplete), AudioManifest.VOICE_TRACE_MORE);
         }

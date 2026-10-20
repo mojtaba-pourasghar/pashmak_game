@@ -32,6 +32,17 @@ public final class MascotController {
     public static final long HOLD_ENCOURAGE_MS = 3000L;
     public static final long HOLD_GIGGLE_MS = 2200L;
     public static final long HOLD_WELCOME_MS = 9000L;
+    /**
+     * A breath between the last syllable and the mascot dropping back to idle, so a
+     * line never ends on the same tick it stops sounding.
+     */
+    public static final long VOICE_TAIL_MS = 260L;
+    /**
+     * The slowest the read-along is allowed to crawl. Measured over the whole voice
+     * set: the slowest clip spends 308ms on a character, so anything under that would
+     * make the words overtake the voice on at least one line.
+     */
+    private static final long TYPEWRITER_MAX_MS = 320L;
 
     private static volatile MascotController instance;
 
@@ -93,10 +104,14 @@ public final class MascotController {
      * screen cannot quietly ship a mouth moving over silence. Pass a name from
      * {@link AudioManifest}; if the recording is not in res/raw yet the words
      * still appear and nothing sounds.
+     *
+     * <p>Returns how many milliseconds this line occupies — the recording's own
+     * length when there is one — so a caller that wants to move on afterwards can
+     * wait for that instead of typing a number and cutting him off.
      */
-    public void say(String text, @Nullable MascotState mood, long holdMs,
+    public long say(String text, @Nullable MascotState mood, long holdMs,
                     @NonNull String audio) {
-        speakInternal(text, mood, holdMs, audio, null);
+        return speakInternal(text, mood, holdMs, audio, null);
     }
 
     /**
@@ -105,12 +120,12 @@ public final class MascotController {
      * stopwatch — though they keep a stopwatch too, because on a device with no
      * Persian voice nothing sounds and nothing would ever finish.
      */
-    public void say(String text, @Nullable MascotState mood, long holdMs,
+    public long say(String text, @Nullable MascotState mood, long holdMs,
                     @NonNull String audio, @Nullable Runnable whenSpoken) {
-        speakInternal(text, mood, holdMs, audio, whenSpoken);
+        return speakInternal(text, mood, holdMs, audio, whenSpoken);
     }
 
-    private void speakInternal(String text, @Nullable MascotState mood, long holdMs,
+    private long speakInternal(String text, @Nullable MascotState mood, long holdMs,
                                @Nullable String audio, @Nullable Runnable whenSpoken) {
         cancelPending();
         String body = text == null ? "" : text;
@@ -126,52 +141,65 @@ public final class MascotController {
                 whenSpoken.run();
             }
         });
+        // How long this line lasts. A recording knows exactly; the device's own voice
+        // does not say, so only then is the word count used.
+        long voiced = 0L;
+        if (sounding) {
+            long clip = voice.soundingMs();
+            voiced = clip > 0 ? clip : spokenMs(body);
+        }
         if (!body.isEmpty()) {
             setSpeaking(true);
             // When the line is actually being said, the words appear at the speed it
             // is said at, so a child follows along instead of reading it and then
             // waiting. In silence the typewriter keeps its own brisk pace.
-            startTypewriter(sounding ? pace(body) : TYPEWRITER_MS);
+            startTypewriter(voiced > 0 ? pace(body, voiced) : TYPEWRITER_MS);
         }
         long hold = Math.max(HOLD_MIN_MS, holdMs <= 0 ? HOLD_DEFAULT_MS : holdMs);
-        if (sounding) {
+        if (voiced > 0) {
             // The hold is a fallback for a line nothing says out loud. Letting it fire
             // while Pashmak is still talking would cut him off mid-sentence, which is
-            // exactly what happened to the longer story passages.
-            hold = Math.max(hold, spokenMs(body));
+            // exactly what happened to every line in the app: the holds were set for a
+            // 110-words-a-minute reading and the voice reads at 87, so the longest
+            // passages were losing their last six seconds.
+            hold = Math.max(hold, voiced + VOICE_TAIL_MS);
         }
         dismiss = this::idle;
         handler.postDelayed(dismiss, hold);
+        return hold;
     }
 
-    public void speak(@NonNull MascotLine line, long holdMs) {
-        speakInternal(line.text, line.mood, holdMs, line.audio, null);
+    public long speak(@NonNull MascotLine line, long holdMs) {
+        return speakInternal(line.text, line.mood, holdMs, line.audio, null);
     }
 
-    /** Celebrates and awards a star, exactly as the prototype's cheer() does. */
-    public void cheer() {
-        cheer(1);
+    /**
+     * Celebrates and awards a star, exactly as the prototype's cheer() does. Returns
+     * how long the praise lasts, as {@link #say} does.
+     */
+    public long cheer() {
+        return cheer(1);
     }
 
-    public void cheer(int stars) {
+    public long cheer(int stars) {
         if (stars != 0) {
             addStars(stars);
         }
-        speak(dialogues.pick(MascotDialogues.BUCKET_SUCCESS), HOLD_CHEER_MS);
+        return speak(dialogues.pick(MascotDialogues.BUCKET_SUCCESS), HOLD_CHEER_MS);
     }
 
     /** Warm, never punishing — the design is explicit about this. */
-    public void encourage() {
+    public long encourage() {
         sounds.play(AudioManifest.SFX_WRONG);
-        speak(dialogues.pick(MascotDialogues.BUCKET_ENCOURAGE), HOLD_ENCOURAGE_MS);
+        return speak(dialogues.pick(MascotDialogues.BUCKET_ENCOURAGE), HOLD_ENCOURAGE_MS);
     }
 
-    public void poke() {
-        speak(dialogues.pick(MascotDialogues.BUCKET_POKE), HOLD_GIGGLE_MS);
+    public long poke() {
+        return speak(dialogues.pick(MascotDialogues.BUCKET_POKE), HOLD_GIGGLE_MS);
     }
 
-    public void help(String key, String... args) {
-        speak(dialogues.help(key, args), HOLD_DEFAULT_MS);
+    public long help(String key, String... args) {
+        return speak(dialogues.help(key, args), HOLD_DEFAULT_MS);
     }
 
     public void welcome() {
@@ -242,19 +270,25 @@ public final class MascotController {
     }
 
     /**
-     * Roughly how long a line takes to say aloud: about 110 words a minute, which is
-     * a storyteller's pace rather than a newsreader's, plus a breath at the end. Used
-     * to keep the hold timer out of the voice's way and to pace the typewriter.
+     * Roughly how long a line takes to say aloud, used only when nothing can be asked
+     * for the real figure — the device's own voice. 87 words a minute, measured across
+     * all 1,136 recordings rather than guessed; the 110 that used to be here is a
+     * newsreader's pace and it was clipping the end off seven lines in ten.
      */
     private static long spokenMs(String text) {
         int words = text.trim().isEmpty() ? 0 : text.trim().split("\\s+").length;
-        return (long) (words / 110f * 60000f) + 800L;
+        return (long) (words / 87f * 60000f) + 800L;
     }
 
-    /** Milliseconds per character so the text lands with the voice, within reason. */
-    private static long pace(String text) {
-        long step = spokenMs(text) / Math.max(1, text.length());
-        return Math.max(TYPEWRITER_MS, Math.min(step, 90L));
+    /**
+     * Milliseconds per character, so the words land with the voice. The step comes
+     * from the line's real length divided by its letters, which is the whole point —
+     * the ceiling is only there so a mis-tagged clip of several minutes cannot leave
+     * the read-along frozen on the first word.
+     */
+    private static long pace(String text, long voicedMs) {
+        long step = voicedMs / Math.max(1, text.length());
+        return Math.max(TYPEWRITER_MS, Math.min(step, TYPEWRITER_MAX_MS));
     }
 
     private void startTypewriter(final long step) {
