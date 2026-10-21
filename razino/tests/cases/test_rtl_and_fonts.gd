@@ -69,7 +69,7 @@ func test_all_shipped_dialogue_is_non_empty_persian():
 	## chapter, not a sample.
 	var checked := 0
 	for cid in ContentManager.chapter_ids():
-		var story := ContentManager.load_chapter_story(cid)
+		var story := ContentManager.load_source_story(cid)
 		for s in story.get("scenes", []):
 			for line in (s as Dictionary).get("dialogue", []):
 				var text := String((line as Dictionary).get("text", ""))

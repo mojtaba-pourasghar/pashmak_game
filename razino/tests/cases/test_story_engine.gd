@@ -16,19 +16,17 @@ func before_each() -> void:
 func after_each() -> void:
 	GameState.reset()
 
+## Every chapter in the catalogue, read from the authoring source — these
+## tests check the content itself, not what this run has downloaded.
 func _chapters() -> PackedStringArray:
-	var out := PackedStringArray()
-	for cid in ContentManager.chapter_ids():
-		if ContentManager.is_installed(cid):
-			out.append(cid)
-	return out
+	return ContentManager.chapter_ids()
 
 func test_all_ten_chapters_are_present_and_load():
 	var ids := _chapters()
 	eq(ids.size(), 10, "ten chapters are installed")
 	for cid in ids:
 		GameState.reset()
-		var story := ContentManager.load_chapter_story(cid)
+		var story := ContentManager.load_source_story(cid)
 		not_empty(story, "%s has story data" % cid)
 		var problems := StoryEngine.validate_story(story)
 		empty(problems, "%s validates in-engine: %s" % [cid, ", ".join(problems)])
@@ -47,7 +45,7 @@ func test_choices_are_never_all_hidden_mid_chapter():
 	## can actually take, whatever state they arrive in.
 	for cid in _chapters():
 		GameState.reset()
-		var story := ContentManager.load_chapter_story(cid)
+		var story := ContentManager.load_source_story(cid)
 		StoryEngine.load_story(story)
 		for s in story.get("scenes", []):
 			var scene: Dictionary = s
@@ -117,7 +115,7 @@ func test_validator_catches_an_unreachable_scene():
 ## Walks one chapter, choosing pseudo-randomly among the choices the engine
 ## says are available, and reports whether an ending was reached.
 func _play(chapter_id: String, run: int) -> Dictionary:
-	var story := ContentManager.load_chapter_story(chapter_id)
+	var story := ContentManager.load_source_story(chapter_id)
 	var by_id := {}
 	for s in story.get("scenes", []):
 		by_id[String((s as Dictionary).get("scene_id", ""))] = s

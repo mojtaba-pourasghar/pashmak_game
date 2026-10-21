@@ -86,7 +86,16 @@ func chapter_ids() -> PackedStringArray:
 # — availability —————————————————————————————————————————
 
 ## Bundled chapters ship inside the APK; installed ones were downloaded.
+##
+## Whether a chapter is bundled is decided by the CATALOGUE, not by whether a
+## file happens to be on disk. The repository holds the authoring source for
+## all ten chapters, but only the ones marked "bundled" are exported into the
+## build — so trusting the filesystem here would make a development run behave
+## unlike a shipped one, and hide exactly the download path this needs to test.
 func is_bundled(chapter_id: String) -> bool:
+	var entry := catalog_entry(chapter_id)
+	if String(entry.get("delivery", "download")) != "bundled":
+		return false
 	return FileAccess.file_exists("%s/%s/story.json" % [BUNDLED_ROOT, chapter_id])
 
 func is_installed(chapter_id: String) -> bool:
@@ -119,6 +128,16 @@ func load_chapter_story(chapter_id: String) -> Dictionary:
 		last_error = "chapter %s is not installed" % chapter_id
 		return {}
 	return _read_json(root + "/story.json")
+
+## The authoring copy of a chapter, straight from the repository.
+##
+## This is for TOOLS AND TESTS only — it deliberately ignores delivery and
+## entitlement, because a content check should be able to read a chapter that
+## the running game has not downloaded. The game itself always goes through
+## load_chapter_story(), which reads the installed copy.
+func load_source_story(chapter_id: String) -> Dictionary:
+	return _read_json("%s/%s/story.json" % [BUNDLED_ROOT, chapter_id])
+
 
 ## AudioManager asks here when a res:// lookup fails, so downloaded chapters
 ## can supply their own clips.
@@ -351,6 +370,15 @@ func _canonical_json(value: Variant) -> String:
 			for v in (value as Array):
 				parts2.append(_canonical_json(v))
 			return "[" + ",".join(parts2) + "]"
+		TYPE_FLOAT:
+			# Godot's JSON parser returns every number as a float, so an integer
+			# read back from a manifest would canonicalise as "2.0" while the
+			# signing tool wrote "2". Whole numbers are emitted as integers so
+			# both sides agree byte for byte.
+			var f: float = value
+			if is_equal_approx(f, floor(f)) and absf(f) < 9.0e15:
+				return "%d" % int(f)
+			return JSON.stringify(f)
 		_:
 			return JSON.stringify(value)
 

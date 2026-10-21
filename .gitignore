@@ -24,6 +24,8 @@ tools/.scratch/
 # Razino (Godot) — engine caches and local-only files
 razino/.godot/
 razino/android/
-razino/export/*.apk
-razino/export/*.aab
+razino/export/
+# Packed content packages are build output; they are rebuilt from content/
+# by content_tools/pack_chapter.py and signed with a key that is never here.
+razino/dist/
 *.key.private

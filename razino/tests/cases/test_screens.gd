@@ -89,7 +89,7 @@ func test_puzzle_panel_handles_every_puzzle_kind():
 	## Every kind the schema allows must render something a player can act on.
 	var kinds := {}
 	for cid in ContentManager.chapter_ids():
-		var story := ContentManager.load_chapter_story(cid)
+		var story := ContentManager.load_source_story(cid)
 		for s in story.get("scenes", []):
 			var p: Dictionary = (s as Dictionary).get("puzzle", {})
 			if not p.is_empty():

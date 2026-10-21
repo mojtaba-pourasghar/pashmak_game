@@ -3,7 +3,7 @@ extends RazinoTest
 
 func before_each() -> void:
 	GameState.reset()
-	ClueJournal.load_chapter_clues(ContentManager.load_chapter_story("season_01"))
+	ClueJournal.load_chapter_clues(ContentManager.load_source_story("season_01"))
 
 func after_each() -> void:
 	GameState.reset()
