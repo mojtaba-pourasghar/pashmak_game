@@ -20,3 +20,10 @@ tools/mana/check/
 *.ogg.part
 *.tmp.wav
 tools/.scratch/
+
+# Razino (Godot) — engine caches and local-only files
+razino/.godot/
+razino/android/
+razino/export/*.apk
+razino/export/*.aab
+*.key.private

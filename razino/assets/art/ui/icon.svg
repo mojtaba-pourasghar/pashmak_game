@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Razino mark: a clock face whose hands form a keyhole. Original artwork. -->
+  <rect width="128" height="128" rx="28" fill="#1B1F3B"/>
+  <circle cx="64" cy="64" r="42" fill="none" stroke="#D9A45B" stroke-width="6"/>
+  <circle cx="64" cy="54" r="11" fill="#D9A45B"/>
+  <path d="M58 60 L52 92 L76 92 L70 60 Z" fill="#D9A45B"/>
+  <circle cx="64" cy="64" r="52" fill="none" stroke="#2E8B8B" stroke-width="3" opacity="0.6"/>
+</svg>

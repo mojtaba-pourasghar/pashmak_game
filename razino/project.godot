@@ -1,0 +1,69 @@
+; Razino — رازینو
+; Godot 4.3 project configuration.
+; Engine configuration is documented at docs/ARCHITECTURE.md.
+
+config_version=5
+
+[application]
+
+config/name="Razino"
+config/name_fa="رازینو"
+config/description="بازی ماجراجویی معمایی دوبعدی فارسی برای کودکان ۸ تا ۱۲ سال"
+config/version="0.1.0"
+run/main_scene="res://scenes/boot/boot.tscn"
+config/features=PackedStringArray("4.3", "GL Compatibility")
+config/icon="res://assets/art/ui/icon.svg"
+boot_splash/show_image=false
+boot_splash/bg_color=Color(0.106, 0.122, 0.231, 1)
+
+[autoload]
+
+Log="*res://scripts/core/log.gd"
+Settings="*res://scripts/core/settings.gd"
+SaveManager="*res://scripts/save_system/save_manager.gd"
+GameState="*res://scripts/core/game_state.gd"
+AudioManager="*res://scripts/audio/audio_manager.gd"
+ContentManager="*res://scripts/content_delivery/content_manager.gd"
+StoryEngine="*res://scripts/story_engine/story_engine.gd"
+ClueJournal="*res://scripts/story_engine/clue_journal.gd"
+AvatarManager="*res://scripts/avatar/avatar_manager.gd"
+PurchaseManager="*res://scripts/purchases/purchase_manager.gd"
+ParentalSettings="*res://scripts/core/parental_settings.gd"
+Style="*res://scripts/ui/style.gd"
+Router="*res://scripts/core/router.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=0
+
+[gui]
+
+; theme is built at runtime by scripts/ui/style.gd
+theme/default_font_antialiasing=1
+
+[internationalization]
+
+locale/translation_remaps={}
+locale/fallback="fa"
+rendering/root_node_layout_direction=2
+rendering/force_right_to_left_layout_direction=true
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0.106, 0.122, 0.231, 1)
+anti_aliasing/quality/msaa_2d=1
+
+[physics]
+
+common/physics_ticks_per_second=60
