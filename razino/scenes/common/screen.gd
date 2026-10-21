@@ -19,11 +19,25 @@ var _back_target: String = ""
 const SAFE_MARGIN := 28
 const MAX_CONTENT_WIDTH := 1100
 
+var _margin: MarginContainer
+
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	layout_direction = Control.LAYOUT_DIRECTION_RTL
+	Style.attach(self)
 	_build_shell()
 	build_content()
+	resized.connect(_apply_side_margins)
+	_apply_side_margins()
+
+## Content fills a phone or tablet, and is reined in on a very wide window so
+## lines never run to an unreadable length.
+func _apply_side_margins() -> void:
+	if _margin == null:
+		return
+	var side := maxi(SAFE_MARGIN, int((size.x - MAX_CONTENT_WIDTH) * 0.5))
+	_margin.add_theme_constant_override("margin_left", side)
+	_margin.add_theme_constant_override("margin_right", side)
 
 ## Overridden by each screen.
 func build_content() -> void:
@@ -37,26 +51,21 @@ func configure(title: String, back_to: String = "") -> void:
 func _build_shell() -> void:
 	background = ColorRect.new()
 	(background as ColorRect).color = Palette.NIGHT
-	background.set_anchors_preset(Control.PRESET_FULL_RECT)
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(background)
 
-	var margin := MarginContainer.new()
-	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_margin = MarginContainer.new()
+	_margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + side, SAFE_MARGIN)
-	add_child(margin)
-
-	var centre := CenterContainer.new()
-	centre.set_anchors_preset(Control.PRESET_FULL_RECT)
-	margin.add_child(centre)
+		_margin.add_theme_constant_override("margin_" + side, SAFE_MARGIN)
+	add_child(_margin)
 
 	var column := VBoxContainer.new()
-	column.custom_minimum_size = Vector2(0, 0)
 	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	column.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	column.add_theme_constant_override("separation", Palette.PAD_MD)
-	centre.add_child(column)
+	_margin.add_child(column)
 
 	header = HBoxContainer.new()
 	header.add_theme_constant_override("separation", Palette.PAD_SM)

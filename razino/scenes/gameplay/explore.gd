@@ -27,13 +27,15 @@ func build_content() -> void:
 	if _chapter_id.is_empty():
 		_chapter_id = "season_01"
 
-	# The stage fills the screen; everything else floats above it.
+	# The stage IS the background on this screen, so the shell's flat colour
+	# must get out of the way or it paints straight over the scene.
+	background.visible = false
 	_stage = SceneStage.new()
 	add_child(_stage)
 	move_child(_stage, 0)
 
 	_hotspots = Control.new()
-	_hotspots.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_hotspots.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_hotspots.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_hotspots)
 
@@ -44,8 +46,11 @@ func build_content() -> void:
 	_toast.modulate.a = 0.0
 
 	var bottom := VBoxContainer.new()
-	bottom.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	bottom.offset_top = -340
+	bottom.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	# Grows upward from the bottom edge, so a long line or a third choice
+	# pushes the box taller instead of being cut off.
+	bottom.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	bottom.offset_top = -460
 	bottom.offset_left = SAFE_MARGIN
 	bottom.offset_right = -SAFE_MARGIN
 	bottom.offset_bottom = -SAFE_MARGIN
@@ -82,7 +87,7 @@ func build_content() -> void:
 
 func _build_hud() -> void:
 	_hud = HBoxContainer.new()
-	_hud.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	_hud.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	_hud.offset_left = SAFE_MARGIN
 	_hud.offset_right = -SAFE_MARGIN
 	_hud.offset_top = SAFE_MARGIN

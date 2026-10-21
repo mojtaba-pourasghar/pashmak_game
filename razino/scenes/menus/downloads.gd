@@ -27,7 +27,7 @@ func build_content() -> void:
 	_refresh()
 
 	ContentManager.download_progress.connect(func(cid, ratio):
-		_status.text = "در حال دریافت %s — %d٪" % [cid, int(ratio * 100.0)])
+		_status.text = "در حال دریافت %s — %s" % [cid, Fa.percent(ratio)])
 	ContentManager.download_completed.connect(func(cid):
 		_status.text = "«%s» دریافت شد." % cid
 		_refresh())
@@ -43,7 +43,7 @@ func _refresh() -> void:
 		c.queue_free()
 
 	var used_mb := float(ContentManager.storage_bytes_used()) / (1024.0 * 1024.0)
-	_list.add_child(Style.make_body("فضای استفاده‌شده: %.1f مگابایت" % used_mb,
+	_list.add_child(Style.make_body("فضای استفاده‌شده: %s مگابایت" % Fa.decimal(used_mb),
 		Palette.FS_CAPTION, Palette.SNOW_SOFT))
 
 	for entry in ContentManager.catalog:
@@ -69,7 +69,7 @@ func _row(entry: Dictionary) -> Control:
 	if bundled:
 		state = "همراه بازی نصب شده — بدون اینترنت کار می‌کند"
 	elif installed and needs_update:
-		state = "نسخهٔ تازه‌تری موجود است (نسخهٔ %d)" % int(entry.get("version", 1))
+		state = "نسخهٔ تازه‌تری موجود است (نسخهٔ %s)" % Fa.num(int(entry.get("version", 1)))
 	elif installed:
 		state = "روی دستگاه است — بدون اینترنت کار می‌کند"
 	else:

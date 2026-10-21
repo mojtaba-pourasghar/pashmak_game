@@ -94,7 +94,7 @@ func _part_row(key: String, label: String) -> Control:
 
 	var refresh := func(_id = ""):
 		var index := int(AvatarManager.config.get(key, 0)) + 1
-		value.text = "%d از %d" % [index, AvatarManager.part_count(key)]
+		value.text = "%s از %s" % [Fa.num(index), Fa.num(AvatarManager.part_count(key))]
 	refresh.call()
 	AvatarManager.avatar_changed.connect(refresh)
 

@@ -107,8 +107,10 @@ func _style_labels() -> void:
 		theme.set_font("bold_font", "RichTextLabel", font_bold)
 
 func _style_inputs() -> void:
-	theme.set_stylebox("normal", "LineEdit", _flat(Palette.PARCHMENT, Palette.R_SM))
-	theme.set_stylebox("focus", "LineEdit", _flat(Palette.PARCHMENT, Palette.R_SM, Palette.BRASS, 3))
+	# A field has to read as a field on parchment as well as on night blue, so
+	# it is near-white with a standing border rather than the card colour.
+	theme.set_stylebox("normal", "LineEdit", _flat(Color("FDFBF7"), Palette.R_SM, Palette.INK_SOFT, 2))
+	theme.set_stylebox("focus", "LineEdit", _flat(Color("FDFBF7"), Palette.R_SM, Palette.BRASS_DEEP, 3))
 	theme.set_color("font_color", "LineEdit", Palette.INK)
 	theme.set_color("font_placeholder_color", "LineEdit", Palette.INK_SOFT)
 	theme.set_color("caret_color", "LineEdit", Palette.INK)
@@ -127,6 +129,17 @@ func _style_misc() -> void:
 	theme.set_constant("separation", "HBoxContainer", Palette.PAD_SM)
 	theme.set_stylebox("panel", "ScrollContainer", _flat(Color.TRANSPARENT, 0.0))
 
+## Assigns the theme directly to a control.
+##
+## Godot propagates a theme down through Control and Window nodes, but a plain
+## Node in the chain breaks that walk — so a screen parented under one would
+## silently fall back to the engine's default grey. Every root UI node calls
+## this instead of trusting its ancestry.
+func attach(control: Control) -> void:
+	if control != null and theme != null:
+		control.theme = theme
+
+
 # — small helpers shared by the screens ———————————————————
 
 ## A heading that reads as a heading on every screen.
@@ -141,20 +154,24 @@ func make_title(text: String, size: int = Palette.FS_TITLE, color: Color = Palet
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	return l
 
-func make_body(text: String, size: int = Palette.FS_BODY, color: Color = Palette.SNOW_SOFT) -> Label:
+func make_body(text: String, size: int = Palette.FS_BODY, color: Color = Palette.SNOW_SOFT,
+		wrap: bool = true) -> Label:
 	var l := Label.new()
 	l.text = text
 	l.add_theme_font_size_override("font_size", scaled(size))
 	l.add_theme_color_override("font_color", color)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# A wrapping label inside a row can shrink to a single glyph per line, so
+	# anything laid out horizontally asks for wrap = false.
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if wrap else TextServer.AUTOWRAP_OFF
 	return l
 
 ## Buttons are at least Palette.TOUCH_MIN tall, per GDD §7.2.
 func make_button(text: String, variant: String = "primary") -> Button:
 	var b := Button.new()
 	b.text = text
-	b.custom_minimum_size = Vector2(0, Palette.TOUCH_MIN)
+	# Wide enough to read and to hit; height is the GDD's touch minimum.
+	b.custom_minimum_size = Vector2(120, Palette.TOUCH_MIN)
 	b.focus_mode = Control.FOCUS_ALL
 	match variant:
 		"secondary":

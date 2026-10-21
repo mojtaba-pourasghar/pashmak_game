@@ -16,21 +16,22 @@ var _figures: Control
 var _drift: float = 0.0
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	_bg = PlaceholderArt.new()
 	add_child(_bg)
 	_figures = Control.new()
-	_figures.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_figures.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_figures.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_figures)
 	set_process(not Settings.reduce_motion)
 
 func _process(delta: float) -> void:
 	# A very slow horizontal drift reads as depth without ever moving enough
-	# to distract from the text.
+	# to distract from the text. The offset goes to the background's own draw
+	# routine; moving the control itself would break its anchoring.
 	_drift += delta * 0.12
-	_bg.position.x = sin(_drift) * 8.0
+	_bg.drift = sin(_drift) * 10.0
 
 func show_scene(scene: Dictionary) -> void:
 	_bg.background_id = String(scene.get("background_id", ""))

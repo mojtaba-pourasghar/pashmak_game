@@ -29,6 +29,7 @@ var _revealing: bool = false
 var _current_audio: String = ""
 
 func _ready() -> void:
+	Style.attach(self)
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Palette.PARCHMENT
 	sb.set_corner_radius_all(int(Palette.R_LG))
@@ -59,7 +60,7 @@ func _ready() -> void:
 	_text = RichTextLabel.new()
 	_text.bbcode_enabled = false
 	_text.fit_content = true
-	_text.custom_minimum_size.y = 108
+	_text.custom_minimum_size.y = 84
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_text.add_theme_color_override("default_color", Palette.INK)
 	_text.add_theme_font_size_override("normal_font_size", Style.scaled(Palette.FS_BODY))

@@ -42,8 +42,8 @@ func _chapter_card(entry: Dictionary) -> Control:
 	var facts := HBoxContainer.new()
 	facts.add_theme_constant_override("separation", Palette.PAD_MD)
 	col.add_child(facts)
-	facts.add_child(_chip("%d صحنه" % int(entry.get("scene_count", 0)), Palette.NIGHT_LIFT))
-	facts.add_child(_chip("%d قسمت" % int(entry.get("episode_count", 0)), Palette.NIGHT_LIFT))
+	facts.add_child(_chip("%s صحنه" % Fa.num(int(entry.get("scene_count", 0))), Palette.NIGHT_LIFT))
+	facts.add_child(_chip("%s قسمت" % Fa.num(int(entry.get("episode_count", 0))), Palette.NIGHT_LIFT))
 	facts.add_child(_chip("رایگان" if free else "خریدنی", Palette.TEAL if free else Palette.BRASS))
 	if complete:
 		facts.add_child(_chip("تمام شد", Palette.OK))
@@ -84,5 +84,5 @@ func _chip(text: String, colour: Color) -> Control:
 	sb.content_margin_top = 4
 	sb.content_margin_bottom = 4
 	p.add_theme_stylebox_override("panel", sb)
-	p.add_child(Style.make_body(text, Palette.FS_CAPTION, Palette.SNOW))
+	p.add_child(Style.make_body(text, Palette.FS_CAPTION, Palette.SNOW, false))
 	return p

@@ -44,7 +44,7 @@ func _build_fade_layer() -> void:
 	add_child(layer)
 	_fade = ColorRect.new()
 	_fade.color = Palette.NIGHT
-	_fade.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_fade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_fade.modulate.a = 0.0
 	layer.add_child(_fade)

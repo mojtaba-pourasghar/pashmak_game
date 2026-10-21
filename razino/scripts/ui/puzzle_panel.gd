@@ -35,6 +35,7 @@ var _pairs_done: Array = []
 var _picked: Dictionary = {}
 
 func _ready() -> void:
+	Style.attach(self)
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Palette.NIGHT_SOFT
 	sb.set_corner_radius_all(int(Palette.R_LG))
@@ -53,7 +54,6 @@ func _ready() -> void:
 
 	_work_area = VBoxContainer.new()
 	_work_area.add_theme_constant_override("separation", Palette.PAD_SM)
-	_work_area.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	col.add_child(_work_area)
 
 	_feedback = Style.make_body("", Palette.FS_LABEL, Palette.BRASS)
@@ -123,7 +123,7 @@ func _build_ordering() -> void:
 	for i in _ordered.size():
 		chosen.add_child(_token(String(_label_for(_ordered[i])), Palette.BRASS, Palette.INK))
 	if _ordered.is_empty():
-		chosen.add_child(Style.make_body("— هنوز چیزی نچیده‌ای —", Palette.FS_CAPTION, Palette.LOCKED))
+		chosen.add_child(Style.make_body("— هنوز چیزی نچیده‌ای —", Palette.FS_CAPTION, Palette.LOCKED, false))
 
 	_work_area.add_child(Style.make_body("از این‌ها انتخاب کن:", Palette.FS_CAPTION, Palette.SNOW_SOFT))
 	var pool := _flow()
@@ -159,7 +159,7 @@ func _build_dials() -> void:
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", Palette.PAD_SM)
 
-		var label := Style.make_body(String(d.get("label", id)), Palette.FS_LABEL, Palette.SNOW)
+		var label := Style.make_body(String(d.get("label", id)), Palette.FS_LABEL, Palette.SNOW, false)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(label)
 
@@ -243,7 +243,7 @@ func _in_done(id: String) -> bool:
 func _build_picking() -> void:
 	var needed := (_puzzle.get("solution", []) as Array).size()
 	_work_area.add_child(Style.make_body(
-		"یکی را انتخاب کن." if needed == 1 else "%d تا را انتخاب کن." % needed,
+		"یکی را انتخاب کن." if needed == 1 else "%s تا را انتخاب کن." % Fa.num(needed),
 		Palette.FS_CAPTION, Palette.SNOW_SOFT))
 	for item in _puzzle.get("items", []):
 		var id := String((item as Dictionary).get("id", ""))
@@ -353,5 +353,5 @@ func _token(text: String, bg: Color, fg: Color) -> Control:
 	sb.content_margin_top = Palette.PAD_XS
 	sb.content_margin_bottom = Palette.PAD_XS
 	p.add_theme_stylebox_override("panel", sb)
-	p.add_child(Style.make_body(text, Palette.FS_LABEL, fg))
+	p.add_child(Style.make_body(text, Palette.FS_LABEL, fg, false))
 	return p

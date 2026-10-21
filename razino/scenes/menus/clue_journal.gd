@@ -114,18 +114,24 @@ func _clue_card(clue_id: String) -> Control:
 		sb.border_color = Palette.TEAL
 	card.add_theme_stylebox_override("panel", sb)
 
-	var btn := Button.new()
-	btn.flat = true
-	btn.custom_minimum_size.y = Palette.TOUCH_MIN
-	btn.pressed.connect(func(): _toggle(clue_id))
-	card.add_child(btn)
-
+	# The card must grow with its text, so the content is a normal child of the
+	# panel and the whole card takes the tap — anchoring the text inside a
+	# fixed-height Button clipped longer clues.
 	var col := VBoxContainer.new()
 	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	btn.add_child(col)
-	col.set_anchors_preset(Control.PRESET_FULL_RECT)
+	col.custom_minimum_size.y = Palette.TOUCH_MIN
+	card.add_child(col)
 	col.add_child(Style.make_title(ClueJournal.title_of(clue_id), Palette.FS_LABEL, Palette.INK))
 	col.add_child(Style.make_body(ClueJournal.body_of(clue_id), Palette.FS_CAPTION, Palette.INK_SOFT))
+
+	card.mouse_filter = Control.MOUSE_FILTER_STOP
+	card.gui_input.connect(func(event: InputEvent):
+		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed \
+				and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+			_toggle(clue_id)
+		elif event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed:
+			_toggle(clue_id))
+	card.tooltip_text = ClueJournal.body_of(clue_id)
 	return card
 
 func _toggle(clue_id: String) -> void:

@@ -65,7 +65,7 @@ func _submit(first_time: bool) -> void:
 			_message.text = "رمز باید دقیقاً چهار رقم باشد."
 		return
 	if ParentalSettings.is_locked_out():
-		_message.text = "هنوز قفل است. %d ثانیه دیگر دوباره امتحان کنید." % int(ParentalSettings.seconds_until_unlock())
+		_message.text = "هنوز قفل است. %s ثانیه دیگر دوباره امتحان کنید." % Fa.num(int(ParentalSettings.seconds_until_unlock()))
 		return
 	if ParentalSettings.verify(pin):
 		_show_panel()
@@ -142,7 +142,7 @@ func _purchases_card() -> Control:
 	var restore := Style.make_button("بازیابی خریدها", "quiet")
 	restore.pressed.connect(func():
 		var n := await PurchaseManager.restore_purchases()
-		restore.text = "بازیابی شد: %d مورد" % n)
+		restore.text = "بازیابی شد: %s مورد" % Fa.num(n))
 	col.add_child(restore)
 	return card
 
@@ -152,7 +152,7 @@ func _storage_card() -> Control:
 	card.add_child(col)
 	col.add_child(Style.make_title("فضای ذخیره‌سازی", Palette.FS_HEADING))
 	var mb := float(ContentManager.storage_bytes_used()) / (1024.0 * 1024.0)
-	col.add_child(Style.make_body("محتوای دانلودشده: %.1f مگابایت" % mb, Palette.FS_CAPTION, Palette.SNOW_SOFT))
+	col.add_child(Style.make_body("محتوای دانلودشده: %s مگابایت" % Fa.decimal(mb), Palette.FS_CAPTION, Palette.SNOW_SOFT))
 	var manage := Style.make_button("مدیریت دانلودها", "quiet")
 	manage.pressed.connect(func(): Router.go("UI-15"))
 	col.add_child(manage)

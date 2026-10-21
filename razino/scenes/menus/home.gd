@@ -86,7 +86,7 @@ func _current_chapter_card() -> Control:
 	bar.show_percentage = false
 	bar.custom_minimum_size.y = 18
 	col.add_child(bar)
-	col.add_child(Style.make_body("%d٪ از این فصل را دیده‌ای" % int(round(percent * 100.0)),
+	col.add_child(Style.make_body("%s از این فصل را دیده‌ای" % Fa.percent(percent),
 		Palette.FS_CAPTION, Palette.INK_SOFT))
 	return card
 

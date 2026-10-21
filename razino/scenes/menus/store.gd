@@ -75,8 +75,8 @@ func _product_card(entry: Dictionary) -> Control:
 	row.add_child(col)
 	col.add_child(Style.make_title(String(entry.get("title", cid)), Palette.FS_HEADING))
 	# What you get, stated before any price — GDD §11.1.
-	col.add_child(Style.make_body("%d صحنه در %d قسمت، با ذخیرهٔ کامل پیشرفت و اجرای آفلاین." % [
-		int(entry.get("scene_count", 0)), int(entry.get("episode_count", 0))],
+	col.add_child(Style.make_body("%s صحنه در %s قسمت، با ذخیرهٔ کامل پیشرفت و اجرای آفلاین." % [
+		Fa.num(int(entry.get("scene_count", 0))), Fa.num(int(entry.get("episode_count", 0)))],
 		Palette.FS_CAPTION, Palette.SNOW_SOFT))
 	col.add_child(Style.make_body(String(entry.get("synopsis", "")).left(150) + "…",
 		Palette.FS_CAPTION, Palette.SNOW_SOFT))

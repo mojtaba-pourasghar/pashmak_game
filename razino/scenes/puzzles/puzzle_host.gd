@@ -13,9 +13,10 @@ func _ready() -> void:
 
 func build_content() -> void:
 	var payload := Router.take_payload()
+	var scroll := make_scroll()
 	_panel = PuzzlePanel.new()
-	_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	content.add_child(_panel)
+	_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(_panel)
 
 	var puzzle: Dictionary = payload.get("puzzle", {})
 	if puzzle.is_empty():
@@ -28,7 +29,7 @@ func build_content() -> void:
 					puzzle = (s as Dictionary).get("puzzle", {})
 					break
 	if puzzle.is_empty():
-		content.add_child(make_notice("معمایی برای نمایش انتخاب نشده است.", Palette.BRASS))
+		scroll.add_child(make_notice("معمایی برای نمایش انتخاب نشده است.", Palette.BRASS))
 		return
 
 	_panel.load_puzzle(puzzle)

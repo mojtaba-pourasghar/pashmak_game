@@ -39,7 +39,7 @@ func build_content() -> void:
 	var bcol := VBoxContainer.new()
 	about.add_child(bcol)
 	bcol.add_child(Style.make_title("دربارهٔ بازی", Palette.FS_HEADING))
-	bcol.add_child(Style.make_body("رازینو — نسخهٔ %s" % ProjectSettings.get_setting("application/config/version", "?"),
+	bcol.add_child(Style.make_body("رازینو — نسخهٔ %s" % Fa.digits(String(ProjectSettings.get_setting("application/config/version", "?"))),
 		Palette.FS_CAPTION, Palette.SNOW_SOFT))
 	bcol.add_child(Style.make_body("فونت وزیرمتن، با مجوز SIL OFL.", Palette.FS_CAPTION, Palette.SNOW_SOFT))
 	var parent_btn := Style.make_button("بخش والدین", "quiet")
@@ -56,7 +56,7 @@ func _slider(label: String, key: String, value: float, lo: float = 0.0, hi: floa
 	s.custom_minimum_size.y = Palette.TOUCH_MIN
 	var readout := Style.make_body("", Palette.FS_CAPTION, Palette.SNOW_SOFT)
 	var update := func(v: float):
-		readout.text = "%d٪" % int(round((v - lo) / maxf(hi - lo, 0.001) * 100.0))
+		readout.text = Fa.percent((v - lo) / maxf(hi - lo, 0.001))
 	update.call(value)
 	s.value_changed.connect(func(v):
 		Settings.set_value(key, v)

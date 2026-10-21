@@ -33,9 +33,19 @@ func build_content() -> void:
 		_panel.show_line({"text": "محتوای این فصل در دسترس نیست."}, "")
 		return
 	StoryEngine.line_shown.connect(func(line, _i, _t):
-		stage.highlight_speaker(String(line.get("speaker_id", "")))
-		_panel.show_line(line, String(line.get("speaker_id", ""))))
+		var speaker := String(line.get("speaker_id", ""))
+		stage.highlight_speaker(speaker)
+		_panel.show_line(line, _display_name(speaker)))
 	StoryEngine.scene_entered.connect(func(scene): stage.show_scene(scene))
 	_panel.continue_pressed.connect(func(): StoryEngine.advance())
 	_panel.choice_selected.connect(func(cid): StoryEngine.choose(cid))
 	StoryEngine.enter_scene(scene_id)
+
+## The character's Persian name, not the id the content uses internally.
+func _display_name(character_id: String) -> String:
+	if character_id == "player":
+		return GameState.player_name if not GameState.player_name.is_empty() else "تو"
+	for c in StoryEngine.story.get("characters", []):
+		if String((c as Dictionary).get("character_id", "")) == character_id:
+			return String((c as Dictionary).get("name", character_id))
+	return character_id
