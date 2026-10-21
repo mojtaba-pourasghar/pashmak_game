@@ -1,0 +1,1025 @@
+{
+  "schema_version": 1,
+  "chapter_id": "season_03",
+  "version": 1,
+  "title": "جنگل نشانه‌ها",
+  "subtitle": "فصل سوم",
+  "language": "fa-IR",
+  "minimum_game_version": "0.1.0",
+  "synopsis": "نقشه گروه را به جنگلی در حاشیهٔ شهر می‌رساند. سنگ‌ها نشانه دارند و نشانه‌ها ترتیب. بازیکن باید با مشاهدهٔ محیط — جهت خزه، رد آب، صدای پرنده‌ها — مسیر امن را انتخاب کند، از رودخانه بگذرد و به کلبه‌ای برسد که سال‌هاست کسی در آن نبوده.",
+  "narrative_goal": "یافتن مسیر امن از میان سنگ‌های نشانه‌دار و رسیدن به کلبهٔ متروکه.",
+  "macro_clue": "قطعهٔ دستگاه",
+  "primary_environment": "جنگل و آبشار",
+  "core_mechanic": "مسیریابی و مشاهده",
+  "start_scene_id": "S03-E01-SC01",
+  "default_ending_id": "ending_s03_part",
+  "episodes": [
+    {
+      "episode_id": "S03-E01",
+      "title": "لبهٔ جنگل",
+      "summary": "گروه وارد جنگل می‌شود و اولین سنگ‌های نشانه‌دار را می‌بیند."
+    },
+    {
+      "episode_id": "S03-E02",
+      "title": "پل و رودخانه",
+      "summary": "گروه به پل شکسته می‌رسد و راه عبور را پیدا می‌کند."
+    },
+    {
+      "episode_id": "S03-E03",
+      "title": "پشت آبشار",
+      "summary": "گروه کلبه را پیدا می‌کند و در را باز می‌کند."
+    },
+    {
+      "episode_id": "S03-E04",
+      "title": "برداریم یا نه؟",
+      "summary": "گروه تصمیم می‌گیرد قطعه را بردارد یا سر جایش بگذارد."
+    }
+  ],
+  "characters": [
+    {
+      "character_id": "player",
+      "name": "تو",
+      "role": "عضو تازهٔ گروه"
+    },
+    {
+      "character_id": "arad",
+      "name": "آراد",
+      "role": "کنجکاو و ماجراجو"
+    },
+    {
+      "character_id": "raha",
+      "name": "رها",
+      "role": "تحلیل‌گر گروه"
+    },
+    {
+      "character_id": "mani",
+      "name": "مانی",
+      "role": "مخترع کوچک"
+    },
+    {
+      "character_id": "fandogh",
+      "name": "فندق",
+      "role": "راهنمای بازی"
+    },
+    {
+      "character_id": "banoo",
+      "name": "بانو کرمی",
+      "role": "جنگل‌بان"
+    }
+  ],
+  "clues": [
+    {
+      "clue_id": "CLUE_S03_MOSS",
+      "title": "خزه فقط یک طرف",
+      "body": "خزه روی سنگ‌ها همیشه یک سمت است. همان سمتی که آفتاب کمتر می‌تابد.",
+      "category": "observation"
+    },
+    {
+      "clue_id": "CLUE_S03_STONES",
+      "title": "سنگ‌های نشانه‌دار",
+      "body": "روی هفت سنگ، همان نشانه‌های دفترچه کنده شده: خورشید، پله، قطره.",
+      "category": "symbol"
+    },
+    {
+      "clue_id": "CLUE_S03_WATER",
+      "title": "رد آب",
+      "body": "خط باریکی از گل‌ولای روی سنگ‌ها نشان می‌دهد آب تا کجا بالا می‌آید.",
+      "category": "observation"
+    },
+    {
+      "clue_id": "CLUE_S03_BRIDGE",
+      "title": "پل چوبی",
+      "body": "دو تخته از پل شکسته است، ولی نه از کهنگی — بریده شده‌اند.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S03_BIRDS",
+      "title": "سکوت پرنده‌ها",
+      "body": "در یک قسمت جنگل، پرنده‌ها ساکت‌اند. بانو کرمی می‌گوید یعنی کسی تازه از آنجا رد شده.",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "CLUE_S03_CABIN",
+      "title": "کلبهٔ متروکه",
+      "body": "کلبه‌ای پشت آبشار، با دری که از داخل چفت شده بود.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S03_PART",
+      "title": "قطعهٔ برنجی",
+      "body": "یک چرخ‌دندهٔ بزرگ برنجی با ده دندانه. دقیقاً ده تا.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S03_ROUTE",
+      "title": "مسیر امن",
+      "body": "اگر خزه، رد آب و نشانه‌ها را کنار هم بگذاری، فقط یک مسیر می‌ماند که زیر آب نمی‌رود.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "Q_S03_WHO_CUT",
+      "title": "چه کسی تخته‌ها را برید؟",
+      "body": "پل از کهنگی نشکسته. کسی نخواسته رد شوند.",
+      "category": "question",
+      "is_question": true,
+      "visible_after": "CLUE_S03_BRIDGE"
+    }
+  ],
+  "clue_combinations": [
+    {
+      "a": "CLUE_S03_MOSS",
+      "b": "CLUE_S03_WATER",
+      "result": "CLUE_S03_ROUTE"
+    }
+  ],
+  "endings": [
+    {
+      "ending_id": "ending_s03_part",
+      "title": "قطعه‌ای در دست",
+      "body": "گروه قطعهٔ ده‌دندانه را برداشت. مانی می‌گوید این تکهٔ یک دستگاه بزرگ‌تر است."
+    },
+    {
+      "ending_id": "ending_s03_left",
+      "title": "قطعه‌ای که سر جایش ماند",
+      "body": "گروه قطعه را برنداشت و فقط از آن عکس کشید. کلبه را همان‌طور که بود گذاشتند و برگشتند."
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "S03-E01-SC01",
+      "episode_id": "S03-E01",
+      "scene_type": "cinematic",
+      "title": "جایی که شهر تمام می‌شود",
+      "background_id": "BG_S03_FOREST_EDGE",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "cinematic": {
+        "cinematic_id": "CIN_S03_E01",
+        "skippable": true,
+        "beats": [
+          {
+            "text": "پله‌ها تمام شدند و هوا عوض شد.",
+            "audio_id": "VO_S03_E01_NAR_001",
+            "background_id": "BG_S03_FOREST_EDGE",
+            "seconds": 4.5
+          },
+          {
+            "text": "اینجا دیگر دیوار نبود. سنگ بود، و روی سنگ‌ها، نشانه.",
+            "audio_id": "VO_S03_E01_NAR_002",
+            "background_id": "BG_S03_FOREST_EDGE",
+            "seconds": 4.5
+          }
+        ]
+      },
+      "next_scene_id": "S03-E01-SC02"
+    },
+    {
+      "scene_id": "S03-E01-SC02",
+      "episode_id": "S03-E01",
+      "scene_type": "dialogue",
+      "title": "اردوگاه",
+      "background_id": "BG_S03_FOREST_EDGE",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S03-E01-L001",
+          "speaker_id": "banoo",
+          "text": "تا غروب دو ساعت وقت دارید. بعدش آب بالا می‌آید.",
+          "audio_id": "VO_S03_E01_BANOO_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S03-E01-L002",
+          "speaker_id": "raha",
+          "text": "آب بالا می‌آید؟ رودخانه که آرام است.",
+          "audio_id": "VO_S03_E01_RAHA_001",
+          "animation": "think"
+        },
+        {
+          "line_id": "S03-E01-L003",
+          "speaker_id": "banoo",
+          "text": "الان آرام است. سنگ‌ها را نگاه کنید؛ خودشان می‌گویند تا کجا بالا می‌آید.",
+          "audio_id": "VO_S03_E01_BANOO_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S03-E01-SC03"
+    },
+    {
+      "scene_id": "S03-E01-SC03",
+      "episode_id": "S03-E01",
+      "scene_type": "explore",
+      "title": "سنگ‌ها",
+      "background_id": "BG_S03_STONE_PATH",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S03-E01-L004",
+          "speaker_id": "fandogh",
+          "text": "در جنگل، جواب‌ها روی زمین‌اند. سر پایین.",
+          "audio_id": "VO_S03_E01_FANDOGH_001",
+          "animation": "talk"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S03_MOSS",
+          "kind": "examine",
+          "label": "خزهٔ روی سنگ",
+          "description": "فقط یک سمتِ هر سنگ سبز است.",
+          "rect": [
+            0.22,
+            0.56,
+            0.18,
+            0.2
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S03_MOSS"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S03_MARKS",
+          "kind": "examine",
+          "label": "نشانه‌های کنده‌شده",
+          "description": "خورشید، پله، قطره — دوباره همان‌ها.",
+          "rect": [
+            0.46,
+            0.5,
+            0.18,
+            0.22
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S03_STONES"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S03_WATERLINE",
+          "kind": "inspect",
+          "label": "خط گل‌ولای",
+          "description": "تا کجا آب بالا می‌آید.",
+          "rect": [
+            0.7,
+            0.62,
+            0.18,
+            0.16
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S03_WATER"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S03-E01-SC04"
+    },
+    {
+      "scene_id": "S03-E01-SC04",
+      "episode_id": "S03-E01",
+      "scene_type": "dialogue",
+      "title": "از کدام طرف؟",
+      "background_id": "BG_S03_STONE_PATH",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S03_E01S04_1",
+          "text": "از مسیر سنگی بالا برویم؛ خشک‌تر است.",
+          "next_scene_id": "S03-E02-SC01",
+          "hint": "خزه راه را نشان می‌دهد.",
+          "effects": [
+            {
+              "set_flag": {
+                "s03_route": "stones"
+              }
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S03_E01S04_2",
+          "text": "از کنار رودخانه برویم؛ کوتاه‌تر است.",
+          "next_scene_id": "S03-E02-SC02",
+          "hint": "ولی آب بالا می‌آید.",
+          "effects": [
+            {
+              "set_flag": {
+                "s03_route": "river"
+              }
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S03-E02-SC01",
+      "episode_id": "S03-E02",
+      "scene_type": "dialogue",
+      "title": "مسیر سنگی",
+      "background_id": "BG_S03_STONE_PATH",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S03-E02-L001",
+          "speaker_id": "raha",
+          "text": "خزه سمت شمال است. پس اگر خزه سمت چپمان باشد، داریم درست می‌رویم.",
+          "audio_id": "VO_S03_E02_RAHA_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S03-E02-L002",
+          "speaker_id": "mani",
+          "text": "و پاهایمان خشک می‌ماند. من موافقم.",
+          "audio_id": "VO_S03_E02_MANI_001",
+          "animation": "happy"
+        }
+      ],
+      "next_scene_id": "S03-E02-SC02"
+    },
+    {
+      "scene_id": "S03-E02-SC02",
+      "episode_id": "S03-E02",
+      "scene_type": "explore",
+      "title": "پل چوبی",
+      "background_id": "BG_S03_WOODEN_BRIDGE",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S03-E02-L003",
+          "speaker_id": "arad",
+          "text": "دو تخته نیست. و لبه‌شان صاف است.",
+          "audio_id": "VO_S03_E02_ARAD_001",
+          "animation": "think"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S03_PLANKS",
+          "kind": "examine",
+          "label": "تخته‌های شکسته",
+          "description": "لبه‌ها صاف‌اند، نه شکسته.",
+          "rect": [
+            0.38,
+            0.54,
+            0.22,
+            0.18
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S03_BRIDGE"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S03_SILENCE",
+          "kind": "talk",
+          "label": "پرسیدن از بانو کرمی",
+          "description": "چرا اینجا پرنده نیست؟",
+          "rect": [
+            0.68,
+            0.44,
+            0.14,
+            0.32
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S03_BIRDS"
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S03-E02-SC03"
+    },
+    {
+      "scene_id": "S03-E02-SC03",
+      "episode_id": "S03-E02",
+      "scene_type": "puzzle",
+      "title": "کدام سنگ‌ها زیر آب نمی‌روند؟",
+      "background_id": "BG_S03_WOODEN_BRIDGE",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S03_SAFE_ROUTE",
+        "kind": "route_path",
+        "prompt": "مسیری بساز که همهٔ سنگ‌هایش بالاتر از خط گل‌ولای باشند.",
+        "items": [
+          {
+            "id": "R1",
+            "label": "سنگ بلند با خزه",
+            "height": 3
+          },
+          {
+            "id": "R2",
+            "label": "سنگ پهن، خط گل تا وسطش",
+            "height": 1
+          },
+          {
+            "id": "R3",
+            "label": "سنگ نوک‌تیز، خشک",
+            "height": 3
+          },
+          {
+            "id": "R4",
+            "label": "سنگ صاف، لغزنده",
+            "height": 1
+          },
+          {
+            "id": "R5",
+            "label": "سنگ بزرگ کنار آبشار",
+            "height": 3
+          }
+        ],
+        "solution": [
+          "R1",
+          "R3",
+          "R5"
+        ],
+        "hints": [
+          "سنگ‌هایی که خط گل‌ولای رویشان نیست، بالاتر از آب می‌مانند.",
+          "سنگ‌های لغزنده و پهن، هر دو پایین‌اند.",
+          "سنگ بلند، سنگ نوک‌تیز، سنگ کنار آبشار."
+        ],
+        "on_solve": [
+          {
+            "add_clue": "CLUE_S03_ROUTE"
+          },
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "add_clue": "CLUE_S03_ROUTE"
+          },
+          {
+            "set_flag": {
+              "s03_got_wet": true
+            }
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S03-E03-SC01",
+        "skip_scene_id": "S03-E03-SC01"
+      }
+    },
+    {
+      "scene_id": "S03-E03-SC01",
+      "episode_id": "S03-E03",
+      "scene_type": "dialogue",
+      "title": "صدای آب",
+      "background_id": "BG_S03_WATERFALL",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S03-E03-L001",
+          "speaker_id": "mani",
+          "text": "پشت آبشار جا هست. صدایش توخالی است.",
+          "audio_id": "VO_S03_E03_MANI_002",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S03-E03-L002",
+          "speaker_id": "arad",
+          "text": "یعنی کسی عمداً اینجا را انتخاب کرده. کسی که نمی‌خواسته پیدا شود.",
+          "audio_id": "VO_S03_E03_ARAD_002",
+          "animation": "think"
+        }
+      ],
+      "next_scene_id": "S03-E03-SC02"
+    },
+    {
+      "scene_id": "S03-E03-SC02",
+      "episode_id": "S03-E03",
+      "scene_type": "explore",
+      "title": "کلبه",
+      "background_id": "BG_S03_CABIN",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S03_DOOR",
+          "kind": "trigger",
+          "label": "در کلبه",
+          "description": "از داخل چفت شده بود؛ چفتش پوسیده.",
+          "rect": [
+            0.42,
+            0.4,
+            0.18,
+            0.34
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S03_CABIN"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S03_BENCH",
+          "kind": "examine",
+          "label": "میز کار",
+          "description": "ابزارها هنوز سر جایشان‌اند.",
+          "rect": [
+            0.66,
+            0.52,
+            0.2,
+            0.2
+          ],
+          "once": true,
+          "conditions": {
+            "has_clue": "CLUE_S03_CABIN"
+          },
+          "effects": [
+            {
+              "set_flag": {
+                "s03_saw_bench": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S03-E03-SC03"
+    },
+    {
+      "scene_id": "S03-E03-SC03",
+      "episode_id": "S03-E03",
+      "scene_type": "puzzle",
+      "title": "چفت پوسیده",
+      "background_id": "BG_S03_CABIN",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S03_LATCH",
+        "kind": "assemble_parts",
+        "prompt": "چفت را با چیزهایی که در کلبه هست دوباره بساز تا در باز بماند.",
+        "items": [
+          {
+            "id": "P_PIN",
+            "label": "میخ برنجی"
+          },
+          {
+            "id": "P_SPRING",
+            "label": "فنر کوچک"
+          },
+          {
+            "id": "P_WOOD",
+            "label": "تکه چوب خشک"
+          },
+          {
+            "id": "P_CLOTH",
+            "label": "تکه پارچه"
+          }
+        ],
+        "solution": [
+          "P_WOOD",
+          "P_PIN",
+          "P_SPRING"
+        ],
+        "hints": [
+          "چفت سه چیز می‌خواهد: یک پایه، یک محور، و چیزی که برش گرداند.",
+          "پارچه به درد چفت نمی‌خورد.",
+          "چوب، میخ، فنر."
+        ],
+        "on_solve": [
+          {
+            "add_trust": {
+              "mani": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "set_flag": {
+              "s03_door_propped": true
+            }
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S03-E03-SC04",
+        "skip_scene_id": "S03-E03-SC04"
+      }
+    },
+    {
+      "scene_id": "S03-E03-SC04",
+      "episode_id": "S03-E03",
+      "scene_type": "dialogue",
+      "title": "چیزی روی میز",
+      "background_id": "BG_S03_CABIN",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S03_PART"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S03-E03-L003",
+          "speaker_id": "mani",
+          "text": "یک چرخ‌دنده. ده دندانه دارد. ده تا، نه نه تا نه یازده تا.",
+          "audio_id": "VO_S03_E03_MANI_003",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S03-E03-L004",
+          "speaker_id": "raha",
+          "text": "ده. مثل ده پرتو.",
+          "audio_id": "VO_S03_E03_RAHA_003",
+          "animation": "think"
+        },
+        {
+          "line_id": "S03-E03-L005",
+          "speaker_id": "fandogh",
+          "text": "و مثل ده فصلی که پیش روی ماست — هرچند این را فعلاً فقط من می‌دانم.",
+          "audio_id": "VO_S03_E03_FANDOGH_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S03-E04-SC01"
+    },
+    {
+      "scene_id": "S03-E04-SC01",
+      "episode_id": "S03-E04",
+      "scene_type": "dialogue",
+      "title": "بانو کرمی برمی‌گردد",
+      "background_id": "BG_S03_CABIN",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S03-E04-L001",
+          "speaker_id": "banoo",
+          "text": "این کلبه را می‌شناسم. سال‌ها پیش اینجا کسی کار می‌کرد.",
+          "audio_id": "VO_S03_E04_BANOO_003",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S03-E04-L002",
+          "speaker_id": "banoo",
+          "text": "هرچه برمی‌دارید، بدانید که روزی باید برش گردانید.",
+          "audio_id": "VO_S03_E04_BANOO_004",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S03-E04-SC02"
+    },
+    {
+      "scene_id": "S03-E04-SC02",
+      "episode_id": "S03-E04",
+      "scene_type": "puzzle",
+      "title": "نشانه‌های روی دیوار",
+      "background_id": "BG_S03_CABIN",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S03_WALL_SIGNS",
+        "kind": "order_symbols",
+        "prompt": "روی دیوار کلبه چهار نشانه هست. به ترتیبی بچینشان که مسیر از شهر تا اینجا را نشان بدهد.",
+        "items": [
+          {
+            "id": "W_TOWER",
+            "label": "برج",
+            "icon": "ICON_TOWER"
+          },
+          {
+            "id": "W_BOOK",
+            "label": "کتاب",
+            "icon": "ICON_BOOK"
+          },
+          {
+            "id": "W_TREE",
+            "label": "درخت",
+            "icon": "ICON_TREE"
+          },
+          {
+            "id": "W_WATER",
+            "label": "آب",
+            "icon": "ICON_DROP"
+          }
+        ],
+        "solution": [
+          "W_TOWER",
+          "W_BOOK",
+          "W_TREE",
+          "W_WATER"
+        ],
+        "hints": [
+          "از کجا شروع کردید؟",
+          "اول برج، بعد کتابخانه.",
+          "برج، کتاب، درخت، آب."
+        ],
+        "on_solve": [
+          {
+            "add_trust": {
+              "arad": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S03-E04-SC03",
+        "skip_scene_id": "S03-E04-SC03"
+      }
+    },
+    {
+      "scene_id": "S03-E04-SC03",
+      "episode_id": "S03-E04",
+      "scene_type": "dialogue",
+      "title": "تصمیم",
+      "background_id": "BG_S03_CABIN",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S03_E04S03_1",
+          "text": "قطعه را برداریم؛ مانی می‌تواند بفهمد مال چیست.",
+          "next_scene_id": "S03-E04-SC04",
+          "hint": "و روزی برش می‌گردانیم.",
+          "effects": [
+            {
+              "add_item": "ITEM_GEAR_TEN"
+            },
+            {
+              "set_ending": "ending_s03_part"
+            },
+            {
+              "add_trust": {
+                "mani": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S03_E04S03_2",
+          "text": "سر جایش بگذاریم و فقط از آن نقشه بکشیم.",
+          "next_scene_id": "S03-E04-SC05",
+          "hint": "کلبه را همان‌طور که بود می‌گذاریم.",
+          "effects": [
+            {
+              "set_flag": {
+                "s03_left_part": true
+              }
+            },
+            {
+              "set_ending": "ending_s03_left"
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S03-E04-SC04",
+      "episode_id": "S03-E04",
+      "scene_type": "dialogue",
+      "title": "قطعه‌ای در دست",
+      "background_id": "BG_S03_FOREST_EDGE",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_04"
+        },
+        {
+          "set_ending": "ending_s03_part"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S03-E04-L003",
+          "speaker_id": "mani",
+          "text": "این تکهٔ یک دستگاه بزرگ‌تر است. و من کارگاهی می‌شناسم که می‌تواند جوابش را بدهد.",
+          "audio_id": "VO_S03_E04_MANI_004",
+          "animation": "happy"
+        },
+        {
+          "line_id": "S03-E04-L004",
+          "speaker_id": "fandogh",
+          "text": "کارگاه مخترع. فردا.",
+          "audio_id": "VO_S03_E04_FANDOGH_003",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    },
+    {
+      "scene_id": "S03-E04-SC05",
+      "episode_id": "S03-E04",
+      "scene_type": "dialogue",
+      "title": "قطعه‌ای که سر جایش ماند",
+      "background_id": "BG_S03_FOREST_EDGE",
+      "music_id": "MUS_FOREST_MYSTERY",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_04"
+        },
+        {
+          "set_ending": "ending_s03_left"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S03-E04-L005",
+          "speaker_id": "raha",
+          "text": "نقشه‌اش را دقیق کشیدم. اندازه‌ها درست است.",
+          "audio_id": "VO_S03_E04_RAHA_004",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S03-E04-L006",
+          "speaker_id": "fandogh",
+          "text": "برای کارگاه مخترع، نقشه هم کافی است. فعلاً.",
+          "audio_id": "VO_S03_E04_FANDOGH_004",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    }
+  ]
+}

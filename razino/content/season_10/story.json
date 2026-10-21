@@ -1,0 +1,1086 @@
+{
+  "schema_version": 1,
+  "chapter_id": "season_10",
+  "version": 1,
+  "title": "قلب رازینو",
+  "subtitle": "فصل دهم",
+  "language": "fa-IR",
+  "minimum_game_version": "0.1.0",
+  "synopsis": "گروه با آخرین معما روبه‌رو می‌شود. معلوم می‌شود دلارام رستا قصد نداشته رازها را برای همیشه پنهان کند؛ او سامانه‌ای ساخته بود تا تاریخ شهر حفظ شود و هر نسل بتواند با کشف و همکاری دوباره آن را فعال کند. بازیکن تصمیم می‌گیرد این دانش چطور به شهر منتقل شود و چه کسی مسئول نگهداری آرشیو تازه باشد.",
+  "narrative_goal": "فعال‌کردن دوبارهٔ برج و تصمیم‌گیری دربارهٔ اینکه این دانش به چه کسی سپرده شود.",
+  "macro_clue": "حل داستان اصلی",
+  "primary_environment": "برج ساعت",
+  "core_mechanic": "معمای نهایی و تصمیم",
+  "start_scene_id": "S10-E01-SC01",
+  "default_ending_id": "ending_s10_school",
+  "episodes": [
+    {
+      "episode_id": "S10-E01",
+      "title": "محفظهٔ مرکزی",
+      "summary": "گروه وارد قلب برج می‌شود."
+    },
+    {
+      "episode_id": "S10-E02",
+      "title": "نامهٔ دلارام",
+      "summary": "گروه می‌فهمد برج برای پنهان‌کردن ساخته نشده بود."
+    },
+    {
+      "episode_id": "S10-E03",
+      "title": "معمای آخر",
+      "summary": "گروه آخرین معما را حل می‌کند و دستگاه آمادهٔ کار می‌شود."
+    },
+    {
+      "episode_id": "S10-E04",
+      "title": "تصمیم آخر",
+      "summary": "بازیکن تصمیم می‌گیرد آرشیو به چه کسی سپرده شود."
+    }
+  ],
+  "characters": [
+    {
+      "character_id": "player",
+      "name": "تو",
+      "role": "عضو تازهٔ گروه"
+    },
+    {
+      "character_id": "arad",
+      "name": "آراد",
+      "role": "کنجکاو و ماجراجو"
+    },
+    {
+      "character_id": "raha",
+      "name": "رها",
+      "role": "تحلیل‌گر گروه"
+    },
+    {
+      "character_id": "mani",
+      "name": "مانی",
+      "role": "مخترع کوچک"
+    },
+    {
+      "character_id": "fandogh",
+      "name": "فندق",
+      "role": "راهنمای بازی"
+    },
+    {
+      "character_id": "gholami",
+      "name": "آقای غلامی",
+      "role": "نگهبان سابق برج"
+    },
+    {
+      "character_id": "modir",
+      "name": "آقای نیکزاد",
+      "role": "مدیر مدرسه"
+    },
+    {
+      "character_id": "delaram",
+      "name": "دلارام رستا",
+      "role": "سازندهٔ برج — در یادداشت‌ها"
+    }
+  ],
+  "clues": [
+    {
+      "clue_id": "CLUE_S10_CHAMBER",
+      "title": "محفظهٔ مرکزی",
+      "body": "اتاقی گرد در دل برج، با دستگاهی که ده بازو دارد.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S10_SLOT",
+      "title": "جای خالی",
+      "body": "یک جای خالی به اندازهٔ چرخ‌دندهٔ ده‌دندانه.",
+      "category": "observation"
+    },
+    {
+      "clue_id": "CLUE_S10_ARCHIVE",
+      "title": "آرشیو برج",
+      "body": "هزاران برگ یادداشت دربارهٔ شهر: کِی چه ساخته شد، چه کسی چه کرد.",
+      "category": "document"
+    },
+    {
+      "clue_id": "CLUE_S10_LETTER",
+      "title": "نامهٔ دلارام",
+      "body": "«این را نساختم که راز بماند. ساختم که فراموش نشود. اگر تا اینجا آمده‌ای، یعنی کار کرده است.»",
+      "category": "document"
+    },
+    {
+      "clue_id": "CLUE_S10_PURPOSE",
+      "title": "هدف واقعی",
+      "body": "برج یک قفل نبود؛ یک دفترچهٔ خاطرات بود، به اندازهٔ یک شهر.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "CLUE_S10_RULE",
+      "title": "شرط دلارام",
+      "body": "«هر نسل باید خودش پیدایش کند، وگرنه فقط یک ساختمان است.»",
+      "category": "document"
+    },
+    {
+      "clue_id": "CLUE_S10_READY",
+      "title": "همه‌چیز آماده",
+      "body": "با قطعهٔ ده‌دندانه، دستگاه کامل می‌شود.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "Q_S10_WHO_KEEPS",
+      "title": "آرشیو را به چه کسی بسپاریم؟",
+      "body": "یکی باید مسئول نگهداری این آرشیو باشد.",
+      "category": "question",
+      "is_question": true,
+      "visible_after": "CLUE_S10_ARCHIVE"
+    }
+  ],
+  "clue_combinations": [
+    {
+      "a": "CLUE_S10_LETTER",
+      "b": "CLUE_S10_ARCHIVE",
+      "result": "CLUE_S10_PURPOSE"
+    }
+  ],
+  "endings": [
+    {
+      "ending_id": "ending_s10_school",
+      "title": "به مدرسه سپرده شد",
+      "body": "آرشیو به مدرسه سپرده شد و هر سال گروهی تازه مسئول نگهداری‌اش می‌شود. برج دوباره می‌خواند."
+    },
+    {
+      "ending_id": "ending_s10_city",
+      "title": "به شهر سپرده شد",
+      "body": "آرشیو عمومی شد و هر کسی می‌تواند ببیندش. برج دوباره می‌خواند، و حالا کل شهر صدایش را می‌شنود."
+    },
+    {
+      "ending_id": "ending_s10_keepers",
+      "title": "به نگهبانان سپرده شد",
+      "body": "آرشیو پیش آقای غلامی و گروه ماند، با قراری ساده: هر سال یک نفر تازه به آن اضافه شود."
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "S10-E01-SC01",
+      "episode_id": "S10-E01",
+      "scene_type": "cinematic",
+      "title": "قلب",
+      "background_id": "BG_S10_CHAMBER",
+      "music_id": "MUS_TOWER",
+      "cinematic": {
+        "cinematic_id": "CIN_S10_E01",
+        "skippable": true,
+        "beats": [
+          {
+            "text": "ده فصل طول کشید تا این در باز شود.",
+            "audio_id": "VO_S10_E01_NAR_001",
+            "background_id": "BG_S10_CHAMBER",
+            "seconds": 4.5
+          },
+          {
+            "text": "و پشتش، نه گنج بود نه راز ترسناک.",
+            "audio_id": "VO_S10_E01_NAR_002",
+            "background_id": "BG_S10_CHAMBER",
+            "seconds": 4.5
+          },
+          {
+            "text": "یک اتاق بود، پر از کاغذ.",
+            "audio_id": "VO_S10_E01_NAR_003",
+            "background_id": "BG_S10_CHAMBER",
+            "seconds": 4.5
+          }
+        ]
+      },
+      "next_scene_id": "S10-E01-SC02"
+    },
+    {
+      "scene_id": "S10-E01-SC02",
+      "episode_id": "S10-E01",
+      "scene_type": "dialogue",
+      "title": "اینجا چیست؟",
+      "background_id": "BG_S10_CHAMBER",
+      "music_id": "MUS_TOWER",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S10_CHAMBER"
+        },
+        {
+          "add_clue": "CLUE_S10_SLOT"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S10-E01-L001",
+          "speaker_id": "arad",
+          "text": "فکر می‌کردم یک دستگاه بزرگ باشد. هست، ولی دورش همه کاغذ است.",
+          "audio_id": "VO_S10_E01_ARAD_001",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S10-E01-L002",
+          "speaker_id": "raha",
+          "text": "اینها یادداشت‌اند. دربارهٔ شهر. تاریخ‌دار.",
+          "audio_id": "VO_S10_E01_RAHA_001",
+          "animation": "think"
+        },
+        {
+          "line_id": "S10-E01-L003",
+          "speaker_id": "mani",
+          "text": "و دستگاه یک جای خالی دارد. همان‌جا که فکرش را می‌کردیم.",
+          "audio_id": "VO_S10_E01_MANI_001",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S10-E01-SC03"
+    },
+    {
+      "scene_id": "S10-E01-SC03",
+      "episode_id": "S10-E01",
+      "scene_type": "explore",
+      "title": "دور اتاق",
+      "background_id": "BG_S10_ARCHIVE",
+      "music_id": "MUS_TOWER",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S10-E01-L004",
+          "speaker_id": "fandogh",
+          "text": "آخرین بار است که می‌گویم: دقت کن. بعدش دیگر خودت بلدی.",
+          "audio_id": "VO_S10_E01_FANDOGH_001",
+          "animation": "talk"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S10_ARCHIVE",
+          "kind": "examine",
+          "label": "قفسه‌های یادداشت",
+          "description": "هزاران برگ، مرتب به ترتیب سال.",
+          "rect": [
+            0.26,
+            0.38,
+            0.22,
+            0.3
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S10_ARCHIVE"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S10_LETTER",
+          "kind": "inspect",
+          "label": "نامه‌ای روی دستگاه",
+          "description": "همان دست‌خط.",
+          "rect": [
+            0.54,
+            0.46,
+            0.18,
+            0.2
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S10_LETTER"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S10_RULE",
+          "kind": "inspect",
+          "label": "جمله‌ای روی دیوار",
+          "description": "کنده شده، نه نوشته.",
+          "rect": [
+            0.78,
+            0.4,
+            0.16,
+            0.22
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S10_RULE"
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S10-E01-SC04"
+    },
+    {
+      "scene_id": "S10-E01-SC04",
+      "episode_id": "S10-E01",
+      "scene_type": "dialogue",
+      "title": "اول چه کنیم؟",
+      "background_id": "BG_S10_ARCHIVE",
+      "music_id": "MUS_TOWER",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S10_E01S04_1",
+          "text": "اول نامه را کامل بخوانیم.",
+          "next_scene_id": "S10-E02-SC01",
+          "hint": "بفهمیم چرا، بعد چه‌کار.",
+          "effects": [
+            {
+              "set_flag": {
+                "s10_path": "letter"
+              }
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S10_E01S04_2",
+          "text": "اول دستگاه را کامل کنیم.",
+          "next_scene_id": "S10-E02-SC02",
+          "hint": "ببینیم اصلاً کار می‌کند یا نه.",
+          "effects": [
+            {
+              "set_flag": {
+                "s10_path": "machine"
+              }
+            },
+            {
+              "add_trust": {
+                "mani": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S10-E02-SC01",
+      "episode_id": "S10-E02",
+      "scene_type": "dialogue",
+      "title": "«که فراموش نشود»",
+      "background_id": "BG_S10_ARCHIVE",
+      "music_id": "MUS_TOWER",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S10_PURPOSE"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S10-E02-L001",
+          "speaker_id": "raha",
+          "text": "«این را نساختم که راز بماند. ساختم که فراموش نشود.»",
+          "audio_id": "VO_S10_E02_RAHA_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S10-E02-L002",
+          "speaker_id": "arad",
+          "text": "پس چرا قفلش کرد؟",
+          "audio_id": "VO_S10_E02_ARAD_002",
+          "animation": "think"
+        },
+        {
+          "line_id": "S10-E02-L003",
+          "speaker_id": "raha",
+          "text": "«هر نسل باید خودش پیدایش کند، وگرنه فقط یک ساختمان است.»",
+          "audio_id": "VO_S10_E02_RAHA_003",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S10-E02-L004",
+          "speaker_id": "mani",
+          "text": "یعنی قفل، بخشی از هدیه بود.",
+          "audio_id": "VO_S10_E02_MANI_002",
+          "animation": "surprised"
+        }
+      ],
+      "next_scene_id": "S10-E02-SC02"
+    },
+    {
+      "scene_id": "S10-E02-SC02",
+      "episode_id": "S10-E02",
+      "scene_type": "explore",
+      "title": "دستگاه ده‌بازو",
+      "background_id": "BG_S10_CHAMBER",
+      "music_id": "MUS_TOWER",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S10_ARMS",
+          "kind": "examine",
+          "label": "ده بازوی دستگاه",
+          "description": "هر بازو به یکی از ده نقطهٔ شهر می‌رود.",
+          "rect": [
+            0.36,
+            0.44,
+            0.24,
+            0.26
+          ],
+          "once": true,
+          "effects": [
+            {
+              "set_flag": {
+                "s10_saw_arms": true
+              }
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S10_FIT",
+          "kind": "combine",
+          "label": "جاانداختن چرخ‌دنده",
+          "description": "دقیقاً اندازه است.",
+          "rect": [
+            0.66,
+            0.5,
+            0.18,
+            0.2
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S10_READY"
+            },
+            {
+              "play_sfx": "SFX_PUZZLE_OK"
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S10-E02-SC03"
+    },
+    {
+      "scene_id": "S10-E02-SC03",
+      "episode_id": "S10-E02",
+      "scene_type": "puzzle",
+      "title": "ده بازو، ده نقطه",
+      "background_id": "BG_S10_CHAMBER",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S10_ARMS",
+        "kind": "match_pairs",
+        "prompt": "هر بازوی دستگاه را به نقطه‌ای از شهر وصل کن که سرنخش را آنجا پیدا کردی.",
+        "items": [
+          {
+            "id": "AR_1",
+            "label": "بازوی یکم"
+          },
+          {
+            "id": "PT_SCHOOL",
+            "label": "مدرسه و برج ساعت"
+          },
+          {
+            "id": "AR_5",
+            "label": "بازوی پنجم"
+          },
+          {
+            "id": "PT_LAKE",
+            "label": "دریاچه و ایستگاه پژوهشی"
+          }
+        ],
+        "solution": [
+          [
+            "AR_1",
+            "PT_SCHOOL"
+          ],
+          [
+            "AR_5",
+            "PT_LAKE"
+          ]
+        ],
+        "hints": [
+          "بازوها به ترتیب فصل‌ها شماره خورده‌اند.",
+          "فصل اول کجا بود؟ فصل پنجم کجا؟",
+          "یکم با مدرسه، پنجم با دریاچه."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s10_arms_ok": true
+            }
+          },
+          {
+            "add_trust": {
+              "mani": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "set_flag": {
+              "s10_arms_partial": true
+            }
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S10-E03-SC01",
+        "skip_scene_id": "S10-E03-SC01"
+      }
+    },
+    {
+      "scene_id": "S10-E03-SC01",
+      "episode_id": "S10-E03",
+      "scene_type": "dialogue",
+      "title": "یک سؤال آخر",
+      "background_id": "BG_S10_CHAMBER",
+      "music_id": "MUS_TOWER",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S10-E03-L001",
+          "speaker_id": "gholami",
+          "text": "روی دستگاه یک سؤال هست. دلارام می‌گفت تنها قفلی است که با ابزار باز نمی‌شود.",
+          "audio_id": "VO_S10_E03_GHOLAMI_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S10-E03-L002",
+          "speaker_id": "raha",
+          "text": "بخوانش.",
+          "audio_id": "VO_S10_E03_RAHA_004",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S10-E03-L003",
+          "speaker_id": "gholami",
+          "text": "«این سامانه برای چه ساخته شد؟»",
+          "audio_id": "VO_S10_E03_GHOLAMI_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S10-E03-SC02"
+    },
+    {
+      "scene_id": "S10-E03-SC02",
+      "episode_id": "S10-E03",
+      "scene_type": "puzzle",
+      "title": "برای چه ساخته شد؟",
+      "background_id": "BG_S10_CHAMBER",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S10_FINAL",
+        "kind": "spot_contradiction",
+        "prompt": "از میان این چهار جواب، کدام با همهٔ چیزهایی که در ده فصل دیدی می‌خواند؟",
+        "items": [
+          {
+            "id": "FA_HIDE",
+            "label": "«که رازها برای همیشه پنهان بمانند.»"
+          },
+          {
+            "id": "FA_REMEMBER",
+            "label": "«که شهر تاریخ خودش را فراموش نکند.»"
+          },
+          {
+            "id": "FA_RICH",
+            "label": "«که گنجی را نگه دارد.»"
+          },
+          {
+            "id": "FA_PUNISH",
+            "label": "«که کنجکاوها را دور کند.»"
+          }
+        ],
+        "solution": [
+          "FA_REMEMBER"
+        ],
+        "hints": [
+          "نامهٔ دلارام چه گفت؟",
+          "«ساختم که فراموش نشود.»",
+          "جوابی که دربارهٔ به‌یادآوردن است."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s10_answered": true
+            }
+          },
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "set_flag": {
+              "s10_answer_given": true
+            }
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S10-E03-SC03",
+        "skip_scene_id": "S10-E03-SC03"
+      }
+    },
+    {
+      "scene_id": "S10-E03-SC03",
+      "episode_id": "S10-E03",
+      "scene_type": "cinematic",
+      "title": "برج می‌خواند",
+      "background_id": "BG_S10_TOWER_LIT",
+      "music_id": "MUS_REVEAL",
+      "cinematic": {
+        "cinematic_id": "CIN_S10_E03",
+        "skippable": true,
+        "beats": [
+          {
+            "text": "چرخ‌دنده‌ها یکی‌یکی راه افتادند.",
+            "audio_id": "VO_S10_E03_NAR_001",
+            "background_id": "BG_S10_TOWER_LIT",
+            "seconds": 4.5
+          },
+          {
+            "text": "نور از پنجره‌های برج بیرون زد و روی بام‌های شهر پخش شد.",
+            "audio_id": "VO_S10_E03_NAR_002",
+            "background_id": "BG_S10_TOWER_LIT",
+            "seconds": 4.5
+          },
+          {
+            "text": "و برج، بعد از بیست سال، خواند.",
+            "audio_id": "VO_S10_E03_NAR_003",
+            "background_id": "BG_S10_TOWER_LIT",
+            "seconds": 4.5
+          }
+        ]
+      },
+      "next_scene_id": "S10-E03-SC04"
+    },
+    {
+      "scene_id": "S10-E03-SC04",
+      "episode_id": "S10-E03",
+      "scene_type": "dialogue",
+      "title": "حالا چه؟",
+      "background_id": "BG_S10_TOWER_LIT",
+      "music_id": "MUS_TOWER",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S10-E03-L004",
+          "speaker_id": "modir",
+          "text": "تمام شهر صدایش را شنید. فردا همه می‌پرسند چه شد.",
+          "audio_id": "VO_S10_E03_MODIR_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S10-E03-L005",
+          "speaker_id": "raha",
+          "text": "و ما باید تصمیم بگیریم چه جوابی بدهیم.",
+          "audio_id": "VO_S10_E03_RAHA_005",
+          "animation": "think"
+        },
+        {
+          "line_id": "S10-E03-L006",
+          "speaker_id": "arad",
+          "text": "و این آرشیو را به چه کسی بسپاریم.",
+          "audio_id": "VO_S10_E03_ARAD_003",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S10-E04-SC01"
+    },
+    {
+      "scene_id": "S10-E04-SC01",
+      "episode_id": "S10-E04",
+      "scene_type": "dialogue",
+      "title": "سه پیشنهاد",
+      "background_id": "BG_S10_TOWER_LIT",
+      "music_id": "MUS_TOWER",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S10-E04-L001",
+          "speaker_id": "modir",
+          "text": "می‌توانم اتاقی در مدرسه بدهم. هر سال یک گروه مسئولش باشد.",
+          "audio_id": "VO_S10_E04_MODIR_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S10-E04-L002",
+          "speaker_id": "gholami",
+          "text": "یا بگذارید عمومی شود. هر کسی خواست، بیاید ببیند.",
+          "audio_id": "VO_S10_E04_GHOLAMI_003",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S10-E04-L003",
+          "speaker_id": "mani",
+          "text": "یا همین‌طور بماند پیش خودمان، و هر سال یک نفر اضافه شود.",
+          "audio_id": "VO_S10_E04_MANI_003",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S10-E04-L004",
+          "speaker_id": "fandogh",
+          "text": "هر سه جواب درست‌اند. فقط یکی‌شان مال توست.",
+          "audio_id": "VO_S10_E04_FANDOGH_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S10-E04-SC02"
+    },
+    {
+      "scene_id": "S10-E04-SC02",
+      "episode_id": "S10-E04",
+      "scene_type": "dialogue",
+      "title": "تصمیم تو",
+      "background_id": "BG_S10_TOWER_LIT",
+      "music_id": "MUS_TOWER",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S10_E04S02_1",
+          "text": "به مدرسه بسپاریم؛ هر سال گروهی تازه.",
+          "next_scene_id": "S10-E04-SC03",
+          "hint": "بچه‌های بعدی هم پیدایش می‌کنند.",
+          "effects": [
+            {
+              "set_flag": {
+                "s10_keeper": "school"
+              }
+            },
+            {
+              "set_ending": "ending_s10_school"
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S10_E04S02_2",
+          "text": "عمومی‌اش کنیم؛ مال همهٔ شهر است.",
+          "next_scene_id": "S10-E04-SC04",
+          "hint": "هیچ‌کس از آن محروم نماند.",
+          "effects": [
+            {
+              "set_flag": {
+                "s10_keeper": "city"
+              }
+            },
+            {
+              "set_ending": "ending_s10_city"
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S10_E04S02_3",
+          "text": "خودمان نگه داریم و هر سال یک نفر اضافه کنیم.",
+          "next_scene_id": "S10-E04-SC05",
+          "hint": "همان شرط دلارام.",
+          "effects": [
+            {
+              "set_flag": {
+                "s10_keeper": "keepers"
+              }
+            },
+            {
+              "set_ending": "ending_s10_keepers"
+            },
+            {
+              "add_trust": {
+                "mani": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S10-E04-SC03",
+      "episode_id": "S10-E04",
+      "scene_type": "dialogue",
+      "title": "به مدرسه سپرده شد",
+      "background_id": "BG_S10_SCHOOL_ARCHIVE",
+      "music_id": "MUS_TOWER",
+      "on_enter": [
+        {
+          "set_ending": "ending_s10_school"
+        },
+        {
+          "complete_chapter": "season_10"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S10-E04-L005",
+          "speaker_id": "modir",
+          "text": "اتاق بایگانی از امروز اسم دارد: «اتاق ده نقطه».",
+          "audio_id": "VO_S10_E04_MODIR_003",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S10-E04-L006",
+          "speaker_id": "raha",
+          "text": "و سال بعد، گروه بعدی باید خودش پیدایش کند. همان شرط.",
+          "audio_id": "VO_S10_E04_RAHA_006",
+          "animation": "happy"
+        },
+        {
+          "line_id": "S10-E04-L007",
+          "speaker_id": "fandogh",
+          "text": "و در آخرین صحنه، نقشه‌ای تازه از منطقه‌ای ناشناخته روی میز باز ماند.",
+          "audio_id": "VO_S10_E04_FANDOGH_003",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    },
+    {
+      "scene_id": "S10-E04-SC04",
+      "episode_id": "S10-E04",
+      "scene_type": "dialogue",
+      "title": "به شهر سپرده شد",
+      "background_id": "BG_S10_CITY_SQUARE",
+      "music_id": "MUS_TOWER",
+      "on_enter": [
+        {
+          "set_ending": "ending_s10_city"
+        },
+        {
+          "complete_chapter": "season_10"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S10-E04-L008",
+          "speaker_id": "arad",
+          "text": "هر کسی می‌تواند بیاید و بخواند. حتی آن‌هایی که به ما نخندیدند.",
+          "audio_id": "VO_S10_E04_ARAD_004",
+          "animation": "happy"
+        },
+        {
+          "line_id": "S10-E04-L009",
+          "speaker_id": "gholami",
+          "text": "دلارام همین را می‌خواست، فکر کنم.",
+          "audio_id": "VO_S10_E04_GHOLAMI_004",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S10-E04-L010",
+          "speaker_id": "fandogh",
+          "text": "و روی دیوار میدان، نقشه‌ای تازه نصب شد — از جایی که هنوز کسی نرفته.",
+          "audio_id": "VO_S10_E04_FANDOGH_004",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    },
+    {
+      "scene_id": "S10-E04-SC05",
+      "episode_id": "S10-E04",
+      "scene_type": "dialogue",
+      "title": "به نگهبانان سپرده شد",
+      "background_id": "BG_S10_CHAMBER",
+      "music_id": "MUS_TOWER",
+      "on_enter": [
+        {
+          "set_ending": "ending_s10_keepers"
+        },
+        {
+          "complete_chapter": "season_10"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S10-E04-L011",
+          "speaker_id": "gholami",
+          "text": "پس من می‌شوم نگهبان دوم. و هر سال یک نفر اضافه.",
+          "audio_id": "VO_S10_E04_GHOLAMI_005",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S10-E04-L012",
+          "speaker_id": "mani",
+          "text": "و دفترچهٔ سرنخ‌ها می‌ماند پیش ما.",
+          "audio_id": "VO_S10_E04_MANI_004",
+          "animation": "happy"
+        },
+        {
+          "line_id": "S10-E04-L013",
+          "speaker_id": "fandogh",
+          "text": "و در صفحهٔ آخرش، نقشه‌ای تازه کشیده شد. از جایی که اسمش را هنوز نمی‌دانیم.",
+          "audio_id": "VO_S10_E04_FANDOGH_005",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    }
+  ]
+}

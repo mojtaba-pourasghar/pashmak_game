@@ -1,0 +1,1071 @@
+{
+  "schema_version": 1,
+  "chapter_id": "season_08",
+  "version": 1,
+  "title": "شهر زیر شهر",
+  "subtitle": "فصل هشتم",
+  "language": "fa-IR",
+  "minimum_game_version": "0.1.0",
+  "synopsis": "نقشهٔ زیرزمین بالاخره به کار می‌آید. زیر شهر، راهروهایی هست که آب و هوا را جابه‌جا می‌کنند. گروه باید دریچه‌ها را به ترتیب درست باز کند، از خطرهای ساده و قابل پیش‌بینی محیط بگذرد، و در تالار مرکزی بفهمد چرا دستگاه برج از کار افتاده است.",
+  "narrative_goal": "ثبت مسیرها روی نقشه، فعال‌کردن دریچه‌ها و رسیدن به تالار مرکزی.",
+  "macro_clue": "علت خاموشی دستگاه",
+  "primary_environment": "تونل‌ها و تالار زیرزمینی",
+  "core_mechanic": "نقشه و اکتشاف",
+  "start_scene_id": "S08-E01-SC01",
+  "default_ending_id": "ending_s08_mapped",
+  "episodes": [
+    {
+      "episode_id": "S08-E01",
+      "title": "ورودی",
+      "summary": "گروه دریچهٔ ورودی را پیدا می‌کند و وارد تونل می‌شود."
+    },
+    {
+      "episode_id": "S08-E02",
+      "title": "دریچه‌ها",
+      "summary": "گروه دریچه‌ها را به ترتیب درست باز می‌کند."
+    },
+    {
+      "episode_id": "S08-E03",
+      "title": "پلکان سنگی",
+      "summary": "گروه از پلکان پایین می‌رود و به تالار مرکزی می‌رسد."
+    },
+    {
+      "episode_id": "S08-E04",
+      "title": "دریچهٔ آخر",
+      "summary": "گروه تصمیم می‌گیرد جلوتر برود یا با تجهیزات برگردد."
+    }
+  ],
+  "characters": [
+    {
+      "character_id": "player",
+      "name": "تو",
+      "role": "عضو تازهٔ گروه"
+    },
+    {
+      "character_id": "arad",
+      "name": "آراد",
+      "role": "کنجکاو و ماجراجو"
+    },
+    {
+      "character_id": "raha",
+      "name": "رها",
+      "role": "تحلیل‌گر گروه"
+    },
+    {
+      "character_id": "mani",
+      "name": "مانی",
+      "role": "مخترع کوچک"
+    },
+    {
+      "character_id": "fandogh",
+      "name": "فندق",
+      "role": "راهنمای بازی"
+    },
+    {
+      "character_id": "sohrab",
+      "name": "سهراب",
+      "role": "کارگر تأسیسات شهر"
+    }
+  ],
+  "clues": [
+    {
+      "clue_id": "CLUE_S08_ENTRANCE",
+      "title": "ورودی تونل",
+      "body": "دریچه‌ای در حیاط پشتی شهرداری که روی نقشه نقطهٔ شمارهٔ یک است.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S08_AIRFLOW",
+      "title": "جریان هوا",
+      "body": "هوا از یک تونل می‌آید و از تونل دیگر می‌رود. یعنی جایی باز است.",
+      "category": "observation"
+    },
+    {
+      "clue_id": "CLUE_S08_VALVES",
+      "title": "دریچه‌ها",
+      "body": "شش دریچه که اگر به ترتیب غلط باز شوند، آب پس می‌زند.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S08_SOHRAB",
+      "title": "حرف سهراب",
+      "body": "سهراب می‌گوید این تونل‌ها مال شهرداری نیستند؛ شهرداری فقط رویشان لوله کشیده.",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "CLUE_S08_STAIRS",
+      "title": "پلکان سنگی",
+      "body": "پلکانی که سنگ‌هایش هر ده پله یک نشانه دارد.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S08_HALL",
+      "title": "تالار مرکزی",
+      "body": "تالاری گرد با ده طاقچه دور تا دورش.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S08_BROKEN",
+      "title": "قطعهٔ جامانده",
+      "body": "جای یک چرخ‌دنده در دستگاه مرکزی خالی است — همان‌اندازه که در کلبهٔ جنگل پیدا شد.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "CLUE_S08_WHY",
+      "title": "علت خاموشی",
+      "body": "دستگاه خراب نشده. یک قطعه‌اش را برداشته‌اند و با خودشان برده‌اند.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "CLUE_S08_NOTE",
+      "title": "یادداشت روی طاقچه",
+      "body": "«آن را برداشتم تا تا وقتی کسی ده نقطه را نفهمیده، برج نخواند.»",
+      "category": "document"
+    },
+    {
+      "clue_id": "Q_S08_WHO_STOPPED",
+      "title": "چه کسی دستگاه را خاموش کرد؟",
+      "body": "یک قطعه عمداً برداشته شده است.",
+      "category": "question",
+      "is_question": true,
+      "visible_after": "CLUE_S08_BROKEN",
+      "resolved_by": "CLUE_S08_NOTE"
+    }
+  ],
+  "clue_combinations": [
+    {
+      "a": "CLUE_S08_BROKEN",
+      "b": "CLUE_S08_NOTE",
+      "result": "CLUE_S08_WHY"
+    }
+  ],
+  "endings": [
+    {
+      "ending_id": "ending_s08_mapped",
+      "title": "نقشه‌ای که کامل شد",
+      "body": "گروه هر ده نقطه را روی نقشه ثبت کرد. حالا شهر زیر شهر دیگر ناشناخته نیست."
+    },
+    {
+      "ending_id": "ending_s08_sealed",
+      "title": "دری که بسته ماند",
+      "body": "گروه تالار را دید ولی دریچهٔ آخر را باز نکرد. سهراب می‌گوید بهتر است با تجهیزات برگردند."
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "S08-E01-SC01",
+      "episode_id": "S08-E01",
+      "scene_type": "cinematic",
+      "title": "زیر پاهایمان",
+      "background_id": "BG_S08_TUNNEL_ENTRY",
+      "music_id": "MUS_UNDERCITY",
+      "cinematic": {
+        "cinematic_id": "CIN_S08_E01",
+        "skippable": true,
+        "beats": [
+          {
+            "text": "همیشه فکر می‌کردیم شهر همان است که می‌بینیم.",
+            "audio_id": "VO_S08_E01_NAR_001",
+            "background_id": "BG_S08_TUNNEL_ENTRY",
+            "seconds": 4.5
+          },
+          {
+            "text": "نقشه می‌گفت نه.",
+            "audio_id": "VO_S08_E01_NAR_002",
+            "background_id": "BG_S08_TUNNEL_ENTRY",
+            "seconds": 4.5
+          }
+        ]
+      },
+      "next_scene_id": "S08-E01-SC02"
+    },
+    {
+      "scene_id": "S08-E01-SC02",
+      "episode_id": "S08-E01",
+      "scene_type": "dialogue",
+      "title": "سهراب",
+      "background_id": "BG_S08_TUNNEL_ENTRY",
+      "music_id": "MUS_UNDERCITY",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S08_ENTRANCE"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S08-E01-L001",
+          "speaker_id": "sohrab",
+          "text": "این دریچه مال ماست. ولی تونلِ پشتش نه.",
+          "audio_id": "VO_S08_E01_SOHRAB_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S08-E01-L002",
+          "speaker_id": "mani",
+          "text": "یعنی چه؟",
+          "audio_id": "VO_S08_E01_MANI_001",
+          "animation": "think"
+        },
+        {
+          "line_id": "S08-E01-L003",
+          "speaker_id": "sohrab",
+          "text": "یعنی ما فقط رویش لوله کشیدیم. خودش قبل از ما بوده.",
+          "audio_id": "VO_S08_E01_SOHRAB_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S08-E01-L004",
+          "speaker_id": "sohrab",
+          "text": "با من بیایید. و دست به دریچه‌ها نزنید تا نگفتم.",
+          "audio_id": "VO_S08_E01_SOHRAB_003",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S08-E01-SC03"
+    },
+    {
+      "scene_id": "S08-E01-SC03",
+      "episode_id": "S08-E01",
+      "scene_type": "explore",
+      "title": "تونل اول",
+      "background_id": "BG_S08_TUNNEL",
+      "music_id": "MUS_UNDERCITY",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S08-E01-L005",
+          "speaker_id": "fandogh",
+          "text": "زیر زمین، هوا راه را نشان می‌دهد. ببین از کجا می‌آید.",
+          "audio_id": "VO_S08_E01_FANDOGH_001",
+          "animation": "talk"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S08_AIR",
+          "kind": "examine",
+          "label": "جریان هوا",
+          "description": "شعلهٔ چراغ به یک سمت خم می‌شود.",
+          "rect": [
+            0.26,
+            0.46,
+            0.18,
+            0.22
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S08_AIRFLOW"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S08_VALVES",
+          "kind": "examine",
+          "label": "ردیف دریچه‌ها",
+          "description": "شش تا، با شماره‌های پاک‌شده.",
+          "rect": [
+            0.52,
+            0.48,
+            0.2,
+            0.22
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S08_VALVES"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S08_ASK",
+          "kind": "talk",
+          "label": "پرسیدن از سهراب",
+          "description": "این تونل‌ها مال کی‌اند؟",
+          "rect": [
+            0.78,
+            0.42,
+            0.14,
+            0.32
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S08_SOHRAB"
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S08-E01-SC04"
+    },
+    {
+      "scene_id": "S08-E01-SC04",
+      "episode_id": "S08-E01",
+      "scene_type": "dialogue",
+      "title": "کدام تونل؟",
+      "background_id": "BG_S08_TUNNEL",
+      "music_id": "MUS_UNDERCITY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S08_E01S04_1",
+          "text": "از تونلی برویم که هوا از آن می‌آید.",
+          "next_scene_id": "S08-E02-SC01",
+          "hint": "هوا از جای باز می‌آید.",
+          "effects": [
+            {
+              "set_flag": {
+                "s08_route": "airflow"
+              }
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S08_E01S04_2",
+          "text": "از تونلی برویم که روی نقشه کوتاه‌تر است.",
+          "next_scene_id": "S08-E02-SC02",
+          "hint": "سریع‌تر، ولی نقشه قدیمی است.",
+          "effects": [
+            {
+              "set_flag": {
+                "s08_route": "short"
+              }
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S08-E02-SC01",
+      "episode_id": "S08-E02",
+      "scene_type": "dialogue",
+      "title": "صدای آب",
+      "background_id": "BG_S08_VALVE_ROOM",
+      "music_id": "MUS_UNDERCITY",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S08-E02-L001",
+          "speaker_id": "sohrab",
+          "text": "اگر ترتیب را اشتباه بزنید، آب پس می‌زند. خطرناک نیست، ولی خیس می‌شوید و برمی‌گردید سر جای اول.",
+          "audio_id": "VO_S08_E02_SOHRAB_004",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S08-E02-L002",
+          "speaker_id": "mani",
+          "text": "پس بهتر است یک بار درست بزنیم.",
+          "audio_id": "VO_S08_E02_MANI_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S08-E02-SC02"
+    },
+    {
+      "scene_id": "S08-E02-SC02",
+      "episode_id": "S08-E02",
+      "scene_type": "explore",
+      "title": "اتاق دریچه",
+      "background_id": "BG_S08_VALVE_ROOM",
+      "music_id": "MUS_UNDERCITY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S08_MARKS",
+          "kind": "examine",
+          "label": "نشانه‌های کنار دریچه‌ها",
+          "description": "هر دریچه یک نماد دارد.",
+          "rect": [
+            0.34,
+            0.44,
+            0.22,
+            0.24
+          ],
+          "once": true,
+          "effects": [
+            {
+              "set_flag": {
+                "s08_saw_valve_marks": true
+              }
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S08_GAUGE",
+          "kind": "inspect",
+          "label": "فشارسنج",
+          "description": "عقربه‌اش روی قرمز نرود.",
+          "rect": [
+            0.64,
+            0.48,
+            0.16,
+            0.2
+          ],
+          "once": true,
+          "effects": [
+            {
+              "set_flag": {
+                "s08_saw_gauge": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S08-E02-SC03"
+    },
+    {
+      "scene_id": "S08-E02-SC03",
+      "episode_id": "S08-E02",
+      "scene_type": "puzzle",
+      "title": "ترتیب دریچه‌ها",
+      "background_id": "BG_S08_VALVE_ROOM",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S08_VALVES",
+        "kind": "route_path",
+        "prompt": "دریچه‌ها را به ترتیبی باز کن که فشار هیچ‌وقت بالا نرود: از بالادست به پایین‌دست.",
+        "items": [
+          {
+            "id": "V_HIGH",
+            "label": "دریچهٔ بالادست"
+          },
+          {
+            "id": "V_MID",
+            "label": "دریچهٔ میانی"
+          },
+          {
+            "id": "V_LOW",
+            "label": "دریچهٔ پایین‌دست"
+          },
+          {
+            "id": "V_SIDE",
+            "label": "دریچهٔ فرعی (بسته بماند)"
+          }
+        ],
+        "solution": [
+          "V_HIGH",
+          "V_MID",
+          "V_LOW"
+        ],
+        "hints": [
+          "آب از کجا به کجا می‌رود؟",
+          "اول آنجا که آب از آن می‌آید.",
+          "بالادست، میانی، پایین‌دست. فرعی را باز نکن."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s08_valves_ok": true
+            }
+          },
+          {
+            "add_trust": {
+              "mani": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "set_flag": {
+              "s08_got_wet": true
+            }
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S08-E03-SC01",
+        "skip_scene_id": "S08-E03-SC01"
+      }
+    },
+    {
+      "scene_id": "S08-E03-SC01",
+      "episode_id": "S08-E03",
+      "scene_type": "dialogue",
+      "title": "هر ده پله یک نشانه",
+      "background_id": "BG_S08_STONE_STAIRS",
+      "music_id": "MUS_UNDERCITY",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S08_STAIRS"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S08-E03-L001",
+          "speaker_id": "raha",
+          "text": "هر ده پله، یک نشانه. و ما تا حالا شش تا شمرده‌ایم.",
+          "audio_id": "VO_S08_E03_RAHA_001",
+          "animation": "think"
+        },
+        {
+          "line_id": "S08-E03-L002",
+          "speaker_id": "arad",
+          "text": "یعنی چهار تا مانده.",
+          "audio_id": "VO_S08_E03_ARAD_001",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S08-E03-SC02"
+    },
+    {
+      "scene_id": "S08-E03-SC02",
+      "episode_id": "S08-E03",
+      "scene_type": "explore",
+      "title": "تالار مرکزی",
+      "background_id": "BG_S08_CENTRAL_HALL",
+      "music_id": "MUS_UNDERCITY",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S08_HALL",
+          "kind": "examine",
+          "label": "طاقچه‌های دور تالار",
+          "description": "ده تا، و همه خالی.",
+          "rect": [
+            0.3,
+            0.38,
+            0.24,
+            0.28
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S08_HALL"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S08_MACHINE",
+          "kind": "examine",
+          "label": "دستگاه مرکزی",
+          "description": "جای یک چرخ‌دنده خالی است.",
+          "rect": [
+            0.58,
+            0.44,
+            0.22,
+            0.24
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S08_BROKEN"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S08_NOTE",
+          "kind": "inspect",
+          "label": "کاغذی روی طاقچه",
+          "description": "دست‌خطی که حالا می‌شناسی.",
+          "rect": [
+            0.82,
+            0.5,
+            0.14,
+            0.18
+          ],
+          "once": true,
+          "conditions": {
+            "has_clue": "CLUE_S08_BROKEN"
+          },
+          "effects": [
+            {
+              "add_clue": "CLUE_S08_NOTE"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S08-E03-SC03"
+    },
+    {
+      "scene_id": "S08-E03-SC03",
+      "episode_id": "S08-E03",
+      "scene_type": "puzzle",
+      "title": "کدام طاقچه مال کدام فصل؟",
+      "background_id": "BG_S08_CENTRAL_HALL",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S08_NICHES",
+        "kind": "match_pairs",
+        "prompt": "هر طاقچه را با جایی که سرنخش را پیدا کردی جفت کن.",
+        "items": [
+          {
+            "id": "NI_1",
+            "label": "طاقچهٔ یکم"
+          },
+          {
+            "id": "PL_TOWER",
+            "label": "برج ساعت مدرسه"
+          },
+          {
+            "id": "NI_3",
+            "label": "طاقچهٔ سوم"
+          },
+          {
+            "id": "PL_FOREST",
+            "label": "کلبهٔ جنگل"
+          }
+        ],
+        "solution": [
+          [
+            "NI_1",
+            "PL_TOWER"
+          ],
+          [
+            "NI_3",
+            "PL_FOREST"
+          ]
+        ],
+        "hints": [
+          "طاقچه‌ها به ترتیب فصل‌هایند.",
+          "اولین جایی که رفتی کجا بود؟",
+          "یکم با برج، سوم با جنگل."
+        ],
+        "on_solve": [
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S08-E03-SC04",
+        "skip_scene_id": "S08-E03-SC04"
+      }
+    },
+    {
+      "scene_id": "S08-E03-SC04",
+      "episode_id": "S08-E03",
+      "scene_type": "dialogue",
+      "title": "پس خراب نشده بود",
+      "background_id": "BG_S08_CENTRAL_HALL",
+      "music_id": "MUS_UNDERCITY",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S08_WHY"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S08-E03-L003",
+          "speaker_id": "mani",
+          "text": "جای خالی دقیقاً اندازهٔ همان چرخ‌دندهٔ ده‌دندانه است.",
+          "audio_id": "VO_S08_E03_MANI_003",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S08-E03-L004",
+          "speaker_id": "raha",
+          "text": "«آن را برداشتم تا تا وقتی کسی ده نقطه را نفهمیده، برج نخواند.»",
+          "audio_id": "VO_S08_E03_RAHA_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S08-E03-L005",
+          "speaker_id": "arad",
+          "text": "یعنی خاموشی برج، خرابی نبود. یک قفل بود.",
+          "audio_id": "VO_S08_E03_ARAD_002",
+          "animation": "think"
+        },
+        {
+          "line_id": "S08-E03-L006",
+          "speaker_id": "fandogh",
+          "text": "و قفل، منتظر کسی است که کلیدش را فهمیده باشد.",
+          "audio_id": "VO_S08_E03_FANDOGH_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S08-E04-SC01"
+    },
+    {
+      "scene_id": "S08-E04-SC01",
+      "episode_id": "S08-E04",
+      "scene_type": "dialogue",
+      "title": "پشت دریچهٔ آخر",
+      "background_id": "BG_S08_CENTRAL_HALL",
+      "music_id": "MUS_UNDERCITY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S08-E04-L001",
+          "speaker_id": "sohrab",
+          "text": "پشت این دریچه را خودم هم ندیده‌ام.",
+          "audio_id": "VO_S08_E04_SOHRAB_005",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S08-E04-L002",
+          "speaker_id": "sohrab",
+          "text": "چراغ‌هایمان یک ساعت دیگر تمام می‌شود. تصمیم با شماست.",
+          "audio_id": "VO_S08_E04_SOHRAB_006",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S08-E04-SC02"
+    },
+    {
+      "scene_id": "S08-E04-SC02",
+      "episode_id": "S08-E04",
+      "scene_type": "puzzle",
+      "title": "نقشه را کامل کن",
+      "background_id": "BG_S08_MAP_ROOM",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S08_COMPLETE_MAP",
+        "kind": "route_path",
+        "prompt": "مسیری که آمدید را روی نقشه بکشید تا نقطهٔ هشتم ثبت شود.",
+        "items": [
+          {
+            "id": "MP_ENTRY",
+            "label": "دریچهٔ ورودی"
+          },
+          {
+            "id": "MP_VALVE",
+            "label": "اتاق دریچه‌ها"
+          },
+          {
+            "id": "MP_STAIRS",
+            "label": "پلکان سنگی"
+          },
+          {
+            "id": "MP_HALL",
+            "label": "تالار مرکزی"
+          }
+        ],
+        "solution": [
+          "MP_ENTRY",
+          "MP_VALVE",
+          "MP_STAIRS",
+          "MP_HALL"
+        ],
+        "hints": [
+          "از کجا وارد شدید؟",
+          "بعد از ورودی، اتاق دریچه‌ها بود.",
+          "ورودی، دریچه‌ها، پلکان، تالار."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s08_map_done": true
+            }
+          },
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S08-E04-SC03",
+        "skip_scene_id": "S08-E04-SC03"
+      }
+    },
+    {
+      "scene_id": "S08-E04-SC03",
+      "episode_id": "S08-E04",
+      "scene_type": "dialogue",
+      "title": "تصمیم",
+      "background_id": "BG_S08_CENTRAL_HALL",
+      "music_id": "MUS_UNDERCITY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S08_E04S03_1",
+          "text": "نقشه را کامل کنیم و همه‌چیز را ثبت.",
+          "next_scene_id": "S08-E04-SC04",
+          "hint": "بعد با خیال راحت برمی‌گردیم.",
+          "effects": [
+            {
+              "set_flag": {
+                "s08_completed_map": true
+              }
+            },
+            {
+              "set_ending": "ending_s08_mapped"
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S08_E04S03_2",
+          "text": "دریچهٔ آخر را فعلاً باز نکنیم.",
+          "next_scene_id": "S08-E04-SC05",
+          "hint": "با تجهیزات برمی‌گردیم.",
+          "effects": [
+            {
+              "set_flag": {
+                "s08_sealed": true
+              }
+            },
+            {
+              "set_ending": "ending_s08_sealed"
+            },
+            {
+              "add_trust": {
+                "mani": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S08-E04-SC04",
+      "episode_id": "S08-E04",
+      "scene_type": "dialogue",
+      "title": "نقشه‌ای که کامل شد",
+      "background_id": "BG_S08_MAP_ROOM",
+      "music_id": "MUS_UNDERCITY",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_09"
+        },
+        {
+          "set_ending": "ending_s08_mapped"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S08-E04-L003",
+          "speaker_id": "raha",
+          "text": "هر ده نقطه ثبت شد. دیگر هیچ‌کدامشان ناشناخته نیست.",
+          "audio_id": "VO_S08_E04_RAHA_003",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S08-E04-L004",
+          "speaker_id": "fandogh",
+          "text": "و حالا باید همه‌شان را کنار هم بگذارید. ده کلید.",
+          "audio_id": "VO_S08_E04_FANDOGH_003",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    },
+    {
+      "scene_id": "S08-E04-SC05",
+      "episode_id": "S08-E04",
+      "scene_type": "dialogue",
+      "title": "دری که بسته ماند",
+      "background_id": "BG_S08_TUNNEL_ENTRY",
+      "music_id": "MUS_UNDERCITY",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_09"
+        },
+        {
+          "set_ending": "ending_s08_sealed"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "sohrab",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S08-E04-L005",
+          "speaker_id": "sohrab",
+          "text": "کار درستی کردید. با چراغ تمام‌شده جلو رفتن، شجاعت نیست.",
+          "audio_id": "VO_S08_E04_SOHRAB_007",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S08-E04-L006",
+          "speaker_id": "mani",
+          "text": "و ما هرچه لازم بود را دیدیم.",
+          "audio_id": "VO_S08_E04_MANI_004",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S08-E04-L007",
+          "speaker_id": "fandogh",
+          "text": "ده کلید. حالا وقتش است.",
+          "audio_id": "VO_S08_E04_FANDOGH_004",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    }
+  ]
+}

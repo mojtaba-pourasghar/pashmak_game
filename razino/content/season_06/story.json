@@ -1,0 +1,1062 @@
+{
+  "schema_version": 1,
+  "chapter_id": "season_06",
+  "version": 1,
+  "title": "جشن هزار چراغ",
+  "subtitle": "فصل ششم",
+  "language": "fa-IR",
+  "minimum_game_version": "0.1.0",
+  "synopsis": "در جشن سالانهٔ شهر، چند وسیلهٔ تاریخی اشتباهی در غرفه‌ها جابه‌جا شده‌اند و همه انگشت را به سمت یک نفر گرفته‌اند. بازیکن باید از شاهدان سؤال کند، حرف‌هایشان را کنار هم بگذارد و تناقض را پیدا کند — تا کسی به ناحق متهم نشود.",
+  "narrative_goal": "پیداکردن تناقض در حرف شاهدان و جلوگیری از متهم‌شدن اشتباه یک نفر.",
+  "macro_clue": "نگهبان سابق برج",
+  "primary_environment": "بازار و میدان شهر",
+  "core_mechanic": "گفت‌وگو و بررسی تناقض",
+  "start_scene_id": "S06-E01-SC01",
+  "default_ending_id": "ending_s06_cleared",
+  "episodes": [
+    {
+      "episode_id": "S06-E01",
+      "title": "میدان جشن",
+      "summary": "گروه وارد جشن می‌شود و می‌فهمد چیزی جابه‌جا شده."
+    },
+    {
+      "episode_id": "S06-E02",
+      "title": "حرف‌ها",
+      "summary": "گروه حرف شاهدان را جمع می‌کند و تناقض را پیدا می‌کند."
+    },
+    {
+      "episode_id": "S06-E03",
+      "title": "آنچه واقعاً شد",
+      "summary": "گروه می‌فهمد وسیله‌ها جابه‌جا نشده‌اند، مرتب شده‌اند."
+    },
+    {
+      "episode_id": "S06-E04",
+      "title": "جلوی همه یا آرام؟",
+      "summary": "گروه تصمیم می‌گیرد چطور حقیقت را بگوید."
+    }
+  ],
+  "characters": [
+    {
+      "character_id": "player",
+      "name": "تو",
+      "role": "عضو تازهٔ گروه"
+    },
+    {
+      "character_id": "arad",
+      "name": "آراد",
+      "role": "کنجکاو و ماجراجو"
+    },
+    {
+      "character_id": "raha",
+      "name": "رها",
+      "role": "تحلیل‌گر گروه"
+    },
+    {
+      "character_id": "mani",
+      "name": "مانی",
+      "role": "مخترع کوچک"
+    },
+    {
+      "character_id": "fandogh",
+      "name": "فندق",
+      "role": "راهنمای بازی"
+    },
+    {
+      "character_id": "gholami",
+      "name": "آقای غلامی",
+      "role": "نگهبان سابق برج"
+    },
+    {
+      "character_id": "sara",
+      "name": "سارا",
+      "role": "غرفه‌دار صنایع دستی"
+    },
+    {
+      "character_id": "navid",
+      "name": "نوید",
+      "role": "داوطلب جوان جشن"
+    }
+  ],
+  "clues": [
+    {
+      "clue_id": "CLUE_S06_SWAP",
+      "title": "وسیله‌های جابه‌جا",
+      "body": "سه وسیلهٔ تاریخی در غرفهٔ اشتباه‌اند. نه گم شده‌اند، نه شکسته — فقط جابه‌جا.",
+      "category": "observation"
+    },
+    {
+      "clue_id": "CLUE_S06_ACCUSED",
+      "title": "انگشت اتهام",
+      "body": "همه می‌گویند کار آقای غلامی است، چون شب قبل او تنها کسی بوده که کلید داشته.",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "CLUE_S06_SARA",
+      "title": "حرف سارا",
+      "body": "سارا می‌گوید غروب، آقای غلامی را کنار غرفهٔ خودش دیده است.",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "CLUE_S06_NAVID",
+      "title": "حرف نوید",
+      "body": "نوید می‌گوید غروب با آقای غلامی در انبار بوده و جعبه‌ها را می‌شمرده‌اند.",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "CLUE_S06_GHOLAMI",
+      "title": "حرف آقای غلامی",
+      "body": "آقای غلامی می‌گوید کلید را عصر به دفتر جشن تحویل داده و رسیدش را هم دارد.",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "CLUE_S06_RECEIPT",
+      "title": "رسید تحویل کلید",
+      "body": "رسیدی با مهر دفتر جشن، به تاریخ همان عصر، ساعت پنج.",
+      "category": "document"
+    },
+    {
+      "clue_id": "CLUE_S06_CONTRA",
+      "title": "تناقض",
+      "body": "سارا می‌گوید غلامی غروب کنار غرفه بوده؛ نوید می‌گوید همان موقع در انبار بوده. هر دو نمی‌توانند درست باشند.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "CLUE_S06_TRUTH",
+      "title": "آنچه واقعاً شد",
+      "body": "وسیله‌ها را کسی جابه‌جا نکرده بود که بدزدد؛ کسی آن‌ها را مرتب کرده بود — به ترتیب ده نقطه.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "CLUE_S06_KEEPER",
+      "title": "نگهبان سابق",
+      "body": "آقای غلامی بیست سال نگهبان برج بوده. و تنها کسی است که یادش می‌آید برج آخرین بار کی زنگ زد.",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "Q_S06_WHO_MOVED",
+      "title": "چه کسی وسیله‌ها را جابه‌جا کرد؟",
+      "body": "یکی وسیله‌های تاریخی را جابه‌جا کرده، ولی چیزی برنداشته.",
+      "category": "question",
+      "is_question": true,
+      "visible_after": "CLUE_S06_SWAP",
+      "resolved_by": "CLUE_S06_TRUTH"
+    }
+  ],
+  "clue_combinations": [
+    {
+      "a": "CLUE_S06_SARA",
+      "b": "CLUE_S06_NAVID",
+      "result": "CLUE_S06_CONTRA"
+    }
+  ],
+  "endings": [
+    {
+      "ending_id": "ending_s06_cleared",
+      "title": "اسمی که پاک شد",
+      "body": "گروه تناقض را جلوی همه گفت و آقای غلامی تبرئه شد. او در عوض چیزی را تعریف کرد که بیست سال نگفته بود."
+    },
+    {
+      "ending_id": "ending_s06_quiet",
+      "title": "حرفی که آرام زده شد",
+      "body": "گروه به جای اعلام عمومی، اول با خود آقای غلامی حرف زد. او خودش توضیح داد و آبروی کسی نریخت."
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "S06-E01-SC01",
+      "episode_id": "S06-E01",
+      "scene_type": "cinematic",
+      "title": "هزار چراغ",
+      "background_id": "BG_S06_SQUARE",
+      "music_id": "MUS_FESTIVAL",
+      "cinematic": {
+        "cinematic_id": "CIN_S06_E01",
+        "skippable": true,
+        "beats": [
+          {
+            "text": "سالی یک شب، شهر هزار چراغ روشن می‌کند.",
+            "audio_id": "VO_S06_E01_NAR_001",
+            "background_id": "BG_S06_SQUARE",
+            "seconds": 4.5
+          },
+          {
+            "text": "و امسال، زیر همان چراغ‌ها، کسی داشت به ناحق متهم می‌شد.",
+            "audio_id": "VO_S06_E01_NAR_002",
+            "background_id": "BG_S06_SQUARE",
+            "seconds": 4.5
+          }
+        ]
+      },
+      "next_scene_id": "S06-E01-SC02"
+    },
+    {
+      "scene_id": "S06-E01-SC02",
+      "episode_id": "S06-E01",
+      "scene_type": "dialogue",
+      "title": "همهمه",
+      "background_id": "BG_S06_SQUARE",
+      "music_id": "MUS_FESTIVAL",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S06_SWAP"
+        },
+        {
+          "add_clue": "CLUE_S06_ACCUSED"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S06-E01-L001",
+          "speaker_id": "arad",
+          "text": "می‌گویند سه وسیله از غرفهٔ تاریخ جابه‌جا شده.",
+          "audio_id": "VO_S06_E01_ARAD_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S06-E01-L002",
+          "speaker_id": "raha",
+          "text": "جابه‌جا شده، یا برداشته شده؟",
+          "audio_id": "VO_S06_E01_RAHA_001",
+          "animation": "think"
+        },
+        {
+          "line_id": "S06-E01-L003",
+          "speaker_id": "arad",
+          "text": "جابه‌جا. هیچ‌چیز کم نیست.",
+          "audio_id": "VO_S06_E01_ARAD_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S06-E01-L004",
+          "speaker_id": "raha",
+          "text": "پس این دزدی نیست. و اگر دزدی نیست، چرا کسی را متهم می‌کنند؟",
+          "audio_id": "VO_S06_E01_RAHA_002",
+          "animation": "think"
+        }
+      ],
+      "next_scene_id": "S06-E01-SC03"
+    },
+    {
+      "scene_id": "S06-E01-SC03",
+      "episode_id": "S06-E01",
+      "scene_type": "explore",
+      "title": "غرفه‌ها",
+      "background_id": "BG_S06_BAZAAR",
+      "music_id": "MUS_FESTIVAL",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S06-E01-L005",
+          "speaker_id": "fandogh",
+          "text": "هر کسی یک تکه از ماجرا را دیده. تکه‌ها را جمع کن، نه نتیجه‌ها را.",
+          "audio_id": "VO_S06_E01_FANDOGH_001",
+          "animation": "talk"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S06_SARA",
+          "kind": "talk",
+          "label": "سارا، غرفه‌دار",
+          "description": "سر غرفهٔ صنایع دستی.",
+          "rect": [
+            0.22,
+            0.44,
+            0.16,
+            0.32
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S06_SARA"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S06_NAVID",
+          "kind": "talk",
+          "label": "نوید، داوطلب",
+          "description": "جلیقهٔ نارنجی جشن تنش است.",
+          "rect": [
+            0.48,
+            0.44,
+            0.16,
+            0.32
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S06_NAVID"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S06_SHELF",
+          "kind": "examine",
+          "label": "غرفهٔ تاریخ",
+          "description": "سه جای خالی و سه چیز اضافه.",
+          "rect": [
+            0.72,
+            0.5,
+            0.18,
+            0.22
+          ],
+          "once": true,
+          "effects": [
+            {
+              "set_flag": {
+                "s06_saw_booth": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S06-E01-SC04"
+    },
+    {
+      "scene_id": "S06-E01-SC04",
+      "episode_id": "S06-E01",
+      "scene_type": "dialogue",
+      "title": "اول با که حرف بزنیم؟",
+      "background_id": "BG_S06_BAZAAR",
+      "music_id": "MUS_FESTIVAL",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S06_E01S04_1",
+          "text": "برویم سراغ خود آقای غلامی.",
+          "next_scene_id": "S06-E02-SC01",
+          "hint": "بگذار خودش بگوید.",
+          "effects": [
+            {
+              "set_flag": {
+                "s06_path": "direct"
+              }
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S06_E01S04_2",
+          "text": "اول رسیدها و دفتر جشن را ببینیم.",
+          "next_scene_id": "S06-E02-SC02",
+          "hint": "کاغذ دروغ نمی‌گوید.",
+          "effects": [
+            {
+              "set_flag": {
+                "s06_path": "papers"
+              }
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S06-E02-SC01",
+      "episode_id": "S06-E02",
+      "scene_type": "dialogue",
+      "title": "آقای غلامی",
+      "background_id": "BG_S06_CRAFT_BOOTH",
+      "music_id": "MUS_FESTIVAL",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S06_GHOLAMI"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S06-E02-L001",
+          "speaker_id": "gholami",
+          "text": "کلید را عصر تحویل دادم. ساعت پنج. رسیدش هم هست.",
+          "audio_id": "VO_S06_E02_GHOLAMI_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S06-E02-L002",
+          "speaker_id": "gholami",
+          "text": "ولی کسی رسید را نمی‌خواند. فقط می‌گویند «کلید دستش بود».",
+          "audio_id": "VO_S06_E02_GHOLAMI_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S06-E02-L003",
+          "speaker_id": "raha",
+          "text": "ما می‌خوانیمش.",
+          "audio_id": "VO_S06_E02_RAHA_003",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S06-E02-SC02"
+    },
+    {
+      "scene_id": "S06-E02-SC02",
+      "episode_id": "S06-E02",
+      "scene_type": "explore",
+      "title": "دفتر جشن",
+      "background_id": "BG_S06_SQUARE",
+      "music_id": "MUS_FESTIVAL",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S06_RECEIPT",
+          "kind": "inspect",
+          "label": "دفتر رسیدها",
+          "description": "مهر و ساعت دارد.",
+          "rect": [
+            0.38,
+            0.5,
+            0.2,
+            0.2
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S06_RECEIPT"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S06_ROSTER",
+          "kind": "examine",
+          "label": "برنامهٔ داوطلبان",
+          "description": "چه کسی کجا بوده.",
+          "rect": [
+            0.64,
+            0.48,
+            0.18,
+            0.2
+          ],
+          "once": true,
+          "effects": [
+            {
+              "set_flag": {
+                "s06_saw_roster": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S06-E02-SC03"
+    },
+    {
+      "scene_id": "S06-E02-SC03",
+      "episode_id": "S06-E02",
+      "scene_type": "puzzle",
+      "title": "دو حرف که با هم نمی‌خوانند",
+      "background_id": "BG_S06_SQUARE",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S06_CONTRADICTION",
+        "kind": "spot_contradiction",
+        "prompt": "کدام دو حرف نمی‌توانند هر دو درست باشند؟",
+        "items": [
+          {
+            "id": "T_SARA",
+            "label": "سارا: «غروب، غلامی را کنار غرفه‌ام دیدم.»"
+          },
+          {
+            "id": "T_NAVID",
+            "label": "نوید: «غروب با غلامی در انبار بودم.»"
+          },
+          {
+            "id": "T_GHOL",
+            "label": "غلامی: «کلید را ساعت پنج تحویل دادم.»"
+          },
+          {
+            "id": "T_RECEIPT",
+            "label": "رسید: «تحویل کلید، ساعت پنج عصر.»"
+          }
+        ],
+        "solution": [
+          "T_SARA",
+          "T_NAVID"
+        ],
+        "hints": [
+          "یک نفر نمی‌تواند هم‌زمان در دو جا باشد.",
+          "رسید و حرف غلامی با هم می‌خوانند.",
+          "حرف سارا و حرف نوید، هر دو دربارهٔ غروب‌اند."
+        ],
+        "on_solve": [
+          {
+            "add_clue": "CLUE_S06_CONTRA"
+          },
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "add_clue": "CLUE_S06_CONTRA"
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S06-E03-SC01",
+        "skip_scene_id": "S06-E03-SC01"
+      }
+    },
+    {
+      "scene_id": "S06-E03-SC01",
+      "episode_id": "S06-E03",
+      "scene_type": "dialogue",
+      "title": "سارا اشتباه کرده بود",
+      "background_id": "BG_S06_CRAFT_BOOTH",
+      "music_id": "MUS_FESTIVAL",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S06-E03-L001",
+          "speaker_id": "sara",
+          "text": "راستش… هوا تاریک بود. کلاهش شبیه کلاه آقای غلامی بود.",
+          "audio_id": "VO_S06_E03_SARA_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S06-E03-L002",
+          "speaker_id": "raha",
+          "text": "پس شما مطمئن نبودید، ولی حرفتان مطمئن بود.",
+          "audio_id": "VO_S06_E03_RAHA_004",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S06-E03-L003",
+          "speaker_id": "sara",
+          "text": "بله. و همین بد بود.",
+          "audio_id": "VO_S06_E03_SARA_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S06-E03-SC02"
+    },
+    {
+      "scene_id": "S06-E03-SC02",
+      "episode_id": "S06-E03",
+      "scene_type": "explore",
+      "title": "دوباره غرفهٔ تاریخ",
+      "background_id": "BG_S06_HISTORY_BOOTH",
+      "music_id": "MUS_FESTIVAL",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S06_ORDER",
+          "kind": "examine",
+          "label": "ترتیب تازهٔ وسیله‌ها",
+          "description": "جابه‌جا نشده‌اند؛ مرتب شده‌اند.",
+          "rect": [
+            0.36,
+            0.46,
+            0.22,
+            0.24
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S06_TRUTH"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S06_LABEL",
+          "kind": "inspect",
+          "label": "برچسب پشت یکی از وسیله‌ها",
+          "description": "یک عدد کوچک: ۶.",
+          "rect": [
+            0.64,
+            0.52,
+            0.16,
+            0.18
+          ],
+          "once": true,
+          "conditions": {
+            "has_clue": "CLUE_S06_TRUTH"
+          },
+          "effects": [
+            {
+              "set_flag": {
+                "s06_saw_number": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S06-E03-SC03"
+    },
+    {
+      "scene_id": "S06-E03-SC03",
+      "episode_id": "S06-E03",
+      "scene_type": "puzzle",
+      "title": "به ترتیب ده نقطه",
+      "background_id": "BG_S06_HISTORY_BOOTH",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S06_ARTIFACT_ORDER",
+        "kind": "match_pairs",
+        "prompt": "هر وسیله را با نقطه‌ای از نقشهٔ زیرزمین جفت کن.",
+        "items": [
+          {
+            "id": "A_LAMP",
+            "label": "چراغ برنجی"
+          },
+          {
+            "id": "A_P3",
+            "label": "نقطهٔ ۳ — کنار رودخانه"
+          },
+          {
+            "id": "A_COMPASS",
+            "label": "قطب‌نمای کهنه"
+          },
+          {
+            "id": "A_P7",
+            "label": "نقطهٔ ۷ — بالای تپه"
+          }
+        ],
+        "solution": [
+          [
+            "A_LAMP",
+            "A_P3"
+          ],
+          [
+            "A_COMPASS",
+            "A_P7"
+          ]
+        ],
+        "hints": [
+          "چراغ را کجا لازم داری؟ جایی که تاریک و نمناک است.",
+          "قطب‌نما برای جایی است که باید جهت بدانی.",
+          "چراغ با رودخانه، قطب‌نما با تپه."
+        ],
+        "on_solve": [
+          {
+            "add_trust": {
+              "mani": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S06-E03-SC04",
+        "skip_scene_id": "S06-E03-SC04"
+      }
+    },
+    {
+      "scene_id": "S06-E03-SC04",
+      "episode_id": "S06-E03",
+      "scene_type": "dialogue",
+      "title": "پس کار که بود؟",
+      "background_id": "BG_S06_HISTORY_BOOTH",
+      "music_id": "MUS_FESTIVAL",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S06-E03-L004",
+          "speaker_id": "mani",
+          "text": "هر وسیله یک عدد دارد. و عددها با نقطه‌های نقشه می‌خوانند.",
+          "audio_id": "VO_S06_E03_MANI_001",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S06-E03-L005",
+          "speaker_id": "raha",
+          "text": "یعنی کسی داشته آن‌ها را مرتب می‌کرده، نه قایم.",
+          "audio_id": "VO_S06_E03_RAHA_005",
+          "animation": "think"
+        },
+        {
+          "line_id": "S06-E03-L006",
+          "speaker_id": "fandogh",
+          "text": "و آن کس، احتمالاً همان کسی است که کلید را تحویل داد و رفت.",
+          "audio_id": "VO_S06_E03_FANDOGH_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S06-E04-SC01"
+    },
+    {
+      "scene_id": "S06-E04-SC01",
+      "episode_id": "S06-E04",
+      "scene_type": "dialogue",
+      "title": "سر صحنهٔ اصلی",
+      "background_id": "BG_S06_SQUARE",
+      "music_id": "MUS_FESTIVAL",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S06-E04-L001",
+          "speaker_id": "arad",
+          "text": "میکروفون سر صحنه است. می‌شود همین حالا گفت.",
+          "audio_id": "VO_S06_E04_ARAD_003",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S06-E04-L002",
+          "speaker_id": "raha",
+          "text": "می‌شود. ولی سارا هم آنجاست.",
+          "audio_id": "VO_S06_E04_RAHA_006",
+          "animation": "think"
+        }
+      ],
+      "next_scene_id": "S06-E04-SC02"
+    },
+    {
+      "scene_id": "S06-E04-SC02",
+      "episode_id": "S06-E04",
+      "scene_type": "puzzle",
+      "title": "کدام جمله را بگوییم؟",
+      "background_id": "BG_S06_SQUARE",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S06_PHRASING",
+        "kind": "spot_contradiction",
+        "prompt": "کدام جمله هم درست است و هم کسی را خجالت‌زده نمی‌کند؟",
+        "items": [
+          {
+            "id": "S_BLAME",
+            "label": "«سارا دروغ گفت.»"
+          },
+          {
+            "id": "S_FACT",
+            "label": "«در تاریکی، دو کلاه شبیه هم بودند.»"
+          },
+          {
+            "id": "S_GUESS",
+            "label": "«حتماً کار نوید بوده.»"
+          },
+          {
+            "id": "S_VAGUE",
+            "label": "«کسی نمی‌داند چه شد.»"
+          }
+        ],
+        "solution": [
+          "S_FACT"
+        ],
+        "hints": [
+          "کدام جمله چیزی را می‌گوید که مطمئنیم؟",
+          "اتهام تازه زدن، مشکل را حل نمی‌کند.",
+          "جمله‌ای که دربارهٔ کلاه‌هاست."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s06_said_kindly": true
+            }
+          },
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S06-E04-SC03",
+        "skip_scene_id": "S06-E04-SC03"
+      }
+    },
+    {
+      "scene_id": "S06-E04-SC03",
+      "episode_id": "S06-E04",
+      "scene_type": "dialogue",
+      "title": "تصمیم",
+      "background_id": "BG_S06_SQUARE",
+      "music_id": "MUS_FESTIVAL",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S06_E04S03_1",
+          "text": "جلوی همه بگوییم؛ اسمش باید پاک شود.",
+          "next_scene_id": "S06-E04-SC04",
+          "hint": "علنی، چون اتهام هم علنی بود.",
+          "effects": [
+            {
+              "set_flag": {
+                "s06_public": true
+              }
+            },
+            {
+              "set_ending": "ending_s06_cleared"
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S06_E04S03_2",
+          "text": "اول با خودش حرف بزنیم.",
+          "next_scene_id": "S06-E04-SC05",
+          "hint": "بگذار خودش بگوید.",
+          "effects": [
+            {
+              "set_flag": {
+                "s06_public": false
+              }
+            },
+            {
+              "set_ending": "ending_s06_quiet"
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S06-E04-SC04",
+      "episode_id": "S06-E04",
+      "scene_type": "dialogue",
+      "title": "اسمی که پاک شد",
+      "background_id": "BG_S06_SQUARE",
+      "music_id": "MUS_FESTIVAL",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_07"
+        },
+        {
+          "add_clue": "CLUE_S06_KEEPER"
+        },
+        {
+          "set_ending": "ending_s06_cleared"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S06-E04-L003",
+          "speaker_id": "gholami",
+          "text": "بیست سال نگهبان آن برج بودم. و یک چیز هست که هیچ‌وقت نگفتم.",
+          "audio_id": "VO_S06_E04_GHOLAMI_003",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S06-E04-L004",
+          "speaker_id": "gholami",
+          "text": "شبی که برج آخرین بار زنگ زد، من آنجا بودم. و تنها نبودم.",
+          "audio_id": "VO_S06_E04_GHOLAMI_004",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S06-E04-L005",
+          "speaker_id": "fandogh",
+          "text": "رصدخانه. فردا شب.",
+          "audio_id": "VO_S06_E04_FANDOGH_003",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    },
+    {
+      "scene_id": "S06-E04-SC05",
+      "episode_id": "S06-E04",
+      "scene_type": "dialogue",
+      "title": "حرفی که آرام زده شد",
+      "background_id": "BG_S06_CRAFT_BOOTH",
+      "music_id": "MUS_FESTIVAL",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_07"
+        },
+        {
+          "add_clue": "CLUE_S06_KEEPER"
+        },
+        {
+          "set_ending": "ending_s06_quiet"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "gholami",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S06-E04-L006",
+          "speaker_id": "gholami",
+          "text": "ممنون که اول آمدید پیش خودم.",
+          "audio_id": "VO_S06_E04_GHOLAMI_005",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S06-E04-L007",
+          "speaker_id": "gholami",
+          "text": "بیست سال نگهبان برج بودم. شبی که آخرین بار زنگ زد، تنها نبودم.",
+          "audio_id": "VO_S06_E04_GHOLAMI_006",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S06-E04-L008",
+          "speaker_id": "fandogh",
+          "text": "و آن یک نفر، نقشهٔ ستاره‌ها را داشت. رصدخانه.",
+          "audio_id": "VO_S06_E04_FANDOGH_004",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    }
+  ]
+}

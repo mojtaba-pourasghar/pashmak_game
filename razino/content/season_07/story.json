@@ -1,0 +1,1020 @@
+{
+  "schema_version": 1,
+  "chapter_id": "season_07",
+  "version": 1,
+  "title": "رصدخانهٔ ستاره‌ها",
+  "subtitle": "فصل هفتم",
+  "language": "fa-IR",
+  "minimum_game_version": "0.1.0",
+  "synopsis": "گروه به رصدخانهٔ بالای تپه می‌رود. نقشه‌ای از ستاره‌ها و مجموعه‌ای از زمان‌ها نشان می‌دهند که ده نماد برج تصادفی نیستند: به ترتیب طلوع ستاره‌ها چیده شده‌اند. بازیکن باید الگو را کشف کند و ترتیب ده نماد را بسازد.",
+  "narrative_goal": "فهمیدن اینکه ده نماد برج، بر اساس الگویی ستاره‌ای مرتب شده‌اند.",
+  "macro_clue": "ساختار ده نماد",
+  "primary_environment": "رصدخانه",
+  "core_mechanic": "الگو و ترتیب منطقی",
+  "start_scene_id": "S07-E01-SC01",
+  "default_ending_id": "ending_s07_unlocked",
+  "episodes": [
+    {
+      "episode_id": "S07-E01",
+      "title": "راه کوهستان",
+      "summary": "گروه از مسیر تپه بالا می‌رود و به رصدخانه می‌رسد."
+    },
+    {
+      "episode_id": "S07-E02",
+      "title": "اتاق تلسکوپ",
+      "summary": "گروه یادداشت داخل تلسکوپ را پیدا می‌کند و الگو را می‌سازد."
+    },
+    {
+      "episode_id": "S07-E03",
+      "title": "گنبد",
+      "summary": "گروه چفت گنبد را بررسی می‌کند و ده نماد را مرتب می‌کند."
+    },
+    {
+      "episode_id": "S07-E04",
+      "title": "بچرخانیم یا نه؟",
+      "summary": "گروه تصمیم می‌گیرد چفت را باز کند یا فقط رونویسی کند."
+    }
+  ],
+  "characters": [
+    {
+      "character_id": "player",
+      "name": "تو",
+      "role": "عضو تازهٔ گروه"
+    },
+    {
+      "character_id": "arad",
+      "name": "آراد",
+      "role": "کنجکاو و ماجراجو"
+    },
+    {
+      "character_id": "raha",
+      "name": "رها",
+      "role": "تحلیل‌گر گروه"
+    },
+    {
+      "character_id": "mani",
+      "name": "مانی",
+      "role": "مخترع کوچک"
+    },
+    {
+      "character_id": "fandogh",
+      "name": "فندق",
+      "role": "راهنمای بازی"
+    },
+    {
+      "character_id": "hamid",
+      "name": "آقای حمیدی",
+      "role": "نگهبان رصدخانه"
+    }
+  ],
+  "clues": [
+    {
+      "clue_id": "CLUE_S07_DOME",
+      "title": "گنبد چفت‌شده",
+      "body": "گنبد رصدخانه سال‌هاست روی یک زاویه چفت شده و تکان نمی‌خورد.",
+      "category": "observation"
+    },
+    {
+      "clue_id": "CLUE_S07_CHART",
+      "title": "نقشهٔ ستاره‌ها",
+      "body": "نقشه‌ای بزرگ با ده ستارهٔ علامت‌خورده، هر کدام با یک ساعت کنارش.",
+      "category": "document"
+    },
+    {
+      "clue_id": "CLUE_S07_TIMES",
+      "title": "ده ساعت",
+      "body": "ده ساعت نوشته شده، از نزدیک غروب تا نزدیک سحر.",
+      "category": "document"
+    },
+    {
+      "clue_id": "CLUE_S07_ANGLE",
+      "title": "زاویهٔ چفت",
+      "body": "زاویه‌ای که گنبد رویش چفت شده، دقیقاً به سمت برج ساعت شهر است.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "CLUE_S07_HAMID",
+      "title": "حرف آقای حمیدی",
+      "body": "آقای حمیدی می‌گوید بیست سال پیش کسی هر شب می‌آمد و همین نقشه را می‌کشید.",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "CLUE_S07_PATTERN",
+      "title": "الگوی ترتیب",
+      "body": "ده نماد برج به ترتیب طلوع همان ده ستاره چیده شده‌اند.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "CLUE_S07_TELESCOPE",
+      "title": "یادداشت داخل تلسکوپ",
+      "body": "لولهٔ تلسکوپ یک کاغذ تاشده در خود دارد: «ترتیب را از آسمان بگیر، نه از دیوار.»",
+      "category": "document"
+    },
+    {
+      "clue_id": "CLUE_S07_TENSYM",
+      "title": "ساختار ده نماد",
+      "body": "ده نماد، ده ستاره، ده نقطهٔ زیرزمین. یک ساختار، سه جا.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "Q_S07_WHY_LOCKED",
+      "title": "چرا گنبد را چفت کرده‌اند؟",
+      "body": "کسی گنبد را روی یک زاویهٔ مشخص قفل کرده و کلیدش را برده.",
+      "category": "question",
+      "is_question": true,
+      "visible_after": "CLUE_S07_DOME",
+      "resolved_by": "CLUE_S07_ANGLE"
+    }
+  ],
+  "clue_combinations": [
+    {
+      "a": "CLUE_S07_CHART",
+      "b": "CLUE_S07_TIMES",
+      "result": "CLUE_S07_PATTERN"
+    }
+  ],
+  "endings": [
+    {
+      "ending_id": "ending_s07_unlocked",
+      "title": "گنبدی که چرخید",
+      "body": "گروه گنبد را آزاد کرد و تلسکوپ دوباره به آسمان نگاه کرد. ترتیب ده نماد حالا روشن است."
+    },
+    {
+      "ending_id": "ending_s07_copied",
+      "title": "نقشه‌ای که رونویسی شد",
+      "body": "گروه گنبد را دست نزد و فقط نقشه را دقیق رونویسی کرد. ترتیب را دارند، بی‌آنکه چیزی را تغییر بدهند."
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "S07-E01-SC01",
+      "episode_id": "S07-E01",
+      "scene_type": "cinematic",
+      "title": "بالای تپه",
+      "background_id": "BG_S07_MOUNTAIN_ROAD",
+      "music_id": "MUS_OBSERVATORY",
+      "cinematic": {
+        "cinematic_id": "CIN_S07_E01",
+        "skippable": true,
+        "beats": [
+          {
+            "text": "از بالای تپه، شهر کوچک می‌شد و آسمان بزرگ.",
+            "audio_id": "VO_S07_E01_NAR_001",
+            "background_id": "BG_S07_MOUNTAIN_ROAD",
+            "seconds": 4.5
+          },
+          {
+            "text": "و در میان شهر، برجی که ساکت بود.",
+            "audio_id": "VO_S07_E01_NAR_002",
+            "background_id": "BG_S07_MOUNTAIN_ROAD",
+            "seconds": 4.5
+          }
+        ]
+      },
+      "next_scene_id": "S07-E01-SC02"
+    },
+    {
+      "scene_id": "S07-E01-SC02",
+      "episode_id": "S07-E01",
+      "scene_type": "dialogue",
+      "title": "در رصدخانه",
+      "background_id": "BG_S07_OBSERVATORY",
+      "music_id": "MUS_OBSERVATORY",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S07_DOME"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S07-E01-L001",
+          "speaker_id": "hamid",
+          "text": "گنبد از بیست سال پیش همین‌طور مانده. چفتش کرده‌اند.",
+          "audio_id": "VO_S07_E01_HAMID_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S07-E01-L002",
+          "speaker_id": "arad",
+          "text": "کی؟",
+          "audio_id": "VO_S07_E01_ARAD_001",
+          "animation": "think"
+        },
+        {
+          "line_id": "S07-E01-L003",
+          "speaker_id": "hamid",
+          "text": "نمی‌دانم. یک شب آمدم و دیدم چفت است و کلیدش نیست.",
+          "audio_id": "VO_S07_E01_HAMID_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S07-E01-SC03"
+    },
+    {
+      "scene_id": "S07-E01-SC03",
+      "episode_id": "S07-E01",
+      "scene_type": "explore",
+      "title": "تالار نقشه‌ها",
+      "background_id": "BG_S07_MAP_HALL",
+      "music_id": "MUS_OBSERVATORY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S07-E01-L004",
+          "speaker_id": "fandogh",
+          "text": "هر چیزی که عدد دارد، ترتیب هم دارد. دنبال ترتیبش بگرد.",
+          "audio_id": "VO_S07_E01_FANDOGH_001",
+          "animation": "talk"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S07_CHART",
+          "kind": "examine",
+          "label": "نقشهٔ بزرگ ستاره‌ها",
+          "description": "ده ستاره علامت خورده.",
+          "rect": [
+            0.28,
+            0.36,
+            0.22,
+            0.3
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S07_CHART"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S07_TIMES",
+          "kind": "inspect",
+          "label": "فهرست ساعت‌ها",
+          "description": "از غروب تا سحر.",
+          "rect": [
+            0.54,
+            0.48,
+            0.18,
+            0.2
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S07_TIMES"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S07_ASK",
+          "kind": "talk",
+          "label": "پرسیدن از آقای حمیدی",
+          "description": "کسی اینجا می‌آمد؟",
+          "rect": [
+            0.78,
+            0.42,
+            0.14,
+            0.32
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S07_HAMID"
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S07-E01-SC04"
+    },
+    {
+      "scene_id": "S07-E01-SC04",
+      "episode_id": "S07-E01",
+      "scene_type": "dialogue",
+      "title": "از کجا شروع کنیم؟",
+      "background_id": "BG_S07_MAP_HALL",
+      "music_id": "MUS_OBSERVATORY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S07_E01S04_1",
+          "text": "برویم سراغ خود تلسکوپ.",
+          "next_scene_id": "S07-E02-SC01",
+          "hint": "شاید چیزی داخلش مانده باشد.",
+          "effects": [
+            {
+              "set_flag": {
+                "s07_path": "scope"
+              }
+            },
+            {
+              "add_trust": {
+                "mani": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S07_E01S04_2",
+          "text": "اول نقشه و ساعت‌ها را کنار هم بگذاریم.",
+          "next_scene_id": "S07-E02-SC02",
+          "hint": "الگو همیشه در داده‌هاست.",
+          "effects": [
+            {
+              "set_flag": {
+                "s07_path": "chart"
+              }
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S07-E02-SC01",
+      "episode_id": "S07-E02",
+      "scene_type": "dialogue",
+      "title": "لولهٔ تلسکوپ",
+      "background_id": "BG_S07_TELESCOPE_ROOM",
+      "music_id": "MUS_OBSERVATORY",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S07_TELESCOPE"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S07-E02-L001",
+          "speaker_id": "mani",
+          "text": "داخل لوله یک کاغذ تاشده بود. جوری گذاشته‌اند که فقط با بازکردن لوله پیدا شود.",
+          "audio_id": "VO_S07_E02_MANI_001",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S07-E02-L002",
+          "speaker_id": "arad",
+          "text": "«ترتیب را از آسمان بگیر، نه از دیوار.»",
+          "audio_id": "VO_S07_E02_ARAD_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S07-E02-SC02"
+    },
+    {
+      "scene_id": "S07-E02-SC02",
+      "episode_id": "S07-E02",
+      "scene_type": "explore",
+      "title": "زاویهٔ چفت",
+      "background_id": "BG_S07_TELESCOPE_ROOM",
+      "music_id": "MUS_OBSERVATORY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S07_LOCK",
+          "kind": "examine",
+          "label": "چفت گنبد",
+          "description": "روی یک زاویهٔ مشخص قفل شده.",
+          "rect": [
+            0.36,
+            0.4,
+            0.2,
+            0.26
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S07_ANGLE"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S07_VIEW",
+          "kind": "inspect",
+          "label": "از شکاف گنبد",
+          "description": "دقیقاً برج ساعت پیداست.",
+          "rect": [
+            0.64,
+            0.34,
+            0.18,
+            0.24
+          ],
+          "once": true,
+          "conditions": {
+            "has_clue": "CLUE_S07_ANGLE"
+          },
+          "effects": [
+            {
+              "set_flag": {
+                "s07_saw_tower": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S07-E02-SC03"
+    },
+    {
+      "scene_id": "S07-E02-SC03",
+      "episode_id": "S07-E02",
+      "scene_type": "puzzle",
+      "title": "ترتیب طلوع",
+      "background_id": "BG_S07_MAP_HALL",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S07_STAR_ORDER",
+        "kind": "order_symbols",
+        "prompt": "ستاره‌ها را به ترتیب ساعتی که طلوع می‌کنند بچین.",
+        "items": [
+          {
+            "id": "ST_DAWN",
+            "label": "ستارهٔ سحر — ساعت ۵:۱۰",
+            "icon": "ICON_STAR_4"
+          },
+          {
+            "id": "ST_DUSK",
+            "label": "ستارهٔ غروب — ساعت ۱۹:۴۰",
+            "icon": "ICON_STAR_1"
+          },
+          {
+            "id": "ST_MID",
+            "label": "ستارهٔ نیمه‌شب — ساعت ۰:۱۵",
+            "icon": "ICON_STAR_3"
+          },
+          {
+            "id": "ST_EVE",
+            "label": "ستارهٔ شامگاه — ساعت ۲۱:۳۰",
+            "icon": "ICON_STAR_2"
+          }
+        ],
+        "solution": [
+          "ST_DUSK",
+          "ST_EVE",
+          "ST_MID",
+          "ST_DAWN"
+        ],
+        "hints": [
+          "شب از کدام ساعت شروع می‌شود؟",
+          "۱۹:۴۰ قبل از ۲۱:۳۰ است.",
+          "غروب، شامگاه، نیمه‌شب، سحر."
+        ],
+        "on_solve": [
+          {
+            "add_clue": "CLUE_S07_PATTERN"
+          },
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "add_clue": "CLUE_S07_PATTERN"
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S07-E03-SC01",
+        "skip_scene_id": "S07-E03-SC01"
+      }
+    },
+    {
+      "scene_id": "S07-E03-SC01",
+      "episode_id": "S07-E03",
+      "scene_type": "dialogue",
+      "title": "چرا این زاویه؟",
+      "background_id": "BG_S07_DOME",
+      "music_id": "MUS_OBSERVATORY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S07-E03-L001",
+          "speaker_id": "raha",
+          "text": "گنبد را روی زاویه‌ای قفل کرده‌اند که دقیقاً به برج نگاه می‌کند.",
+          "audio_id": "VO_S07_E03_RAHA_001",
+          "animation": "think"
+        },
+        {
+          "line_id": "S07-E03-L002",
+          "speaker_id": "mani",
+          "text": "یعنی نمی‌خواسته‌اند تلسکوپ جای دیگری را ببیند.",
+          "audio_id": "VO_S07_E03_MANI_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S07-E03-L003",
+          "speaker_id": "arad",
+          "text": "یا می‌خواسته‌اند همیشه همان‌جا را ببیند.",
+          "audio_id": "VO_S07_E03_ARAD_003",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S07-E03-SC02"
+    },
+    {
+      "scene_id": "S07-E03-SC02",
+      "episode_id": "S07-E03",
+      "scene_type": "explore",
+      "title": "زیر گنبد",
+      "background_id": "BG_S07_DOME",
+      "music_id": "MUS_OBSERVATORY",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S07_RING",
+          "kind": "examine",
+          "label": "حلقهٔ ده‌خانهٔ زیر گنبد",
+          "description": "ده خانه، هر کدام جای یک نماد.",
+          "rect": [
+            0.38,
+            0.44,
+            0.24,
+            0.26
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S07_TENSYM"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S07_PIN",
+          "kind": "inspect",
+          "label": "پین چفت",
+          "description": "زنگ زده، ولی با روغن باز می‌شود.",
+          "rect": [
+            0.68,
+            0.5,
+            0.16,
+            0.2
+          ],
+          "once": true,
+          "effects": [
+            {
+              "set_flag": {
+                "s07_saw_pin": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S07-E03-SC03"
+    },
+    {
+      "scene_id": "S07-E03-SC03",
+      "episode_id": "S07-E03",
+      "scene_type": "puzzle",
+      "title": "ده خانه",
+      "background_id": "BG_S07_DOME",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S07_TEN_RING",
+        "kind": "match_pairs",
+        "prompt": "هر نماد را در خانه‌ای بگذار که ستاره‌اش در همان ساعت طلوع می‌کند.",
+        "items": [
+          {
+            "id": "M_SUN",
+            "label": "نماد خورشید"
+          },
+          {
+            "id": "M_H1",
+            "label": "خانهٔ یکم — غروب"
+          },
+          {
+            "id": "M_DROP",
+            "label": "نماد قطره"
+          },
+          {
+            "id": "M_H4",
+            "label": "خانهٔ چهارم — سحر"
+          }
+        ],
+        "solution": [
+          [
+            "M_SUN",
+            "M_H1"
+          ],
+          [
+            "M_DROP",
+            "M_H4"
+          ]
+        ],
+        "hints": [
+          "خورشید به کدام سر شب نزدیک‌تر است؟",
+          "قطره یعنی شبنم، و شبنم سحر می‌زند.",
+          "خورشید در خانهٔ یکم، قطره در خانهٔ چهارم."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s07_ring_set": true
+            }
+          },
+          {
+            "add_trust": {
+              "mani": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S07-E03-SC04",
+        "skip_scene_id": "S07-E03-SC04"
+      }
+    },
+    {
+      "scene_id": "S07-E03-SC04",
+      "episode_id": "S07-E03",
+      "scene_type": "dialogue",
+      "title": "یک ساختار، سه جا",
+      "background_id": "BG_S07_DOME",
+      "music_id": "MUS_OBSERVATORY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S07-E03-L004",
+          "speaker_id": "raha",
+          "text": "ده ستاره، ده نماد، ده نقطهٔ زیرزمین. یک ساختارند.",
+          "audio_id": "VO_S07_E03_RAHA_002",
+          "animation": "think"
+        },
+        {
+          "line_id": "S07-E03-L005",
+          "speaker_id": "fandogh",
+          "text": "پس هر فصلی که گذراندید، یکی از ده را روشن کرده. چهار تا مانده.",
+          "audio_id": "VO_S07_E03_FANDOGH_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S07-E04-SC01"
+    },
+    {
+      "scene_id": "S07-E04-SC01",
+      "episode_id": "S07-E04",
+      "scene_type": "dialogue",
+      "title": "آقای حمیدی مردد است",
+      "background_id": "BG_S07_DOME",
+      "music_id": "MUS_OBSERVATORY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S07-E04-L001",
+          "speaker_id": "hamid",
+          "text": "اگر بچرخانیدش و خراب شود، من جوابگو هستم.",
+          "audio_id": "VO_S07_E04_HAMID_003",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S07-E04-L002",
+          "speaker_id": "hamid",
+          "text": "ولی اگر نچرخد، شاید هیچ‌وقت نفهمیم.",
+          "audio_id": "VO_S07_E04_HAMID_004",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S07-E04-SC02"
+    },
+    {
+      "scene_id": "S07-E04-SC02",
+      "episode_id": "S07-E04",
+      "scene_type": "puzzle",
+      "title": "کدام ادعا را داده‌ها تأیید می‌کنند؟",
+      "background_id": "BG_S07_MAP_HALL",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S07_CLAIM",
+        "kind": "spot_contradiction",
+        "prompt": "کدام جمله با نقشه و ساعت‌ها نمی‌خواند؟",
+        "items": [
+          {
+            "id": "K_ORDER",
+            "label": "«ده نماد به ترتیب طلوع چیده شده‌اند.»"
+          },
+          {
+            "id": "K_TOWER",
+            "label": "«گنبد به سمت برج چفت شده است.»"
+          },
+          {
+            "id": "K_RANDOM",
+            "label": "«نمادها ترتیب خاصی ندارند.»"
+          },
+          {
+            "id": "K_TEN",
+            "label": "«تعداد ستاره‌های علامت‌خورده ده تاست.»"
+          }
+        ],
+        "solution": [
+          "K_RANDOM"
+        ],
+        "hints": [
+          "سه جمله با چیزی که دیدیم می‌خوانند.",
+          "ما خودمان ترتیب را پیدا کردیم.",
+          "جمله‌ای که می‌گوید ترتیبی نیست."
+        ],
+        "on_solve": [
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S07-E04-SC03",
+        "skip_scene_id": "S07-E04-SC03"
+      }
+    },
+    {
+      "scene_id": "S07-E04-SC03",
+      "episode_id": "S07-E04",
+      "scene_type": "dialogue",
+      "title": "تصمیم",
+      "background_id": "BG_S07_DOME",
+      "music_id": "MUS_OBSERVATORY",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S07_E04S03_1",
+          "text": "پین را باز کنیم و گنبد را بچرخانیم.",
+          "next_scene_id": "S07-E04-SC04",
+          "hint": "مانی مواظب است.",
+          "effects": [
+            {
+              "set_flag": {
+                "s07_unlocked": true
+              }
+            },
+            {
+              "set_ending": "ending_s07_unlocked"
+            },
+            {
+              "add_trust": {
+                "mani": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S07_E04S03_2",
+          "text": "دست نزنیم؛ فقط نقشه را رونویسی کنیم.",
+          "next_scene_id": "S07-E04-SC05",
+          "hint": "ترتیب را داریم، همین کافی است.",
+          "effects": [
+            {
+              "set_flag": {
+                "s07_unlocked": false
+              }
+            },
+            {
+              "set_ending": "ending_s07_copied"
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S07-E04-SC04",
+      "episode_id": "S07-E04",
+      "scene_type": "dialogue",
+      "title": "گنبدی که چرخید",
+      "background_id": "BG_S07_DOME",
+      "music_id": "MUS_OBSERVATORY",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_08"
+        },
+        {
+          "set_ending": "ending_s07_unlocked"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S07-E04-L003",
+          "speaker_id": "mani",
+          "text": "چرخید. آرام، ولی چرخید.",
+          "audio_id": "VO_S07_E04_MANI_003",
+          "animation": "happy"
+        },
+        {
+          "line_id": "S07-E04-L004",
+          "speaker_id": "hamid",
+          "text": "بیست سال بود این صدا را نشنیده بودم.",
+          "audio_id": "VO_S07_E04_HAMID_005",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S07-E04-L005",
+          "speaker_id": "fandogh",
+          "text": "و حالا تلسکوپ جایی را نشان می‌دهد که نقشه می‌گفت: زیر شهر.",
+          "audio_id": "VO_S07_E04_FANDOGH_003",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    },
+    {
+      "scene_id": "S07-E04-SC05",
+      "episode_id": "S07-E04",
+      "scene_type": "dialogue",
+      "title": "نقشه‌ای که رونویسی شد",
+      "background_id": "BG_S07_MAP_HALL",
+      "music_id": "MUS_OBSERVATORY",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_08"
+        },
+        {
+          "set_ending": "ending_s07_copied"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "hamid",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S07-E04-L006",
+          "speaker_id": "raha",
+          "text": "ترتیب را کامل نوشتم. گنبد سر جایش ماند.",
+          "audio_id": "VO_S07_E04_RAHA_003",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S07-E04-L007",
+          "speaker_id": "hamid",
+          "text": "ممنون. یک روز خودم بازش می‌کنم، وقتی مطمئن شدم.",
+          "audio_id": "VO_S07_E04_HAMID_006",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S07-E04-L008",
+          "speaker_id": "fandogh",
+          "text": "نقطهٔ بعدی زیر شهر است.",
+          "audio_id": "VO_S07_E04_FANDOGH_004",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    }
+  ]
+}

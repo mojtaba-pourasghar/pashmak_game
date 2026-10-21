@@ -1,0 +1,1088 @@
+{
+  "schema_version": 1,
+  "chapter_id": "season_09",
+  "version": 1,
+  "title": "ده کلید",
+  "subtitle": "فصل نهم",
+  "language": "fa-IR",
+  "minimum_game_version": "0.1.0",
+  "synopsis": "همهٔ سرنخ‌های هشت فصل گذشته باید کنار هم بنشینند. در تالار نمادها، هر نماد بخشی از دستگاه را فعال می‌کند، و ترتیب فعال‌سازی تعیین می‌کند کدام مسیر به اتاق نهایی باز شود. اتاق اصلی باز می‌شود — ولی دستگاه بدون یک قطعهٔ مهم کار نمی‌کند.",
+  "narrative_goal": "کنار هم گذاشتن یافته‌های هشت فصل و فعال‌کردن ده بخش دستگاه به ترتیب درست.",
+  "macro_clue": "دسترسی به قلب دستگاه",
+  "primary_environment": "تالار نمادها",
+  "core_mechanic": "ترکیب سرنخ‌های قبلی",
+  "start_scene_id": "S09-E01-SC01",
+  "default_ending_id": "ending_s09_open",
+  "episodes": [
+    {
+      "episode_id": "S09-E01",
+      "title": "تالار نمادها",
+      "summary": "گروه وارد تالار می‌شود و ده نماد را می‌بیند."
+    },
+    {
+      "episode_id": "S09-E02",
+      "title": "کنار هم گذاشتن",
+      "summary": "گروه سرنخ‌های هشت فصل را کنار هم می‌گذارد."
+    },
+    {
+      "episode_id": "S09-E03",
+      "title": "سکو",
+      "summary": "گروه کلیدها را سر جایشان می‌گذارد و در را امتحان می‌کند."
+    },
+    {
+      "episode_id": "S09-E04",
+      "title": "در",
+      "summary": "گروه تصمیم می‌گیرد هر ده نماد را روشن کند یا نه."
+    }
+  ],
+  "characters": [
+    {
+      "character_id": "player",
+      "name": "تو",
+      "role": "عضو تازهٔ گروه"
+    },
+    {
+      "character_id": "arad",
+      "name": "آراد",
+      "role": "کنجکاو و ماجراجو"
+    },
+    {
+      "character_id": "raha",
+      "name": "رها",
+      "role": "تحلیل‌گر گروه"
+    },
+    {
+      "character_id": "mani",
+      "name": "مانی",
+      "role": "مخترع کوچک"
+    },
+    {
+      "character_id": "fandogh",
+      "name": "فندق",
+      "role": "راهنمای بازی"
+    },
+    {
+      "character_id": "gholami",
+      "name": "آقای غلامی",
+      "role": "نگهبان سابق برج"
+    }
+  ],
+  "clues": [
+    {
+      "clue_id": "CLUE_S09_HALL",
+      "title": "تالار نمادها",
+      "body": "تالاری با ده نماد روی دیوار، هر کدام با یک اهرم کوچک.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S09_SEQUENCE",
+      "title": "ترتیب فعال‌سازی",
+      "body": "اگر نمادها به ترتیب ستاره‌های رصدخانه فعال شوند، مسیر مرکزی باز می‌شود.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "CLUE_S09_PLATFORM",
+      "title": "سکوی کلیدها",
+      "body": "سکویی وسط تالار با ده فرورفتگی، هر کدام به شکل یک نماد.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S09_GHOLAMI2",
+      "title": "آنچه غلامی دید",
+      "body": "آقای غلامی می‌گوید آن شب، زنی ده کلید را یکی‌یکی برداشت و رفت — ولی یکی را جا گذاشت.",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "CLUE_S09_LEFT_KEY",
+      "title": "کلیدی که جا ماند",
+      "body": "یک فرورفتگی هنوز پر است. کلید دهم هیچ‌وقت برداشته نشد.",
+      "category": "observation"
+    },
+    {
+      "clue_id": "CLUE_S09_HEART",
+      "title": "ورودی محفظهٔ مرکزی",
+      "body": "پشت سکو، دری هست که فقط با فعال‌شدن هر ده نماد باز می‌شود.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S09_MISSING",
+      "title": "قطعهٔ غایب",
+      "body": "دستگاه مرکزی هنوز همان چرخ‌دندهٔ ده‌دندانه را کم دارد.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "CLUE_S09_INVITE",
+      "title": "دعوت‌نامه",
+      "body": "روی در نوشته: «این در برای کسی ساخته شد که بی‌آنکه چیزی بشکند تا اینجا آمده باشد.»",
+      "category": "document"
+    },
+    {
+      "clue_id": "Q_S09_WHICH_PATH",
+      "title": "کدام ترتیب درست است؟",
+      "body": "ترتیب فعال‌سازی، مسیر رسیدن به اتاق نهایی را عوض می‌کند.",
+      "category": "question",
+      "is_question": true,
+      "visible_after": "CLUE_S09_HALL",
+      "resolved_by": "CLUE_S09_SEQUENCE"
+    }
+  ],
+  "clue_combinations": [
+    {
+      "a": "CLUE_S09_HALL",
+      "b": "CLUE_S09_PLATFORM",
+      "result": "CLUE_S09_SEQUENCE"
+    }
+  ],
+  "endings": [
+    {
+      "ending_id": "ending_s09_open",
+      "title": "دری که باز شد",
+      "body": "ده نماد روشن شدند و در محفظهٔ مرکزی باز شد. دستگاه آنجاست — و یک جای خالی دارد."
+    },
+    {
+      "ending_id": "ending_s09_half",
+      "title": "دری که نیمه باز شد",
+      "body": "نه نماد روشن شد و دهمی نه. در کمی باز شد و همان‌طور ماند؛ کافی بود تا داخل را ببینند."
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "S09-E01-SC01",
+      "episode_id": "S09-E01",
+      "scene_type": "cinematic",
+      "title": "ده نماد",
+      "background_id": "BG_S09_SYMBOL_HALL",
+      "music_id": "MUS_SYMBOL_HALL",
+      "cinematic": {
+        "cinematic_id": "CIN_S09_E01",
+        "skippable": true,
+        "beats": [
+          {
+            "text": "هر چیزی که در این هشت فصل دیده بودید، اینجا روی دیوار بود.",
+            "audio_id": "VO_S09_E01_NAR_001",
+            "background_id": "BG_S09_SYMBOL_HALL",
+            "seconds": 4.5
+          },
+          {
+            "text": "ده نماد. و زیر هر کدام، یک اهرم.",
+            "audio_id": "VO_S09_E01_NAR_002",
+            "background_id": "BG_S09_SYMBOL_HALL",
+            "seconds": 4.5
+          }
+        ]
+      },
+      "next_scene_id": "S09-E01-SC02"
+    },
+    {
+      "scene_id": "S09-E01-SC02",
+      "episode_id": "S09-E01",
+      "scene_type": "dialogue",
+      "title": "همه‌چیز سر جایش",
+      "background_id": "BG_S09_SYMBOL_HALL",
+      "music_id": "MUS_SYMBOL_HALL",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S09_HALL"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S09-E01-L001",
+          "speaker_id": "raha",
+          "text": "خورشید، پله، قطره… و هفت تای دیگر که هر کدام را جایی دیدیم.",
+          "audio_id": "VO_S09_E01_RAHA_001",
+          "animation": "think"
+        },
+        {
+          "line_id": "S09-E01-L002",
+          "speaker_id": "mani",
+          "text": "هر اهرم یک بخش دستگاه را روشن می‌کند. ولی نه هر ترتیبی.",
+          "audio_id": "VO_S09_E01_MANI_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S09-E01-L003",
+          "speaker_id": "arad",
+          "text": "پس باید ترتیب را از جایی بیاوریم.",
+          "audio_id": "VO_S09_E01_ARAD_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S09-E01-L004",
+          "speaker_id": "fandogh",
+          "text": "از آسمان. یادت هست؟",
+          "audio_id": "VO_S09_E01_FANDOGH_001",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S09-E01-SC03"
+    },
+    {
+      "scene_id": "S09-E01-SC03",
+      "episode_id": "S09-E01",
+      "scene_type": "explore",
+      "title": "دور تالار",
+      "background_id": "BG_S09_SYMBOL_HALL",
+      "music_id": "MUS_SYMBOL_HALL",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S09_PLATFORM",
+          "kind": "examine",
+          "label": "سکوی وسط",
+          "description": "ده فرورفتگی، نه تا خالی.",
+          "rect": [
+            0.38,
+            0.48,
+            0.24,
+            0.24
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S09_PLATFORM"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S09_LEFTKEY",
+          "kind": "collect",
+          "label": "فرورفتگی پر",
+          "description": "یک کلید هنوز سر جایش است.",
+          "rect": [
+            0.64,
+            0.52,
+            0.16,
+            0.18
+          ],
+          "once": true,
+          "conditions": {
+            "has_clue": "CLUE_S09_PLATFORM"
+          },
+          "effects": [
+            {
+              "add_clue": "CLUE_S09_LEFT_KEY"
+            },
+            {
+              "add_item": "ITEM_TENTH_KEY"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S09_DOOR",
+          "kind": "inspect",
+          "label": "در پشت سکو",
+          "description": "چیزی رویش نوشته شده.",
+          "rect": [
+            0.84,
+            0.38,
+            0.14,
+            0.28
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S09_HEART"
+            },
+            {
+              "add_clue": "CLUE_S09_INVITE"
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S09-E01-SC04"
+    },
+    {
+      "scene_id": "S09-E01-SC04",
+      "episode_id": "S09-E01",
+      "scene_type": "dialogue",
+      "title": "ترتیب را از کجا بیاوریم؟",
+      "background_id": "BG_S09_SYMBOL_HALL",
+      "music_id": "MUS_SYMBOL_HALL",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S09_E01S04_1",
+          "text": "از ترتیب ستاره‌های رصدخانه.",
+          "next_scene_id": "S09-E02-SC01",
+          "hint": "«ترتیب را از آسمان بگیر.»",
+          "effects": [
+            {
+              "set_flag": {
+                "s09_order_source": "stars"
+              }
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S09_E01S04_2",
+          "text": "از ترتیبی که خودمان فصل‌ها را گذراندیم.",
+          "next_scene_id": "S09-E02-SC02",
+          "hint": "راه خودمان هم یک ترتیب است.",
+          "effects": [
+            {
+              "set_flag": {
+                "s09_order_source": "journey"
+              }
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S09-E02-SC01",
+      "episode_id": "S09-E02",
+      "scene_type": "dialogue",
+      "title": "آسمان یا راه خودمان؟",
+      "background_id": "BG_S09_KEY_ROOM",
+      "music_id": "MUS_SYMBOL_HALL",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S09_SEQUENCE"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S09-E02-L001",
+          "speaker_id": "raha",
+          "text": "یادداشت تلسکوپ می‌گفت «از آسمان، نه از دیوار».",
+          "audio_id": "VO_S09_E02_RAHA_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S09-E02-L002",
+          "speaker_id": "arad",
+          "text": "ولی راه خودمان هم یک ترتیب بود، و درست کار کرد.",
+          "audio_id": "VO_S09_E02_ARAD_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S09-E02-L003",
+          "speaker_id": "raha",
+          "text": "هر دو جواب می‌دهند. فقط از دو در مختلف.",
+          "audio_id": "VO_S09_E02_RAHA_003",
+          "animation": "think"
+        }
+      ],
+      "next_scene_id": "S09-E02-SC02"
+    },
+    {
+      "scene_id": "S09-E02-SC02",
+      "episode_id": "S09-E02",
+      "scene_type": "explore",
+      "title": "اتاق کلیدها",
+      "background_id": "BG_S09_KEY_ROOM",
+      "music_id": "MUS_SYMBOL_HALL",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S09_GHOLAMI",
+          "kind": "talk",
+          "label": "آقای غلامی",
+          "description": "آن شب اینجا بوده.",
+          "rect": [
+            0.3,
+            0.42,
+            0.16,
+            0.32
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S09_GHOLAMI2"
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S09_SLOTS",
+          "kind": "examine",
+          "label": "فرورفتگی‌های خالی",
+          "description": "نه تا، همه به یک اندازه.",
+          "rect": [
+            0.58,
+            0.5,
+            0.2,
+            0.2
+          ],
+          "once": true,
+          "effects": [
+            {
+              "set_flag": {
+                "s09_saw_slots": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S09-E02-SC03"
+    },
+    {
+      "scene_id": "S09-E02-SC03",
+      "episode_id": "S09-E02",
+      "scene_type": "puzzle",
+      "title": "ده نماد، به ترتیب",
+      "background_id": "BG_S09_SYMBOL_HALL",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S09_TEN_ORDER",
+        "kind": "order_symbols",
+        "prompt": "نمادها را به ترتیبی که در رصدخانه یاد گرفتی فعال کن.",
+        "items": [
+          {
+            "id": "N_SUN",
+            "label": "خورشید — برج مدرسه",
+            "icon": "ICON_SUN"
+          },
+          {
+            "id": "N_BOOK",
+            "label": "کتاب — کتابخانه",
+            "icon": "ICON_BOOK"
+          },
+          {
+            "id": "N_TREE",
+            "label": "درخت — جنگل",
+            "icon": "ICON_TREE"
+          },
+          {
+            "id": "N_GEAR",
+            "label": "چرخ‌دنده — کارگاه",
+            "icon": "ICON_GEAR"
+          },
+          {
+            "id": "N_DROP",
+            "label": "قطره — دریاچه",
+            "icon": "ICON_DROP"
+          }
+        ],
+        "solution": [
+          "N_SUN",
+          "N_BOOK",
+          "N_TREE",
+          "N_GEAR",
+          "N_DROP"
+        ],
+        "hints": [
+          "به ترتیبی که خودت این جاها را دیدی.",
+          "اول برج مدرسه بود، بعد کتابخانه.",
+          "خورشید، کتاب، درخت، چرخ‌دنده، قطره."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s09_sequence_ok": true
+            }
+          },
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "set_flag": {
+              "s09_sequence_partial": true
+            }
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S09-E03-SC01",
+        "skip_scene_id": "S09-E03-SC01"
+      }
+    },
+    {
+      "scene_id": "S09-E03-SC01",
+      "episode_id": "S09-E03",
+      "scene_type": "dialogue",
+      "title": "کلید دهم",
+      "background_id": "BG_S09_KEY_ROOM",
+      "music_id": "MUS_SYMBOL_HALL",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S09-E03-L001",
+          "speaker_id": "gholami",
+          "text": "آن شب، نه کلید را برداشت و رفت. دهمی را سر جایش گذاشت.",
+          "audio_id": "VO_S09_E03_GHOLAMI_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S09-E03-L002",
+          "speaker_id": "arad",
+          "text": "چرا؟",
+          "audio_id": "VO_S09_E03_ARAD_003",
+          "animation": "think"
+        },
+        {
+          "line_id": "S09-E03-L003",
+          "speaker_id": "gholami",
+          "text": "گفت: «یکی باید بماند، وگرنه هیچ‌کس نمی‌تواند برگردد.»",
+          "audio_id": "VO_S09_E03_GHOLAMI_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S09-E03-SC02"
+    },
+    {
+      "scene_id": "S09-E03-SC02",
+      "episode_id": "S09-E03",
+      "scene_type": "explore",
+      "title": "گذاشتن کلیدها",
+      "background_id": "BG_S09_PLATFORM",
+      "music_id": "MUS_SYMBOL_HALL",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S09_PLACE",
+          "kind": "combine",
+          "label": "گذاشتن کلید در فرورفتگی",
+          "description": "هر کلید فقط در جای خودش می‌نشیند.",
+          "rect": [
+            0.4,
+            0.5,
+            0.22,
+            0.22
+          ],
+          "once": true,
+          "conditions": {
+            "has_item": "ITEM_TENTH_KEY"
+          },
+          "effects": [
+            {
+              "set_flag": {
+                "s09_keys_placed": true
+              }
+            },
+            {
+              "play_sfx": "SFX_PUZZLE_OK"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S09_READ",
+          "kind": "inspect",
+          "label": "خواندن نوشتهٔ روی در",
+          "description": "«…بی‌آنکه چیزی بشکند.»",
+          "rect": [
+            0.7,
+            0.44,
+            0.16,
+            0.22
+          ],
+          "once": true,
+          "effects": [
+            {
+              "set_flag": {
+                "s09_read_invite": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S09-E03-SC03"
+    },
+    {
+      "scene_id": "S09-E03-SC03",
+      "episode_id": "S09-E03",
+      "scene_type": "puzzle",
+      "title": "کدام کلید جعلی است؟",
+      "background_id": "BG_S09_PLATFORM",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S09_FAKE_KEY",
+        "kind": "spot_contradiction",
+        "prompt": "یکی از کلیدها بعداً ساخته شده و اصل نیست. کدام؟",
+        "items": [
+          {
+            "id": "FK_1",
+            "label": "کلید برنجی، لبه‌های ساییده"
+          },
+          {
+            "id": "FK_2",
+            "label": "کلید برنجی، نشان ده‌پرتو کم‌رنگ"
+          },
+          {
+            "id": "FK_3",
+            "label": "کلید براق، نشان ده‌پرتو تیز و تازه"
+          },
+          {
+            "id": "FK_4",
+            "label": "کلید برنجی، یک گوشه‌اش پریده"
+          }
+        ],
+        "solution": [
+          "FK_3"
+        ],
+        "hints": [
+          "بقیه چند ده سال اینجا بوده‌اند.",
+          "چیزی که سال‌ها دست‌به‌دست شود، ساییده می‌شود.",
+          "کلید براق با نشان تازه."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s09_found_fake": true
+            }
+          },
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S09-E03-SC04",
+        "skip_scene_id": "S09-E03-SC04"
+      }
+    },
+    {
+      "scene_id": "S09-E03-SC04",
+      "episode_id": "S09-E03",
+      "scene_type": "dialogue",
+      "title": "صدای چرخیدن",
+      "background_id": "BG_S09_PLATFORM",
+      "music_id": "MUS_SYMBOL_HALL",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S09_MISSING"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S09-E03-L004",
+          "speaker_id": "mani",
+          "text": "دارد کار می‌کند. ولی یک جای خالی هنوز هست.",
+          "audio_id": "VO_S09_E03_MANI_002",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S09-E03-L005",
+          "speaker_id": "arad",
+          "text": "همان چرخ‌دندهٔ ده‌دندانه.",
+          "audio_id": "VO_S09_E03_ARAD_004",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S09-E03-L006",
+          "speaker_id": "fandogh",
+          "text": "که یا در جیب شماست، یا هنوز در کلبهٔ جنگل.",
+          "audio_id": "VO_S09_E03_FANDOGH_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S09-E04-SC01"
+    },
+    {
+      "scene_id": "S09-E04-SC01",
+      "episode_id": "S09-E04",
+      "scene_type": "dialogue",
+      "title": "نماد دهم",
+      "background_id": "BG_S09_PLATFORM",
+      "music_id": "MUS_SYMBOL_HALL",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S09-E04-L001",
+          "speaker_id": "raha",
+          "text": "نه تا روشن است. دهمی اهرمش سفت است.",
+          "audio_id": "VO_S09_E04_RAHA_004",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S09-E04-L002",
+          "speaker_id": "mani",
+          "text": "می‌توانم بازش کنم. ولی ممکن است اهرم بشکند.",
+          "audio_id": "VO_S09_E04_MANI_003",
+          "animation": "think"
+        },
+        {
+          "line_id": "S09-E04-L003",
+          "speaker_id": "arad",
+          "text": "روی در نوشته «بی‌آنکه چیزی بشکند».",
+          "audio_id": "VO_S09_E04_ARAD_005",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S09-E04-SC02"
+    },
+    {
+      "scene_id": "S09-E04-SC02",
+      "episode_id": "S09-E04",
+      "scene_type": "puzzle",
+      "title": "بازکردن اهرم بدون شکستن",
+      "background_id": "BG_S09_PLATFORM",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S09_LEVER_CARE",
+        "kind": "assemble_parts",
+        "prompt": "با چه چیزهایی می‌شود اهرم سفت را بدون شکستن باز کرد؟",
+        "items": [
+          {
+            "id": "LC_OIL",
+            "label": "روغن"
+          },
+          {
+            "id": "LC_CLOTH",
+            "label": "پارچه"
+          },
+          {
+            "id": "LC_TIME",
+            "label": "کمی صبر"
+          },
+          {
+            "id": "LC_HAMMER",
+            "label": "چکش"
+          }
+        ],
+        "solution": [
+          "LC_OIL",
+          "LC_CLOTH",
+          "LC_TIME"
+        ],
+        "hints": [
+          "چه چیزی باعث می‌شود فلز زنگ‌زده راحت‌تر بچرخد؟",
+          "چکش چیزی را باز نمی‌کند؛ می‌شکند.",
+          "روغن، پارچه، صبر."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s09_tenth_open": true
+            }
+          },
+          {
+            "add_trust": {
+              "mani": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "set_flag": {
+              "s09_tenth_stuck": true
+            }
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S09-E04-SC03",
+        "skip_scene_id": "S09-E04-SC03"
+      }
+    },
+    {
+      "scene_id": "S09-E04-SC03",
+      "episode_id": "S09-E04",
+      "scene_type": "dialogue",
+      "title": "تصمیم",
+      "background_id": "BG_S09_PLATFORM",
+      "music_id": "MUS_SYMBOL_HALL",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S09_E04S03_1",
+          "text": "با روغن و صبر، دهمی را هم باز کنیم.",
+          "next_scene_id": "S09-E04-SC04",
+          "hint": "بی‌آنکه چیزی بشکند.",
+          "effects": [
+            {
+              "set_flag": {
+                "s09_all_ten": true
+              }
+            },
+            {
+              "set_ending": "ending_s09_open"
+            },
+            {
+              "add_trust": {
+                "mani": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S09_E04S03_2",
+          "text": "به همین نه تا بسنده کنیم.",
+          "next_scene_id": "S09-E04-SC05",
+          "hint": "در کمی باز می‌شود؛ شاید کافی باشد.",
+          "effects": [
+            {
+              "set_flag": {
+                "s09_all_ten": false
+              }
+            },
+            {
+              "set_ending": "ending_s09_half"
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S09-E04-SC04",
+      "episode_id": "S09-E04",
+      "scene_type": "dialogue",
+      "title": "دری که باز شد",
+      "background_id": "BG_S09_HEART_DOOR",
+      "music_id": "MUS_SYMBOL_HALL",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_10"
+        },
+        {
+          "set_ending": "ending_s09_open"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S09-E04-L004",
+          "speaker_id": "mani",
+          "text": "باز شد. و هیچ‌چیز هم نشکست.",
+          "audio_id": "VO_S09_E04_MANI_004",
+          "animation": "happy"
+        },
+        {
+          "line_id": "S09-E04-L005",
+          "speaker_id": "raha",
+          "text": "پشت در، دستگاه است. و یک جای خالی.",
+          "audio_id": "VO_S09_E04_RAHA_005",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S09-E04-L006",
+          "speaker_id": "fandogh",
+          "text": "قلب رازینو. فردا.",
+          "audio_id": "VO_S09_E04_FANDOGH_003",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    },
+    {
+      "scene_id": "S09-E04-SC05",
+      "episode_id": "S09-E04",
+      "scene_type": "dialogue",
+      "title": "دری که نیمه باز شد",
+      "background_id": "BG_S09_HEART_DOOR",
+      "music_id": "MUS_SYMBOL_HALL",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_10"
+        },
+        {
+          "set_ending": "ending_s09_half"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S09-E04-L007",
+          "speaker_id": "raha",
+          "text": "یک وجب باز شد و ایستاد. ولی می‌شود داخل را دید.",
+          "audio_id": "VO_S09_E04_RAHA_006",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S09-E04-L008",
+          "speaker_id": "arad",
+          "text": "و داخلش، همان دستگاه است. با یک جای خالی.",
+          "audio_id": "VO_S09_E04_ARAD_006",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S09-E04-L009",
+          "speaker_id": "fandogh",
+          "text": "برای فردا کافی است. قلب رازینو.",
+          "audio_id": "VO_S09_E04_FANDOGH_004",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    }
+  ]
+}

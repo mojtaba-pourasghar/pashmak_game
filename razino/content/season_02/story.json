@@ -1,0 +1,1043 @@
+{
+  "schema_version": 1,
+  "chapter_id": "season_02",
+  "version": 1,
+  "title": "کتابخانهٔ هزار در",
+  "subtitle": "فصل دوم",
+  "language": "fa-IR",
+  "minimum_game_version": "0.1.0",
+  "synopsis": "کتابی که نقشهٔ قدیمی شهر را در خود دارد، از قفسه‌اش ناپدید شده است. گروه باید از روی ترتیب قفسه‌ها، نشانه‌های پشت جلدها و یادداشت‌های کتابدار بازنشسته بفهمد چه کسی کتاب را برداشته و چرا جای خالی‌اش را با کتابی هم‌اندازه پر کرده‌اند.",
+  "narrative_goal": "پیداکردن مسیر مخفی از روی نشانه‌های کتاب‌ها و یادداشت‌های کتابدار بازنشسته.",
+  "macro_clue": "نام مخترع",
+  "primary_environment": "کتابخانه و آرشیو",
+  "core_mechanic": "رمزگشایی و جست‌وجو",
+  "start_scene_id": "S02-E01-SC01",
+  "default_ending_id": "ending_s02_open",
+  "episodes": [
+    {
+      "episode_id": "S02-E01",
+      "title": "جای خالی",
+      "summary": "گروه می‌فهمد کتاب نقشه برداشته شده و جایش را پر کرده‌اند."
+    },
+    {
+      "episode_id": "S02-E02",
+      "title": "اتاق اسناد",
+      "summary": "گروه از ترتیب رنگ‌ها شمارهٔ قفسه‌ها را درمی‌آورد."
+    },
+    {
+      "episode_id": "S02-E03",
+      "title": "قفسه‌های متحرک",
+      "summary": "قفسه‌ها به ترتیب درست کنار می‌روند و دری پیدا می‌شود."
+    },
+    {
+      "episode_id": "S02-E04",
+      "title": "نامی که کامل شد",
+      "summary": "آقای شریفی نام مخترع را کامل می‌کند و گروه تصمیم می‌گیرد."
+    }
+  ],
+  "characters": [
+    {
+      "character_id": "player",
+      "name": "تو",
+      "role": "عضو تازهٔ گروه"
+    },
+    {
+      "character_id": "arad",
+      "name": "آراد",
+      "role": "کنجکاو و ماجراجو"
+    },
+    {
+      "character_id": "raha",
+      "name": "رها",
+      "role": "تحلیل‌گر گروه"
+    },
+    {
+      "character_id": "mani",
+      "name": "مانی",
+      "role": "مخترع کوچک"
+    },
+    {
+      "character_id": "fandogh",
+      "name": "فندق",
+      "role": "راهنمای بازی"
+    },
+    {
+      "character_id": "azimi",
+      "name": "خانم عظیمی",
+      "role": "مسئول کتابخانه"
+    },
+    {
+      "character_id": "sharifi",
+      "name": "آقای شریفی",
+      "role": "کتابدار بازنشسته"
+    }
+  ],
+  "clues": [
+    {
+      "clue_id": "CLUE_S02_GAP",
+      "title": "جای خالی که خالی نیست",
+      "body": "کتاب نقشه سر جایش نیست، ولی قفسه خالی نمانده — کتابی هم‌اندازه جایش گذاشته‌اند.",
+      "category": "observation"
+    },
+    {
+      "clue_id": "CLUE_S02_SPINE",
+      "title": "نشانه‌های پشت جلد",
+      "body": "پشت جلد چند کتاب، نقطه‌هایی رنگی هست که به ترتیب قفسه نمی‌خورد.",
+      "category": "symbol"
+    },
+    {
+      "clue_id": "CLUE_S02_CARD",
+      "title": "برگهٔ امانت",
+      "body": "برگهٔ امانت کتاب نقشه، تاریخ دارد ولی اسم ندارد. امضا هم ندارد.",
+      "category": "document"
+    },
+    {
+      "clue_id": "CLUE_S02_LADDER",
+      "title": "نردبان جابه‌جا",
+      "body": "نردبان کتابخانه جلوی قفسهٔ «ک» است، در حالی که همیشه جلوی «الف» می‌ماند.",
+      "category": "observation"
+    },
+    {
+      "clue_id": "CLUE_S02_SHARIFI",
+      "title": "حرف آقای شریفی",
+      "body": "آقای شریفی می‌گوید یک راهروی باریک پشت قفسه‌های متحرک هست که سال‌هاست بسته‌اند.",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "CLUE_S02_ORDER",
+      "title": "ترتیب رنگ‌ها",
+      "body": "نقطه‌های رنگی، به ترتیب رنگین‌کمان، شمارهٔ قفسه‌ها را می‌سازند.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "CLUE_S02_DOOR",
+      "title": "در پشت قفسه",
+      "body": "پشت قفسهٔ متحرک، دری هست با همان نشان ده‌پرتو.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S02_SIGN",
+      "title": "امضای روی قاب در",
+      "body": "روی قاب در، همان دو حرف کنده شده: «د.ر».",
+      "category": "symbol"
+    },
+    {
+      "clue_id": "CLUE_S02_MAKER",
+      "title": "نام کامل",
+      "body": "آقای شریفی اسم را کامل می‌کند: «دلارام رستا»، همان که برج را طراحی کرد و بعد دیگر پیدایش نشد.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "Q_S02_WHO_TOOK",
+      "title": "چه کسی کتاب را برد؟",
+      "body": "کسی کتاب نقشه را برده و جایش را پر کرده تا کسی نفهمد.",
+      "category": "question",
+      "is_question": true,
+      "visible_after": "CLUE_S02_GAP",
+      "resolved_by": "CLUE_S02_MAKER"
+    }
+  ],
+  "clue_combinations": [
+    {
+      "a": "CLUE_S02_SPINE",
+      "b": "CLUE_S02_LADDER",
+      "result": "CLUE_S02_ORDER"
+    },
+    {
+      "a": "CLUE_S02_DOOR",
+      "b": "CLUE_S02_SIGN",
+      "result": "CLUE_S02_MAKER"
+    }
+  ],
+  "endings": [
+    {
+      "ending_id": "ending_s02_open",
+      "title": "دری که باز شد",
+      "body": "گروه قفسه را کنار زد و در را باز کرد. راهرو کوتاه بود و به پلکانی می‌رسید که از نقشه بیرون می‌زد — به سمت جنگل."
+    },
+    {
+      "ending_id": "ending_s02_mapped",
+      "title": "دری که روی کاغذ ماند",
+      "body": "گروه تصمیم گرفت اول راهرو را روی نقشه بکشد و بعد برود. نقشه حالا کامل‌تر است، و راه هنوز باز نشده."
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "S02-E01-SC01",
+      "episode_id": "S02-E01",
+      "scene_type": "cinematic",
+      "title": "هزار در",
+      "background_id": "BG_S02_LIBRARY_HALL",
+      "music_id": "MUS_LIBRARY",
+      "cinematic": {
+        "cinematic_id": "CIN_S02_E01",
+        "skippable": true,
+        "beats": [
+          {
+            "text": "می‌گویند این کتابخانه هزار در دارد. نهصد و نود و نه تایش قفسه است.",
+            "audio_id": "VO_S02_E01_NAR_001",
+            "background_id": "BG_S02_LIBRARY_HALL",
+            "seconds": 4.5
+          },
+          {
+            "text": "و یکی‌شان، کسی نمی‌داند کجاست.",
+            "audio_id": "VO_S02_E01_NAR_002",
+            "background_id": "BG_S02_LIBRARY_HALL",
+            "seconds": 4.5
+          }
+        ]
+      },
+      "next_scene_id": "S02-E01-SC02"
+    },
+    {
+      "scene_id": "S02-E01-SC02",
+      "episode_id": "S02-E01",
+      "scene_type": "dialogue",
+      "title": "قفسهٔ نقشه‌ها",
+      "background_id": "BG_S02_LIBRARY_HALL",
+      "music_id": "MUS_LIBRARY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S02-E01-L001",
+          "speaker_id": "azimi",
+          "text": "کتاب نقشهٔ شهر همیشه اینجا بود. قفسهٔ «ن»، ردیف سوم.",
+          "audio_id": "VO_S02_E01_AZIMI_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S02-E01-L002",
+          "speaker_id": "raha",
+          "text": "قفسه که خالی نیست.",
+          "audio_id": "VO_S02_E01_RAHA_001",
+          "animation": "think"
+        },
+        {
+          "line_id": "S02-E01-L003",
+          "speaker_id": "azimi",
+          "text": "نه. و همین عجیب است.",
+          "audio_id": "VO_S02_E01_AZIMI_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S02-E01-SC03"
+    },
+    {
+      "scene_id": "S02-E01-SC03",
+      "episode_id": "S02-E01",
+      "scene_type": "explore",
+      "title": "دنبال جای خالی",
+      "background_id": "BG_S02_LIBRARY_HALL",
+      "music_id": "MUS_LIBRARY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S02-E01-L004",
+          "speaker_id": "fandogh",
+          "text": "جای خالی را که پر کرده باشند، سخت‌تر پیدا می‌شود. اندازه‌ها را نگاه کن.",
+          "audio_id": "VO_S02_E01_FANDOGH_001",
+          "animation": "talk"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S02_SHELF_N",
+          "kind": "examine",
+          "label": "قفسهٔ «ن»",
+          "description": "کتابی هم‌اندازه، ولی جلدش تازه‌تر است.",
+          "rect": [
+            0.2,
+            0.38,
+            0.2,
+            0.3
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S02_GAP"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S02_CARD",
+          "kind": "inspect",
+          "label": "جعبهٔ برگه‌های امانت",
+          "description": "برگه‌ها به ترتیب تاریخ‌اند.",
+          "rect": [
+            0.48,
+            0.56,
+            0.16,
+            0.18
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S02_CARD"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S02_LADDER",
+          "kind": "examine",
+          "label": "نردبان کتابخانه",
+          "description": "چرخ‌هایش رد تازه روی زمین گذاشته.",
+          "rect": [
+            0.72,
+            0.4,
+            0.14,
+            0.36
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S02_LADDER"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S02-E01-SC04"
+    },
+    {
+      "scene_id": "S02-E01-SC04",
+      "episode_id": "S02-E01",
+      "scene_type": "dialogue",
+      "title": "از کجا شروع کنیم؟",
+      "background_id": "BG_S02_LIBRARY_HALL",
+      "music_id": "MUS_LIBRARY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S02_E01S04_1",
+          "text": "برویم سراغ آقای شریفی؛ او اینجا را از بر است.",
+          "next_scene_id": "S02-E02-SC01",
+          "hint": "کتابدار بازنشسته.",
+          "effects": [
+            {
+              "set_flag": {
+                "s02_path": "sharifi"
+              }
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S02_E01S04_2",
+          "text": "اول پشت جلدها را نگاه کنیم.",
+          "next_scene_id": "S02-E02-SC02",
+          "hint": "نقطه‌های رنگی بی‌دلیل نیستند.",
+          "effects": [
+            {
+              "set_flag": {
+                "s02_path": "spines"
+              }
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S02-E02-SC01",
+      "episode_id": "S02-E02",
+      "scene_type": "dialogue",
+      "title": "آقای شریفی",
+      "background_id": "BG_S02_ARCHIVE_ROOM",
+      "music_id": "MUS_LIBRARY",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S02_SHARIFI"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S02-E02-L001",
+          "speaker_id": "sharifi",
+          "text": "چهل سال اینجا بودم. پشت قفسه‌های متحرک، یک راهروی باریک هست.",
+          "audio_id": "VO_S02_E02_SHARIFI_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S02-E02-L002",
+          "speaker_id": "sharifi",
+          "text": "بچه که بودید نگفتم، چون می‌ترسیدم بروید. حالا که خودتان فهمیده‌اید، فرق دارد.",
+          "audio_id": "VO_S02_E02_SHARIFI_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S02-E02-L003",
+          "speaker_id": "arad",
+          "text": "یعنی قفسه‌ها را می‌شود کنار زد؟",
+          "audio_id": "VO_S02_E02_ARAD_001",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S02-E02-L004",
+          "speaker_id": "sharifi",
+          "text": "اگر ترتیبشان را بدانی، بله.",
+          "audio_id": "VO_S02_E02_SHARIFI_003",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S02-E02-SC02"
+    },
+    {
+      "scene_id": "S02-E02-SC02",
+      "episode_id": "S02-E02",
+      "scene_type": "explore",
+      "title": "پشت جلدها",
+      "background_id": "BG_S02_ARCHIVE_ROOM",
+      "music_id": "MUS_LIBRARY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S02-E02-L005",
+          "speaker_id": "raha",
+          "text": "نقطه‌ها رنگی‌اند. و رنگ‌ها ترتیب دارند.",
+          "audio_id": "VO_S02_E02_RAHA_002",
+          "animation": "think"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S02_SPINES",
+          "kind": "examine",
+          "label": "پشت جلد کتاب‌ها",
+          "description": "نقطه‌هایی به رنگ‌های مختلف.",
+          "rect": [
+            0.26,
+            0.4,
+            0.22,
+            0.3
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S02_SPINE"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S02_RAIL",
+          "kind": "inspect",
+          "label": "ریل قفسه‌های متحرک",
+          "description": "روغن تازه، مثل قفل راهروی مدرسه.",
+          "rect": [
+            0.6,
+            0.52,
+            0.2,
+            0.2
+          ],
+          "once": true,
+          "effects": [
+            {
+              "set_flag": {
+                "s02_saw_rail": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S02-E02-SC03"
+    },
+    {
+      "scene_id": "S02-E02-SC03",
+      "episode_id": "S02-E02",
+      "scene_type": "puzzle",
+      "title": "ترتیب رنگین‌کمان",
+      "background_id": "BG_S02_ARCHIVE_ROOM",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S02_COLOR_ORDER",
+        "kind": "order_symbols",
+        "prompt": "نقطه‌های رنگی را به ترتیب رنگین‌کمان بچین تا شمارهٔ قفسه‌ها پیدا شود.",
+        "items": [
+          {
+            "id": "C_GREEN",
+            "label": "سبز",
+            "icon": "ICON_DOT_GREEN"
+          },
+          {
+            "id": "C_RED",
+            "label": "قرمز",
+            "icon": "ICON_DOT_RED"
+          },
+          {
+            "id": "C_BLUE",
+            "label": "آبی",
+            "icon": "ICON_DOT_BLUE"
+          },
+          {
+            "id": "C_YELLOW",
+            "label": "زرد",
+            "icon": "ICON_DOT_YELLOW"
+          }
+        ],
+        "solution": [
+          "C_RED",
+          "C_YELLOW",
+          "C_GREEN",
+          "C_BLUE"
+        ],
+        "hints": [
+          "رنگین‌کمان از کدام رنگ شروع می‌شود؟",
+          "قرمز، بعد زرد. سبز و آبی ته صف‌اند.",
+          "قرمز، زرد، سبز، آبی."
+        ],
+        "on_solve": [
+          {
+            "add_clue": "CLUE_S02_ORDER"
+          },
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "add_clue": "CLUE_S02_ORDER"
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S02-E03-SC01",
+        "skip_scene_id": "S02-E03-SC01"
+      }
+    },
+    {
+      "scene_id": "S02-E03-SC01",
+      "episode_id": "S02-E03",
+      "scene_type": "dialogue",
+      "title": "حالا می‌دانیم",
+      "background_id": "BG_S02_MOVING_STACKS",
+      "music_id": "MUS_LIBRARY",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S02-E03-L001",
+          "speaker_id": "mani",
+          "text": "چهار قفسه، چهار شماره. اگر به ترتیب هلشان بدهیم، یکی‌شان آخر از همه می‌ماند.",
+          "audio_id": "VO_S02_E03_MANI_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S02-E03-L002",
+          "speaker_id": "raha",
+          "text": "و پشت همان یکی، راهرو است.",
+          "audio_id": "VO_S02_E03_RAHA_003",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S02-E03-SC02"
+    },
+    {
+      "scene_id": "S02-E03-SC02",
+      "episode_id": "S02-E03",
+      "scene_type": "explore",
+      "title": "هل‌دادن قفسه‌ها",
+      "background_id": "BG_S02_MOVING_STACKS",
+      "music_id": "MUS_LIBRARY",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S02_STACK",
+          "kind": "trigger",
+          "label": "قفسهٔ آخر",
+          "description": "سنگین است، ولی روی ریل می‌لغزد.",
+          "rect": [
+            0.4,
+            0.34,
+            0.24,
+            0.4
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S02_DOOR"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S02_FRAME",
+          "kind": "examine",
+          "label": "قاب در",
+          "description": "چوب کهنه، با چیزی کنده‌شده روی آن.",
+          "rect": [
+            0.66,
+            0.44,
+            0.16,
+            0.22
+          ],
+          "once": true,
+          "conditions": {
+            "has_clue": "CLUE_S02_DOOR"
+          },
+          "effects": [
+            {
+              "add_clue": "CLUE_S02_SIGN"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S02-E03-SC03"
+    },
+    {
+      "scene_id": "S02-E03-SC03",
+      "episode_id": "S02-E03",
+      "scene_type": "puzzle",
+      "title": "قفل حرف‌ها",
+      "background_id": "BG_S02_MOVING_STACKS",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S02_LETTER_LOCK",
+        "kind": "dial_code",
+        "prompt": "روی قفل در، دو حرف باید بنشیند. همان دو حرفی که روی دفترچه بود.",
+        "items": [
+          {
+            "id": "DIAL_1",
+            "label": "حلقهٔ اول",
+            "options": [
+              "ر",
+              "د",
+              "ن"
+            ]
+          },
+          {
+            "id": "DIAL_2",
+            "label": "حلقهٔ دوم",
+            "options": [
+              "د",
+              "ر",
+              "م"
+            ]
+          }
+        ],
+        "solution": [
+          "د",
+          "ر"
+        ],
+        "hints": [
+          "روی جلد دفترچه دو حرف کنده شده بود.",
+          "اولی «د» بود.",
+          "«د» و بعد «ر»."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s02_door_open": true
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "set_flag": {
+              "s02_door_forced": true
+            }
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S02-E03-SC04",
+        "skip_scene_id": "S02-E03-SC04"
+      }
+    },
+    {
+      "scene_id": "S02-E03-SC04",
+      "episode_id": "S02-E03",
+      "scene_type": "dialogue",
+      "title": "پشت در",
+      "background_id": "BG_S02_HIDDEN_PASSAGE",
+      "music_id": "MUS_LIBRARY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S02-E03-L003",
+          "speaker_id": "arad",
+          "text": "راهرو کوتاه است. و تهش پله می‌خورد پایین.",
+          "audio_id": "VO_S02_E03_ARAD_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S02-E03-L004",
+          "speaker_id": "raha",
+          "text": "پله‌ها از نقشهٔ مدرسه بیرون می‌زنند. این دیگر مال مدرسه نیست.",
+          "audio_id": "VO_S02_E03_RAHA_004",
+          "animation": "think"
+        }
+      ],
+      "next_scene_id": "S02-E04-SC01"
+    },
+    {
+      "scene_id": "S02-E04-SC01",
+      "episode_id": "S02-E04",
+      "scene_type": "dialogue",
+      "title": "دلارام رستا",
+      "background_id": "BG_S02_ARCHIVE_ROOM",
+      "music_id": "MUS_LIBRARY",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S02_MAKER"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S02-E04-L001",
+          "speaker_id": "sharifi",
+          "text": "«د.ر». دلارام رستا. همان که برج را طراحی کرد.",
+          "audio_id": "VO_S02_E04_SHARIFI_004",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S02-E04-L002",
+          "speaker_id": "sharifi",
+          "text": "یک روز آمد، چند صفحه از دفترش را برید و برد. و دیگر نیامد.",
+          "audio_id": "VO_S02_E04_SHARIFI_005",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S02-E04-L003",
+          "speaker_id": "fandogh",
+          "text": "پس صفحه‌های بریده را خودش برده. سؤال این است: از چه چیزی می‌ترسیده؟",
+          "audio_id": "VO_S02_E04_FANDOGH_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S02-E04-SC02"
+    },
+    {
+      "scene_id": "S02-E04-SC02",
+      "episode_id": "S02-E04",
+      "scene_type": "puzzle",
+      "title": "کدام کتاب جایش را گرفت؟",
+      "background_id": "BG_S02_LIBRARY_HALL",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S02_MATCH_BOOK",
+        "kind": "match_pairs",
+        "prompt": "کتاب جایگزین را با برگهٔ امانتش جفت کن.",
+        "items": [
+          {
+            "id": "B1",
+            "label": "جلد سبز، بی‌عنوان"
+          },
+          {
+            "id": "B2",
+            "label": "برگهٔ بی‌امضا، تاریخ پنج‌شنبه"
+          },
+          {
+            "id": "B3",
+            "label": "جلد قهوه‌ای، «گیاهان شهر»"
+          },
+          {
+            "id": "B4",
+            "label": "برگهٔ امضادار، تاریخ دوشنبه"
+          }
+        ],
+        "solution": [
+          [
+            "B1",
+            "B2"
+          ],
+          [
+            "B3",
+            "B4"
+          ]
+        ],
+        "hints": [
+          "کتابی که جای نقشه را گرفته، امضا ندارد.",
+          "جلد سبزِ بی‌عنوان با برگهٔ بی‌امضا جور است.",
+          "سبز با بی‌امضا، قهوه‌ای با امضادار."
+        ],
+        "on_solve": [
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S02-E04-SC03",
+        "skip_scene_id": "S02-E04-SC03"
+      }
+    },
+    {
+      "scene_id": "S02-E04-SC03",
+      "episode_id": "S02-E04",
+      "scene_type": "dialogue",
+      "title": "برویم یا بکشیم؟",
+      "background_id": "BG_S02_HIDDEN_PASSAGE",
+      "music_id": "MUS_LIBRARY",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S02_E04S03_1",
+          "text": "همین حالا از پله‌ها پایین برویم.",
+          "next_scene_id": "S02-E04-SC04",
+          "hint": "جنگل آن طرف است.",
+          "effects": [
+            {
+              "set_flag": {
+                "s02_went": true
+              }
+            },
+            {
+              "set_ending": "ending_s02_open"
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S02_E04S03_2",
+          "text": "اول راهرو را روی نقشه بکشیم.",
+          "next_scene_id": "S02-E04-SC05",
+          "hint": "نقشهٔ کامل‌تر، بعداً به کار می‌آید.",
+          "effects": [
+            {
+              "set_flag": {
+                "s02_went": false
+              }
+            },
+            {
+              "set_ending": "ending_s02_mapped"
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S02-E04-SC04",
+      "episode_id": "S02-E04",
+      "scene_type": "dialogue",
+      "title": "دری که باز شد",
+      "background_id": "BG_S02_HIDDEN_PASSAGE",
+      "music_id": "MUS_LIBRARY",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_03"
+        },
+        {
+          "set_ending": "ending_s02_open"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S02-E04-L004",
+          "speaker_id": "arad",
+          "text": "هوا عوض شد. بوی برگ می‌آید.",
+          "audio_id": "VO_S02_E04_ARAD_003",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S02-E04-L005",
+          "speaker_id": "fandogh",
+          "text": "پله‌ها به حاشیهٔ شهر می‌رسند. آنجا که سنگ‌ها نشانه دارند.",
+          "audio_id": "VO_S02_E04_FANDOGH_003",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    },
+    {
+      "scene_id": "S02-E04-SC05",
+      "episode_id": "S02-E04",
+      "scene_type": "dialogue",
+      "title": "دری که روی کاغذ ماند",
+      "background_id": "BG_S02_ARCHIVE_ROOM",
+      "music_id": "MUS_LIBRARY",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_03"
+        },
+        {
+          "set_ending": "ending_s02_mapped"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S02-E04-L006",
+          "speaker_id": "raha",
+          "text": "حالا نقشه کامل‌تر است. فردا با چراغ می‌رویم.",
+          "audio_id": "VO_S02_E04_RAHA_005",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S02-E04-L007",
+          "speaker_id": "fandogh",
+          "text": "و فردا، جنگل نشانه‌ها منتظر است.",
+          "audio_id": "VO_S02_E04_FANDOGH_004",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    }
+  ]
+}

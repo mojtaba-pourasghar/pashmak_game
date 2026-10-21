@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://razino.example/schema/chapter-1.json",
+  "title": "Razino chapter package — schema version 1",
+  "description": "The data contract for one chapter. Chapters are DATA ONLY: no executable file may appear in a package, and the engine executes only the closed condition/effect vocabulary listed below.",
+  "type": "object",
+  "required": ["schema_version", "chapter_id", "title", "language", "start_scene_id", "scenes"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "chapter_id": {"type": "string", "pattern": "^season_[0-9]{2}$"},
+    "version": {"type": "integer", "minimum": 1},
+    "title": {"type": "string", "minLength": 1},
+    "subtitle": {"type": "string"},
+    "language": {"type": "string", "const": "fa-IR"},
+    "minimum_game_version": {"type": "string"},
+    "synopsis": {"type": "string", "minLength": 1},
+    "narrative_goal": {"type": "string"},
+    "macro_clue": {"type": "string", "description": "The thread this chapter adds to the clock-tower mystery."},
+    "primary_environment": {"type": "string"},
+    "core_mechanic": {"type": "string"},
+    "start_scene_id": {"type": "string"},
+    "default_ending_id": {"type": "string"},
+    "episodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["episode_id", "title"],
+        "properties": {
+          "episode_id": {"type": "string", "pattern": "^S[0-9]{2}-E[0-9]{2}$"},
+          "title": {"type": "string"},
+          "summary": {"type": "string"}
+        }
+      }
+    },
+    "characters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["character_id", "name"],
+        "properties": {
+          "character_id": {"type": "string"},
+          "name": {"type": "string"},
+          "role": {"type": "string"}
+        }
+      }
+    },
+    "clues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["clue_id", "title", "body", "category"],
+        "properties": {
+          "clue_id": {"type": "string"},
+          "title": {"type": "string", "minLength": 1},
+          "body": {"type": "string", "minLength": 1},
+          "category": {"type": "string"},
+          "is_question": {"type": "boolean"},
+          "visible_after": {"type": "string"},
+          "resolved_by": {"type": "string"}
+        }
+      }
+    },
+    "clue_combinations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["a", "b", "result"],
+        "properties": {
+          "a": {"type": "string"},
+          "b": {"type": "string"},
+          "result": {"type": "string"}
+        }
+      }
+    },
+    "endings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ending_id", "title", "body"],
+        "properties": {
+          "ending_id": {"type": "string"},
+          "title": {"type": "string"},
+          "body": {"type": "string"}
+        }
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/scene"}
+    }
+  },
+  "$defs": {
+    "scene": {
+      "type": "object",
+      "required": ["scene_id", "scene_type"],
+      "properties": {
+        "scene_id": {"type": "string", "pattern": "^S[0-9]{2}-E[0-9]{2}-SC[0-9]{2}$"},
+        "episode_id": {"type": "string"},
+        "scene_type": {"enum": ["dialogue", "explore", "puzzle", "cinematic"]},
+        "title": {"type": "string"},
+        "background_id": {"type": "string"},
+        "music_id": {"type": "string"},
+        "is_ending": {"type": "boolean"},
+        "on_enter": {"$ref": "#/$defs/effects"},
+        "characters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["character_id"],
+            "properties": {
+              "character_id": {"type": "string"},
+              "position": {"enum": ["left", "right", "center", "far_left", "far_right"]},
+              "animation": {"type": "string"}
+            }
+          }
+        },
+        "dialogue": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["line_id", "speaker_id", "text"],
+            "properties": {
+              "line_id": {"type": "string"},
+              "speaker_id": {"type": "string"},
+              "text": {"type": "string", "minLength": 1},
+              "audio_id": {"type": "string"},
+              "animation": {"type": "string"},
+              "effects": {"$ref": "#/$defs/effects"}
+            }
+          }
+        },
+        "interactions": {
+          "type": "array",
+          "description": "Touchable objects in an explore scene. `kind` maps to GDD INT-01..INT-08.",
+          "items": {
+            "type": "object",
+            "required": ["interaction_id", "kind", "label"],
+            "properties": {
+              "interaction_id": {"type": "string"},
+              "kind": {"enum": ["examine", "talk", "collect", "combine", "puzzle", "choice", "inspect", "trigger"]},
+              "label": {"type": "string", "minLength": 1},
+              "description": {"type": "string"},
+              "rect": {"type": "array", "items": {"type": "number"}, "minItems": 4, "maxItems": 4},
+              "conditions": {"$ref": "#/$defs/conditions"},
+              "effects": {"$ref": "#/$defs/effects"},
+              "once": {"type": "boolean"}
+            }
+          }
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["choice_id", "text", "next_scene_id"],
+            "properties": {
+              "choice_id": {"type": "string"},
+              "text": {"type": "string", "minLength": 1},
+              "hint": {"type": "string"},
+              "conditions": {"$ref": "#/$defs/conditions"},
+              "effects": {"$ref": "#/$defs/effects"},
+              "next_scene_id": {"type": "string"}
+            }
+          }
+        },
+        "puzzle": {
+          "type": "object",
+          "required": ["puzzle_id", "kind", "prompt"],
+          "properties": {
+            "puzzle_id": {"type": "string"},
+            "kind": {"enum": ["order_symbols", "match_pairs", "dial_code", "route_path", "assemble_parts", "spot_contradiction"]},
+            "prompt": {"type": "string", "minLength": 1},
+            "items": {"type": "array"},
+            "solution": {"type": "array"},
+            "hints": {"type": "array", "items": {"type": "string"}},
+            "allow_skip_after_failures": {"type": "integer", "minimum": 1,
+              "description": "A child is never locked out: after this many tries a guided route opens. GDD 4.3."},
+            "on_solve": {"$ref": "#/$defs/effects"},
+            "on_skip": {"$ref": "#/$defs/effects"},
+            "next_scene_id": {"type": "string"},
+            "skip_scene_id": {"type": "string"}
+          }
+        },
+        "cinematic": {
+          "type": "object",
+          "properties": {
+            "cinematic_id": {"type": "string"},
+            "skippable": {"type": "boolean"},
+            "beats": {"type": "array", "items": {
+              "type": "object",
+              "properties": {
+                "text": {"type": "string"},
+                "audio_id": {"type": "string"},
+                "background_id": {"type": "string"},
+                "seconds": {"type": "number"}
+              }
+            }}
+          }
+        },
+        "next_scene_id": {"type": "string"}
+      }
+    },
+    "conditions": {
+      "description": "Closed vocabulary — StoryEngine.CONDITIONS. Anything else fails closed.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "has_clue": {}, "lacks_clue": {}, "has_item": {}, "lacks_item": {},
+        "flag": {}, "not_flag": {}, "trust_at_least": {}, "trust_below": {},
+        "chapter_complete": {}, "any": {}, "all": {}
+      }
+    },
+    "effects": {
+      "description": "Closed vocabulary — StoryEngine.EFFECTS. Anything else is ignored and logged.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "add_clue": {}, "add_item": {}, "set_flag": {}, "add_trust": {},
+          "unlock_chapter": {}, "play_sfx": {}, "play_music": {},
+          "complete_chapter": {}, "set_ending": {}
+        }
+      }
+    }
+  }
+}

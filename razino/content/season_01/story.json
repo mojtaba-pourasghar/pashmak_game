@@ -1,0 +1,641 @@
+{
+  "schema_version": 1,
+  "chapter_id": "season_01",
+  "version": 1,
+  "title": "راز ساعت خاموش",
+  "subtitle": "فصل یکم",
+  "language": "fa-IR",
+  "minimum_game_version": "0.1.0",
+  "synopsis": "ساعت بزرگ مدرسه سال‌هاست از کار افتاده. یک روز، درست پس از آنکه چیزی در نمایشگاه علمی جابه‌جا می‌شود، ساعت به‌طور غیرمنتظره‌ای به صدا درمی‌آید و از داخل محفظه‌اش تکه‌ای نقشه بیرون می‌افتد. بازیکن همراه آراد، رها و مانی باید بفهمد نقشه متعلق به چه کسی است و چرا بعضی صفحه‌های دفتر قدیمی مدرسه ناپدید شده‌اند.",
+  "narrative_goal": "کشف علت به‌صدا درآمدن ساعت و پیدا کردن نشان ده‌پرتو.",
+  "macro_clue": "نشان ده‌پرتو",
+  "primary_environment": "مدرسه و برج ساعت",
+  "core_mechanic": "آموزش تعامل و کشف سرنخ",
+  "start_scene_id": "S01-E01-SC01",
+  "default_ending_id": "ending_shared",
+  "episodes": [
+    {"episode_id": "S01-E01", "title": "صدای ساعت", "summary": "بازیکن وارد حیاط مدرسه می‌شود، با آراد آشنا می‌شود و پس از شنیدن صدای برج، سه نقطه را بررسی می‌کند."},
+    {"episode_id": "S01-E02", "title": "راهروی قدیمی", "summary": "بازیکن دفترچه‌ای پیدا می‌کند و با کمک همراهش نشانه‌های آن را مرتب می‌کند."},
+    {"episode_id": "S01-E03", "title": "کتابخانه و اتاقک بالا", "summary": "بازیکن با تعامل محیطی کلید صندوقچه را پیدا می‌کند و یک معمای ترتیبی حل می‌کند."},
+    {"episode_id": "S01-E04", "title": "نشان ده‌پرتو", "summary": "گروه به محفظهٔ برج می‌رسد و سه نشانه را به ترتیب می‌چیند."}
+  ],
+  "characters": [
+    {"character_id": "player", "name": "تو", "role": "عضو تازهٔ گروه"},
+    {"character_id": "arad", "name": "آراد", "role": "کنجکاو و ماجراجو"},
+    {"character_id": "raha", "name": "رها", "role": "تحلیل‌گر گروه"},
+    {"character_id": "mani", "name": "مانی", "role": "مخترع کوچک"},
+    {"character_id": "fandogh", "name": "فندق", "role": "راهنمای بازی"},
+    {"character_id": "azimi", "name": "خانم عظیمی", "role": "مسئول کتابخانه"},
+    {"character_id": "modir", "name": "آقای نیکزاد", "role": "مدیر مدرسه"}
+  ],
+  "clues": [
+    {"clue_id": "CLUE_S01_SOUND", "title": "صدایی که نباید می‌آمد", "body": "ساعت برج سال‌هاست کار نمی‌کند، اما امروز سه ضربه زد. یعنی چیزی در آن حرکت کرده است.", "category": "observation"},
+    {"clue_id": "CLUE_S01_MAP_PIECE", "title": "تکهٔ نقشه", "body": "یک تکه کاغذ کهنه با خطوطی که شبیه راهروهای مدرسه است، اما یک راهرو در آن هست که تو تا حالا ندیده‌ای.", "category": "object"},
+    {"clue_id": "CLUE_S01_DUST", "title": "ردّ غبار", "body": "روی زمینِ جلوی جعبهٔ نمایشگاه، غبار به شکل یک مستطیل کنار رفته. چیزی اینجا بوده و برداشته شده است.", "category": "observation"},
+    {"clue_id": "CLUE_S01_NOTICE", "title": "اعلان قدیمی", "body": "روی تابلو، برگه‌ای زیر برگه‌های تازه مانده: «بازدید از برج ساعت تا اطلاع ثانوی تعطیل است.» تاریخش مال خیلی وقت پیش است.", "category": "document"},
+    {"clue_id": "CLUE_S01_NOTEBOOK", "title": "دفترچهٔ قدیمی", "body": "دفترچه‌ای با جلد پارچه‌ای. چند صفحهٔ وسطش با دقت بریده شده — نه پاره، بریده.", "category": "document"},
+    {"clue_id": "CLUE_S01_SYMBOLS", "title": "سه نشانه", "body": "در حاشیهٔ دفترچه سه نشانه کشیده شده: یک خورشید، یک پله و یک قطره. کنارشان نوشته: «به ترتیبی که روز می‌گذرد.»", "category": "symbol"},
+    {"clue_id": "CLUE_S01_INITIALS", "title": "دو حرف", "body": "گوشهٔ جلد دفترچه دو حرف کنده شده: «د.ر»", "category": "symbol"},
+    {"clue_id": "CLUE_S01_LIBRARIAN", "title": "حرف خانم عظیمی", "body": "خانم عظیمی می‌گوید سال‌ها پیش کسی هر هفته می‌آمد و دربارهٔ برج یادداشت برمی‌داشت. اسمش یادش نیست، ولی می‌گوید «دست‌خطش مثل نقاشی بود.»", "category": "testimony"},
+    {"clue_id": "CLUE_S01_KEY", "title": "کلید کوچک برنجی", "body": "کلیدی به اندازهٔ بند انگشت، با سری به شکل چرخ‌دنده.", "category": "object"},
+    {"clue_id": "CLUE_S01_TENRAY", "title": "نشان ده‌پرتو", "body": "نشانی با ده پرتو که از یک مرکز بیرون می‌زند. روی محفظهٔ برج، و روی جلد دفترچه، و — حالا که دقت می‌کنی — روی تکهٔ نقشه هم هست.", "category": "symbol"},
+    {"clue_id": "CLUE_S01_NAME", "title": "نام مخترع", "body": "دفترچه و نشان و نقشه همه یک چیز می‌گویند: «دلارام رستا»، کسی که سال‌ها پیش در طراحی برج ساعت دست داشته است.", "category": "conclusion"},
+    {"clue_id": "Q_S01_WHO", "title": "نقشه مال کیست؟", "body": "هنوز نمی‌دانی این تکه نقشه را چه کسی کشیده است.", "category": "question", "is_question": true, "visible_after": "CLUE_S01_MAP_PIECE", "resolved_by": "CLUE_S01_NAME"},
+    {"clue_id": "Q_S01_PAGES", "title": "صفحه‌های بریده کجا رفته‌اند؟", "body": "چند صفحهٔ دفترچه با دقت بریده شده. هنوز نمی‌دانی چرا.", "category": "question", "is_question": true, "visible_after": "CLUE_S01_NOTEBOOK"}
+  ],
+  "clue_combinations": [
+    {"a": "CLUE_S01_INITIALS", "b": "CLUE_S01_LIBRARIAN", "result": "CLUE_S01_NAME"},
+    {"a": "CLUE_S01_MAP_PIECE", "b": "CLUE_S01_SYMBOLS", "result": "CLUE_S01_TENRAY"}
+  ],
+  "endings": [
+    {"ending_id": "ending_shared", "title": "رازی که گفته شد", "body": "گروه یافته‌ها را به آقای نیکزاد نشان داد. حالا مدرسه هم می‌داند برج چه چیزی را نگه داشته است — و در بایگانی باز می‌شود."},
+    {"ending_id": "ending_kept", "title": "رازی که نگه داشته شد", "body": "گروه تصمیم گرفت فعلاً چیزی نگوید تا مطمئن شود. دفترچه پیش شما می‌ماند، و راهرویی که در نقشه بود، هنوز پیدا نشده است."}
+  ],
+  "scenes": [
+    {
+      "scene_id": "S01-E01-SC01",
+      "episode_id": "S01-E01",
+      "scene_type": "cinematic",
+      "title": "سه ضربه",
+      "background_id": "BG_S01_CLOCK_TOWER",
+      "music_id": "MUS_TOWN_DAY",
+      "cinematic": {
+        "cinematic_id": "CIN_S01_OPEN",
+        "skippable": true,
+        "beats": [
+          {"text": "برج ساعت مدرسه سال‌هاست ساکت است. آن‌قدر ساکت که کسی دیگر به آن نگاه نمی‌کند.", "audio_id": "VO_S01_E01_NAR_001", "background_id": "BG_S01_CLOCK_TOWER", "seconds": 5.0},
+          {"text": "اما امروز، وقت زنگ تفریح، چیزی در آن تکان خورد.", "audio_id": "VO_S01_E01_NAR_002", "background_id": "BG_S01_CLOCK_TOWER", "seconds": 4.0},
+          {"text": "و ساعت، سه بار، زد.", "audio_id": "VO_S01_E01_NAR_003", "background_id": "BG_S01_SCHOOL_YARD", "seconds": 4.0}
+        ]
+      },
+      "next_scene_id": "S01-E01-SC02"
+    },
+    {
+      "scene_id": "S01-E01-SC02",
+      "episode_id": "S01-E01",
+      "scene_type": "dialogue",
+      "title": "حیاط مدرسه",
+      "background_id": "BG_S01_SCHOOL_YARD",
+      "music_id": "MUS_TOWN_DAY",
+      "characters": [
+        {"character_id": "arad", "position": "right", "animation": "surprised"},
+        {"character_id": "fandogh", "position": "far_right", "animation": "idle"}
+      ],
+      "on_enter": [{"add_clue": "CLUE_S01_SOUND"}],
+      "dialogue": [
+        {"line_id": "S01-E01-L001", "speaker_id": "arad", "text": "صدای ساعت را شنیدی؟", "audio_id": "VO_S01_E01_ARAD_001", "animation": "surprised"},
+        {"line_id": "S01-E01-L002", "speaker_id": "arad", "text": "من آرادم. سه سال است هر روز از زیر این برج رد می‌شوم و تا امروز یک صدا هم ازش نشنیده بودم.", "audio_id": "VO_S01_E01_ARAD_002", "animation": "talk"},
+        {"line_id": "S01-E01-L003", "speaker_id": "fandogh", "text": "و من فندقم. کارم این است که هرچه پیدا می‌کنید را یادم بماند — چون شما حتماً یادتان می‌رود.", "audio_id": "VO_S01_E01_FAND_001", "animation": "talk"},
+        {"line_id": "S01-E01-L004", "speaker_id": "arad", "text": "بیا دور و بر را نگاه کنیم. اگر چیزی تکان خورده باشد، جایش معلوم می‌شود.", "audio_id": "VO_S01_E01_ARAD_003", "animation": "talk"}
+      ],
+      "next_scene_id": "S01-E01-SC03"
+    },
+    {
+      "scene_id": "S01-E01-SC03",
+      "episode_id": "S01-E01",
+      "scene_type": "explore",
+      "title": "سه نقطه",
+      "background_id": "BG_S01_SCHOOL_YARD",
+      "music_id": "MUS_TOWN_DAY",
+      "characters": [{"character_id": "arad", "position": "far_right", "animation": "idle"}],
+      "interactions": [
+        {
+          "interaction_id": "INT_S01_CASE", "kind": "examine", "label": "جعبهٔ نمایشگاه علمی",
+          "description": "شیشه‌اش تمیز است، ولی زمینِ جلویش نه.",
+          "rect": [0.14, 0.52, 0.22, 0.26], "once": true,
+          "effects": [{"add_clue": "CLUE_S01_DUST"}, {"play_sfx": "SFX_CLUE_FOUND"}]
+        },
+        {
+          "interaction_id": "INT_S01_BOARD", "kind": "examine", "label": "تابلوی اعلانات",
+          "description": "برگه‌ها روی هم سنجاق شده‌اند.",
+          "rect": [0.44, 0.34, 0.18, 0.24], "once": true,
+          "effects": [{"add_clue": "CLUE_S01_NOTICE"}, {"play_sfx": "SFX_CLUE_FOUND"}]
+        },
+        {
+          "interaction_id": "INT_S01_PAPER", "kind": "collect", "label": "کاغذی کنار پای برج",
+          "description": "تا شده و لبه‌هایش کهنه است.",
+          "rect": [0.70, 0.68, 0.16, 0.18], "once": true,
+          "effects": [{"add_clue": "CLUE_S01_MAP_PIECE"}, {"add_item": "ITEM_MAP_PIECE"}, {"play_sfx": "SFX_CLUE_FOUND"}]
+        },
+        {
+          "interaction_id": "INT_S01_ARAD_TALK", "kind": "talk", "label": "حرف‌زدن با آراد",
+          "description": "ببینیم او چه فکری می‌کند.",
+          "rect": [0.86, 0.46, 0.12, 0.34],
+          "effects": [{"add_trust": {"arad": 1}}]
+        }
+      ],
+      "dialogue": [
+        {"line_id": "S01-E01-L005", "speaker_id": "fandogh", "text": "روی هر چیزی که به نظرت عجیب است، یک بار بزن. هرچه پیدا کنی در دفترچهٔ سرنخ‌ها می‌نشیند.", "audio_id": "VO_S01_E01_FAND_002", "animation": "talk"}
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S01_GO_IN", "text": "کافی است؛ برویم تو.",
+          "conditions": {"has_clue": ["CLUE_S01_MAP_PIECE"]},
+          "next_scene_id": "S01-E01-SC04"
+        },
+        {
+          "choice_id": "CH_S01_LOOK_MORE", "text": "هنوز همه‌جا را ندیده‌ام.",
+          "conditions": {"lacks_clue": "CLUE_S01_MAP_PIECE"},
+          "effects": [{"set_flag": {"s01_looked_twice": true}}],
+          "next_scene_id": "S01-E01-SC03"
+        }
+      ]
+    },
+    {
+      "scene_id": "S01-E01-SC04",
+      "episode_id": "S01-E01",
+      "scene_type": "dialogue",
+      "title": "دفترچهٔ سرنخ‌ها",
+      "background_id": "BG_S01_SCHOOL_YARD",
+      "music_id": "MUS_TOWN_DAY",
+      "characters": [
+        {"character_id": "arad", "position": "right", "animation": "talk"},
+        {"character_id": "fandogh", "position": "far_right", "animation": "idle"}
+      ],
+      "dialogue": [
+        {"line_id": "S01-E01-L006", "speaker_id": "arad", "text": "این خطوط شبیه راهروهای خودمان است. ولی این یکی… این یکی کجاست؟", "audio_id": "VO_S01_E01_ARAD_004", "animation": "think"},
+        {"line_id": "S01-E01-L007", "speaker_id": "fandogh", "text": "هر وقت دو سرنخ را کنار هم بگذاری، گاهی چیز سومی پیدا می‌شود. امتحانش ضرر ندارد.", "audio_id": "VO_S01_E01_FAND_003", "animation": "talk"},
+        {"line_id": "S01-E01-L008", "speaker_id": "arad", "text": "تنها نرویم. کدامشان را صدا کنیم؟", "audio_id": "VO_S01_E01_ARAD_005", "animation": "talk"}
+      ],
+      "next_scene_id": "S01-E01-SC05"
+    },
+    {
+      "scene_id": "S01-E01-SC05",
+      "episode_id": "S01-E01",
+      "scene_type": "dialogue",
+      "title": "کدام همراه؟",
+      "background_id": "BG_S01_SCHOOL_YARD",
+      "music_id": "MUS_TOWN_DAY",
+      "characters": [{"character_id": "arad", "position": "right", "animation": "idle"}],
+      "choices": [
+        {
+          "choice_id": "CH_S01_PICK_RAHA", "text": "رها را صدا کنیم؛ او نشانه‌ها را خوب می‌خواند.",
+          "hint": "رها تناقض‌ها را پیدا می‌کند.",
+          "effects": [{"set_flag": {"s01_companion": "raha"}}, {"add_trust": {"raha": 1}}],
+          "next_scene_id": "S01-E01-SC06"
+        },
+        {
+          "choice_id": "CH_S01_PICK_MANI", "text": "مانی را صدا کنیم؛ او از چفت و بست سر درمی‌آورد.",
+          "hint": "مانی قفل و چرخ‌دنده را می‌شناسد.",
+          "effects": [{"set_flag": {"s01_companion": "mani"}}, {"add_trust": {"mani": 1}}],
+          "next_scene_id": "S01-E01-SC06"
+        }
+      ]
+    },
+    {
+      "scene_id": "S01-E01-SC06",
+      "episode_id": "S01-E01",
+      "scene_type": "dialogue",
+      "title": "در راهروی قدیمی",
+      "background_id": "BG_S01_OLD_CORRIDOR",
+      "music_id": "MUS_SCHOOL_MYSTERY",
+      "characters": [
+        {"character_id": "arad", "position": "right", "animation": "idle"},
+        {"character_id": "raha", "position": "left", "animation": "idle"}
+      ],
+      "dialogue": [
+        {"line_id": "S01-E01-L009", "speaker_id": "raha", "text": "این راهرو را سال‌هاست بسته‌اند. ولی قفلش روغن تازه دارد.", "audio_id": "VO_S01_E01_RAHA_001", "animation": "talk"},
+        {"line_id": "S01-E01-L010", "speaker_id": "mani", "text": "قفلش روغن تازه دارد. یعنی یکی اخیراً بازش کرده.", "audio_id": "VO_S01_E01_MANI_001", "animation": "talk"},
+        {"line_id": "S01-E01-L011", "speaker_id": "arad", "text": "پس ما اولین نفر نیستیم.", "audio_id": "VO_S01_E01_ARAD_006", "animation": "think"}
+      ],
+      "next_scene_id": "S01-E02-SC01"
+    },
+
+    {
+      "scene_id": "S01-E02-SC01",
+      "episode_id": "S01-E02",
+      "scene_type": "explore",
+      "title": "راهروی قدیمی",
+      "background_id": "BG_S01_OLD_CORRIDOR",
+      "music_id": "MUS_SCHOOL_MYSTERY",
+      "characters": [{"character_id": "arad", "position": "far_right", "animation": "idle"}],
+      "interactions": [
+        {
+          "interaction_id": "INT_S01_SHELF", "kind": "examine", "label": "قفسهٔ خاک‌گرفته",
+          "description": "بیشتر قفسه خالی است، جز یک گوشه.",
+          "rect": [0.18, 0.40, 0.20, 0.34], "once": true,
+          "effects": [{"set_flag": {"s01_saw_shelf": true}}]
+        },
+        {
+          "interaction_id": "INT_S01_NOTEBOOK", "kind": "collect", "label": "دفترچهٔ جلدپارچه‌ای",
+          "description": "پشت قفسه افتاده بود.",
+          "rect": [0.48, 0.56, 0.16, 0.18], "once": true,
+          "conditions": {"flag": "s01_saw_shelf"},
+          "effects": [{"add_clue": ["CLUE_S01_NOTEBOOK", "CLUE_S01_INITIALS"]}, {"add_item": "ITEM_NOTEBOOK"}, {"play_sfx": "SFX_CLUE_FOUND"}]
+        },
+        {
+          "interaction_id": "INT_S01_WINDOW", "kind": "inspect", "label": "پنجرهٔ بلند",
+          "description": "از اینجا نوک برج پیداست.",
+          "rect": [0.72, 0.26, 0.18, 0.36]
+        }
+      ],
+      "dialogue": [
+        {"line_id": "S01-E02-L001", "speaker_id": "arad", "text": "اول قفسه را ببین. چیزی پشتش افتاده.", "audio_id": "VO_S01_E02_ARAD_001", "animation": "talk"}
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S01_OPEN_NOTEBOOK", "text": "دفترچه را باز کنیم.",
+          "conditions": {"has_clue": "CLUE_S01_NOTEBOOK"},
+          "next_scene_id": "S01-E02-SC02"
+        }
+      ]
+    },
+    {
+      "scene_id": "S01-E02-SC02",
+      "episode_id": "S01-E02",
+      "scene_type": "dialogue",
+      "title": "صفحه‌های بریده",
+      "background_id": "BG_S01_OLD_CORRIDOR",
+      "music_id": "MUS_SCHOOL_MYSTERY",
+      "characters": [
+        {"character_id": "raha", "position": "left", "animation": "think"},
+        {"character_id": "arad", "position": "right", "animation": "idle"}
+      ],
+      "on_enter": [{"add_clue": "CLUE_S01_SYMBOLS"}],
+      "dialogue": [
+        {"line_id": "S01-E02-L002", "speaker_id": "raha", "text": "صفحه‌ها پاره نشده‌اند. بریده شده‌اند. با قیچی، با حوصله.", "audio_id": "VO_S01_E02_RAHA_001", "animation": "talk"},
+        {"line_id": "S01-E02-L003", "speaker_id": "mani", "text": "با قیچی بریده شده، نه پاره. یعنی کسی عجله نداشته.", "audio_id": "VO_S01_E02_MANI_001", "animation": "talk"},
+        {"line_id": "S01-E02-L004", "speaker_id": "arad", "text": "حاشیه‌اش سه نشانه دارد: خورشید، پله، قطره. و نوشته «به ترتیبی که روز می‌گذرد.»", "audio_id": "VO_S01_E02_ARAD_002", "animation": "talk"}
+      ],
+      "next_scene_id": "S01-E02-SC03"
+    },
+    {
+      "scene_id": "S01-E02-SC03",
+      "episode_id": "S01-E02",
+      "scene_type": "puzzle",
+      "title": "به ترتیبی که روز می‌گذرد",
+      "background_id": "BG_S01_OLD_CORRIDOR",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S01_ORDER_DAY",
+        "kind": "order_symbols",
+        "prompt": "سه نشانه را به ترتیبی بچین که یک روز می‌گذرد.",
+        "items": [
+          {"id": "SYM_DROP", "label": "قطره", "icon": "ICON_DROP"},
+          {"id": "SYM_SUN", "label": "خورشید", "icon": "ICON_SUN"},
+          {"id": "SYM_STEP", "label": "پله", "icon": "ICON_STEP"}
+        ],
+        "solution": ["SYM_SUN", "SYM_STEP", "SYM_DROP"],
+        "hints": [
+          "روز با چه چیزی شروع می‌شود؟",
+          "خورشید که بالا می‌آید، بعدش چه اتفاقی می‌افتد؟ پله‌ها را بالا می‌روی.",
+          "ترتیب درست این است: خورشید، پله، قطره — صبح، روز، شب."
+        ],
+        "allow_skip_after_failures": 4,
+        "on_solve": [{"set_flag": {"s01_order_solved": true}}, {"add_trust": {"raha": 1}}, {"play_sfx": "SFX_PUZZLE_OK"}],
+        "on_skip": [{"set_flag": {"s01_order_skipped": true}}],
+        "next_scene_id": "S01-E02-SC04",
+        "skip_scene_id": "S01-E02-SC04"
+      }
+    },
+    {
+      "scene_id": "S01-E02-SC04",
+      "episode_id": "S01-E02",
+      "scene_type": "dialogue",
+      "title": "چیزی که از لای صفحه‌ها افتاد",
+      "background_id": "BG_S01_OLD_CORRIDOR",
+      "music_id": "MUS_SCHOOL_MYSTERY",
+      "characters": [{"character_id": "raha", "position": "left", "animation": "happy"}],
+      "dialogue": [
+        {"line_id": "S01-E02-L005", "speaker_id": "raha", "text": "وقتی نشانه‌ها را درست چیدیم، دفترچه از همان جا باز شد — انگار عادت داشته همان‌جا باز شود.", "audio_id": "VO_S01_E02_RAHA_002", "animation": "happy"},
+        {"line_id": "S01-E02-L006", "speaker_id": "arad", "text": "خب. حالا با این دفترچه چه کنیم؟", "audio_id": "VO_S01_E02_ARAD_003", "animation": "talk"}
+      ],
+      "next_scene_id": "S01-E02-SC05"
+    },
+    {
+      "scene_id": "S01-E02-SC05",
+      "episode_id": "S01-E02",
+      "scene_type": "dialogue",
+      "title": "سه راه",
+      "background_id": "BG_S01_OLD_CORRIDOR",
+      "music_id": "MUS_SCHOOL_MYSTERY",
+      "characters": [{"character_id": "arad", "position": "right", "animation": "idle"}],
+      "choices": [
+        {
+          "choice_id": "CH_S01_SHOW_LIBRARIAN", "text": "دفتر را به مسئول کتابخانه نشان بدهیم.",
+          "hint": "شاید او این دست‌خط را بشناسد.",
+          "effects": [{"set_flag": {"s01_path": "librarian"}}],
+          "next_scene_id": "S01-E03-SC02"
+        },
+        {
+          "choice_id": "CH_S01_CHECK_PAGES", "text": "خودمان با دوستمان صفحه‌ها را بررسی کنیم.",
+          "hint": "شاید چیزی بین خطوط باشد.",
+          "effects": [{"set_flag": {"s01_path": "pages"}}, {"add_trust": {"arad": 1}}],
+          "next_scene_id": "S01-E03-SC01"
+        },
+        {
+          "choice_id": "CH_S01_FIND_MAP", "text": "اول دنبال نقشهٔ دیگری بگردیم.",
+          "hint": "تکهٔ نقشه حتماً جفتی دارد.",
+          "effects": [{"set_flag": {"s01_path": "map"}}],
+          "next_scene_id": "S01-E03-SC01"
+        }
+      ]
+    },
+
+    {
+      "scene_id": "S01-E03-SC01",
+      "episode_id": "S01-E03",
+      "scene_type": "explore",
+      "title": "سالن کتاب‌ها",
+      "background_id": "BG_S01_LIBRARY_HALL",
+      "music_id": "MUS_LIBRARY",
+      "characters": [{"character_id": "arad", "position": "far_right", "animation": "idle"}],
+      "interactions": [
+        {
+          "interaction_id": "INT_S01_ATLAS", "kind": "examine", "label": "اطلس بزرگ مدرسه",
+          "description": "نقشه‌های قدیمی ساختمان.",
+          "rect": [0.22, 0.44, 0.20, 0.26], "once": true,
+          "effects": [{"set_flag": {"s01_saw_atlas": true}}]
+        },
+        {
+          "interaction_id": "INT_S01_DRAWER", "kind": "examine", "label": "کشوی زیر میز",
+          "description": "کمی بیرون مانده.",
+          "rect": [0.50, 0.62, 0.16, 0.16], "once": true,
+          "effects": [{"add_clue": "CLUE_S01_KEY"}, {"add_item": "ITEM_BRASS_KEY"}, {"play_sfx": "SFX_CLUE_FOUND"}]
+        },
+        {
+          "interaction_id": "INT_S01_LADDER", "kind": "trigger", "label": "نردبان اتاقک بالا",
+          "description": "به اتاقک زیرشیروانی می‌رسد.",
+          "rect": [0.76, 0.30, 0.14, 0.44],
+          "conditions": {"has_item": "ITEM_BRASS_KEY"}
+        }
+      ],
+      "dialogue": [
+        {"line_id": "S01-E03-L001", "speaker_id": "arad", "text": "اینجا را بگرد. کتابخانه‌ها همیشه بیشتر از چیزی که نشان می‌دهند، دارند.", "audio_id": "VO_S01_E03_ARAD_001", "animation": "talk"}
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S01_ASK_AZIMI", "text": "برویم از خانم عظیمی بپرسیم.",
+          "next_scene_id": "S01-E03-SC02"
+        },
+        {
+          "choice_id": "CH_S01_UP_LADDER", "text": "با کلید برویم بالا.",
+          "conditions": {"has_item": "ITEM_BRASS_KEY"},
+          "next_scene_id": "S01-E03-SC03"
+        }
+      ]
+    },
+    {
+      "scene_id": "S01-E03-SC02",
+      "episode_id": "S01-E03",
+      "scene_type": "dialogue",
+      "title": "خانم عظیمی",
+      "background_id": "BG_S01_LIBRARY_HALL",
+      "music_id": "MUS_LIBRARY",
+      "characters": [
+        {"character_id": "azimi", "position": "left", "animation": "talk"},
+        {"character_id": "arad", "position": "right", "animation": "idle"}
+      ],
+      "on_enter": [{"add_clue": "CLUE_S01_LIBRARIAN"}],
+      "dialogue": [
+        {"line_id": "S01-E03-L002", "speaker_id": "azimi", "text": "این جلد را می‌شناسم. سال‌ها پیش کسی هر هفته می‌آمد و دربارهٔ برج یادداشت برمی‌داشت.", "audio_id": "VO_S01_E03_AZIMI_001", "animation": "talk"},
+        {"line_id": "S01-E03-L003", "speaker_id": "azimi", "text": "اسمش یادم نیست. ولی دست‌خطش مثل نقاشی بود. و همیشه کلید کوچکی همراهش داشت.", "audio_id": "VO_S01_E03_AZIMI_002", "animation": "talk"},
+        {"line_id": "S01-E03-L004", "speaker_id": "arad", "text": "کلید؟ مثل آن که در کشو بود؟", "audio_id": "VO_S01_E03_ARAD_002", "animation": "surprised"},
+        {"line_id": "S01-E03-L005", "speaker_id": "azimi", "text": "اگر دو تا سرنخ دارید که هر کدام نصفِ یک جواب‌اند، کنار هم بگذاریدشان. دفترچه‌تان همین کار را می‌کند.", "audio_id": "VO_S01_E03_AZIMI_003", "animation": "talk"}
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S01_BACK_TO_HALL", "text": "برگردیم به سالن.",
+          "next_scene_id": "S01-E03-SC01"
+        },
+        {
+          "choice_id": "CH_S01_UP_NOW", "text": "برویم سراغ اتاقک بالا.",
+          "conditions": {"has_item": "ITEM_BRASS_KEY"},
+          "next_scene_id": "S01-E03-SC03"
+        }
+      ]
+    },
+    {
+      "scene_id": "S01-E03-SC03",
+      "episode_id": "S01-E03",
+      "scene_type": "explore",
+      "title": "اتاقک زیرشیروانی",
+      "background_id": "BG_S01_ATTIC_ROOM",
+      "music_id": "MUS_SCHOOL_MYSTERY",
+      "characters": [{"character_id": "mani", "position": "left", "animation": "idle"}],
+      "interactions": [
+        {
+          "interaction_id": "INT_S01_CHEST", "kind": "puzzle", "label": "صندوقچهٔ کوچک",
+          "description": "قفلش سه حلقهٔ چرخان دارد.",
+          "rect": [0.42, 0.52, 0.22, 0.24]
+        },
+        {
+          "interaction_id": "INT_S01_PLAQUE", "kind": "examine", "label": "پلاک برنجی روی دیوار",
+          "description": "نشانی با ده پرتو.",
+          "rect": [0.70, 0.34, 0.16, 0.18], "once": true,
+          "effects": [{"add_clue": "CLUE_S01_TENRAY"}, {"play_sfx": "SFX_CLUE_FOUND"}]
+        }
+      ],
+      "dialogue": [
+        {"line_id": "S01-E03-L006", "speaker_id": "mani", "text": "این قفل سه حلقه دارد. هر حلقه یک نشانه. آشنا نیست؟", "audio_id": "VO_S01_E03_MANI_001", "animation": "talk"}
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S01_OPEN_CHEST", "text": "قفل صندوقچه را باز کنیم.",
+          "next_scene_id": "S01-E03-SC04"
+        }
+      ]
+    },
+    {
+      "scene_id": "S01-E03-SC04",
+      "episode_id": "S01-E03",
+      "scene_type": "puzzle",
+      "title": "قفل سه‌حلقه",
+      "background_id": "BG_S01_ATTIC_ROOM",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S01_CHEST_DIAL",
+        "kind": "dial_code",
+        "prompt": "هر حلقه را روی نشانهٔ درست بچرخان. همان ترتیبی که در دفترچه بود.",
+        "items": [
+          {"id": "RING_1", "label": "حلقهٔ اول", "options": ["ICON_SUN", "ICON_DROP", "ICON_STEP"]},
+          {"id": "RING_2", "label": "حلقهٔ دوم", "options": ["ICON_DROP", "ICON_STEP", "ICON_SUN"]},
+          {"id": "RING_3", "label": "حلقهٔ سوم", "options": ["ICON_STEP", "ICON_SUN", "ICON_DROP"]}
+        ],
+        "solution": ["ICON_SUN", "ICON_STEP", "ICON_DROP"],
+        "hints": [
+          "همان ترتیبی که یک روز می‌گذرد.",
+          "اول خورشید. بعد پله. آخر قطره.",
+          "حلقهٔ اول روی خورشید، دومی روی پله، سومی روی قطره."
+        ],
+        "allow_skip_after_failures": 4,
+        "on_solve": [{"add_clue": "CLUE_S01_TENRAY"}, {"set_flag": {"s01_chest_open": true}}, {"add_trust": {"mani": 1}}, {"play_sfx": "SFX_PUZZLE_OK"}],
+        "on_skip": [{"set_flag": {"s01_chest_forced": true}}, {"add_clue": "CLUE_S01_TENRAY"}],
+        "next_scene_id": "S01-E03-SC05",
+        "skip_scene_id": "S01-E03-SC05"
+      }
+    },
+    {
+      "scene_id": "S01-E03-SC05",
+      "episode_id": "S01-E03",
+      "scene_type": "cinematic",
+      "title": "ده پرتو",
+      "background_id": "BG_S01_CLOCK_TOWER",
+      "music_id": "MUS_REVEAL",
+      "cinematic": {
+        "cinematic_id": "CIN_S01_TENRAY",
+        "skippable": true,
+        "beats": [
+          {"text": "داخل صندوقچه، یک نشان برنجی بود: ده پرتو، از یک مرکز.", "audio_id": "VO_S01_E03_NAR_001", "background_id": "BG_S01_ATTIC_ROOM", "seconds": 4.5},
+          {"text": "و وقتی از پنجره به برج نگاه کردی، دیدی همان نشان، بزرگ، روی محفظهٔ بالای برج است.", "audio_id": "VO_S01_E03_NAR_002", "background_id": "BG_S01_CLOCK_TOWER", "seconds": 5.0}
+        ]
+      },
+      "next_scene_id": "S01-E04-SC01"
+    },
+
+    {
+      "scene_id": "S01-E04-SC01",
+      "episode_id": "S01-E04",
+      "scene_type": "explore",
+      "title": "محفظهٔ برج",
+      "background_id": "BG_S01_TOWER_VAULT",
+      "music_id": "MUS_TOWER",
+      "characters": [
+        {"character_id": "arad", "position": "right", "animation": "idle"},
+        {"character_id": "raha", "position": "left", "animation": "idle"},
+        {"character_id": "mani", "position": "far_left", "animation": "idle"}
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S01_VAULT_FACE", "kind": "examine", "label": "صفحهٔ محفظه",
+          "description": "سه جای خالی به شکل نشانه‌ها.",
+          "rect": [0.38, 0.40, 0.26, 0.30], "once": true,
+          "effects": [{"set_flag": {"s01_saw_vault": true}}]
+        },
+        {
+          "interaction_id": "INT_S01_GEARS", "kind": "inspect", "label": "چرخ‌دنده‌های ساکت",
+          "description": "گرد و خاک روی همه هست، جز یکی.",
+          "rect": [0.68, 0.46, 0.18, 0.22], "once": true,
+          "effects": [{"set_flag": {"s01_saw_gear": true}}]
+        }
+      ],
+      "dialogue": [
+        {"line_id": "S01-E04-L001", "speaker_id": "raha", "text": "سه جای خالی. و ما سه نشانه داریم.", "audio_id": "VO_S01_E04_RAHA_001", "animation": "talk"}
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S01_PLACE_SIGNS", "text": "نشانه‌ها را سر جایشان بگذاریم.",
+          "conditions": {"flag": "s01_saw_vault"},
+          "next_scene_id": "S01-E04-SC02"
+        },
+        {
+          "choice_id": "CH_S01_LOOK_AROUND", "text": "کمی بیشتر نگاه کنیم.",
+          "conditions": {"not_flag": "s01_saw_vault"},
+          "next_scene_id": "S01-E04-SC01"
+        }
+      ]
+    },
+    {
+      "scene_id": "S01-E04-SC02",
+      "episode_id": "S01-E04",
+      "scene_type": "puzzle",
+      "title": "سه نشانه، سر جایشان",
+      "background_id": "BG_S01_TOWER_VAULT",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S01_VAULT_ORDER",
+        "kind": "order_symbols",
+        "prompt": "نشانه‌ها را در صفحهٔ محفظه بچین.",
+        "items": [
+          {"id": "SYM_STEP", "label": "پله", "icon": "ICON_STEP"},
+          {"id": "SYM_DROP", "label": "قطره", "icon": "ICON_DROP"},
+          {"id": "SYM_SUN", "label": "خورشید", "icon": "ICON_SUN"}
+        ],
+        "solution": ["SYM_SUN", "SYM_STEP", "SYM_DROP"],
+        "hints": [
+          "همان ترتیب همیشگی.",
+          "روز از خورشید شروع می‌شود.",
+          "خورشید، پله، قطره."
+        ],
+        "allow_skip_after_failures": 3,
+        "on_solve": [{"set_flag": {"s01_vault_open": true}}, {"play_sfx": "SFX_CLOCK_ACTIVATE"}],
+        "on_skip": [{"set_flag": {"s01_vault_forced": true}}],
+        "next_scene_id": "S01-E04-SC03",
+        "skip_scene_id": "S01-E04-SC03"
+      }
+    },
+    {
+      "scene_id": "S01-E04-SC03",
+      "episode_id": "S01-E04",
+      "scene_type": "dialogue",
+      "title": "دستگاه جواب می‌دهد",
+      "background_id": "BG_S01_TOWER_VAULT",
+      "music_id": "MUS_REVEAL",
+      "characters": [
+        {"character_id": "mani", "position": "far_left", "animation": "surprised"},
+        {"character_id": "raha", "position": "left", "animation": "surprised"},
+        {"character_id": "arad", "position": "right", "animation": "surprised"}
+      ],
+      "on_enter": [{"add_clue": "CLUE_S01_NAME"}],
+      "dialogue": [
+        {"line_id": "S01-E04-L002", "speaker_id": "mani", "text": "چرخ‌دنده‌ها دارند می‌چرخند! نه همه‌شان… ولی دارند.", "audio_id": "VO_S01_E04_MANI_001", "animation": "surprised"},
+        {"line_id": "S01-E04-L003", "speaker_id": "raha", "text": "پشت صفحه یک اسم کنده شده. «دلارام رستا».", "audio_id": "VO_S01_E04_RAHA_002", "animation": "talk"},
+        {"line_id": "S01-E04-L004", "speaker_id": "arad", "text": "«د.ر» روی جلد دفترچه. خودش است.", "audio_id": "VO_S01_E04_ARAD_001", "animation": "talk"},
+        {"line_id": "S01-E04-L005", "speaker_id": "fandogh", "text": "پس برج را کسی ساکت نکرده. یکی خاموشش کرده — و بلد بوده چطور.", "audio_id": "VO_S01_E04_FAND_001", "animation": "talk"},
+        {"line_id": "S01-E04-L006", "speaker_id": "arad", "text": "حالا این را به کسی بگوییم یا نه؟", "audio_id": "VO_S01_E04_ARAD_002", "animation": "think"}
+      ],
+      "next_scene_id": "S01-E04-SC04"
+    },
+    {
+      "scene_id": "S01-E04-SC04",
+      "episode_id": "S01-E04",
+      "scene_type": "dialogue",
+      "title": "بگوییم یا نگوییم؟",
+      "background_id": "BG_S01_TOWER_VAULT",
+      "music_id": "MUS_TOWER",
+      "characters": [{"character_id": "arad", "position": "right", "animation": "idle"}],
+      "choices": [
+        {
+          "choice_id": "CH_S01_TELL", "text": "به آقای نیکزاد بگوییم؛ این مال همهٔ مدرسه است.",
+          "hint": "شاید بایگانی مدرسه باز شود.",
+          "effects": [{"set_flag": {"s01_told": true}}, {"set_ending": "ending_shared"}, {"add_trust": {"raha": 1}}],
+          "next_scene_id": "S01-E04-SC05"
+        },
+        {
+          "choice_id": "CH_S01_KEEP", "text": "فعلاً نگوییم تا مطمئن شویم.",
+          "hint": "دفترچه پیش خودمان می‌ماند.",
+          "effects": [{"set_flag": {"s01_told": false}}, {"set_ending": "ending_kept"}, {"add_trust": {"arad": 1}}],
+          "next_scene_id": "S01-E04-SC06"
+        }
+      ]
+    },
+    {
+      "scene_id": "S01-E04-SC05",
+      "episode_id": "S01-E04",
+      "scene_type": "dialogue",
+      "title": "رازی که گفته شد",
+      "background_id": "BG_S01_SCHOOL_YARD",
+      "music_id": "MUS_REVEAL",
+      "is_ending": true,
+      "characters": [
+        {"character_id": "modir", "position": "left", "animation": "talk"},
+        {"character_id": "arad", "position": "right", "animation": "happy"}
+      ],
+      "on_enter": [{"unlock_chapter": "season_02"}, {"set_ending": "ending_shared"}],
+      "dialogue": [
+        {"line_id": "S01-E04-L007", "speaker_id": "modir", "text": "دلارام رستا… این اسم سال‌هاست در بایگانی ما خاک می‌خورد.", "audio_id": "VO_S01_E04_MODIR_001", "animation": "talk"},
+        {"line_id": "S01-E04-L008", "speaker_id": "modir", "text": "فردا در بایگانی را برایتان باز می‌کنم. ولی قول بدهید تنها بالای برج نروید.", "audio_id": "VO_S01_E04_MODIR_002", "animation": "talk"},
+        {"line_id": "S01-E04-L009", "speaker_id": "fandogh", "text": "و این‌طور شد که کتابخانهٔ هزار در، در تقویم ما باز شد.", "audio_id": "VO_S01_E04_FAND_002", "animation": "talk"}
+      ]
+    },
+    {
+      "scene_id": "S01-E04-SC06",
+      "episode_id": "S01-E04",
+      "scene_type": "dialogue",
+      "title": "رازی که نگه داشته شد",
+      "background_id": "BG_S01_OLD_CORRIDOR",
+      "music_id": "MUS_SCHOOL_MYSTERY",
+      "is_ending": true,
+      "characters": [
+        {"character_id": "arad", "position": "right", "animation": "idle"},
+        {"character_id": "raha", "position": "left", "animation": "think"}
+      ],
+      "on_enter": [{"unlock_chapter": "season_02"}, {"set_ending": "ending_kept"}],
+      "dialogue": [
+        {"line_id": "S01-E04-L010", "speaker_id": "raha", "text": "باشد. فعلاً بین خودمان. ولی یک شرط دارد: هیچ‌کداممان تنها بالا نمی‌رود.", "audio_id": "VO_S01_E04_RAHA_003", "animation": "talk"},
+        {"line_id": "S01-E04-L011", "speaker_id": "arad", "text": "قبول. و آن راهرویی که در نقشه بود و در مدرسه نیست — فردا دنبالش می‌گردیم.", "audio_id": "VO_S01_E04_ARAD_003", "animation": "talk"},
+        {"line_id": "S01-E04-L012", "speaker_id": "fandogh", "text": "دفترچه پیش شما ماند. و کتابخانه‌ای که هزار در دارد، منتظر است.", "audio_id": "VO_S01_E04_FAND_003", "animation": "talk"}
+      ]
+    }
+  ]
+}

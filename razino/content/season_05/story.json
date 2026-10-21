@@ -1,0 +1,1025 @@
+{
+  "schema_version": 1,
+  "chapter_id": "season_05",
+  "version": 1,
+  "title": "راز دریاچهٔ آبی",
+  "subtitle": "فصل پنجم",
+  "language": "fa-IR",
+  "minimum_game_version": "0.1.0",
+  "synopsis": "آب دریاچه در یک بخش رنگ عوض کرده است. ایستگاه پژوهشی کنار دریاچه می‌گوید دلیلش را نمی‌داند. گروه با آزمایش‌های ساده دربارهٔ نور و بازتاب، زنجیرهٔ علت و معلول را پیدا می‌کند — و در ته تونل شیشه‌ای، دستگاهی که هنوز یک پیام ضبط‌شده در خود دارد.",
+  "narrative_goal": "یافتن علت تغییر رنگ آب و بازیابی پیام صوتی ضبط‌شدهٔ مخترع.",
+  "macro_clue": "پیام مخترع",
+  "primary_environment": "اسکله و ایستگاه پژوهشی",
+  "core_mechanic": "آزمایش و علت‌ومعلول",
+  "start_scene_id": "S05-E01-SC01",
+  "default_ending_id": "ending_s05_played",
+  "episodes": [
+    {
+      "episode_id": "S05-E01",
+      "title": "آبی‌تر از بقیه",
+      "summary": "گروه به اسکله می‌رسد و تغییر رنگ آب را می‌بیند."
+    },
+    {
+      "episode_id": "S05-E02",
+      "title": "آزمایش نور",
+      "summary": "گروه با آزمایشی ساده ثابت می‌کند علت، بازتاب است."
+    },
+    {
+      "episode_id": "S05-E03",
+      "title": "تونل شیشه‌ای",
+      "summary": "گروه از تونل می‌گذرد و به دستگاه می‌رسد."
+    },
+    {
+      "episode_id": "S05-E04",
+      "title": "پیام",
+      "summary": "گروه تصمیم می‌گیرد پیام را همان‌جا پخش کند یا دستگاه را سالم ببرد."
+    }
+  ],
+  "characters": [
+    {
+      "character_id": "player",
+      "name": "تو",
+      "role": "عضو تازهٔ گروه"
+    },
+    {
+      "character_id": "arad",
+      "name": "آراد",
+      "role": "کنجکاو و ماجراجو"
+    },
+    {
+      "character_id": "raha",
+      "name": "رها",
+      "role": "تحلیل‌گر گروه"
+    },
+    {
+      "character_id": "mani",
+      "name": "مانی",
+      "role": "مخترع کوچک"
+    },
+    {
+      "character_id": "fandogh",
+      "name": "فندق",
+      "role": "راهنمای بازی"
+    },
+    {
+      "character_id": "parisa",
+      "name": "دکتر پریسا راد",
+      "role": "پژوهشگر ایستگاه"
+    }
+  ],
+  "clues": [
+    {
+      "clue_id": "CLUE_S05_COLOR",
+      "title": "آب آبی‌تر",
+      "body": "یک بخش از دریاچه آبی‌تر از بقیه است، و فقط وقتی آفتاب بالاست.",
+      "category": "observation"
+    },
+    {
+      "clue_id": "CLUE_S05_MIRROR",
+      "title": "چیزی کف دریاچه",
+      "body": "چیزی صاف و بزرگ کف آن قسمت هست که نور را برمی‌گرداند.",
+      "category": "observation"
+    },
+    {
+      "clue_id": "CLUE_S05_LOG",
+      "title": "دفتر ایستگاه",
+      "body": "در دفتر ایستگاه، هر سال یک بار نوشته‌اند: «بازتاب دوباره دیده شد.»",
+      "category": "document"
+    },
+    {
+      "clue_id": "CLUE_S05_PARISA",
+      "title": "حرف دکتر راد",
+      "body": "دکتر راد می‌گوید ایستگاه را روی پی‌های قدیمی ساخته‌اند؛ پی‌هایی که مال خودشان نبوده.",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "CLUE_S05_TUNNEL",
+      "title": "تونل شیشه‌ای",
+      "body": "تونلی زیر اسکله که دیواره‌اش شیشه است و به سمت آن بخش از دریاچه می‌رود.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S05_LENS",
+      "title": "عدسی بزرگ",
+      "body": "آن چیز صاف، یک عدسی است؛ به اندازهٔ یک در، و عمداً زیر آب گذاشته شده.",
+      "category": "conclusion"
+    },
+    {
+      "clue_id": "CLUE_S05_DEVICE",
+      "title": "دستگاه ته تونل",
+      "body": "دستگاهی کوچک، با همان نشان ده‌پرتو، که هنوز یک چراغ ضعیف دارد.",
+      "category": "object"
+    },
+    {
+      "clue_id": "CLUE_S05_MESSAGE",
+      "title": "پیام ضبط‌شده",
+      "body": "صدای زنی که می‌گوید: «ده نقطه ساختم تا شهر خودش را به یاد بیاورد. اگر هر ده را پیدا کردی، برج دوباره می‌خواند.»",
+      "category": "testimony"
+    },
+    {
+      "clue_id": "Q_S05_WHY_LENS",
+      "title": "عدسی برای چیست؟",
+      "body": "کسی یک عدسی بزرگ را عمداً کف دریاچه گذاشته است.",
+      "category": "question",
+      "is_question": true,
+      "visible_after": "CLUE_S05_MIRROR",
+      "resolved_by": "CLUE_S05_MESSAGE"
+    }
+  ],
+  "clue_combinations": [
+    {
+      "a": "CLUE_S05_MIRROR",
+      "b": "CLUE_S05_LOG",
+      "result": "CLUE_S05_LENS"
+    }
+  ],
+  "endings": [
+    {
+      "ending_id": "ending_s05_played",
+      "title": "پیامی که شنیده شد",
+      "body": "گروه دستگاه را به برق رساند و پیام پخش شد. حالا می‌دانند ده نقطه چیست و چرا."
+    },
+    {
+      "ending_id": "ending_s05_saved",
+      "title": "پیامی که برای بعد ماند",
+      "body": "باتری دستگاه کم بود. گروه ترجیح داد آن را سالم نگه دارد و با مانی در کارگاه بازش کند."
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "S05-E01-SC01",
+      "episode_id": "S05-E01",
+      "scene_type": "cinematic",
+      "title": "دریاچه",
+      "background_id": "BG_S05_PIER",
+      "music_id": "MUS_LAKE",
+      "cinematic": {
+        "cinematic_id": "CIN_S05_E01",
+        "skippable": true,
+        "beats": [
+          {
+            "text": "دریاچه از دور یک رنگ بود.",
+            "audio_id": "VO_S05_E01_NAR_001",
+            "background_id": "BG_S05_PIER",
+            "seconds": 4.5
+          },
+          {
+            "text": "از نزدیک، نه.",
+            "audio_id": "VO_S05_E01_NAR_002",
+            "background_id": "BG_S05_PIER",
+            "seconds": 4.5
+          }
+        ]
+      },
+      "next_scene_id": "S05-E01-SC02"
+    },
+    {
+      "scene_id": "S05-E01-SC02",
+      "episode_id": "S05-E01",
+      "scene_type": "dialogue",
+      "title": "ایستگاه پژوهشی",
+      "background_id": "BG_S05_STATION",
+      "music_id": "MUS_LAKE",
+      "on_enter": [
+        {
+          "add_clue": "CLUE_S05_COLOR"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S05-E01-L001",
+          "speaker_id": "parisa",
+          "text": "سه سال است این لکه را می‌بینیم. هر تابستان، وقتی آفتاب بالاست.",
+          "audio_id": "VO_S05_E01_PARISA_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S05-E01-L002",
+          "speaker_id": "raha",
+          "text": "یعنی به نور بستگی دارد، نه به آب.",
+          "audio_id": "VO_S05_E01_RAHA_001",
+          "animation": "think"
+        },
+        {
+          "line_id": "S05-E01-L003",
+          "speaker_id": "parisa",
+          "text": "دقیقاً همین را نتوانستیم ثابت کنیم.",
+          "audio_id": "VO_S05_E01_PARISA_002",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S05-E01-SC03"
+    },
+    {
+      "scene_id": "S05-E01-SC03",
+      "episode_id": "S05-E01",
+      "scene_type": "explore",
+      "title": "روی اسکله",
+      "background_id": "BG_S05_PIER",
+      "music_id": "MUS_LAKE",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S05-E01-L004",
+          "speaker_id": "fandogh",
+          "text": "وقتی چیزی فقط در یک حالت پیدا می‌شود، علتش را در همان حالت بگرد.",
+          "audio_id": "VO_S05_E01_FANDOGH_001",
+          "animation": "talk"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S05_WATER",
+          "kind": "examine",
+          "label": "لکهٔ آبی",
+          "description": "ته آب چیزی برق می‌زند.",
+          "rect": [
+            0.34,
+            0.56,
+            0.22,
+            0.2
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S05_MIRROR"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S05_LOG",
+          "kind": "inspect",
+          "label": "دفتر ایستگاه",
+          "description": "یادداشت‌های سالانه.",
+          "rect": [
+            0.6,
+            0.46,
+            0.18,
+            0.18
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S05_LOG"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S05_ASK",
+          "kind": "talk",
+          "label": "پرسیدن از دکتر راد",
+          "description": "ایستگاه را کی ساخته؟",
+          "rect": [
+            0.8,
+            0.42,
+            0.14,
+            0.32
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S05_PARISA"
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S05-E01-SC04"
+    },
+    {
+      "scene_id": "S05-E01-SC04",
+      "episode_id": "S05-E01",
+      "scene_type": "dialogue",
+      "title": "چطور ثابتش کنیم؟",
+      "background_id": "BG_S05_PIER",
+      "music_id": "MUS_LAKE",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S05_E01S04_1",
+          "text": "یک آزمایش ساده با آینه بکنیم.",
+          "next_scene_id": "S05-E02-SC01",
+          "hint": "اگر نور باشد، با آینه تکرار می‌شود.",
+          "effects": [
+            {
+              "set_flag": {
+                "s05_path": "experiment"
+              }
+            },
+            {
+              "add_trust": {
+                "raha": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S05_E01S04_2",
+          "text": "برویم زیر اسکله را ببینیم.",
+          "next_scene_id": "S05-E02-SC02",
+          "hint": "شاید راهی به زیر آب باشد.",
+          "effects": [
+            {
+              "set_flag": {
+                "s05_path": "tunnel"
+              }
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S05-E02-SC01",
+      "episode_id": "S05-E02",
+      "scene_type": "dialogue",
+      "title": "آینه و آفتاب",
+      "background_id": "BG_S05_STATION",
+      "music_id": "MUS_LAKE",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S05-E02-L001",
+          "speaker_id": "mani",
+          "text": "آینه را زیر آب می‌گیرم، تو زاویه را عوض کن.",
+          "audio_id": "VO_S05_E02_MANI_001",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S05-E02-L002",
+          "speaker_id": "raha",
+          "text": "اگر رنگ عوض شد، یعنی هر چیز صافی این کار را می‌کند.",
+          "audio_id": "VO_S05_E02_RAHA_002",
+          "animation": "think"
+        }
+      ],
+      "next_scene_id": "S05-E02-SC02"
+    },
+    {
+      "scene_id": "S05-E02-SC02",
+      "episode_id": "S05-E02",
+      "scene_type": "explore",
+      "title": "زیر اسکله",
+      "background_id": "BG_S05_TUNNEL",
+      "music_id": "MUS_LAKE",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S05_HATCH",
+          "kind": "trigger",
+          "label": "دریچهٔ زیر اسکله",
+          "description": "به یک تونل شیشه‌ای می‌رسد.",
+          "rect": [
+            0.4,
+            0.5,
+            0.2,
+            0.24
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S05_TUNNEL"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S05_GLASS",
+          "kind": "examine",
+          "label": "دیوارهٔ شیشه‌ای",
+          "description": "از اینجا کف دریاچه پیداست.",
+          "rect": [
+            0.66,
+            0.44,
+            0.18,
+            0.24
+          ],
+          "once": true,
+          "conditions": {
+            "has_clue": "CLUE_S05_TUNNEL"
+          },
+          "effects": [
+            {
+              "set_flag": {
+                "s05_saw_bottom": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S05-E02-SC03"
+    },
+    {
+      "scene_id": "S05-E02-SC03",
+      "episode_id": "S05-E02",
+      "scene_type": "puzzle",
+      "title": "زنجیرهٔ علت و معلول",
+      "background_id": "BG_S05_STATION",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S05_CAUSE_CHAIN",
+        "kind": "order_symbols",
+        "prompt": "مرحله‌ها را به ترتیب بچین تا معلوم شود چرا آب آبی‌تر می‌شود.",
+        "items": [
+          {
+            "id": "CC_BLUE",
+            "label": "آب آبی‌تر دیده می‌شود",
+            "icon": "ICON_DROP"
+          },
+          {
+            "id": "CC_SUN",
+            "label": "آفتاب به بالاترین نقطه می‌رسد",
+            "icon": "ICON_SUN"
+          },
+          {
+            "id": "CC_LENS",
+            "label": "نور به چیزی صاف در ته آب می‌خورد",
+            "icon": "ICON_LENS"
+          },
+          {
+            "id": "CC_BOUNCE",
+            "label": "نور برمی‌گردد بالا",
+            "icon": "ICON_ARROW_UP"
+          }
+        ],
+        "solution": [
+          "CC_SUN",
+          "CC_LENS",
+          "CC_BOUNCE",
+          "CC_BLUE"
+        ],
+        "hints": [
+          "اول چه چیزی اتفاق می‌افتد؟ چیزی که به ما ربطی ندارد.",
+          "آفتاب اول است و رنگ آخر.",
+          "آفتاب، برخورد، بازگشت، رنگ."
+        ],
+        "on_solve": [
+          {
+            "add_clue": "CLUE_S05_LENS"
+          },
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "add_clue": "CLUE_S05_LENS"
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S05-E03-SC01",
+        "skip_scene_id": "S05-E03-SC01"
+      }
+    },
+    {
+      "scene_id": "S05-E03-SC01",
+      "episode_id": "S05-E03",
+      "scene_type": "dialogue",
+      "title": "زیر آب",
+      "background_id": "BG_S05_TUNNEL",
+      "music_id": "MUS_LAKE",
+      "characters": [
+        {
+          "character_id": "arad",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S05-E03-L001",
+          "speaker_id": "arad",
+          "text": "صدای آب از بالا می‌آید. عجیب است که آدم زیر دریاچه راه برود.",
+          "audio_id": "VO_S05_E03_ARAD_001",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S05-E03-L002",
+          "speaker_id": "mani",
+          "text": "این تونل را خوب ساخته‌اند. خیلی خوب.",
+          "audio_id": "VO_S05_E03_MANI_002",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S05-E03-L003",
+          "speaker_id": "raha",
+          "text": "همان کسی که برج را ساخت.",
+          "audio_id": "VO_S05_E03_RAHA_003",
+          "animation": "think"
+        }
+      ],
+      "next_scene_id": "S05-E03-SC02"
+    },
+    {
+      "scene_id": "S05-E03-SC02",
+      "episode_id": "S05-E03",
+      "scene_type": "explore",
+      "title": "ته تونل",
+      "background_id": "BG_S05_TUNNEL",
+      "music_id": "MUS_LAKE",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        }
+      ],
+      "interactions": [
+        {
+          "interaction_id": "INT_S05_DEVICE",
+          "kind": "examine",
+          "label": "دستگاه کوچک",
+          "description": "یک چراغ ضعیف هنوز روشن است.",
+          "rect": [
+            0.42,
+            0.48,
+            0.2,
+            0.22
+          ],
+          "once": true,
+          "effects": [
+            {
+              "add_clue": "CLUE_S05_DEVICE"
+            },
+            {
+              "play_sfx": "SFX_CLUE_FOUND"
+            }
+          ]
+        },
+        {
+          "interaction_id": "INT_S05_LENS_BACK",
+          "kind": "inspect",
+          "label": "پشت عدسی",
+          "description": "از این طرف، عدسی مثل یک پنجره است.",
+          "rect": [
+            0.68,
+            0.42,
+            0.18,
+            0.24
+          ],
+          "once": true,
+          "effects": [
+            {
+              "set_flag": {
+                "s05_saw_lens_back": true
+              }
+            }
+          ]
+        }
+      ],
+      "next_scene_id": "S05-E03-SC03"
+    },
+    {
+      "scene_id": "S05-E03-SC03",
+      "episode_id": "S05-E03",
+      "scene_type": "puzzle",
+      "title": "رساندن برق",
+      "background_id": "BG_S05_TUNNEL",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S05_CIRCUIT",
+        "kind": "assemble_parts",
+        "prompt": "یک مدار ساده ببند تا چراغ دستگاه قوی شود.",
+        "items": [
+          {
+            "id": "E_BATT",
+            "label": "باتری ایستگاه"
+          },
+          {
+            "id": "E_WIRE",
+            "label": "سیم بلند"
+          },
+          {
+            "id": "E_CLIP",
+            "label": "گیرهٔ فلزی"
+          },
+          {
+            "id": "E_GLASS",
+            "label": "تکه شیشه"
+          }
+        ],
+        "solution": [
+          "E_BATT",
+          "E_WIRE",
+          "E_CLIP"
+        ],
+        "hints": [
+          "مدار به سه چیز نیاز دارد: منبع، راه، و اتصال.",
+          "شیشه برق را رد نمی‌کند.",
+          "باتری، سیم، گیره."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s05_powered": true
+            }
+          },
+          {
+            "add_trust": {
+              "mani": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [
+          {
+            "set_flag": {
+              "s05_low_power": true
+            }
+          }
+        ],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S05-E03-SC04",
+        "skip_scene_id": "S05-E03-SC04"
+      }
+    },
+    {
+      "scene_id": "S05-E03-SC04",
+      "episode_id": "S05-E03",
+      "scene_type": "dialogue",
+      "title": "چراغ قوی‌تر شد",
+      "background_id": "BG_S05_TUNNEL",
+      "music_id": "MUS_LAKE",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S05-E03-L004",
+          "speaker_id": "mani",
+          "text": "یک بلندگوی کوچک دارد. یعنی چیزی برای گفتن دارد.",
+          "audio_id": "VO_S05_E03_MANI_003",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S05-E03-L005",
+          "speaker_id": "raha",
+          "text": "یا داشته. بیست سال پیش.",
+          "audio_id": "VO_S05_E03_RAHA_004",
+          "animation": "think"
+        }
+      ],
+      "next_scene_id": "S05-E04-SC01"
+    },
+    {
+      "scene_id": "S05-E04-SC01",
+      "episode_id": "S05-E04",
+      "scene_type": "dialogue",
+      "title": "دو راه",
+      "background_id": "BG_S05_TUNNEL",
+      "music_id": "MUS_LAKE",
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S05-E04-L001",
+          "speaker_id": "parisa",
+          "text": "اگر پخشش کنید و باتری تمام شود، شاید دیگر نشود.",
+          "audio_id": "VO_S05_E04_PARISA_003",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S05-E04-L002",
+          "speaker_id": "mani",
+          "text": "و اگر نبریمش، شاید اصلاً باز نشود.",
+          "audio_id": "VO_S05_E04_MANI_004",
+          "animation": "talk"
+        }
+      ],
+      "next_scene_id": "S05-E04-SC02"
+    },
+    {
+      "scene_id": "S05-E04-SC02",
+      "episode_id": "S05-E04",
+      "scene_type": "puzzle",
+      "title": "کدام جمله با بقیه نمی‌خواند؟",
+      "background_id": "BG_S05_STATION",
+      "music_id": "MUS_PUZZLE_CALM",
+      "puzzle": {
+        "puzzle_id": "PZ_S05_LOG_CONTRA",
+        "kind": "spot_contradiction",
+        "prompt": "در دفتر ایستگاه یکی از یادداشت‌ها با بقیه نمی‌خواند. کدام؟",
+        "items": [
+          {
+            "id": "N1",
+            "label": "«بازتاب دوباره دیده شد — تیر، ظهر»"
+          },
+          {
+            "id": "N2",
+            "label": "«بازتاب دوباره دیده شد — مرداد، ظهر»"
+          },
+          {
+            "id": "N3",
+            "label": "«بازتاب دوباره دیده شد — دی، شب»"
+          },
+          {
+            "id": "N4",
+            "label": "«بازتاب دوباره دیده شد — خرداد، ظهر»"
+          }
+        ],
+        "solution": [
+          "N3"
+        ],
+        "hints": [
+          "بقیه در چه ساعتی‌اند؟",
+          "سه تا ظهرند و یکی نه.",
+          "دی، شب — آن یکی را کس دیگری نوشته."
+        ],
+        "on_solve": [
+          {
+            "set_flag": {
+              "s05_found_odd_note": true
+            }
+          },
+          {
+            "add_trust": {
+              "raha": 1
+            }
+          },
+          {
+            "play_sfx": "SFX_PUZZLE_OK"
+          }
+        ],
+        "on_skip": [],
+        "allow_skip_after_failures": 4,
+        "next_scene_id": "S05-E04-SC03",
+        "skip_scene_id": "S05-E04-SC03"
+      }
+    },
+    {
+      "scene_id": "S05-E04-SC03",
+      "episode_id": "S05-E04",
+      "scene_type": "dialogue",
+      "title": "پخشش کنیم؟",
+      "background_id": "BG_S05_TUNNEL",
+      "music_id": "MUS_LAKE",
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "raha",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "choices": [
+        {
+          "choice_id": "CH_S05_E04S03_1",
+          "text": "همین‌جا پخشش کنیم.",
+          "next_scene_id": "S05-E04-SC04",
+          "hint": "شاید فرصت دیگری نباشد.",
+          "effects": [
+            {
+              "add_clue": "CLUE_S05_MESSAGE"
+            },
+            {
+              "set_ending": "ending_s05_played"
+            },
+            {
+              "add_trust": {
+                "arad": 1
+              }
+            }
+          ]
+        },
+        {
+          "choice_id": "CH_S05_E04S03_2",
+          "text": "سالم ببریمش پیش استاد دلشاد.",
+          "next_scene_id": "S05-E04-SC05",
+          "hint": "محتاط‌تر، ولی دیرتر.",
+          "effects": [
+            {
+              "add_item": "ITEM_RECORDER"
+            },
+            {
+              "set_ending": "ending_s05_saved"
+            },
+            {
+              "add_trust": {
+                "mani": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scene_id": "S05-E04-SC04",
+      "episode_id": "S05-E04",
+      "scene_type": "dialogue",
+      "title": "پیامی که شنیده شد",
+      "background_id": "BG_S05_TUNNEL",
+      "music_id": "MUS_LAKE",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_06"
+        },
+        {
+          "add_clue": "CLUE_S05_MESSAGE"
+        },
+        {
+          "set_ending": "ending_s05_played"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "raha",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "arad",
+          "position": "left",
+          "animation": "idle"
+        },
+        {
+          "character_id": "mani",
+          "position": "far_left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S05-E04-L003",
+          "speaker_id": "raha",
+          "text": "«ده نقطه ساختم تا شهر خودش را به یاد بیاورد.»",
+          "audio_id": "VO_S05_E04_RAHA_005",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S05-E04-L004",
+          "speaker_id": "arad",
+          "text": "«اگر هر ده را پیدا کردی، برج دوباره می‌خواند.»",
+          "audio_id": "VO_S05_E04_ARAD_002",
+          "animation": "surprised"
+        },
+        {
+          "line_id": "S05-E04-L005",
+          "speaker_id": "fandogh",
+          "text": "پنج تا مانده. و فردا، شهر جشن دارد.",
+          "audio_id": "VO_S05_E04_FANDOGH_002",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    },
+    {
+      "scene_id": "S05-E04-SC05",
+      "episode_id": "S05-E04",
+      "scene_type": "dialogue",
+      "title": "پیامی که برای بعد ماند",
+      "background_id": "BG_S05_STATION",
+      "music_id": "MUS_LAKE",
+      "on_enter": [
+        {
+          "unlock_chapter": "season_06"
+        },
+        {
+          "set_ending": "ending_s05_saved"
+        }
+      ],
+      "characters": [
+        {
+          "character_id": "mani",
+          "position": "right",
+          "animation": "idle"
+        },
+        {
+          "character_id": "parisa",
+          "position": "left",
+          "animation": "idle"
+        }
+      ],
+      "dialogue": [
+        {
+          "line_id": "S05-E04-L006",
+          "speaker_id": "mani",
+          "text": "با یک باتری درست‌وحسابی، بی‌خطر بازش می‌کنم.",
+          "audio_id": "VO_S05_E04_MANI_005",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S05-E04-L007",
+          "speaker_id": "parisa",
+          "text": "و من یادداشت‌های ایستگاه را برایتان کپی می‌کنم.",
+          "audio_id": "VO_S05_E04_PARISA_004",
+          "animation": "talk"
+        },
+        {
+          "line_id": "S05-E04-L008",
+          "speaker_id": "fandogh",
+          "text": "فردا، شهر جشن دارد. جشن هزار چراغ.",
+          "audio_id": "VO_S05_E04_FANDOGH_003",
+          "animation": "talk"
+        }
+      ],
+      "is_ending": true
+    }
+  ]
+}
