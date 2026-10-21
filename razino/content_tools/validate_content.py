@@ -123,6 +123,31 @@ def check_effects(effects, where: str, rep: Report, clue_ids: set[str]) -> None:
                         rep.error(f"{where}: adds unknown clue '{cid}'")
 
 
+
+def _complementary(conds: list[dict]) -> bool:
+    """True when two conditions are exact opposites, so one always holds.
+
+    The deliberate pattern in the content is {"has_clue": X} paired with
+    {"lacks_clue": X}, and {"flag": F} paired with {"not_flag": F}.
+    """
+    pairs = (("has_clue", "lacks_clue"), ("has_item", "lacks_item"), ("flag", "not_flag"))
+    for a in conds:
+        for b in conds:
+            if a is b or len(a) != 1 or len(b) != 1:
+                continue
+            (ka, va), = a.items()
+            (kb, vb), = b.items()
+            # A one-element list and a bare value name the same clue.
+            if isinstance(va, list) and len(va) == 1:
+                va = va[0]
+            if isinstance(vb, list) and len(vb) == 1:
+                vb = vb[0]
+            for pos, neg in pairs:
+                if ka == pos and kb == neg and va == vb:
+                    return True
+    return False
+
+
 def scene_targets(scene: dict) -> list[str]:
     out = []
     if scene.get("next_scene_id"):
@@ -289,6 +314,17 @@ def validate_chapter(path: Path) -> Report:
         for target in scene_targets(scene):
             if target not in by_id:
                 rep.error(f"{sid}: points at non-existent scene '{target}'")
+
+        # A scene whose every way onward is conditional can strand a player
+        # who arrives without the right clue (GDD 4.3).
+        declared = scene.get("choices", [])
+        if declared and not scene.get("next_scene_id"):
+            conds = [c.get("conditions") or {} for c in declared]
+            if all(conds) and not _complementary(conds):
+                rep.error(
+                    f"{sid}: every choice is conditional and they are not "
+                    f"complementary — a player without the right clue is stuck"
+                )
 
         # dead ends
         if not scene_targets(scene) and not scene.get("is_ending"):

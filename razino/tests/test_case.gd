@@ -15,6 +15,10 @@ func before_each() -> void:
 func after_each() -> void:
 	pass
 
+## A test is a RefCounted, so it has no get_tree(). This waits one frame.
+func next_frame() -> void:
+	await (Engine.get_main_loop() as SceneTree).process_frame
+
 func _fail(message: String) -> void:
 	failures.append(message)
 
