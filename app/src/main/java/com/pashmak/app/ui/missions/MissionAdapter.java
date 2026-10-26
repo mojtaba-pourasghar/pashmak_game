@@ -2,6 +2,7 @@ package com.pashmak.app.ui.missions;
 
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.pashmak.app.R;
+import com.pashmak.app.billing.Entitlement;
 import com.pashmak.app.data.catalog.Mission;
 import com.pashmak.app.databinding.ItemMissionBinding;
 import com.pashmak.app.util.FaNum;
@@ -27,11 +29,21 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.MissionH
     private final OnMissionClick listener;
     private Map<Integer, Integer> progress = new HashMap<>();
     private int currentMission;
+    private boolean fullVersion;
 
     public MissionAdapter(List<Mission> missions, OnMissionClick listener) {
         this.missions = missions;
         this.listener = listener;
         setHasStableIds(true);
+    }
+
+    /** Shows or clears the locks on the missions past the free ones. */
+    public void setFullVersion(boolean value) {
+        if (fullVersion == value) {
+            return;
+        }
+        fullVersion = value;
+        notifyDataSetChanged();
     }
 
     public void setProgress(Map<Integer, Integer> next, int current) {
@@ -57,7 +69,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.MissionH
     public void onBindViewHolder(@NonNull MissionHolder holder, int position) {
         Mission mission = missions.get(position);
         int captured = MissionsViewModel.countFor(progress, mission.index);
-        holder.bind(mission, captured, mission.index == currentMission, listener);
+        holder.bind(mission, captured, mission.index == currentMission,
+                !Entitlement.stageOpen(position, fullVersion), listener);
     }
 
     @Override
@@ -74,7 +87,12 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.MissionH
             this.binding = binding;
         }
 
-        void bind(Mission mission, int captured, boolean isCurrent, OnMissionClick listener) {
+        void bind(Mission mission, int captured, boolean isCurrent, boolean locked,
+                  OnMissionClick listener) {
+            binding.missionLock.setVisibility(locked ? View.VISIBLE : View.GONE);
+            // Visibly out of reach, the way a locked stage is; the tap still lands and
+            // offers the full version.
+            binding.missionRow.setAlpha(locked ? 0.55f : 1f);
             boolean complete = mission.isComplete(captured);
             binding.missionNumber.setText(FaNum.of(mission.index + 1));
             binding.missionTitle.setText(mission.title);

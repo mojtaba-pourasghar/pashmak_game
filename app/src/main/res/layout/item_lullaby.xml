@@ -51,6 +51,17 @@
         android:visibility="invisible"
         app:tint="@color/night_gold" />
 
+    <!-- Shown on songs that belong to the full version. -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/lullaby_lock"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="6dp"
+        android:contentDescription="@string/cd_locked"
+        android:src="@drawable/ic_lock"
+        android:visibility="gone"
+        app:tint="@color/night_gold" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/lullaby_length"
         style="@style/Text.Chip"

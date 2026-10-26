@@ -12,6 +12,7 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 import java.util.Random;
 
@@ -35,12 +36,26 @@ public class ParentGateDialog extends Dialog {
     private int answer;
     private String input = "";
 
+    /** What a right answer does; null opens the settings. */
+    @Nullable
+    private final Runnable onPassed;
+    @StringRes
+    private final int hint;
+
     public static void show(@NonNull Context context) {
-        new ParentGateDialog(context).show();
+        new ParentGateDialog(context, null, R.string.lock_hint).show();
     }
 
-    private ParentGateDialog(@NonNull Context context) {
+    /** The same gate in front of a purchase: a right answer runs {@code onPassed}. */
+    public static void showForPurchase(@NonNull Context context, @NonNull Runnable onPassed) {
+        new ParentGateDialog(context, onPassed, R.string.purchase_gate_hint).show();
+    }
+
+    private ParentGateDialog(@NonNull Context context, @Nullable Runnable onPassed,
+                             @StringRes int hint) {
         super(context, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+        this.onPassed = onPassed;
+        this.hint = hint;
     }
 
     @Override
@@ -57,6 +72,7 @@ public class ParentGateDialog extends Dialog {
                     WindowManager.LayoutParams.MATCH_PARENT);
         }
 
+        binding.gateHint.setText(hint);
         newChallenge();
         wireKeypad();
         binding.gateClose.setOnClickListener(v -> dismiss());
@@ -93,7 +109,7 @@ public class ParentGateDialog extends Dialog {
             if (input.length() < MAX_DIGITS) {
                 input = input + tag;
             }
-            binding.gateHint.setText(R.string.lock_hint);
+            binding.gateHint.setText(hint);
             renderInput();
         };
         binding.key0.setOnClickListener(digit);
@@ -130,8 +146,12 @@ public class ParentGateDialog extends Dialog {
             entered = -1;
         }
         if (entered == answer) {
-            getContext().startActivity(new Intent(getContext(), SettingsActivity.class));
             dismiss();
+            if (onPassed != null) {
+                onPassed.run();
+            } else {
+                getContext().startActivity(new Intent(getContext(), SettingsActivity.class));
+            }
         } else {
             binding.gateHint.setText(R.string.lock_error);
             newChallenge();

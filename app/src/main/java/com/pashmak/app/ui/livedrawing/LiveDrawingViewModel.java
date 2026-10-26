@@ -23,8 +23,12 @@ import com.pashmak.app.vision.ExtractionResult;
 /** Drives one mission session: brief, scan, extract, celebrate. */
 public class LiveDrawingViewModel extends AndroidViewModel {
 
+    /**
+     * The room is the hub: every item card in it opens the camera for that item,
+     * and a finished scan comes straight back to the room to land in its place.
+     */
     public enum Step {
-        BRIEF, CAMERA, PROCESSING, ALIVE
+        BRIEF, CAMERA, PROCESSING
     }
 
     private final MissionRepository repository;
@@ -34,16 +38,20 @@ public class LiveDrawingViewModel extends AndroidViewModel {
 
     private Mission mission;
     /**
-     * How many items had been captured when the finished scene was last saved.
+     * How many items had been captured when the finished mission was last celebrated.
      *
      * <p>It lives here and not in the Activity because the Activity is rebuilt on a
      * rotation with its fields back at their defaults, and the completed mission it
-     * re-renders would then be celebrated and written to the gallery all over again
-     * — one duplicate entry per turn of the tablet.
+     * re-renders would then be celebrated — stars and all — on every turn of the tablet.
      */
-    private int sceneSavedForCount = -1;
+    private int celebratedForCount = -1;
     private LiveData<List<CapturedItem>> items;
     private boolean extracting;
+    /**
+     * The item card the child tapped, i.e. the slot the next photo is for. Kept
+     * here so a rotation in the middle of a scan still files it under the right item.
+     */
+    private int targetSlot = -1;
 
     public LiveDrawingViewModel(@NonNull Application application) {
         super(application);
@@ -80,6 +88,15 @@ public class LiveDrawingViewModel extends AndroidViewModel {
 
     public void goTo(Step next) {
         step.setValue(next);
+    }
+
+    public void setTargetSlot(int slot) {
+        targetSlot = slot;
+    }
+
+    /** The slot the camera is shooting for, or -1 when no card has been tapped yet. */
+    public int targetSlot() {
+        return targetSlot;
     }
 
     public int capturedCount(@Nullable List<CapturedItem> current) {
@@ -156,28 +173,24 @@ public class LiveDrawingViewModel extends AndroidViewModel {
                             extractionFailed.setValue(true);
                             return;
                         }
-                        step.setValue(Step.ALIVE);
-                        callback.onCaptured(label, count);
+                        // Back to the room, where the new drawing lands in its place
+                        // (replacing the old one if this slot had been shot before).
+                        step.setValue(Step.BRIEF);
+                        callback.onCaptured(label, slotIndex, count);
                     }));
         });
     }
 
     public interface ExtractionCallback {
-        void onCaptured(String label, int capturedCount);
+        void onCaptured(String label, int slotIndex, int capturedCount);
     }
 
-    public void retakeSlot(int slotIndex) {
-        if (mission != null) {
-            repository.deleteSlot(mission.index, slotIndex, null);
-        }
-    }
-
-    /** True the first time a finished mission is saved at this item count. */
-    public boolean claimSceneSave(int capturedCount) {
-        if (sceneSavedForCount == capturedCount) {
+    /** True the first time a finished mission is celebrated at this item count. */
+    public boolean claimCelebration(int capturedCount) {
+        if (celebratedForCount == capturedCount) {
             return false;
         }
-        sceneSavedForCount = capturedCount;
+        celebratedForCount = capturedCount;
         return true;
     }
 

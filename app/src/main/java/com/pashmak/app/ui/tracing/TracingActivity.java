@@ -68,7 +68,7 @@ public class TracingActivity extends GameActivity {
         });
         binding.traceNext.setOnClickListener(v -> {
             tap();
-            select(index + 1);
+            goToNext();
         });
         binding.traceDone.setOnClickListener(v -> finishGlyph());
 
@@ -105,6 +105,36 @@ public class TracingActivity extends GameActivity {
         speakGlyph(glyph);
     }
 
+    /**
+     * On to the next glyph, unless it belongs to the full version. The trace list
+     * puts every letter first and the digits after them, and the free stages are
+     * counted along that list, so a glyph's row depends on which set it is in.
+     */
+    private void goToNext() {
+        if (isFinishing() || glyphs.length == 0) {
+            return;
+        }
+        int next = Palette.wrap(index + 1, glyphs.length);
+        int row = digitsMode ? TraceCatalog.letters(this).length + next : next;
+        if (!stageOpen(row)) {
+            pendingNext = true;
+            offerFullVersion();
+            return;
+        }
+        select(next);
+    }
+
+    /** "Next" reached a locked glyph; it opens once the purchase lands. */
+    private boolean pendingNext;
+
+    @Override
+    protected void onFullVersionBought() {
+        if (pendingNext) {
+            pendingNext = false;
+            select(index + 1);
+        }
+    }
+
     private void refreshCoverage() {
         int percent = Math.round(binding.traceCanvas.glyphCoverage() * 100f);
         binding.traceCoverage.setText(getString(R.string.trace_coverage, FaNum.of(percent)));
@@ -121,7 +151,7 @@ public class TracingActivity extends GameActivity {
             binding.traceCanvas.clear();
             // The next letter is spoken as soon as it is selected, and that stops
             // whatever is sounding — so wait for the praise to finish first.
-            binding.getRoot().postDelayed(() -> select(index + 1), said + GLYPH_PAUSE_MS);
+            binding.getRoot().postDelayed(this::goToNext, said + GLYPH_PAUSE_MS);
         } else {
             onWrong(getString(R.string.trace_incomplete), AudioManifest.VOICE_TRACE_MORE);
         }

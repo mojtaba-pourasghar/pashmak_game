@@ -1,0 +1,70 @@
+﻿diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+index fd06b4b..fa5f08b 100644
+--- a/app/src/main/res/values/strings.xml
++++ b/app/src/main/res/values/strings.xml
+@@ -43,8 +43,10 @@
+     <!-- Mission brief -->
+     <string name="draw_line_incomplete">%1$s ┘à█îΓÇî┌»┘ç: ╪¿╪▒╪º█î %2$s ╪º┘ä╪º┘å █î┘ç ┬½%3$s┬╗ ┘à█îΓÇî╪«┘ê╪º┘à. ╪▒┘ê█î ┌⌐╪º╪║╪░ ╪¿┌⌐╪┤╪┤!</string>
+     <string name="draw_line_complete">%1$s ┘à█îΓÇî┌»┘ç: ┘à╪¼┘à┘ê╪╣┘ç ┌⌐╪º┘à┘ä ╪┤╪»! ┘à█îΓÇî╪«┘ê╪º█î █î┘ç ┘à╪º┘à┘ê╪▒█î╪¬ ╪¬╪º╪▓┘ç ╪¿╪▒╪»╪º╪▒█î┘à╪ƒ</string>
+-    <string name="draw_now">╪º┘ä╪º┘å ╪¿┌⌐╪┤: %1$s</string>
+-    <string name="draw_go_camera">┌⌐╪┤█î╪»┘à! ╪¿╪▒█î┘à ╪»┘ê╪▒╪¿█î┘å</string>
++    <string name="draw_tap_to_shoot">┌⌐╪┤█î╪»█î╪ƒ ╪▒┘ê█î ┘ç┘à┘ê┘å╪┤ ╪¿╪▓┘å ╪¬╪º ╪╣┌⌐╪│╪┤┘ê ╪¿┌»█î╪▒█î┘à</string>
++    <string name="draw_tap_to_redo">┘à█îΓÇî╪«┘ê╪º█î █î┌⌐█î ╪▒┘ê ╪╣┘ê╪╢ ┌⌐┘å█î╪ƒ ╪▒┘ê╪┤ ╪¿╪▓┘å ┘ê ╪»┘ê╪¿╪º╪▒┘ç ╪╣┌⌐╪│ ╪¿┌»█î╪▒</string>
++    <string name="draw_save_scene">╪░╪«█î╪▒┘ç ╪¬┘ê ┌»╪º┘ä╪▒█î</string>
++    <string name="draw_scene_saved">╪╡╪¡┘å┘çΓÇî╪º╪¬ ╪¬┘ê ┌»╪º┘ä╪▒█î ╪░╪«█î╪▒┘ç ╪┤╪»!</string>
+     <string name="draw_pick_other">█î┘ç ┘à╪º┘à┘ê╪▒█î╪¬ ╪»█î┌»┘ç ╪º┘å╪¬╪«╪º╪¿ ┌⌐┘å</string>
+ 
+     <!-- Camera -->
+@@ -61,16 +63,8 @@
+     <string name="processing_failed">┘å╪¬┘ê┘å╪│╪¬┘à ┘å┘é╪º╪┤█î ╪▒┘ê ╪¼╪»╪º ┌⌐┘å┘à. ┘å┘ê╪▒ ╪¿█î╪┤╪¬╪▒ ┘ê ┌⌐╪º╪║╪░ ╪╡╪º┘ü ┌⌐┘à┌⌐ ┘à█îΓÇî┌⌐┘å┘ç.</string>
+     <string name="processing_retry">╪»┘ê╪¿╪º╪▒┘ç ╪╣┌⌐╪│ ╪¿┌»█î╪▒</string>
+ 
+-    <!-- Alive scene -->
+-    <string name="alive_headline_progress">╪▓┘å╪»┘ç ╪┤╪»! %1$s ╪º╪▓ %2$s</string>
+-    <string name="alive_headline_complete">┘à╪¼┘à┘ê╪╣┘ç ┌⌐╪º┘à┘ä ╪┤╪»!</string>
+-    <string name="alive_line_progress">┬½%1$s┬╗ ╪º┘ê┘à╪» ┌⌐┘å╪º╪▒ %2$s. ╪¡╪º┘ä╪º %3$s ╪¬╪º ┘à┘ê┘å╪»┘ç ╪¬╪º ┘à╪¼┘à┘ê╪╣┘ç ┌⌐╪º┘à┘ä ╪┤┘ç.</string>
+-    <string name="alive_line_complete">┘ç┘à┘çΓÇî┌å█î╪▓┘É ┬½%1$s┬╗ ╪ó┘à╪º╪»┘çΓÇî╪│╪¬. %2$s ╪»╪º╪▒┘ç ┘ê╪│╪╖╪┤ ┘à█îΓÇî╪▒┘é╪╡┘ç!</string>
++    <!-- A scanned drawing landing in the room -->
+     <string name="alive_arrived">┘ê╪º╪º╪º█î! ┬½%1$s┬╗ ╪▓┘å╪»┘ç ╪┤╪» ┘ê ╪º┘ê┘à╪» ╪¬┘ê ╪╡╪¡┘å┘ç!</string>
+-    <string name="alive_next_item">╪¿┌⌐╪┤: %1$s</string>
+-    <string name="alive_next_mission">┘à╪º┘à┘ê╪▒█î╪¬ ╪¿╪╣╪»█î</string>
+-    <string name="alive_gallery">┌»╪º┘ä╪▒█î</string>
+-    <string name="alive_retake">╪»┘ê╪¿╪º╪▒┘ç ╪¿┌⌐╪┤</string>
+ 
+     <!-- Coloring -->
+     <string name="paint_title">╪▒┘å┌»ΓÇî╪ó┘à█î╪▓█î ┬╖ %1$s</string>
+@@ -208,7 +202,24 @@
+     <string name="settings_audio_music_some">┘à┘ê╪▓█î┌⌐ ┘╛╪│ΓÇî╪▓┘à█î┘å┘ç: %1$s ╪º╪▓ %2$s ┘ü╪º█î┘ä ┘╛█î╪»╪º ╪┤╪». ╪¿┘é█î┘çΓÇî╪º╪┤ ╪▒┘ê ╪«┘ê╪» ╪¿╪▒┘å╪º┘à┘ç ┘à█îΓÇî╪│╪º╪▓┘ç.</string>
+     <string name="settings_audio_all">┘ç╪▒ %1$s ┘ü╪º█î┘ä ╪╡╪»╪º ╪│╪▒ ╪¼╪º╪┤┘ç. Γ£ö</string>
+     <string name="settings_audio_some">%1$s ╪º╪▓ %2$s ┘ü╪º█î┘ä ╪╡╪»╪º ┘╛█î╪»╪º ╪┤╪». ╪¼╪º╪º┘ü╪¬╪º╪»┘çΓÇî┘ç╪º ┘à╪½┘ä %3$s ΓÇö ┘ü┘ç╪▒╪│╪¬ ┌⌐╪º┘à┘ä ╪»╪▒ res/raw/audio_manifest.txt</string>
+-    <string name="settings_info">╪º█î┘å ╪º┘╛ ┌⌐╪º┘à┘ä ╪ó┘ü┘ä╪º█î┘å ┌⌐╪º╪▒ ┘à█îΓÇî┌⌐┘å┘ç ΓÇö ╪¿╪»┘ê┘å ╪¬╪¿┘ä█î╪║╪î ╪¿╪»┘ê┘å ╪¡╪│╪º╪¿ ┌⌐╪º╪▒╪¿╪▒█î ┘ê ╪¿╪»┘ê┘å ╪«╪▒█î╪» ╪»╪▒┘ê┘åΓÇî╪¿╪▒┘å╪º┘à┘çΓÇî╪º█î.</string>
++    <string name="settings_info">╪º█î┘å ╪º┘╛ ┌⌐╪º┘à┘ä ╪ó┘ü┘ä╪º█î┘å ┌⌐╪º╪▒ ┘à█îΓÇî┌⌐┘å┘ç ΓÇö ╪¿╪»┘ê┘å ╪¬╪¿┘ä█î╪║ ┘ê ╪¿╪»┘ê┘å ╪¡╪│╪º╪¿ ┌⌐╪º╪▒╪¿╪▒█î. ┘å╪│╪«┘çΓÇî█î ┌⌐╪º┘à┘ä ┘ü┘é╪╖ █î┌⌐ ╪¿╪º╪▒ ╪º╪▓ ┌⌐╪º┘ü┘çΓÇî╪¿╪º╪▓╪º╪▒ ╪«╪▒█î╪»┘ç ┘à█îΓÇî╪┤┘ç.</string>
++
++    <!-- Full version (Cafe Bazaar in-app purchase) -->
++    <string name="full_locked_line">╪º█î┘å ┘à╪▒╪¡┘ä┘ç ┘à╪º┘ä ┘å╪│╪«┘çΓÇî█î ┌⌐╪º┘à┘ä┘ç. ╪º╪▓ ┘à╪º┘à╪º┘å █î╪º ╪¿╪º╪¿╪º ╪¿╪«┘ê╪º┘ç ╪¿╪▒╪º╪¬ ╪¿╪º╪▓╪┤ ┌⌐┘å┘å!</string>
++    <string name="full_unlocked_line">┘ç┘ê╪▒╪º! ┘ç┘à┘çΓÇî█î ╪¿╪º╪▓█îΓÇî┘ç╪º ┘ê ┘ä╪º┘ä╪º█î█îΓÇî┘ç╪º ╪¿╪º╪▓ ╪┤╪»┘å. ╪¿╪▓┘å ╪¿╪▒█î┘à!</string>
++    <string name="purchase_gate_hint">╪¿╪▒╪º█î ╪«╪▒█î╪» ┘å╪│╪«┘çΓÇî█î ┌⌐╪º┘à┘ä ╪º╪▓ ┌⌐╪º┘ü┘çΓÇî╪¿╪º╪▓╪º╪▒ ╪¼┘ê╪º╪¿ ╪¿╪»┘ç</string>
++    <string name="purchase_no_bazaar">╪¿╪▒╪º█î ╪«╪▒█î╪»╪î ╪º┘ê┘ä ╪¿╪▒┘å╪º┘à┘çΓÇî█î ┌⌐╪º┘ü┘çΓÇî╪¿╪º╪▓╪º╪▒ ╪▒┘ê ┘å╪╡╪¿ ┌⌐┘å█î╪» ┘ê ┘ê╪º╪▒╪» ╪¡╪│╪º╪¿ΓÇî╪¬┘ê┘å ╪¿╪┤█î╪».</string>
++    <string name="purchase_failed">╪«╪▒█î╪» ╪º┘å╪¼╪º┘à ┘å╪┤╪». ╪º╪¬╪╡╪º┘ä ╪º█î┘å╪¬╪▒┘å╪¬ ┘ê ┌⌐╪º┘ü┘çΓÇî╪¿╪º╪▓╪º╪▒ ╪▒┘ê ╪¿╪▒╪▒╪│█î ┌⌐┘å█î╪» ┘ê ╪»┘ê╪¿╪º╪▒┘ç ╪º┘à╪¬╪¡╪º┘å ┌⌐┘å█î╪».</string>
++    <string name="settings_full_title">┘å╪│╪«┘çΓÇî█î ┌⌐╪º┘à┘ä</string>
++    <string name="settings_full_locked">╪»╪▒ ┘å╪│╪«┘çΓÇî█î ╪▒╪º█î┌»╪º┘å╪î ╪»┘ê ┘à╪▒╪¡┘ä┘çΓÇî█î ╪º┘ê┘ä ┘ç╪▒ ╪¿╪º╪▓█î ┘ê █î┌⌐ ┘ä╪º┘ä╪º█î█î ╪¿╪º╪▓ ╪º╪│╪¬. ╪¿╪º █î┌⌐ ╪¿╪º╪▒ ╪«╪▒█î╪» ╪º╪▓ ┌⌐╪º┘ü┘çΓÇî╪¿╪º╪▓╪º╪▒ ┘ç┘à┘çΓÇî┌å█î╪▓ ╪¿╪▒╪º█î ┘ç┘à█î╪┤┘ç ╪¿╪º╪▓ ┘à█îΓÇî╪┤┘ç.</string>
++    <string name="settings_full_owned">┘å╪│╪«┘çΓÇî█î ┌⌐╪º┘à┘ä ┘ü╪╣╪º┘ä┘ç. ┘à┘à┘å┘ê┘å ┌⌐┘ç ╪º╪▓ ┘╛╪┤┘à┌⌐ ╪¡┘à╪º█î╪¬ ┌⌐╪▒╪»█î╪»! Γ£ö</string>
++    <string name="settings_full_buy">╪«╪▒█î╪» ┘å╪│╪«┘çΓÇî█î ┌⌐╪º┘à┘ä</string>
++    <string name="settings_full_restore">╪¿╪º╪▓█î╪º╪¿█î ╪«╪▒█î╪» ┘é╪¿┘ä█î</string>
++    <string name="settings_full_checking">╪»╪▒ ╪¡╪º┘ä ╪¿╪▒╪▒╪│█î ╪¿╪º ┌⌐╪º┘ü┘çΓÇî╪¿╪º╪▓╪º╪▒ΓÇª</string>
++    <string name="settings_full_restored">╪«╪▒█î╪» ┘╛█î╪»╪º ╪┤╪» ┘ê ┘å╪│╪«┘çΓÇî█î ┌⌐╪º┘à┘ä ┘ü╪╣╪º┘ä ╪┤╪».</string>
++    <string name="settings_full_not_found">╪¿╪▒╪º█î ╪º█î┘å ╪¡╪│╪º╪¿ ┌⌐╪º┘ü┘çΓÇî╪¿╪º╪▓╪º╪▒ ╪«╪▒█î╪»█î ┘╛█î╪»╪º ┘å╪┤╪».</string>
++    <string name="settings_full_check_failed">╪º╪▒╪¬╪¿╪º╪╖ ╪¿╪º ┌⌐╪º┘ü┘çΓÇî╪¿╪º╪▓╪º╪▒ ╪¿╪▒┘é╪▒╪º╪▒ ┘å╪┤╪». ╪¿╪╣╪»╪º┘ï ╪»┘ê╪¿╪º╪▒┘ç ╪º┘à╪¬╪¡╪º┘å ┌⌐┘å█î╪».</string>
++    <string name="cd_locked">┘é┘ü┘ä</string>
+ 
+     <!-- Mascot dialogue (MascotConfig.js, verbatim) -->
+     <string name="ms_welcome">╪│┘ä╪º┘à ┘é┘å╪»╪╣╪│┘ä┘à! ┘à┘å %1$s┘à╪î ╪»┘ê╪│╪¬ ╪¼╪»█î╪»╪¬! ╪ó┘à╪º╪»┘çΓÇî╪º█î ╪¿╪º┘ç┘à ┌⌐┘ä█î ╪¿╪º╪▓█î ┌⌐┘å█î┘à╪ƒ</string>
+@@ -270,6 +281,8 @@
+     <string name="lullaby_timer_off">╪¿█îΓÇî╪▓┘à╪º┘å</string>
+     <string name="lullaby_timer_left">%1$s ╪¬╪º ╪«╪º┘à┘ê╪┤█î</string>
+     <string name="lullaby_time">%1$s / %2$s</string>
++    <string name="lullaby_channel">┘╛╪«╪┤ ┘ä╪º┘ä╪º█î█î</string>
++    <string name="lullaby_channel_desc">╪»┌⌐┘à┘çΓÇî┘ç╪º█î ┘╛╪«╪┤ ┘ä╪º┘ä╪º█î█î ╪▒┘ê█î ╪╡┘ü╪¡┘ç ┘é┘ü┘ä</string>
+ 
+     <string name="stars_label">╪│╪¬╪º╪▒┘çΓÇî┘ç╪º</string>
+     <string name="sound_toggle">╪╡╪»╪º</string>

@@ -116,14 +116,17 @@
                 </ScrollView>
             </LinearLayout>
 
+            <!-- Each item card opens the camera itself; this appears only when
+                 every item is in the room, to save the finished scene. -->
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/brief_go_camera"
+                android:id="@+id/brief_save"
                 style="@style/Button.Chunky.Choice"
                 android:layout_width="@dimen/band_tools"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/gap"
-                android:background="@drawable/btn_orange"
-                android:text="@string/draw_go_camera" />
+                android:background="@drawable/btn_green"
+                android:text="@string/draw_save_scene"
+                android:visibility="gone" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -338,139 +341,6 @@
                 android:paddingStart="28dp"
                 android:paddingEnd="28dp"
                 android:text="@string/processing_retry" />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- ========================== 4. It came alive =========================== -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/step_alive"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_screen_alive"
-        android:clipChildren="false"
-        android:visibility="gone"
-        android:paddingStart="@dimen/screen_padding"
-        android:paddingTop="@dimen/screen_padding_v"
-        android:paddingEnd="@dimen/screen_padding"
-        android:paddingBottom="@dimen/screen_padding_v">
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/alive_back"
-            style="@style/Button.Round"
-            android:contentDescription="@string/back"
-            android:src="@drawable/ic_back"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/red" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/alive_headline"
-            style="@style/Text.Section"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_chip_white"
-            android:paddingStart="16dp"
-            android:paddingTop="5dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="5dp"
-            android:textColor="@color/red"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="زنده شد! ۲ از ۴" />
-
-        <!-- The scene we compose and save: drawings gathered around the mascot -->
-        <LinearLayout
-            android:id="@+id/alive_scene"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            android:clipChildren="false"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@id/alive_line"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/alive_headline">
-
-            <com.pashmak.app.ui.livedrawing.MissionSceneView
-                android:id="@+id/alive_scene_view"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bg_frame_scene" />
-
-            <com.pashmak.app.mascot.MascotView
-                android:id="@+id/alive_mascot"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="12dp" />
-        </LinearLayout>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/alive_line"
-            style="@style/Text.Body.Bold"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_speech_alive"
-            android:paddingStart="15dp"
-            android:paddingTop="11dp"
-            android:paddingEnd="15dp"
-            android:paddingBottom="11dp"
-            android:textColor="@color/ink_slate"
-            app:layout_constraintBottom_toTopOf="@id/alive_buttons"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="«تخت» اومد کنار پشمک." />
-
-        <!-- Portrait: the three of them will not sit across a phone's width, so the
-             one that carries the mission forward keeps a full-width row of its own. -->
-        <LinearLayout
-            android:id="@+id/alive_buttons"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/alive_next"
-                style="@style/Button.Chunky"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_orange"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textSize="18sp"
-                tools:text="بکش: چراغ" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/gap"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/alive_retake"
-                    style="@style/Button.Chunky.Choice"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_blue_deep"
-                    android:text="@string/alive_retake" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/alive_gallery"
-                    style="@style/Button.Chunky.Choice"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/gap"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_purple"
-                    android:text="@string/alive_gallery" />
-            </LinearLayout>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

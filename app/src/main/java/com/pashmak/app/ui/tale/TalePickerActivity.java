@@ -15,8 +15,10 @@ import com.pashmak.app.ui.common.StagePickerActivity;
 import com.pashmak.app.util.FaNum;
 
 /**
- * Forty told tales. Nothing is locked here — this is the section a tired child
- * reaches for, and having to earn your bedtime story would be a strange rule.
+ * Forty told tales. Nothing here is earned by progress — this is the section a
+ * tired child reaches for, and having to earn your bedtime story would be a strange
+ * rule. Like every game, only the first ones are free; the rest come with the full
+ * version (see {@code StagePickerActivity}).
  */
 public class TalePickerActivity extends StagePickerActivity {
 

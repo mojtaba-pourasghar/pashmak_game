@@ -221,12 +221,31 @@ public class StoryActivity extends GameActivity {
         binding.getRoot().postDelayed(() -> advance(beat.next), said + PAGE_PAUSE_MS);
     }
 
-    /** The story is over; roll straight into the next one, or back to the list. */
+    /**
+     * The story is over; roll straight into the next one, or back to the list. A next
+     * story from the full version is offered rather than opened.
+     */
     private void openNextStory() {
         if (storyIndex + 1 < StoryCatalog.count()) {
+            if (!stageOpen(storyIndex + 1)) {
+                pendingNextStory = true;
+                offerFullVersion();
+                return;
+            }
             openStory(storyIndex + 1);
         } else {
             finish();
+        }
+    }
+
+    /** "Next story" was tapped on a locked one; it opens once the purchase lands. */
+    private boolean pendingNextStory;
+
+    @Override
+    protected void onFullVersionBought() {
+        if (pendingNextStory) {
+            pendingNextStory = false;
+            openNextStory();
         }
     }
 

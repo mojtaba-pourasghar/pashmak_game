@@ -93,6 +93,33 @@ public final class GalleryRepository {
         void onExported(@Nullable Uri uri);
     }
 
+    /**
+     * Keeps the picture in the app's own gallery and also copies it to the device's
+     * photo gallery, in one go. Reports the device-gallery Uri, or null when either
+     * step failed.
+     */
+    public void saveAndExport(int kind, int missionIndex, String title, Bitmap bitmap,
+                              @NonNull ExportCallback callback) {
+        AppExecutors.disk().execute(() -> {
+            File target = BitmapIO.newFile(appContext, BitmapIO.DIR_SCENES, "art");
+            String path = BitmapIO.writePng(bitmap, target);
+            Uri uri = null;
+            if (path != null) {
+                GalleryEntry entry = new GalleryEntry();
+                entry.kind = kind;
+                entry.missionIndex = missionIndex;
+                entry.title = title == null ? "" : title;
+                entry.filePath = path;
+                entry.createdAt = System.currentTimeMillis();
+                dao.insert(entry);
+                uri = MediaStoreExporter.export(appContext, bitmap,
+                        "pashmak_" + entry.createdAt);
+            }
+            Uri result = uri;
+            AppExecutors.main(() -> callback.onExported(result));
+        });
+    }
+
     public void exportToDeviceGallery(long id, @NonNull ExportCallback callback) {
         AppExecutors.disk().execute(() -> {
             GalleryEntry entry = dao.byId(id);

@@ -175,12 +175,35 @@ public class MemoryActivity extends GameActivity {
         }
     }
 
+    /** The next level was locked when this one was won; deal it once it is bought. */
+    private boolean pendingNextLevel;
+
+    @Override
+    protected void onFullVersionBought() {
+        if (pendingNextLevel) {
+            pendingNextLevel = false;
+            deal(viewModel.deckIndex(), viewModel.level() + 1);
+        }
+    }
+
     private void onLevelFinished() {
         sounds.play(AudioManifest.SFX_FANFARE);
         prefs.setMemoryProgress(viewModel.deck().id, viewModel.level());
         mascot.addStars(viewModel.pairCount());
         long said = onCorrect(getString(R.string.memory_win),
                 AudioManifest.VOICE_MEMORY_WIN);
+        // The memory list shows every level of a deck in a run, deck after deck; the
+        // free stages are counted along it, so the next level may need the full version.
+        int nextRow = viewModel.deckIndex() * MemoryCatalog.levelCount() + viewModel.level() + 1;
+        if (viewModel.hasNextLevel() && !stageOpen(nextRow)) {
+            binding.getRoot().postDelayed(() -> {
+                if (!isFinishing()) {
+                    pendingNextLevel = true;
+                    offerFullVersion();
+                }
+            }, said + LEVEL_PAUSE_MS);
+            return;
+        }
         if (viewModel.hasNextLevel()) {
             int next = viewModel.level() + 1;
             // "You won" runs nearly five seconds; deal the next level after it, not

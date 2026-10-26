@@ -161,8 +161,38 @@ public class BubblePopActivity extends GameActivity {
         // clip runs four seconds and the 1.6 that used to be here talked over it.
         long said = mascot.say(getString(R.string.bubbles_round_done), MascotState.CHEER,
                 MascotController.HOLD_CHEER_MS, AudioManifest.VOICE_BUBBLE_ROUND);
-        binding.getRoot().postDelayed(() -> startRound(roundIndex + 1),
-                said + ROUND_PAUSE_MS);
+        binding.getRoot().postDelayed(this::nextRound, said + ROUND_PAUSE_MS);
+    }
+
+    /**
+     * The game has no stage list; its rounds are its stages, and the first
+     * {@code Entitlement.FREE_STAGES} of every session are free. After those the
+     * field stops and the full version is offered.
+     */
+    private void nextRound() {
+        if (isFinishing()) {
+            return;
+        }
+        int next = (roundIndex + 1) % rounds.size();
+        if (!stageOpen(next)) {
+            binding.bubbleField.stop();
+            waitingForFull = true;
+            offerFullVersion();
+            return;
+        }
+        startRound(next);
+    }
+
+    /** The free rounds are used up and the field is stopped until the purchase. */
+    private boolean waitingForFull;
+
+    @Override
+    protected void onFullVersionBought() {
+        if (waitingForFull) {
+            waitingForFull = false;
+            binding.bubbleField.start();
+            startRound(roundIndex + 1);
+        }
     }
 
     private void renderBanner() {
@@ -174,7 +204,14 @@ public class BubblePopActivity extends GameActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        binding.bubbleField.start();
+        if (waitingForFull && fullVersion()) {
+            // Bought elsewhere (settings, or an answer that came in late).
+            waitingForFull = false;
+            startRound(roundIndex + 1);
+        }
+        if (!waitingForFull) {
+            binding.bubbleField.start();
+        }
     }
 
     @Override

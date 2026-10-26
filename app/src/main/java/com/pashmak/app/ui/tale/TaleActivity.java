@@ -75,7 +75,13 @@ public class TaleActivity extends GameActivity {
         });
         binding.taleNextTale.setOnClickListener(v -> {
             tap();
-            openTale(taleIndex + 1);
+            int next = (taleIndex + 1) % TaleCatalog.count();
+            if (!stageOpen(next)) {
+                pendingNextTale = true;
+                offerFullVersion();
+                return;
+            }
+            openTale(next);
         });
 
         if (savedInstanceState == null) {
@@ -198,6 +204,17 @@ public class TaleActivity extends GameActivity {
         mascot.addStars(2);
         mascot.say(getString(R.string.tale_finished), MascotState.CHEER,
                 MascotController.HOLD_CHEER_MS, AudioManifest.VOICE_TALE_DONE);
+    }
+
+    /** "Next tale" was tapped on a locked one; it opens once the purchase lands. */
+    private boolean pendingNextTale;
+
+    @Override
+    protected void onFullVersionBought() {
+        if (pendingNextTale) {
+            pendingNextTale = false;
+            openTale(taleIndex + 1);
+        }
     }
 
     @Override

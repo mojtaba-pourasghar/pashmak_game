@@ -23,10 +23,21 @@ public final class Stage {
     /** Text for the chip when there is no icon. */
     @Nullable
     public final String badge;
+    /**
+     * Locked because it is part of the full version, not because of the child's
+     * progress. Tapping it offers the purchase instead of "finish the last one".
+     */
+    public final boolean forSale;
 
     public Stage(int index, String title, String subtitle, String progress,
                  boolean complete, boolean locked, @DrawableRes int icon,
                  @Nullable String badge) {
+        this(index, title, subtitle, progress, complete, locked, icon, badge, false);
+    }
+
+    private Stage(int index, String title, String subtitle, String progress,
+                  boolean complete, boolean locked, @DrawableRes int icon,
+                  @Nullable String badge, boolean forSale) {
         this.index = index;
         this.title = title;
         this.subtitle = subtitle;
@@ -35,5 +46,11 @@ public final class Stage {
         this.locked = locked;
         this.icon = icon;
         this.badge = badge;
+        this.forSale = forSale;
+    }
+
+    /** The same stage, shut until the full version is bought. */
+    public Stage forSale() {
+        return new Stage(index, title, subtitle, progress, complete, true, icon, badge, true);
     }
 }

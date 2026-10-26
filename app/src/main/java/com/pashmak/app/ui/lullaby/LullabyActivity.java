@@ -15,6 +15,7 @@ import java.util.Locale;
 import com.pashmak.app.R;
 import com.pashmak.app.audio.AudioManifest;
 import com.pashmak.app.audio.LullabyPlayer;
+import com.pashmak.app.billing.Entitlement;
 import com.pashmak.app.data.catalog.Lullaby;
 import com.pashmak.app.data.catalog.LullabyCatalog;
 import com.pashmak.app.databinding.ActivityLullabyBinding;
@@ -65,10 +66,20 @@ public class LullabyActivity extends BaseActivity implements LullabyPlayer.Liste
         player = new ViewModelProvider(this).get(LullabyHolder.class).player();
         player.setRepeatOne(prefs.lullabyRepeat());
         player.setAutoNext(prefs.lullabyAutoNext());
+        // Before anything can play: the free version opens only the first song.
+        player.setPlayable(Entitlement.playableLullabies(fullVersion()));
         player.setListener(this);
 
         adapter = new LullabyAdapter(LullabyCatalog.all(), this::pick);
+        adapter.setFullVersion(fullVersion());
         binding.lullabyList.setAdapter(adapter);
+        // A purchase made here, or Bazaar's answer arriving, opens the playlist in
+        // place; a refund closes it again.
+        billing.ownedLive().observe(this, owned -> {
+            boolean full = Boolean.TRUE.equals(owned);
+            player.setPlayable(Entitlement.playableLullabies(full));
+            adapter.setFullVersion(full);
+        });
 
         // Nothing calls back until the next tick, so catch the new screen up with
         // whatever was already playing before it was built.
@@ -149,10 +160,31 @@ public class LullabyActivity extends BaseActivity implements LullabyPlayer.Liste
         }
     }
 
+    /** The song a parent picked before buying, to start once the purchase lands. */
+    private int pendingSong = -1;
+
     private void pick(int index) {
         tap();
+        if (!player.isPlayable(index)) {
+            pendingSong = index;
+            offerFullVersion();
+            return;
+        }
         warnedMissing = false;
         player.play(index);
+    }
+
+    /** Bought from here: play the song that was asked for. */
+    @Override
+    protected void onFullVersionBought() {
+        int song = pendingSong;
+        pendingSong = -1;
+        player.setPlayable(Entitlement.playableLullabies(true));
+        adapter.setFullVersion(true);
+        if (song >= 0) {
+            warnedMissing = false;
+            player.play(song);
+        }
     }
 
     /** The sleep-timer row: off, then a quarter hour, half an hour, an hour. */
@@ -174,7 +206,8 @@ public class LullabyActivity extends BaseActivity implements LullabyPlayer.Liste
             chip.setMinimumWidth(0);
             chip.setMinHeight(0);
             chip.setMinimumHeight(0);
-            chip.setPadding(dp(10), dp(4), dp(10), dp(4));
+            // Narrow side padding so «بی‌زمان» stays on one line in a quarter of the row.
+            chip.setPadding(dp(6), dp(4), dp(6), dp(4));
             chip.setSelected(minutes == chosen);
             chip.setOnClickListener(v -> {
                 tap();

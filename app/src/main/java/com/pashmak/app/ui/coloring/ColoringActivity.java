@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.Map;
 
 import com.pashmak.app.R;
+import com.pashmak.app.audio.AudioManifest;
 import com.pashmak.app.data.catalog.ColorPack;
 import com.pashmak.app.data.catalog.ColorRegion;
 import com.pashmak.app.data.catalog.ColoringCatalog;
@@ -96,12 +97,42 @@ public class ColoringActivity extends GameActivity {
 
         binding.paintNext.setOnClickListener(v -> {
             tap();
-            viewModel.selectPage(viewModel.pagePosition() + 1);
+            int next = viewModel.pagePosition() + 1;
+            if (!stageOpen(stagePosition(viewModel.packPosition(), next))) {
+                pendingNextPage = true;
+                offerFullVersion();
+                return;
+            }
+            viewModel.selectPage(next);
         });
 
         viewModel.selectPack(getIntent().getIntExtra(EXTRA_PACK, 0));
         viewModel.selectPage(getIntent().getIntExtra(EXTRA_PAGE, 0));
         mascot.help("paint");
+    }
+
+    /** "Next picture" was tapped on a locked one; it opens once the purchase lands. */
+    private boolean pendingNextPage;
+
+    /** Bought from here: go on to the picture that was asked for. */
+    @Override
+    protected void onFullVersionBought() {
+        if (pendingNextPage) {
+            pendingNextPage = false;
+            viewModel.selectPage(viewModel.pagePosition() + 1);
+        }
+    }
+
+    /**
+     * This picture's row in the coloring list, which numbers every picture of every
+     * pack in one run — the order the free stages are counted in.
+     */
+    private static int stagePosition(int pack, int page) {
+        int position = page;
+        for (int i = 0; i < pack; i++) {
+            position += ColoringCatalog.pack(i).size();
+        }
+        return position;
     }
 
     /** Once a picture is finished, the rest of its pack is one tap away. */

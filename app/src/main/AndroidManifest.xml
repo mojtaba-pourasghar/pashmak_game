@@ -7,6 +7,15 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!--
+        Bedtime: the lullaby keeps playing with the screen locked and shows play /
+        pause / next / previous on the lock screen. That needs a media-playback
+        foreground service, and a wake lock so a song can roll on to the next one
+        while the device sleeps.
+    -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
         android:name="android.hardware.camera.any"
@@ -91,6 +100,11 @@
         <activity android:name=".ui.gallery.GalleryActivity" android:exported="false" />
         <activity android:name=".ui.gallery.GalleryViewerActivity" android:exported="false" />
         <activity android:name=".ui.settings.SettingsActivity" android:exported="false" />
+
+        <service
+            android:name=".audio.LullabyService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

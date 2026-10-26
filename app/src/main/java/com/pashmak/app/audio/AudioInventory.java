@@ -120,6 +120,8 @@ public final class AudioInventory {
         names.add(AudioManifest.VOICE_BUBBLE_ROUND);
         names.add(AudioManifest.VOICE_DRAW_EMPTY);
         names.add(AudioManifest.VOICE_STAGE_LOCKED);
+        names.add(AudioManifest.VOICE_FULL_LOCKED);
+        names.add(AudioManifest.VOICE_FULL_UNLOCKED);
 
         names.add(AudioManifest.VOICE_STORY_WRONG);
         names.add(AudioManifest.VOICE_STORY_END);

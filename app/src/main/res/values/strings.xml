@@ -43,8 +43,10 @@
     <!-- Mission brief -->
     <string name="draw_line_incomplete">%1$s می‌گه: برای %2$s الان یه «%3$s» می‌خوام. روی کاغذ بکشش!</string>
     <string name="draw_line_complete">%1$s می‌گه: مجموعه کامل شد! می‌خوای یه ماموریت تازه برداریم؟</string>
-    <string name="draw_now">الان بکش: %1$s</string>
-    <string name="draw_go_camera">کشیدم! بریم دوربین</string>
+    <string name="draw_tap_to_shoot">کشیدی؟ روی همونش بزن تا عکسشو بگیریم</string>
+    <string name="draw_tap_to_redo">می‌خوای یکی رو عوض کنی؟ روش بزن و دوباره عکس بگیر</string>
+    <string name="draw_save_scene">ذخیره تو گالری</string>
+    <string name="draw_scene_saved">صحنه‌ات تو گالری ذخیره شد!</string>
     <string name="draw_pick_other">یه ماموریت دیگه انتخاب کن</string>
 
     <!-- Camera -->
@@ -61,16 +63,8 @@
     <string name="processing_failed">نتونستم نقاشی رو جدا کنم. نور بیشتر و کاغذ صاف کمک می‌کنه.</string>
     <string name="processing_retry">دوباره عکس بگیر</string>
 
-    <!-- Alive scene -->
-    <string name="alive_headline_progress">زنده شد! %1$s از %2$s</string>
-    <string name="alive_headline_complete">مجموعه کامل شد!</string>
-    <string name="alive_line_progress">«%1$s» اومد کنار %2$s. حالا %3$s تا مونده تا مجموعه کامل شه.</string>
-    <string name="alive_line_complete">همه‌چیزِ «%1$s» آماده‌ست. %2$s داره وسطش می‌رقصه!</string>
+    <!-- A scanned drawing landing in the room -->
     <string name="alive_arrived">وااای! «%1$s» زنده شد و اومد تو صحنه!</string>
-    <string name="alive_next_item">بکش: %1$s</string>
-    <string name="alive_next_mission">ماموریت بعدی</string>
-    <string name="alive_gallery">گالری</string>
-    <string name="alive_retake">دوباره بکش</string>
 
     <!-- Coloring -->
     <string name="paint_title">رنگ‌آمیزی · %1$s</string>
@@ -208,7 +202,15 @@
     <string name="settings_audio_music_some">موزیک پس‌زمینه: %1$s از %2$s فایل پیدا شد. بقیه‌اش رو خود برنامه می‌سازه.</string>
     <string name="settings_audio_all">هر %1$s فایل صدا سر جاشه. ✔</string>
     <string name="settings_audio_some">%1$s از %2$s فایل صدا پیدا شد. جاافتاده‌ها مثل %3$s — فهرست کامل در res/raw/audio_manifest.txt</string>
-    <string name="settings_info">این اپ کامل آفلاین کار می‌کنه — بدون تبلیغ، بدون حساب کاربری و بدون خرید درون‌برنامه‌ای.</string>
+    <string name="settings_info">این اپ کامل آفلاین کار می‌کنه — بدون تبلیغ و بدون حساب کاربری. نسخه‌ی کامل فقط یک بار از کافه‌بازار خریده می‌شه.</string>
+
+    <!-- Full version (Cafe Bazaar in-app purchase) -->
+    <string name="full_locked_line">این مرحله مال نسخه‌ی کامله. از مامان یا بابا بخواه برات بازش کنن!</string>
+    <string name="full_unlocked_line">هورا! همه‌ی بازی‌ها و لالایی‌ها باز شدن. بزن بریم!</string>
+    <string name="purchase_gate_hint">برای خرید نسخه‌ی کامل از کافه‌بازار جواب بده</string>
+    <string name="purchase_no_bazaar">برای خرید، اول برنامه‌ی کافه‌بازار رو نصب کنید و وارد حساب‌تون بشید.</string>
+    <string name="purchase_failed">خرید انجام نشد. اتصال اینترنت و کافه‌بازار رو بررسی کنید و دوباره امتحان کنید.</string>
+    <string name="cd_locked">قفل</string>
 
     <!-- Mascot dialogue (MascotConfig.js, verbatim) -->
     <string name="ms_welcome">سلام قندعسلم! من %1$sم، دوست جدیدت! آماده‌ای باهم کلی بازی کنیم؟</string>
@@ -270,6 +272,8 @@
     <string name="lullaby_timer_off">بی‌زمان</string>
     <string name="lullaby_timer_left">%1$s تا خاموشی</string>
     <string name="lullaby_time">%1$s / %2$s</string>
+    <string name="lullaby_channel">پخش لالایی</string>
+    <string name="lullaby_channel_desc">دکمه‌های پخش لالایی روی صفحه قفل</string>
 
     <string name="stars_label">ستاره‌ها</string>
     <string name="sound_toggle">صدا</string>

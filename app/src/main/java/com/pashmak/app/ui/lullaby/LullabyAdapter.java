@@ -10,11 +10,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import java.util.Locale;
 
+import com.pashmak.app.billing.Entitlement;
 import com.pashmak.app.data.catalog.Lullaby;
 import com.pashmak.app.databinding.ItemLullabyBinding;
 import com.pashmak.app.util.FaNum;
 
-/** The bedtime playlist. The row that is sounding keeps a lit border and a mark. */
+/**
+ * The bedtime playlist. The row that is sounding keeps a lit border and a mark;
+ * songs from the full version carry a lock until it is bought.
+ */
 public class LullabyAdapter extends RecyclerView.Adapter<LullabyAdapter.LullabyHolder> {
 
     public interface OnLullabyPicked {
@@ -26,10 +30,20 @@ public class LullabyAdapter extends RecyclerView.Adapter<LullabyAdapter.LullabyH
 
     private int current = -1;
     private boolean playing;
+    private boolean fullVersion;
 
     public LullabyAdapter(@NonNull List<Lullaby> items, @NonNull OnLullabyPicked callback) {
         this.items = items;
         this.callback = callback;
+    }
+
+    /** Shows or clears the locks on the songs past the free one. */
+    public void setFullVersion(boolean value) {
+        if (fullVersion == value) {
+            return;
+        }
+        fullVersion = value;
+        notifyDataSetChanged();
     }
 
     /** Moves the highlight, repainting only the two rows that changed. */
@@ -79,6 +93,11 @@ public class LullabyAdapter extends RecyclerView.Adapter<LullabyAdapter.LullabyH
             binding.lullabyRow.setSelected(isCurrent);
             binding.lullabyPlaying.setVisibility(
                     isCurrent && playing ? View.VISIBLE : View.INVISIBLE);
+            boolean locked = !Entitlement.lullabyOpen(position, fullVersion);
+            binding.lullabyLock.setVisibility(locked ? View.VISIBLE : View.GONE);
+            // Still clearly listed — a locked song is visibly out of reach, as a locked
+            // stage is — and tapping it offers the full version.
+            binding.lullabyRow.setAlpha(locked ? 0.6f : 1f);
             binding.lullabyRow.setOnClickListener(v -> callback.onLullabyPicked(position));
         }
 

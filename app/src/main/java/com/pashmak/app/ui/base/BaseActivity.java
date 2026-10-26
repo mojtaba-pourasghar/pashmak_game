@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,10 +19,14 @@ import com.pashmak.app.R;
 import com.pashmak.app.audio.AudioManifest;
 import com.pashmak.app.audio.MusicEngine;
 import com.pashmak.app.audio.SoundBank;
+import com.pashmak.app.billing.BazaarBilling;
+import com.pashmak.app.billing.Entitlement;
 import com.pashmak.app.data.prefs.GamePrefs;
 import com.pashmak.app.mascot.MascotController;
+import com.pashmak.app.mascot.MascotState;
 import com.pashmak.app.mascot.MascotView;
 import com.pashmak.app.mascot.SpeechBubbleView;
+import com.pashmak.app.ui.parentgate.ParentGateDialog;
 import com.pashmak.app.util.FaNum;
 import com.pashmak.app.util.LocaleUtil;
 
@@ -34,6 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected MascotController mascot;
     protected GamePrefs prefs;
     protected SoundBank sounds;
+    protected BazaarBilling billing;
 
     private boolean observingSpeech;
 
@@ -55,6 +61,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mascot = MascotController.get(this);
         prefs = GamePrefs.get(this);
         sounds = SoundBank.get(this);
+        billing = BazaarBilling.get(this);
     }
 
     @Override
@@ -78,6 +85,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         goImmersive();
+        // Picks up a purchase whose answer was lost to a rebuilt screen.
+        billing.onScreenResumed();
         String track = musicTrack();
         if (track == null) {
             // A screen that makes its own sound (bedtime) asks for silence here.
@@ -234,6 +243,65 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void tap() {
         sounds.play(AudioManifest.SFX_TAP);
+    }
+
+    /** Whether the full version has been bought (as Bazaar last confirmed). */
+    protected boolean fullVersion() {
+        return billing.owned();
+    }
+
+    /**
+     * Whether the stage at this row of its game's list may be played. The same rule
+     * the stage pickers apply, for screens that move on to the next stage by
+     * themselves and must stop at the same place the list does.
+     */
+    protected boolean stageOpen(int position) {
+        return Entitlement.stageOpen(position, fullVersion());
+    }
+
+    /**
+     * Something that belongs to the full version was tapped. Pashmak says so, and the
+     * purchase sits behind the parent gate: a child cannot reach Bazaar's payment
+     * screen on their own.
+     */
+    protected void offerFullVersion() {
+        mascot.say(getString(R.string.full_locked_line), MascotState.TALK,
+                MascotController.HOLD_MIN_MS, AudioManifest.VOICE_FULL_LOCKED);
+        ParentGateDialog.showForPurchase(this, this::buyFullVersion);
+    }
+
+    /** Opens Bazaar's payment screen. Call only once a grown-up is at the controls. */
+    protected void buyFullVersion() {
+        billing.purchase(this, result -> {
+            if (isFinishing() || isDestroyed()) {
+                // The purchase itself is already saved; there is just nobody to tell.
+                return;
+            }
+            switch (result) {
+                case PURCHASED:
+                    sounds.play(AudioManifest.SFX_FANFARE);
+                    mascot.say(getString(R.string.full_unlocked_line), MascotState.CHEER,
+                            MascotController.HOLD_CHEER_MS, AudioManifest.VOICE_FULL_UNLOCKED);
+                    onFullVersionBought();
+                    break;
+                case CANCELED:
+                    break;
+                case NO_BAZAAR:
+                    Toast.makeText(this, R.string.purchase_no_bazaar, Toast.LENGTH_LONG).show();
+                    break;
+                case FAILED:
+                default:
+                    Toast.makeText(this, R.string.purchase_failed, Toast.LENGTH_LONG).show();
+                    break;
+            }
+        });
+    }
+
+    /**
+     * The full version was just bought from this screen. A screen that stopped at a
+     * locked stage overrides this to carry on where the child was.
+     */
+    protected void onFullVersionBought() {
     }
 
     protected void open(Class<?> activity) {

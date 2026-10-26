@@ -65,6 +65,10 @@ public final class AudioManifest {
     /* ---- Stage lists ---- */
     public static final String VOICE_STAGE_LOCKED = "stage_locked";
 
+    /* ---- Full version ---- */
+    public static final String VOICE_FULL_LOCKED = "full_locked";
+    public static final String VOICE_FULL_UNLOCKED = "full_unlocked";
+
     /* ---- Bedtime ---- */
     public static final String VOICE_NIGHT_HELLO = "night_hello";
     public static final String VOICE_NIGHT_GOODNIGHT = "night_goodnight";

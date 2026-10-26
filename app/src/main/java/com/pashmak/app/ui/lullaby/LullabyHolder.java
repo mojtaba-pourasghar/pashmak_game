@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
+import com.pashmak.app.audio.LullabyMedia;
 import com.pashmak.app.audio.LullabyPlayer;
 
 /**
@@ -23,6 +24,8 @@ import com.pashmak.app.audio.LullabyPlayer;
 public class LullabyHolder extends AndroidViewModel {
 
     private LullabyPlayer player;
+    /** Lock-screen / notification controls; lives exactly as long as the player. */
+    private LullabyMedia media;
 
     public LullabyHolder(@NonNull Application application) {
         super(application);
@@ -32,6 +35,7 @@ public class LullabyHolder extends AndroidViewModel {
     public LullabyPlayer player() {
         if (player == null) {
             player = new LullabyPlayer(getApplication());
+            media = new LullabyMedia(getApplication(), player);
         }
         return player;
     }
@@ -39,6 +43,10 @@ public class LullabyHolder extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
+        if (media != null) {
+            media.release();
+            media = null;
+        }
         if (player != null) {
             player.shutdown();
             player = null;

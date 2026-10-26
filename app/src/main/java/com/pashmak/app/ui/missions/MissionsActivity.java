@@ -48,10 +48,35 @@ public class MissionsActivity extends BaseActivity {
 
         viewModel.progress().observe(this, done ->
                 adapter.setProgress(done, viewModel.currentMission(done)));
+        billing.ownedLive().observe(this, owned ->
+                adapter.setFullVersion(Boolean.TRUE.equals(owned)));
     }
+
+    /** A locked mission tapped before buying, to open once the purchase lands. */
+    @Nullable
+    private com.pashmak.app.data.catalog.Mission pendingMission;
 
     private void startMission(com.pashmak.app.data.catalog.Mission mission, int captured) {
         tap();
+        // Missions are this game's stages; the first ones are free.
+        if (!stageOpen(mission.index)) {
+            pendingMission = mission;
+            offerFullVersion();
+            return;
+        }
+        launch(mission);
+    }
+
+    @Override
+    protected void onFullVersionBought() {
+        com.pashmak.app.data.catalog.Mission mission = pendingMission;
+        pendingMission = null;
+        if (mission != null) {
+            launch(mission);
+        }
+    }
+
+    private void launch(com.pashmak.app.data.catalog.Mission mission) {
         mascot.say(getString(R.string.mission_start_line, mission.title),
                 MascotState.TALK, MascotController.HOLD_DEFAULT_MS,
                 AudioManifest.VOICE_MISSION_START);

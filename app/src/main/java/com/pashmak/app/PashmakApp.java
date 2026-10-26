@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.pashmak.app.audio.MusicEngine;
 import com.pashmak.app.audio.SoundBank;
+import com.pashmak.app.billing.BazaarBilling;
 import com.pashmak.app.data.prefs.GamePrefs;
 import com.pashmak.app.util.LocaleUtil;
 
@@ -31,6 +32,10 @@ public class PashmakApp extends Application {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         GamePrefs.get(this);
         SoundBank.get(this);
+        // What was bought is remembered, so the app opens unlocked straight away;
+        // Bazaar's answer then confirms it, restores it after a reinstall, or takes
+        // it back after a refund. Without Bazaar or a network nothing changes.
+        BazaarBilling.get(this).refresh(null);
         watchForBackground();
     }
 

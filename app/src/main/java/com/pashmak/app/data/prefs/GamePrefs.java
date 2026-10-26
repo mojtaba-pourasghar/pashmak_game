@@ -21,6 +21,8 @@ public final class GamePrefs {
     public static final String KEY_DIFFICULTY = "difficulty";
     public static final String KEY_SOUND = "sound_enabled";
     public static final String KEY_MUSIC = "music_enabled";
+    /** The full version, as Bazaar last confirmed it. */
+    public static final String KEY_FULL_VERSION = "full_version";
 
     public static final int DIFFICULTY_EASY = 0;
     public static final int DIFFICULTY_MEDIUM = 1;
@@ -31,11 +33,13 @@ public final class GamePrefs {
     private final SharedPreferences prefs;
     private final MutableLiveData<Integer> stars = new MutableLiveData<>();
     private final MutableLiveData<Boolean> muted = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> fullUnlocked = new MutableLiveData<>();
 
     private GamePrefs(Context context) {
         prefs = context.getApplicationContext().getSharedPreferences(FILE, Context.MODE_PRIVATE);
         stars.setValue(prefs.getInt(KEY_STARS, 0));
         muted.setValue(prefs.getBoolean(KEY_MUTED, false));
+        fullUnlocked.setValue(prefs.getBoolean(KEY_FULL_VERSION, false));
     }
 
     public static GamePrefs get(@NonNull Context context) {
@@ -84,6 +88,25 @@ public final class GamePrefs {
     public void setMuted(boolean value) {
         prefs.edit().putBoolean(KEY_MUTED, value).apply();
         muted.setValue(value);
+    }
+
+    /** Every lock screen watches this, so a purchase opens them all at once. */
+    public LiveData<Boolean> fullUnlockedLive() {
+        return fullUnlocked;
+    }
+
+    public boolean isFullUnlocked() {
+        Boolean value = fullUnlocked.getValue();
+        return value != null && value;
+    }
+
+    /** Main thread only, like the other LiveData here. */
+    public void setFullUnlocked(boolean value) {
+        if (value == isFullUnlocked()) {
+            return;
+        }
+        prefs.edit().putBoolean(KEY_FULL_VERSION, value).apply();
+        fullUnlocked.setValue(value);
     }
 
     public boolean hasWelcomed() {

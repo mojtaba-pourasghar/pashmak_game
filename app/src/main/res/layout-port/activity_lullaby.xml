@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Portrait. The list of lullabies takes the height it wants down the screen and
-     the player sits across the bottom with Pashmak beside it. The night sky is
-     still the whole background; the bedtime screen is the one place in the app
-     that plays no music of its own, so the player is the only thing on it. -->
+     the player sits across the bottom, full width. Pashmak shares only the top row
+     of the player (beside the title and the seek bar); the transport, the toggles
+     and the timer chips each get the panel's whole width underneath, so nothing has
+     to squeeze in beside him on a phone held upright. -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -58,29 +59,28 @@
         android:layout_marginTop="@dimen/gap"
         android:layout_marginEnd="@dimen/screen_padding"
         android:layout_marginBottom="@dimen/screen_padding_v"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:background="@drawable/bg_night_panel"
+        android:orientation="vertical"
+        android:paddingStart="10dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <include
-            android:id="@+id/lullaby_dock"
-            layout="@layout/view_mascot_dock_top"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <!-- Row 1: what is playing and how far along, with Pashmak at its side. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/gap"
                 android:layout_weight="1"
-                android:background="@drawable/bg_night_panel"
-                android:orientation="vertical"
-                android:paddingStart="10dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="10dp">
+                android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/lullaby_now_title"
@@ -93,7 +93,6 @@
                     android:textColor="@color/night_gold"
                     android:textSize="18sp"
                     tools:text="لای‌لای گل پونه" />
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -121,130 +120,147 @@
                         android:textColor="@color/night_sub"
                         tools:text="۰:۳۲ / ۳:۰۰" />
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/lullaby_prev"
-                        style="@style/Button.Round"
-                        android:layout_width="@dimen/lullaby_step"
-                        android:layout_height="@dimen/lullaby_step"
-                        android:background="@drawable/bg_night_toggle"
-                        android:contentDescription="@string/lullaby_prev"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:rotation="180"
-                        android:src="@drawable/ic_next"
-                        app:tint="@color/night_ink" />
-
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/lullaby_play"
-                        style="@style/Button.Round"
-                        android:layout_width="@dimen/lullaby_play"
-                        android:layout_height="@dimen/lullaby_play"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@drawable/btn_yellow"
-                        android:contentDescription="@string/lullaby_play"
-                        android:padding="14dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_play"
-                        app:tint="@color/night_top" />
-
-                    <androidx.appcompat.widget.AppCompatImageButton
-                        android:id="@+id/lullaby_next"
-                        style="@style/Button.Round"
-                        android:layout_width="@dimen/lullaby_step"
-                        android:layout_height="@dimen/lullaby_step"
-                        android:background="@drawable/bg_night_toggle"
-                        android:contentDescription="@string/lullaby_next"
-                        android:padding="10dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/ic_next"
-                        app:tint="@color/night_ink" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:orientation="horizontal">
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/lullaby_repeat"
-                        style="@style/Button.Chunky"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingStart="6dp"
-                        android:paddingEnd="6dp"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_night_toggle"
-                        android:drawableStart="@drawable/ic_repeat"
-                        android:drawablePadding="4dp"
-                        android:text="@string/lullaby_repeat"
-                        android:textColor="@color/night_ink"
-                        android:textSize="13sp" />
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/lullaby_auto"
-                        style="@style/Button.Chunky"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingStart="6dp"
-                        android:paddingEnd="6dp"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_night_toggle"
-                        android:drawableStart="@drawable/ic_auto_next"
-                        android:drawablePadding="4dp"
-                        android:text="@string/lullaby_auto"
-                        android:textColor="@color/night_ink"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:contentDescription="@string/lullaby_timer"
-                        android:src="@drawable/ic_timer"
-                        app:tint="@color/night_sub" />
-
-                    <LinearLayout
-                        android:id="@+id/lullaby_timers"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal" />
-                </LinearLayout>
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/lullaby_timer_note"
-                    style="@style/Text.Chip"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center"
-                    android:textColor="@color/night_sub"
-                    android:visibility="gone"
-                    tools:text="۲۹:۱۲ تا خاموشی" />
             </LinearLayout>
+
+            <include
+                android:id="@+id/lullaby_dock"
+                layout="@layout/view_mascot_dock_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/gap" />
+        </LinearLayout>
+
+        <!-- Row 2: previous / play / next, centred under the whole panel. In RTL the
+             first child sits on the right, so «قبلی» is on the right and «بعدی» on the
+             left; ic_next is auto-mirrored so each arrow points the way it goes. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/lullaby_prev"
+                style="@style/Button.Round"
+                android:layout_width="@dimen/lullaby_step"
+                android:layout_height="@dimen/lullaby_step"
+                android:background="@drawable/bg_night_toggle"
+                android:contentDescription="@string/lullaby_prev"
+                android:padding="10dp"
+                android:rotation="180"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_next"
+                app:tint="@color/night_ink" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/lullaby_play"
+                style="@style/Button.Round"
+                android:layout_width="@dimen/lullaby_play"
+                android:layout_height="@dimen/lullaby_play"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/btn_yellow"
+                android:contentDescription="@string/lullaby_play"
+                android:padding="14dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_play"
+                app:tint="@color/night_top" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/lullaby_next"
+                style="@style/Button.Round"
+                android:layout_width="@dimen/lullaby_step"
+                android:layout_height="@dimen/lullaby_step"
+                android:background="@drawable/bg_night_toggle"
+                android:contentDescription="@string/lullaby_next"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_next"
+                app:tint="@color/night_ink" />
+        </LinearLayout>
+
+        <!-- Row 3: the two toggles, same height, one line each. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/lullaby_repeat"
+                style="@style/Button.Chunky"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_night_toggle"
+                android:drawableStart="@drawable/ic_repeat"
+                android:drawablePadding="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="8dp"
+                android:text="@string/lullaby_repeat"
+                android:textColor="@color/night_ink"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/lullaby_auto"
+                style="@style/Button.Chunky"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_night_toggle"
+                android:drawableStart="@drawable/ic_auto_next"
+                android:drawablePadding="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="8dp"
+                android:text="@string/lullaby_auto"
+                android:textColor="@color/night_ink"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Row 4: the sleep timer, four equal chips across the full width. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="@string/lullaby_timer"
+                android:src="@drawable/ic_timer"
+                app:tint="@color/night_sub" />
+
+            <LinearLayout
+                android:id="@+id/lullaby_timers"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:orientation="horizontal" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/lullaby_timer_note"
+            style="@style/Text.Chip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textColor="@color/night_sub"
+            android:visibility="gone"
+            tools:text="۲۹:۱۲ تا خاموشی" />
     </LinearLayout>
 
     <com.pashmak.app.mascot.SpeechBubbleView

@@ -10,6 +10,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // Cafe Bazaar's billing library (Poolakey) is only published here.
+        maven {
+            url 'https://jitpack.io'
+            content { includeGroupByRegex 'com\\.github\\.cafebazaar.*' }
+        }
     }
 }
 

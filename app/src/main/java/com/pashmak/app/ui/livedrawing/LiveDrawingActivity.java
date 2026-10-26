@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,7 +49,6 @@ import com.pashmak.app.databinding.ActivityLiveDrawingBinding;
 import com.pashmak.app.mascot.MascotController;
 import com.pashmak.app.mascot.MascotState;
 import com.pashmak.app.ui.base.BaseActivity;
-import com.pashmak.app.ui.gallery.GalleryActivity;
 import com.pashmak.app.util.BitmapIO;
 import com.pashmak.app.util.FaNum;
 import com.pashmak.app.util.ViewCapture;
@@ -56,8 +56,10 @@ import com.pashmak.app.vision.FrameDecoder;
 import com.pashmak.app.vision.RoiMapper;
 
 /**
- * The Osmo-style loop: read the brief, draw on real paper, scan it, watch it come
- * to life beside the mascot, repeat until the collection is finished.
+ * The Osmo-style loop: draw on real paper, tap the item's card to photograph it,
+ * and watch it land in its place in the room beside the mascot. Tapping a card that
+ * already has a drawing takes a new photo that replaces it. Once the room is full,
+ * the child can save the finished scene to the gallery.
  */
 public class LiveDrawingActivity extends BaseActivity {
 
@@ -92,12 +94,9 @@ public class LiveDrawingActivity extends BaseActivity {
         wireBrief();
         wireCamera();
         wireProcessing();
-        wireAlive();
         MissionScene room = MissionSceneCatalog.forMission(missionIndex);
-        binding.aliveSceneView.setScene(room);
         binding.briefScene.setScene(room);
         String[] labels = viewModel.mission().items.toArray(new String[0]);
-        binding.aliveSceneView.setSlotLabels(labels);
         binding.briefScene.setSlotLabels(labels);
 
         viewModel.step().observe(this, this::showStep);
@@ -116,7 +115,6 @@ public class LiveDrawingActivity extends BaseActivity {
     protected void onSpeakingChanged(boolean speaking) {
         if (binding != null) {
             binding.briefMascot.setSpeaking(speaking);
-            binding.aliveMascot.setSpeaking(speaking);
         }
     }
 
@@ -129,9 +127,11 @@ public class LiveDrawingActivity extends BaseActivity {
         });
         bindStars(binding.briefHeader.headerStarsValue);
         binding.briefMascot.setState(MascotState.WAVE);
-        binding.briefGoCamera.setOnClickListener(v -> {
+        // There is no "go to the camera" button any more: each item card opens the
+        // camera for its own item. This one only appears once the room is full.
+        binding.briefSave.setOnClickListener(v -> {
             tap();
-            openCamera();
+            saveSceneToGallery();
         });
     }
 
@@ -143,20 +143,29 @@ public class LiveDrawingActivity extends BaseActivity {
         int captured = viewModel.capturedCount(items);
         boolean complete = viewModel.isComplete(items);
         String name = getString(R.string.mascot_name);
-        String current = viewModel.currentItem(items);
+        // Items can be shot in any order now, so "what's next" is the first empty
+        // slot rather than the one after however many are done.
+        String current = mission.itemAt(firstEmptySlot(mission, items));
 
         binding.briefHeader.headerTitle.setText(mission.title);
         binding.briefLine.setText(complete
                 ? getString(R.string.draw_line_complete, name)
                 : getString(R.string.draw_line_incomplete, name, mission.title, current));
-        binding.briefNow.setText(getString(R.string.draw_now, current));
-        binding.briefNow.setVisibility(complete ? View.GONE : View.VISIBLE);
-        binding.briefGoCamera.setVisibility(complete ? View.GONE : View.VISIBLE);
-        binding.cameraTitle.setText(getString(R.string.cam_title, current));
-        binding.processingTitle.setText(getString(R.string.processing_title, current));
+        binding.briefNow.setText(complete
+                ? getString(R.string.draw_tap_to_redo)
+                : getString(R.string.draw_tap_to_shoot));
+        binding.briefSave.setVisibility(complete ? View.VISIBLE : View.GONE);
+        // Rebuilt after a rotation mid-shot, the camera still names the tapped item.
+        String shooting = mission.itemAt(targetSlot());
+        binding.cameraTitle.setText(getString(R.string.cam_title, shooting));
+        binding.processingTitle.setText(getString(R.string.processing_title, shooting));
 
         renderSlots(mission, items);
-        renderAlive(mission, items, captured, complete);
+        renderSceneItems(items);
+
+        if (complete && viewModel.claimCelebration(captured)) {
+            celebrate(mission);
+        }
     }
 
     /**
@@ -212,7 +221,13 @@ public class LiveDrawingActivity extends BaseActivity {
                 thumb.setImageBitmap(bitmap);
             }
         } else {
+            // An empty card shows a camera, so it reads as "tap me to take its photo".
             thumb.setBackgroundColor(Palette.hueFill(slot));
+            thumb.setImageResource(R.drawable.ic_camera);
+            thumb.setColorFilter(Color.WHITE);
+            thumb.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            int inset = thumbSize / 4;
+            thumb.setPadding(inset, inset, inset, inset);
         }
         card.addView(thumb, thumbParams);
 
@@ -237,12 +252,14 @@ public class LiveDrawingActivity extends BaseActivity {
         }
         card.addView(text, textParams);
 
-        if (captured != null) {
-            card.setOnClickListener(v -> {
-                tap();
-                viewModel.retakeSlot(slot);
-            });
-        }
+        // Every card opens the camera for its own item. On a card that already has a
+        // drawing, the new photo simply replaces the old one once it has been cut out
+        // — the old one stays in the room until then, so backing out loses nothing.
+        card.setOnClickListener(v -> {
+            tap();
+            openCamera(slot);
+        });
+        card.setContentDescription(getString(R.string.cam_title, label));
         return card;
     }
 
@@ -272,7 +289,12 @@ public class LiveDrawingActivity extends BaseActivity {
         binding.cameraPreview.setScaleType(PreviewView.ScaleType.FIT_CENTER);
     }
 
-    private void openCamera() {
+    private void openCamera(int slot) {
+        Mission mission = viewModel.mission();
+        viewModel.setTargetSlot(slot);
+        String label = mission == null ? "" : mission.itemAt(slot);
+        binding.cameraTitle.setText(getString(R.string.cam_title, label));
+        binding.processingTitle.setText(getString(R.string.processing_title, label));
         viewModel.goTo(LiveDrawingViewModel.Step.CAMERA);
         if (hasCameraPermission()) {
             binding.cameraPermissionPanel.setVisibility(View.GONE);
@@ -369,7 +391,7 @@ public class LiveDrawingActivity extends BaseActivity {
                         RectF roi = RoiMapper.toNormalized(roiInView, viewW, viewH,
                                 frame.getWidth(), frame.getHeight(), previewFit());
                         processingStartedAt = System.currentTimeMillis();
-                        viewModel.processCapture(frame, roi, currentSlot(),
+                        viewModel.processCapture(frame, roi, targetSlot(),
                                 LiveDrawingActivity.this::onCaptured);
                     }
 
@@ -390,13 +412,30 @@ public class LiveDrawingActivity extends BaseActivity {
         return crop ? RoiMapper.Fit.CROP : RoiMapper.Fit.LETTERBOX;
     }
 
-    private int currentSlot() {
-        List<CapturedItem> items = viewModel.items().getValue();
-        return viewModel.capturedCount(items);
+    /** The slot the tapped card stands for; the first empty one if none was tapped. */
+    private int targetSlot() {
+        int slot = viewModel.targetSlot();
+        if (slot >= 0) {
+            return slot;
+        }
+        Mission mission = viewModel.mission();
+        return mission == null ? 0 : firstEmptySlot(mission, viewModel.items().getValue());
     }
 
-    private void onCaptured(String label, int capturedCount) {
-        pendingArrivalSlot = Math.max(0, capturedCount - 1);
+    private int firstEmptySlot(Mission mission, @Nullable List<CapturedItem> items) {
+        for (int i = 0; i < mission.size(); i++) {
+            if (itemForSlot(items, i) == null) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private void onCaptured(String label, int slotIndex, int capturedCount) {
+        // The room re-renders from the database a moment later; this tells it which
+        // drawing is the new one, so that one flies in instead of just appearing.
+        pendingArrivalSlot = slotIndex;
+        viewModel.setTargetSlot(-1);
         long elapsed = System.currentTimeMillis() - processingStartedAt;
         long wait = Math.max(0L, MIN_PROCESSING_MS - elapsed);
         // Let the drawing land before Pashmak reacts to it by name.
@@ -421,63 +460,10 @@ public class LiveDrawingActivity extends BaseActivity {
         });
     }
 
-    // ------------------------------------------------------------------ alive
-
-    private void wireAlive() {
-        binding.aliveBack.setOnClickListener(v -> {
-            tap();
-            viewModel.goTo(LiveDrawingViewModel.Step.BRIEF);
-        });
-        binding.aliveMascot.setState(MascotState.CHEER);
-        binding.aliveGallery.setOnClickListener(v -> open(GalleryActivity.class));
-        binding.aliveRetake.setOnClickListener(v -> {
-            tap();
-            int last = currentSlot() - 1;
-            if (last >= 0) {
-                viewModel.retakeSlot(last);
-            }
-            viewModel.goTo(LiveDrawingViewModel.Step.CAMERA);
-        });
-    }
-
-    private void renderAlive(Mission mission, @Nullable List<CapturedItem> items,
-                             int captured, boolean complete) {
-        String name = getString(R.string.mascot_name);
-        binding.aliveHeadline.setText(complete
-                ? getString(R.string.alive_headline_complete)
-                : getString(R.string.alive_headline_progress,
-                FaNum.of(captured), FaNum.of(mission.size())));
-
-        String lastLabel = captured > 0 ? mission.itemAt(captured - 1) : "";
-        binding.aliveLine.setText(complete
-                ? getString(R.string.alive_line_complete, mission.title, name)
-                : getString(R.string.alive_line_progress, lastLabel, name,
-                FaNum.of(mission.size() - captured)));
-
-        binding.aliveNext.setText(complete
-                ? getString(R.string.alive_next_mission)
-                : getString(R.string.alive_next_item, mission.currentItem(captured)));
-        binding.aliveNext.setBackgroundResource(
-                complete ? R.drawable.btn_green : R.drawable.btn_orange);
-        binding.aliveNext.setOnClickListener(v -> {
-            tap();
-            if (complete) {
-                finish();
-            } else {
-                openCamera();
-            }
-        });
-        binding.aliveRetake.setVisibility(captured > 0 ? View.VISIBLE : View.GONE);
-
-        renderAliveItems(mission, items);
-
-        if (complete && viewModel.claimSceneSave(captured)) {
-            celebrate(mission);
-        }
-    }
+    // ------------------------------------------------------------------ scene
 
     /** Puts every captured drawing into the mission's world. */
-    private void renderAliveItems(Mission mission, @Nullable List<CapturedItem> items) {
+    private void renderSceneItems(@Nullable List<CapturedItem> items) {
         List<Bitmap> bitmaps = new ArrayList<>();
         List<Integer> slots = new ArrayList<>();
         if (items != null) {
@@ -490,10 +476,9 @@ public class LiveDrawingActivity extends BaseActivity {
                 }
             }
         }
-        binding.aliveSceneView.setItems(bitmaps, slots);
         binding.briefScene.setItems(bitmaps, slots);
         if (pendingArrivalSlot >= 0) {
-            binding.aliveSceneView.playArrival(pendingArrivalSlot);
+            binding.briefScene.playArrival(pendingArrivalSlot);
             celebrate();
             pendingArrivalSlot = -1;
         }
@@ -501,12 +486,10 @@ public class LiveDrawingActivity extends BaseActivity {
 
     /** Pashmak jumps up and down while the new drawing settles into the room. */
     private void celebrate() {
-        binding.aliveMascot.setState(MascotState.CHEER);
         binding.briefMascot.setState(MascotState.CHEER);
-        binding.getRoot().postDelayed(() -> {
-            binding.aliveMascot.setState(MascotState.CHEER);
-            binding.briefMascot.setState(MascotState.WAVE);
-        }, MascotController.HOLD_CHEER_MS);
+        binding.getRoot().postDelayed(
+                () -> binding.briefMascot.setState(MascotState.WAVE),
+                MascotController.HOLD_CHEER_MS);
     }
 
     private void celebrate(Mission mission) {
@@ -515,14 +498,32 @@ public class LiveDrawingActivity extends BaseActivity {
         mascot.addStars(5);
         mascot.say(getString(R.string.ms_mission_done), MascotState.CHEER,
                 MascotController.HOLD_CHEER_MS, AudioManifest.VOICE_MISSION_DONE);
-        // Give the items time to land before snapshotting the finished scene.
-        binding.getRoot().postDelayed(() -> {
-            Bitmap scene = ViewCapture.of(binding.aliveScene, Color.WHITE);
-            if (scene != null) {
-                GalleryRepository.get(this).save(GalleryEntry.KIND_MISSION_SCENE,
-                        mission.index, mission.title, scene, null);
-            }
-        }, 900L);
+    }
+
+    /**
+     * Saves the finished room, with every drawing in place, both to the app's own
+     * gallery and to the device's photo gallery (Pictures/PashmakGame). Only the
+     * child's button does this now, so a room they are still redoing is never saved.
+     */
+    private void saveSceneToGallery() {
+        Mission mission = viewModel.mission();
+        Bitmap scene = ViewCapture.of(binding.briefScene, Color.WHITE);
+        if (mission == null || scene == null) {
+            Toast.makeText(this, R.string.gallery_export_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        binding.briefSave.setEnabled(false);
+        GalleryRepository.get(this).saveAndExport(GalleryEntry.KIND_MISSION_SCENE,
+                mission.index, mission.title, scene, uri -> {
+                    binding.briefSave.setEnabled(true);
+                    if (uri != null) {
+                        sounds.play(AudioManifest.SFX_STAR);
+                    }
+                    Toast.makeText(this, uri != null
+                                    ? R.string.draw_scene_saved
+                                    : R.string.gallery_export_failed,
+                            Toast.LENGTH_LONG).show();
+                });
     }
 
     // ------------------------------------------------------------------ steps
@@ -533,8 +534,6 @@ public class LiveDrawingActivity extends BaseActivity {
         binding.stepCamera.setVisibility(step == LiveDrawingViewModel.Step.CAMERA
                 ? View.VISIBLE : View.GONE);
         binding.stepProcessing.setVisibility(step == LiveDrawingViewModel.Step.PROCESSING
-                ? View.VISIBLE : View.GONE);
-        binding.stepAlive.setVisibility(step == LiveDrawingViewModel.Step.ALIVE
                 ? View.VISIBLE : View.GONE);
     }
 

@@ -6,10 +6,12 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.pashmak.app.R;
 import com.pashmak.app.audio.AudioManifest;
+import com.pashmak.app.billing.Entitlement;
 import com.pashmak.app.databinding.ActivityStagePickerBinding;
 import com.pashmak.app.mascot.MascotController;
 import com.pashmak.app.mascot.MascotState;
@@ -48,8 +50,23 @@ public abstract class StagePickerActivity extends BaseActivity
     /** Rebuilds the list — for a screen whose stages arrive after a disk read. */
     protected void refreshStages() {
         if (adapter != null) {
-            adapter.submit(buildStages());
+            adapter.submit(gated(buildStages()));
         }
+    }
+
+    /**
+     * The first {@link Entitlement#FREE_STAGES} rows of every game are free; the rest
+     * wait for the full version. Counted by row, so it is the first stages the child
+     * sees, whatever numbering the game uses for its own indices.
+     */
+    private List<Stage> gated(List<Stage> stages) {
+        boolean full = fullVersion();
+        List<Stage> out = new ArrayList<>(stages.size());
+        for (int position = 0; position < stages.size(); position++) {
+            Stage stage = stages.get(position);
+            out.add(Entitlement.stageOpen(position, full) ? stage : stage.forSale());
+        }
+        return out;
     }
 
     @Override
@@ -73,6 +90,8 @@ public abstract class StagePickerActivity extends BaseActivity
         menuColumns(binding.pickerList,
                 getResources().getInteger(R.integer.missions_span), COLUMN_MIN_DP);
         binding.pickerList.setAdapter(adapter);
+        // A purchase, or Bazaar's answer at launch, opens the list in place.
+        billing.ownedLive().observe(this, owned -> refreshStages());
     }
 
     @Override
@@ -85,6 +104,10 @@ public abstract class StagePickerActivity extends BaseActivity
     @Override
     public void onStageClick(Stage stage) {
         tap();
+        if (stage.forSale) {
+            offerFullVersion();
+            return;
+        }
         if (stage.locked) {
             mascot.say(lockedLine(stage), MascotState.TALK,
                     MascotController.HOLD_MIN_MS, AudioManifest.VOICE_STAGE_LOCKED);

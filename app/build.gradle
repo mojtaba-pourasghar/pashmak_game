@@ -2,6 +2,33 @@ plugins {
     id 'com.android.application'
 }
 
+/*
+ * Bazaar's in-app billing RSA public key (developer panel -> In-App Billing).
+ * It is read from local.properties, which is not committed:
+ *
+ *     bazaar.rsaKey=MIHNMA0GCSqGSIb3DQEBAQUAA4G7ADCBtwKBrwD...
+ *
+ * or from -PbazaarRsaKey=... on a build server. Purchases are verified against it
+ * on the device, so a release build refuses to go out without one.
+ */
+def localProps = new Properties()
+def localPropsFile = rootProject.file('local.properties')
+if (localPropsFile.exists()) {
+    localPropsFile.withInputStream { localProps.load(it) }
+}
+def bazaarRsaKey = (localProps.getProperty('bazaar.rsaKey')
+        ?: project.findProperty('bazaarRsaKey') ?: '').toString().trim()
+if (bazaarRsaKey.isEmpty()) {
+    logger.warn('Pashmak: bazaar.rsaKey is not set in local.properties; '
+            + 'purchases will not be signature-checked in debug builds.')
+}
+gradle.taskGraph.whenReady { graph ->
+    def releasing = graph.allTasks.any { it.project == project && it.name.contains('Release') }
+    if (releasing && bazaarRsaKey.isEmpty()) {
+        throw new GradleException('Set bazaar.rsaKey in local.properties before building a release.')
+    }
+}
+
 android {
     namespace 'com.pashmak.app'
     compileSdk 35
@@ -15,6 +42,8 @@ android {
 
         vectorDrawables.useSupportLibrary = true
         resourceConfigurations += ['fa', 'en']
+
+        buildConfigField 'String', 'BAZAAR_RSA_KEY', "\"${bazaarRsaKey}\""
     }
 
     buildTypes {
@@ -35,6 +64,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 
     packagingOptions {
@@ -77,6 +107,13 @@ dependencies {
 
     implementation 'androidx.exifinterface:exifinterface:1.3.7'
     implementation 'com.github.bumptech.glide:glide:4.16.0'
+
+    // Cafe Bazaar in-app billing. The library is Kotlin; its callbacks are Kotlin
+    // function types (kotlin.Unit etc.), so the standard library has to be on the
+    // compile classpath — Poolakey only declares it for runtime. A newer stdlib
+    // brought in by AndroidX wins the resolution, which is fine.
+    implementation 'com.github.cafebazaar.Poolakey:poolakey:2.3.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 }

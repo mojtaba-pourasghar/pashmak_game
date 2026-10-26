@@ -52,6 +52,16 @@
             tools:text="تخت · چراغ · قالیچه · پنجره" />
     </LinearLayout>
 
+    <!-- Shown on missions that belong to the full version. -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/mission_lock"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="6dp"
+        android:contentDescription="@string/cd_locked"
+        android:src="@drawable/ic_lock"
+        android:visibility="gone" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/mission_progress"
         style="@style/Text.Section"
